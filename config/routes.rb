@@ -1,4 +1,9 @@
 Libre::Application.routes.draw do |map|
+  resource :home
+  resource :session, :controller => "user_sessions"
+
+  root :to => "homes#show"
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
