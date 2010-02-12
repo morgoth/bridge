@@ -5,9 +5,10 @@ class UserTest < ActiveSupport::TestCase
 
   def setup
     @model = @user = Factory.build(:user)
+    @password = @user.password
   end
 
-  test "should be valid with all attributes" do
+  test "should be valid with all valid attributes" do
     assert @user.valid?
   end
 
@@ -15,8 +16,19 @@ class UserTest < ActiveSupport::TestCase
     @user.save!
   end
 
-  test "should be authenticated with correct password" do
+  test "should be authenticated with the correct password" do
     @user.save!
-    @user.authenticated?(@password)
+    assert @user.authenticated?(@password)
+  end
+
+  test "should save without assigning a new password" do
+    @user.save!
+    @user.email = "alice@example.com"
+    @user.save!
+  end
+
+  test "should not be valid with too short password" do
+    @user.password = @user.password_confirmation = "123"
+    assert_false @user.valid?
   end
 end
