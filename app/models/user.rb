@@ -1,11 +1,10 @@
 class User < ActiveRecord::Base
-  validates_uniqueness_of :email
-  validates_with EmailValidator
-
   attr_accessor :password
 
   validates :password, :presence => true, :confirmation => true, :length => 6..40, :if => :password_required?
   validates :password_confirmation, :presence => true, :if => :password_required?
+  validates :email, :uniqueness => true
+  validates_with EmailValidator
 
   before_save :encrypt_password
 

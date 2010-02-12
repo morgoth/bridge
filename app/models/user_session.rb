@@ -1,28 +1,66 @@
 class UserSession
-  extend ActiveModel::Naming
   include ActiveModel::AttributeMethods
+  include ActiveModel::Conversion
   include ActiveModel::Validations
 
-  attr_reader :errors
-  attr_accessor :attributes
+  # ATTRIBUTES
+  attr_reader :errors, :attributes
 
   attribute_method_suffix ""
   attribute_method_suffix "="
 
   define_attribute_methods [:email, :password, :id]
 
+  # VALIDATION
   validates :email, :presence => true
   validates :password, :presence => true
-
   validate :authenticate
 
-  def initialize(attributes = {})
+  def initialize(session, attributes = {})
     @errors = ActiveModel::Errors.new(self)
-    @attributes = attributes
+    self.attributes = attributes
+    @session = session
+    @destroyed = false
+  end
+
+  def attributes=(attributes)
+    @attributes = attributes.symbolize_keys.merge(:id => nil)
   end
 
   def new_record?
-    true
+    id.nil?
+  end
+
+  def destroyed?
+    @destroyed
+  end
+
+  def save
+    if valid?
+      self.id = @session[:user_id] = user.id
+      true
+    else
+      false
+    end
+  end
+
+  def destroy
+    @session.delete(:user_id)
+    @destroyed = true
+  end
+
+  def self.find(session)
+    id = session[:user_id]
+    self.class.new(session, :id => id) if id
+  end
+
+  def user
+    if id.present?
+      User.find_by_id(id)
+    else
+      user = find_user_by_email
+      user_authenticated?(user) ? user : nil
+    end
   end
 
   protected
@@ -36,11 +74,19 @@ class UserSession
   end
 
   def authenticate
-    user = User.find_by_email(email)
+    user = find_user_by_email
     if user
-      errors.add :password, "is invalid" unless user.authenticated?(password)
+      errors.add :password, "is invalid" unless user_authenticated?(user)
     else
       errors.add :email, "does not exist"
     end
+  end
+
+  def find_user_by_email
+    User.find_by_email(email)
+  end
+
+  def user_authenticated?(user)
+    user.authenticated?(password)
   end
 end
