@@ -21,6 +21,11 @@ class UserTest < ActiveSupport::TestCase
     assert @user.authenticated?(@password)
   end
 
+  test "should not be authenticated with a wrong password" do
+    @user.save!
+    assert_false @user.authenticated?("wrongpass")
+  end
+
   test "should save without assigning a new password" do
     @user.save!
     @user.email = "alice@example.com"
@@ -33,7 +38,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "should not be valid with too long password" do
-    @user.password = @user.password_confirmation = "l#{'o' * 70}ngpass"
+    @user.password = @user.password_confirmation = "l#{'o' * 40}ngpass"
     assert_false @user.valid?
   end
 

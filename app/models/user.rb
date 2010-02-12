@@ -4,11 +4,6 @@ class User < ActiveRecord::Base
 
   attr_accessor :password
 
-  # validates_presence_of     :password,                   :if => :password_required?
-  # validates_presence_of     :password_confirmation,      :if => :password_required?
-  # validates_confirmation_of :password,                   :if => :password_required?
-  # validates_length_of       :password, :within => 6..40, :if => :password_required?
-
   validates :password, :presence => true, :confirmation => true, :length => 6..40, :if => :password_required?
   validates :password_confirmation, :presence => true, :if => :password_required?
 
@@ -29,9 +24,9 @@ class User < ActiveRecord::Base
   end
 
   def self.password_digest(password, password_salt)
-    "".tap do |digest|
-      10.times { digest = secure_digest(digest, password_salt, password) }
-    end
+    digest = ""
+    10.times { digest = secure_digest(digest, password_salt, password) }
+    digest
   end
 
   def encrypt(password)
