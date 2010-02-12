@@ -31,4 +31,20 @@ class UserTest < ActiveSupport::TestCase
     @user.password = @user.password_confirmation = "123"
     assert_false @user.valid?
   end
+
+  test "should not be valid with too long password" do
+    @user.password = @user.password_confirmation = "l#{'o' * 70}ngpass"
+    assert_false @user.valid?
+  end
+
+  test "should not be valid without password confirmation" do
+    @user.password_confirmation = nil
+    assert_false @user.valid?
+  end
+
+  test "should not be valid with incorrect password confirmation" do
+    @user.password = "secret"
+    @user.password_confirmation = "retsecay"
+    assert_false @user.valid?
+  end
 end
