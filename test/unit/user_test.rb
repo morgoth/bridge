@@ -30,35 +30,35 @@ class UserTest < ActiveSupport::TestCase
     @user.save!
   end
 
-  test "should not be valid with too short password" do
+  test "should be invalid with too short password" do
     @user.password = @user.password_confirmation = "123"
     assert_false @user.valid?
   end
 
-  test "should not be valid with too long password" do
+  test "should be invalid with too long password" do
     @user.password = @user.password_confirmation = "l#{'o' * 40}ngpass"
-    assert_false @user.valid?
+    assert @user.invalid?
   end
 
-  test "should not be valid without password confirmation" do
+  test "should be invalid without password confirmation" do
     @user.password_confirmation = nil
-    assert_false @user.valid?
+    assert @user.invalid?
   end
 
-  test "should not be valid with incorrect password confirmation" do
+  test "should be invalid with incorrect password confirmation" do
     @user.password = "secret"
     @user.password_confirmation = "retsecay"
-    assert_false @user.valid?
+    assert @user.invalid?
   end
 
   test "should validate uniqueness of email" do
     @user.save!
     user = Factory.build(:user, :email => @user.email)
-    assert_false user.valid?
+    assert user.invalid?
   end
 
-  test "should not be valid with mispelled email" do
+  test "should be invalid with mispelled email" do
     @user.email = "im.not.an.email"
-    assert_false @user.valid?
+    assert @user.invalid?
   end
 end

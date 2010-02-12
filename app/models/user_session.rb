@@ -4,7 +4,7 @@ class UserSession
   include ActiveModel::Validations
 
   # ATTRIBUTES
-  attr_reader :errors, :attributes
+  attr_reader :attributes
 
   attribute_method_suffix ""
   attribute_method_suffix "="
@@ -17,7 +17,6 @@ class UserSession
   validate :authenticate
 
   def initialize(session, attributes = {})
-    @errors = ActiveModel::Errors.new(self)
     self.attributes = attributes
     @session = session
     @destroyed = false
@@ -37,7 +36,7 @@ class UserSession
 
   def save
     if valid?
-      self.id = @session[:user_id] = user.id
+      self.id = @session[:user_id] = find_user_by_email.id
       true
     else
       false
@@ -50,17 +49,14 @@ class UserSession
   end
 
   def self.find(session)
-    id = session[:user_id]
-    self.class.new(session, :id => id) if id
+    returning(new(session)) do |user_session|
+      user_session.id = session.fetch(:user_id)
+    end
+  rescue IndexError
   end
 
   def user
-    if id.present?
-      User.find_by_id(id)
-    else
-      user = find_user_by_email
-      user_authenticated?(user) ? user : nil
-    end
+    User.find_by_id(id)
   end
 
   protected
@@ -83,7 +79,7 @@ class UserSession
   end
 
   def find_user_by_email
-    User.find_by_email(email)
+    User.find_by_email(email.strip.downcase) if email.present?
   end
 
   def user_authenticated?(user)

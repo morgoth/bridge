@@ -17,24 +17,24 @@ class UserSessionTest < ActiveSupport::TestCase
     assert @user_session.save
   end
 
-  test "should not be valid without password" do
+  test "should be invalid without password" do
     @user_session.password = nil
-    assert_false @user_session.valid?
+    assert @user_session.invalid?
   end
 
-  test "should not be valid with a wrong password" do
+  test "should be invalid with a wrong password" do
     @user_session.password = "wrongpassword"
-    assert_false @user_session.valid?
+    assert @user_session.invalid?
   end
 
-  test "should not be valid without email" do
+  test "should be invalid without email" do
     @user_session.email = nil
-    assert_false @user_session.valid?
+    assert @user_session.invalid?
   end
 
-  test "should not be valid with non-existing email" do
+  test "should be invalid with non-existing email" do
     @user_session.email = "nonexisting@example.com"
-    assert_false @user_session.valid?
+    assert @user_session.invalid?
   end
 
   test "should strip whitespaces from email before validation" do
@@ -71,5 +71,26 @@ class UserSessionTest < ActiveSupport::TestCase
   test "should not allow to mass assign id attribute" do
     @user_session.attributes = { :id => 666 }
     assert_nil @user_session.id
+  end
+
+  test "should not be a new_record after save" do
+    @user_session.save
+    assert_false @user_session.new_record?
+  end
+
+  test "should not be destroyed after initialization" do
+    assert_false @user_session.destroyed?
+  end
+
+  test "should be destroyed after destroy" do
+    @user_session.save
+    @user_session.destroy
+    assert @user_session.destroyed?
+  end
+
+  test "should find UserSession from existing session" do
+    @session[:user_id] = @user.id
+    user_session = UserSession.find(@session)
+    assert_equal @user, user_session.user
   end
 end
