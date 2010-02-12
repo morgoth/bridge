@@ -4,9 +4,7 @@ class UserTest < ActiveSupport::TestCase
   include ActiveModel::Lint::Tests
 
   def setup
-    @model = @user = User.new
-    @user.email = "alice@example.com"
-    @password = @user.password = @user.password_confirmation = "secret"
+    @model = @user = Factory.build(:user)
   end
 
   test "should be valid with all attributes" do
