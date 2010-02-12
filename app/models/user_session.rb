@@ -3,7 +3,6 @@ class UserSession
   include ActiveModel::Conversion
   include ActiveModel::Validations
 
-  # ATTRIBUTES
   attr_reader :attributes
 
   attribute_method_suffix ""
@@ -11,7 +10,6 @@ class UserSession
 
   define_attribute_methods [:email, :password, :id]
 
-  # VALIDATION
   validates :email, :presence => true
   validates :password, :presence => true
   validate :authenticate
