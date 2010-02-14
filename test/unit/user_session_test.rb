@@ -59,13 +59,13 @@ class UserSessionTest < ActiveSupport::TestCase
 
   test "should save user_id to session after save" do
     @user_session.save
-    assert_equal @user.id, @session[:user_id]
+    assert_equal @user.id, @session["user_id"]
   end
 
   test "should delete user_id from session after destroy" do
     @user_session.save
     @user_session.destroy
-    assert_nil @session[:user_id]
+    assert_nil @session["user_id"]
   end
 
   test "should not allow to mass assign id attribute" do
@@ -89,7 +89,7 @@ class UserSessionTest < ActiveSupport::TestCase
   end
 
   test "should find UserSession from existing session" do
-    @session[:user_id] = @user.id
+    @session["user_id"] = @user.id
     user_session = UserSession.find(@session)
     assert_equal @user, user_session.user
   end

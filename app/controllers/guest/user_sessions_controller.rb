@@ -1,4 +1,4 @@
-class UserSessionsController < ApplicationController
+class Guest::UserSessionsController < Guest::BaseController
   def new
     @user_session = UserSession.new(session)
   end
@@ -10,11 +10,5 @@ class UserSessionsController < ApplicationController
     else
       render :new
     end
-  end
-
-  def destroy
-    @user_session = UserSession.find(session)
-    @user_session.destroy
-    redirect_to home_path, :notice => "Successfully logged out"
   end
 end

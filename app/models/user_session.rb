@@ -34,7 +34,7 @@ class UserSession
 
   def save
     if valid?
-      self.id = @session[:user_id] = find_user_by_email.id
+      self.id = @session["user_id"] = find_user_by_email.id
       true
     else
       false
@@ -42,13 +42,13 @@ class UserSession
   end
 
   def destroy
-    @session.delete(:user_id)
+    @session.delete("user_id")
     @destroyed = true
   end
 
   def self.find(session)
     returning(new(session)) do |user_session|
-      user_session.id = session.fetch(:user_id)
+      user_session.id = session.fetch("user_id")
     end
   rescue IndexError
   end

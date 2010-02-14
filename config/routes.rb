@@ -1,6 +1,15 @@
 Libre::Application.routes.draw do |map|
-  resource :home
-  resource :session, :controller => "user_sessions"
+  resource :home, :only => [:show]
+
+  namespace :guest do
+    resource :user_session, :only => [:new, :create]
+    resource :user, :only => [:new, :create]
+  end
+
+  namespace :user do
+    resource :user_session, :only => [:destroy]
+    resource :user, :only => [:show]
+  end
 
   root :to => "homes#show"
 
