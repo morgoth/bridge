@@ -10,5 +10,8 @@ class UserSessionTest < ActionController::IntegrationTest
     click_button("Login")
 
     assert page.has_content?("Successfully logged in")
+
+    visit(user_user_path)
+    assert page.has_content?(user.email)
   end
 end

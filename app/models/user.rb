@@ -1,8 +1,7 @@
 class User < ActiveRecord::Base
   attr_accessor :password
 
-  validates :password, :presence => true, :confirmation => true, :length => 6..40, :if => :password_required?
-  validates :password_confirmation, :presence => true, :if => :password_required?
+  validates :password, :presence => true, :length => 6..40, :if => :password_required?
   validates :email, :uniqueness => true
   validates_with EmailValidator
 

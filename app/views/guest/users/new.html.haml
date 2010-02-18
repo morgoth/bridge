@@ -1,0 +1,11 @@
+- form_for @user, :url => guest_user_path do |form|
+  %p
+    = form.label :email
+    = form.text_field :email
+    = form.error_message_on :email
+  %p
+    = form.label :password
+    = form.password_field :password
+    = form.error_message_on :password
+  %p
+    = form.submit "Sign up"

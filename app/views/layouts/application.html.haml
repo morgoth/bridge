@@ -1,0 +1,17 @@
+!!!
+%html
+  %head
+    %title Libre
+  %body
+    #libre-notice= notice
+    - if current_user
+      #libre-user
+        Logged in as
+        = current_user.email
+        = button_to "Log out", user_user_session_path, :method => :delete
+    - else
+      #libre-signup
+        Not logged in
+        = link_to "Log in", new_guest_user_session_path
+        = link_to "Sign up", new_guest_user_path
+    = yield
