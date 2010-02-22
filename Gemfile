@@ -7,6 +7,7 @@ gem "bridge"
 gem "haml"
 gem "sqlite3"
 gem "state_machine"
+gem "rails3-generators"
 
 group :test do
   gem "capybara"
