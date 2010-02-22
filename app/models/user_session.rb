@@ -17,19 +17,14 @@ class UserSession
   def initialize(session, attributes = {})
     self.attributes = attributes
     @session = session
-    @destroyed = false
   end
 
   def attributes=(attributes)
     @attributes = attributes.symbolize_keys.merge(:id => nil)
   end
 
-  def new_record?
-    id.nil?
-  end
-
-  def destroyed?
-    @destroyed
+  def persisted?
+    id.present?
   end
 
   def save
@@ -43,7 +38,8 @@ class UserSession
 
   def destroy
     @session.delete("user_id")
-    @destroyed = true
+    self.id = nil
+    true
   end
 
   def self.find(session)

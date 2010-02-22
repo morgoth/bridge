@@ -73,19 +73,19 @@ class UserSessionTest < ActiveSupport::TestCase
     assert_nil @user_session.id
   end
 
-  test "should not be a new_record after save" do
+  test "should not be persisted after initialization" do
+    assert_false @user_session.persisted?
+  end
+
+  test "should be persisted after save" do
     @user_session.save
-    assert_false @user_session.new_record?
+    assert @user_session.persisted?
   end
 
-  test "should not be destroyed after initialization" do
-    assert_false @user_session.destroyed?
-  end
-
-  test "should be destroyed after destroy" do
+  test "should not be persisted after destroy" do
     @user_session.save
     @user_session.destroy
-    assert @user_session.destroyed?
+    assert_false @user_session.persisted?
   end
 
   test "should find UserSession from existing session" do
