@@ -2,8 +2,11 @@ source "http://gemcutter.org"
 
 gem "rails", :git => "git://github.com/rails/rails.git"
 
-gem "sqlite3"
+gem "acts_as_list"
+gem "bridge"
 gem "haml"
+gem "sqlite3"
+gem "state_machine"
 
 group :test do
   gem "capybara"

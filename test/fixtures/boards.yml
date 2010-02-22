@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  state: MyString
+  dealer: MyString
+  vulnerable: MyString
+  deal_id: MyString
+
+two:
+  state: MyString
+  dealer: MyString
+  vulnerable: MyString
+  deal_id: MyString

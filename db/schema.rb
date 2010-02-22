@@ -9,7 +9,32 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100203110201) do
+ActiveRecord::Schema.define(:version => 20100222122225) do
+
+  create_table "bids", :force => true do |t|
+    t.integer  "board_id"
+    t.string   "value"
+    t.integer  "position"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "boards", :force => true do |t|
+    t.string   "state"
+    t.string   "dealer"
+    t.string   "vulnerable"
+    t.string   "deal_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "cards", :force => true do |t|
+    t.integer  "board_id"
+    t.string   "value"
+    t.integer  "position"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "users", :force => true do |t|
     t.string   "email"
