@@ -20,7 +20,7 @@ class UserSession
   end
 
   def attributes=(attributes)
-    @attributes = attributes.symbolize_keys.merge(:id => nil)
+    @attributes = attributes.symbolize_keys
   end
 
   def persisted?
@@ -29,7 +29,7 @@ class UserSession
 
   def save
     if valid?
-      self.id = @session["user_id"] = find_user_by_email.id
+      self.id = find_user_by_email.id
       true
     else
       false
@@ -38,7 +38,6 @@ class UserSession
 
   def destroy
     @session.delete("user_id")
-    self.id = nil
     true
   end
 
@@ -56,11 +55,19 @@ class UserSession
   protected
 
   def attribute(name)
-    @attributes[name.to_sym]
+    if name.to_s == "id"
+      @session["user_id"]
+    else
+      @attributes[name.to_sym]
+    end
   end
 
   def attribute=(name, value)
-    @attributes[name.to_sym] = value
+    if name.to_s == "id"
+      @session["user_id"] = value
+    else
+      @attributes[name.to_sym] = value
+    end
   end
 
   def authenticate
