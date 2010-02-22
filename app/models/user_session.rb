@@ -55,7 +55,7 @@ class UserSession
   protected
 
   def attribute(name)
-    if name.to_s == "id"
+    if name == "id"
       @session["user_id"]
     else
       @attributes[name.to_sym]
@@ -63,7 +63,7 @@ class UserSession
   end
 
   def attribute=(name, value)
-    if name.to_s == "id"
+    if name == "id"
       @session["user_id"] = value
     else
       @attributes[name.to_sym] = value
