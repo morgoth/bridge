@@ -1,6 +1,6 @@
 class Board < ActiveRecord::Base
-  has_many :cards
-  has_many :bids
+  has_many :cards, :order => "bids.position ASC"
+  has_many :bids, :order => "bids.position ASC"
 
   state_machine :initial => :auction do
     event :bid_made do
@@ -13,6 +13,4 @@ class Board < ActiveRecord::Base
     # after_transition :auction => :playing, :do => :set_contract
     # after_transition :playing => :completed, :do => :set_result
   end
-
-
 end

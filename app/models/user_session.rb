@@ -37,8 +37,7 @@ class UserSession
   end
 
   def destroy
-    @session.delete("user_id")
-    true
+    returning(true) { @session.delete("user_id") }
   end
 
   def self.find(session)
