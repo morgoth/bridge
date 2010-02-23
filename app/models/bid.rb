@@ -26,6 +26,8 @@ class Bid < ActiveRecord::Base
   scope :redoubles, where(:value => REDOUBLE)
   scope :modifiers, where(:value => MODIFIERS)
   scope :contracts, where(:value => CONTRACTS)
+  scope :with_suit, lambda { |suit| where("value LIKE ?", "_#{suit}") }
+  scope :of_side,   lambda { |bid| where("position % 2 = ?", bid.position % 2) }
 
   def position
     read_attribute(:position) || (board.bids.count + 1)

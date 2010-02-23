@@ -71,6 +71,29 @@ class BiddingTest < ActiveSupport::TestCase
     assert_equal [bid1, bid2, bid3], @board.bids.active.all
   end
 
+  test "with suit returns bids of given suit" do
+    @board.bids.create!(:value => "1C")
+    @board.bids.create!(:value => "1D")
+    @board.bids.create!(:value => "1H")
+    @board.bids.create!(:value => "1S")
+    bid1 = @board.bids.create!(:value => "1NT")
+    @board.bids.create!(:value => "2C")
+    @board.bids.create!(:value => "2D")
+    @board.bids.create!(:value => "2H")
+    @board.bids.create!(:value => "2S")
+    bid2 = @board.bids.create!(:value => "2NT")
+    assert_equal [bid1, bid2], @board.bids.with_suit("NT")
+  end
+
+  test "of side returns bids of given bid's side only" do
+    bid1 = @board.bids.create!(:value => "1C")
+    @board.bids.create!(:value => "1D")
+    bid2 = @board.bids.create!(:value => "1H")
+    @board.bids.create!(:value => "1S")
+    assert_equal [bid1, bid2], @board.bids.of_side(bid1)
+    assert_equal [bid1, bid2], @board.bids.of_side(bid2)
+  end
+
   # CONTRACT
 
   test "bid lower than the last contract is invalid" do
