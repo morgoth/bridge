@@ -7,6 +7,16 @@ class Board < ActiveRecord::Base
     end
   end
 
+  def deck
+    Bridge.id_to_deal(deal_id.to_i)
+  end
+
+  [:n, :e, :s, :w].each do |hand|
+    define_method("#{hand}_hand") do
+      deck[hand]
+    end
+  end
+
   state_machine :initial => :auction do
     event :bid_made do
       transition :auction => :playing, :if => :passed?
