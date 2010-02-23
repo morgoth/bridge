@@ -10,10 +10,10 @@ class BoardTest < ActiveSupport::TestCase
   end
 
   test "hands methods should return cards" do
-    assert_equal board.deck[:n], board.n_hand
-    assert_equal board.deck[:e], board.e_hand
-    assert_equal board.deck[:s], board.s_hand
-    assert_equal board.deck[:w], board.w_hand
+    assert_equal @board.deck[:n], @board.n_hand
+    assert_equal @board.deck[:e], @board.e_hand
+    assert_equal @board.deck[:s], @board.s_hand
+    assert_equal @board.deck[:w], @board.w_hand
   end
 
   test "nth bid user returns correct users when dealer is N" do
