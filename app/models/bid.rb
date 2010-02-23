@@ -13,7 +13,11 @@ class Bid < ActiveRecord::Base
 
   validates :value, :presence => true, :inclusion => BIDS
   validates :board, :presence => true
-  validate :contract_higher_than_last_contract, :has_opponents_contract_to_double
+
+  validate :contract_higher_than_last_contract,
+           :has_opponents_contract_to_double,
+           :has_opponents_double_to_redouble,
+           :has_no_modifier_to_double, :has_no_redouble_to_redouble
 
   before_validation { |bid| self.value = bid.value.to_s.upcase }
 
@@ -51,8 +55,16 @@ class Bid < ActiveRecord::Base
     board && board.bids.contracts.last
   end
 
-  def last_modifier
-    board && board.bids.modifiers.where("bids.position > ?", last_contract.position).last
+  def last_active_modifier
+    board && board.bids.active.modifiers.last
+  end
+
+  def last_active_double
+    board && board.bids.active.doubles.last
+  end
+
+  def last_active_redouble
+    board && board.bids.active.redoubles.last
   end
 
   def partners_bid?(bid)
@@ -63,6 +75,8 @@ class Bid < ActiveRecord::Base
     !partners_bid?(bid)
   end
 
+  private
+
   def contract_higher_than_last_contract
     if last_contract && contract? && contract_compare(last_contract) <= 0
       errors.add :value, "is not greater than the last contract"
@@ -72,6 +86,24 @@ class Bid < ActiveRecord::Base
   def has_opponents_contract_to_double
     if double? && (last_contract.nil? || partners_bid?(last_contract))
       errors.add :value, "there is no opponent's contract to double"
+    end
+  end
+
+  def has_opponents_double_to_redouble
+    if redouble? && (last_active_double.nil? || partners_bid?(last_active_double))
+      errors.add :value, "there is no opponent's double to redouble"
+    end
+  end
+
+  def has_no_modifier_to_double
+    if double? && last_active_modifier
+      errors.add :value, "there is other modifier on the current contract"
+    end
+  end
+
+  def has_no_redouble_to_redouble
+    if redouble? && last_active_redouble
+      errors.add :value, "there is other redouble on the current contract"
     end
   end
 end

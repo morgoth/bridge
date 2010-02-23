@@ -1,8 +1,9 @@
 class Board < ActiveRecord::Base
   has_many :cards, :order => "bids.position ASC"
   has_many :bids, :order => "bids.position ASC" do
-    def active_modifiers
-      modifiers.where("position > ?", contracts.last.position)
+    # active means beginning from the last contract
+    def active
+      where("position >= ?", contracts.last.try(:position) || 1)
     end
   end
 
