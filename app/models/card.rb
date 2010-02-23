@@ -3,7 +3,7 @@ class Card < ActiveRecord::Base
   belongs_to :board
 
   validates :value, :presence => true
-  validate :something, :if => :first_in_round?
+  validate :something, :if => :lead?
 
   delegate :deck, :to => :board, :prefix => true
 
@@ -17,7 +17,11 @@ class Card < ActiveRecord::Base
     true
   end
 
-  def first_in_round?
+  def lead?
     position % 4 == 1
+  end
+
+  def not_lead?
+    not lead?
   end
 end

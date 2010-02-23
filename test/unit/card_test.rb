@@ -10,12 +10,12 @@ class CardTest < ActiveSupport::TestCase
     assert_equal @board.deck, card.board_deck
   end
 
-  test "first_in_round should return true if first card" do
+  test "lead? should return true if first card" do
     card = Factory.build(:card)
-    assert card.send(:first_in_round?)
+    assert card.send(:lead?)
   end
 
-  test "first_in_round should return true if fifth card" do
+  test "lead? should return true if fifth card" do
 
   end
 end
