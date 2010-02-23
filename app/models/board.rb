@@ -1,4 +1,8 @@
 class Board < ActiveRecord::Base
+  belongs_to :user_n, :class_name => "User"
+  belongs_to :user_e, :class_name => "User"
+  belongs_to :user_s, :class_name => "User"
+  belongs_to :user_w, :class_name => "User"
   has_many :cards, :order => "bids.position ASC"
   has_many :bids, :order => "bids.position ASC" do
     # active means beginning from the last contract
