@@ -29,7 +29,7 @@ class Board < ActiveRecord::Base
 
   def cards_left(direction = nil)
     users_cards = cards.inject(deal) do |current_cards, card|
-      current_cards[card.user.direction.downcase.to_sym].delete(card.value)
+      current_cards[card.user.direction].delete(card.value)
       current_cards = current_cards
     end
     direction.nil? ? users_cards : users_cards[direction]

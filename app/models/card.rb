@@ -31,11 +31,15 @@ class Card < ActiveRecord::Base
   private
 
   def identicalness_of_suit
-    errors.add(:value, "of card must be in #{last_card.suit} suit") if !in_same_suit?(last_card) # and have other cards in suit
+    errors.add(:value, "of card must be in #{last_card.suit} suit") if !in_same_suit?(last_card) and cards_left_in_suit?
   end
 
   def presence_of_card_in_hand
     errors.add(:value, "#{value} doesn't belongs to player") unless card_in_hand?
+  end
+
+  def cards_left_in_suit?
+    board.cards_left(user.direction).any? { |c| c[0] == last_card.suit }
   end
 
   def card_in_hand?
