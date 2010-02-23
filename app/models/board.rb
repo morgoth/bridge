@@ -1,13 +1,11 @@
 class Board < ActiveRecord::Base
-  DIRECTIONS = %w(N E S W)
-
   belongs_to :user_n, :class_name => "User", :extend => UserBoardExtension
   belongs_to :user_e, :class_name => "User", :extend => UserBoardExtension
   belongs_to :user_s, :class_name => "User", :extend => UserBoardExtension
   belongs_to :user_w, :class_name => "User", :extend => UserBoardExtension
   has_many :cards, :order => "cards.position ASC" do
     def user(position)
-      proxy_owner.users[(Board::DIRECTIONS.index(proxy_owner.first_lead_user.direction) + position - 1) % 4]
+      proxy_owner.users[(Bridge::DIRECTIONS.index(proxy_owner.first_lead_user.direction) + position - 1) % 4]
     end
   end
   has_many :bids, :order => "bids.position ASC" do
@@ -21,12 +19,12 @@ class Board < ActiveRecord::Base
     end
 
     def user(position)
-      proxy_owner.users[(Board::DIRECTIONS.index(proxy_owner.dealer) + position - 1) % 4]
+      proxy_owner.users[(Bridge::DIRECTIONS.index(proxy_owner.dealer) + position - 1) % 4]
     end
   end
 
   def deal
-    Bridge.id_to_deal(deal_id.to_i)
+    Bridge::Deal.from_id(deal_id.to_i)
   end
 
   def cards_left(direction = nil)

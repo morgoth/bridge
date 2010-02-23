@@ -1,21 +1,10 @@
 class Bid < ActiveRecord::Base
-  # TODO: move to the gem
-  CONTRACTS = %w(1 2 3 4 5 6 7).inject([]) do |b, l|
-    b += %w(C D H S NT).map { |s| l + s }
-  end
-  PASS = "PASS"
-  DOUBLE = "X"
-  REDOUBLE = "XX"
-  MODIFIERS = [DOUBLE, REDOUBLE]
-  BIDS = CONTRACTS + MODIFIERS + [PASS]
-  # ODOT
-
   belongs_to :board
   acts_as_list :scope => :board
 
   attr_writer :user
 
-  validates :value, :presence => true, :inclusion => BIDS
+  validates :value, :presence => true, :inclusion => Bridge::BIDS
   validates :board, :presence => true
 
   validate :contract_higher_than_last_contract,
@@ -26,11 +15,11 @@ class Bid < ActiveRecord::Base
 
   before_validation { |bid| self.value = bid.value.to_s.upcase }
 
-  scope :passes,    where(:value => PASS)
-  scope :doubles,   where(:value => DOUBLE)
-  scope :redoubles, where(:value => REDOUBLE)
-  scope :modifiers, where(:value => MODIFIERS)
-  scope :contracts, where(:value => CONTRACTS)
+  scope :passes,    where(:value => Bridge::PASS)
+  scope :doubles,   where(:value => Bridge::DOUBLE)
+  scope :redoubles, where(:value => Bridge::REDOUBLE)
+  scope :modifiers, where(:value => Bridge::MODIFIERS)
+  scope :contracts, where(:value => Bridge::CONTRACTS)
   scope :with_suit, lambda { |bid| where("value LIKE ?", "_#{bid.respond_to?(:suit) ? bid.suit : bid}") }
   scope :of_side,   lambda { |bid| where("position % 2 = ? % 2", bid.respond_to?(:position) ? bid.position : bid) }
 
@@ -47,23 +36,23 @@ class Bid < ActiveRecord::Base
   end
 
   def pass?
-    value == PASS
+    value == Bridge::PASS
   end
 
   def double?
-    value == DOUBLE
+    value == Bridge::DOUBLE
   end
 
   def redouble?
-    value == REDOUBLE
+    value == Bridge::REDOUBLE
   end
 
   def contract?
-    CONTRACTS.include?(value)
+    Bridge::CONTRACTS.include?(value)
   end
 
   def contract_compare(other)
-    CONTRACTS.index(value) <=> CONTRACTS.index(other.value)
+    Bridge::CONTRACTS.index(value) <=> Bridge::CONTRACTS.index(other.value)
   end
 
   def last_contract

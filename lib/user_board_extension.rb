@@ -1,9 +1,7 @@
 module UserBoardExtension
-  DIRECTIONS = %w(N E S W)
-
   def next_direction
-    i = DIRECTIONS.index(direction)
-    next_direction = DIRECTIONS[(i + 1) % 4]
+    i = Bridge::DIRECTIONS.index(direction)
+    next_direction = Bridge::DIRECTIONS[(i + 1) % 4]
   end
 
   def next
@@ -11,8 +9,8 @@ module UserBoardExtension
   end
 
   def previous_direction
-    i = DIRECTIONS.index(direction)
-    next_direction = DIRECTIONS[(i - 1) % 4]
+    i = Bridge::DIRECTIONS.index(direction)
+    next_direction = Bridge::DIRECTIONS[(i - 1) % 4]
   end
 
   def previous
