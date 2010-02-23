@@ -25,7 +25,7 @@ class Board < ActiveRecord::Base
     end
   end
 
-  def deck
+  def deal
     Bridge.id_to_deal(deal_id.to_i)
   end
 
@@ -39,7 +39,7 @@ class Board < ActiveRecord::Base
 
   [:n, :e, :s, :w].each do |hand|
     define_method("#{hand}_hand") do
-      deck[hand]
+      deal[hand]
     end
   end
 

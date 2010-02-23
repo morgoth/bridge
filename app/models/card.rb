@@ -6,7 +6,7 @@ class Card < ActiveRecord::Base
   validate :presence_of_card_in_hand
   validate :identicalness_of_suit, :if => :not_lead?
 
-  delegate :deck, :to => :board, :prefix => true
+  delegate :deal, :to => :board, :prefix => true
 
   def position
     read_attribute(:position) || (board.cards.count + 1)

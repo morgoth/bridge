@@ -24,7 +24,7 @@ class CardTest < ActiveSupport::TestCase
 
   test "return deal of board" do
     card = Factory.build(:card, :board => @board)
-    assert_equal @board.deck, card.board_deck
+    assert_equal @board.deal, card.board_deal
   end
 
   test "lead? should return true if first card" do
