@@ -37,6 +37,39 @@ class BiddingTest < ActiveSupport::TestCase
 
   # UTILITIES
 
+  test "suit and level of pass are nil" do
+    bid = @board.bids.create!(:value => "PASS")
+    assert_nil bid.suit
+    assert_nil bid.level
+  end
+
+  test "suit and level of double are nil" do
+    @board.bids.create!(:value => "1C")
+    bid = @board.bids.create!(:value => "X")
+    assert_nil bid.suit
+    assert_nil bid.level
+  end
+
+  test "suit and level of redouble are nil" do
+    @board.bids.create!(:value => "1C")
+    @board.bids.create!(:value => "X")
+    bid = @board.bids.create!(:value => "XX")
+    assert_nil bid.suit
+    assert_nil bid.level
+  end
+
+  test "suit and level of 5H are correct" do
+    bid = @board.bids.create!(:value => "5H")
+    assert_equal "H", bid.suit
+    assert_equal "5", bid.level
+  end
+
+  test "suit and level of 7NTH are correct" do
+    bid = @board.bids.create!(:value => "7NT")
+    assert_equal "NT", bid.suit
+    assert_equal "7", bid.level
+  end
+
   test "partners_bid? returns valid results" do
     bid1 = @board.bids.create!(:value => "1S")
     bid2 = @board.bids.create!(:value => "PASS")
@@ -92,6 +125,27 @@ class BiddingTest < ActiveSupport::TestCase
     @board.bids.create!(:value => "1S")
     assert_equal [bid1, bid2], @board.bids.of_side(bid1)
     assert_equal [bid1, bid2], @board.bids.of_side(bid2)
+  end
+
+  test "final returns bids of last contract side and suit" do
+    @board.bids.create!(:value => "1C")
+    @board.bids.create!(:value => "1H")
+    @board.bids.create!(:value => "PASS")
+    @board.bids.create!(:value => "1S")
+
+    bid1 = @board.bids.create!(:value => "2S")
+    @board.bids.create!(:value => "PASS")
+    @board.bids.create!(:value => "3NT")
+    @board.bids.create!(:value => "X")
+
+    @board.bids.create!(:value => "4H")
+    @board.bids.create!(:value => "PASS")
+    bid2 = @board.bids.create!(:value => "4S")
+    @board.bids.create!(:value => "PASS")
+
+    @board.bids.create!(:value => "PASS")
+    @board.bids.create!(:value => "PASS")
+    assert_equal [bid1, bid2], @board.bids.final.all
   end
 
   # CONTRACT

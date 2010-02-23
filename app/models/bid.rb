@@ -1,4 +1,5 @@
 class Bid < ActiveRecord::Base
+  # TODO: move to the gem
   CONTRACTS = %w(1 2 3 4 5 6 7).inject([]) do |b, l|
     b += %w(C D H S NT).map { |s| l + s }
   end
@@ -7,6 +8,7 @@ class Bid < ActiveRecord::Base
   REDOUBLE = "XX"
   MODIFIERS = [DOUBLE, REDOUBLE]
   BIDS = CONTRACTS + MODIFIERS + [PASS]
+  # ODOT
 
   belongs_to :board
   acts_as_list :scope => :board
@@ -26,8 +28,16 @@ class Bid < ActiveRecord::Base
   scope :redoubles, where(:value => REDOUBLE)
   scope :modifiers, where(:value => MODIFIERS)
   scope :contracts, where(:value => CONTRACTS)
-  scope :with_suit, lambda { |suit| where("value LIKE ?", "_#{suit}") }
-  scope :of_side,   lambda { |bid| where("position % 2 = ?", bid.position % 2) }
+  scope :with_suit, lambda { |bid| where("value LIKE ?", "_#{bid.respond_to?(:suit) ? bid.suit : bid}") }
+  scope :of_side,   lambda { |bid| where("position % 2 = ? % 2", bid.respond_to?(:position) ? bid.position : bid) }
+
+  def level
+    value[0] if contract?
+  end
+
+  def suit
+    value[1..-1] if contract?
+  end
 
   def position
     read_attribute(:position) || (board.bids.count + 1)
