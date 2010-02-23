@@ -15,6 +15,14 @@ class Board < ActiveRecord::Base
     Bridge.id_to_deal(deal_id.to_i)
   end
 
+  def dealer_offset
+    ["N", "E", "S", "W"].index(dealer)
+  end
+
+  def nth_bid_user(n)
+
+  end
+
   [:n, :e, :s, :w].each do |hand|
     define_method("#{hand}_hand") do
       deck[hand]
