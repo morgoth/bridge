@@ -21,7 +21,7 @@ class Card < ActiveRecord::Base
   end
 
   def suit
-    value[0].downcase.to_sym
+    value[0]
   end
 
   def user
@@ -31,11 +31,15 @@ class Card < ActiveRecord::Base
   private
 
   def identicalness_of_suit
-    errors.add("must play card in #{last_card.suit} suit") if !in_same_suit?(last_card) # and have other cards in suit
+    errors.add(:value, "of card must be in #{last_card.suit} suit") if !in_same_suit?(last_card) # and have other cards in suit
   end
 
   def presence_of_card_in_hand
-    errors.add("card doesn't belongs to player") if false
+    errors.add(:value, "#{value} doesn't belongs to player") unless card_in_hand?
+  end
+
+  def card_in_hand?
+    board.send("#{user.direction.downcase}_hand").include?(value)
   end
 
   def lead?

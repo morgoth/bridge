@@ -7,3 +7,12 @@ Factory.define :board do |b|
   b.vulnerable "none"
   b.dealer "N"
 end
+
+Factory.define :board_1N_by_S, :parent => :board do |f|
+  f.after_create do |board|
+    board.bids.create!(:value => "1S", :user => board.user_n)
+    board.bids.create!(:value => "PASS", :user => board.user_e)
+    board.bids.create!(:value => "PASS", :user => board.user_s)
+    board.bids.create!(:value => "PASS", :user => board.user_w)
+  end
+end
