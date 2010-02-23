@@ -5,17 +5,45 @@ class CardTest < ActiveSupport::TestCase
     @board = Factory(:board)
   end
 
+  test "return suit of card" do
+    card = Factory.build(:card, :value => "SA")
+    assert_equal :s, card.suit
+  end
+
+  test "return true if cards in same suit" do
+    card = Factory.build(:card, :value => "SA")
+    other = Factory.build(:card, :value => "SQ")
+    assert card.in_same_suit?(other)
+  end
+
+  test "return false if cards not in same suit" do
+    card = Factory.build(:card, :value => "SA")
+    other = Factory.build(:card, :value => "DQ")
+    assert_false card.in_same_suit?(other)
+  end
+
   test "return deck of board" do
     card = Factory.build(:card, :board => @board)
     assert_equal @board.deck, card.board_deck
   end
 
-  test "first_in_round should return true if first card" do
+  test "lead? should return true if first card" do
     card = Factory.build(:card)
-    assert card.send(:first_in_round?)
+    assert card.send(:lead?)
   end
 
-  test "first_in_round should return true if fifth card" do
+  test "lead? should return true if fifth card" do
 
+  end
+end
+
+class CardValidationTest < ActiveSupport::TestCase
+  setup do
+    @card = Factory.build(:card)
+  end
+
+  test "not valid with wrong value" do
+    @card.value = "G2"
+    assert @card.invalid?
   end
 end
