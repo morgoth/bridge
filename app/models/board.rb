@@ -1,6 +1,10 @@
 class Board < ActiveRecord::Base
   has_many :cards, :order => "bids.position ASC"
-  has_many :bids, :order => "bids.position ASC"
+  has_many :bids, :order => "bids.position ASC" do
+    def active_modifiers
+      modifiers.where("position > ?", contracts.last.position)
+    end
+  end
 
   state_machine :initial => :auction do
     event :bid_made do

@@ -61,6 +61,16 @@ class BiddingTest < ActiveSupport::TestCase
     assert_false bid3.partners_bid?(bid2)
   end
 
+  test "active_modifiers returns only modifiers after last contract" do
+    @board.bids.create!(:value => "1C")
+    @board.bids.create!(:value => "X")
+    @board.bids.create!(:value => "XX")
+    @board.bids.create!(:value => "1H")
+    bid1 = @board.bids.create!(:value => "X")
+    bid2 = @board.bids.create!(:value => "XX")
+    assert_equal [bid1, bid2], @board.bids.active_modifiers
+  end
+
   # CONTRACT
 
   test "bid lower than the last contract is invalid" do
