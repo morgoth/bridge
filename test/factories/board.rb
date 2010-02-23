@@ -8,7 +8,7 @@ Factory.define :board do |b|
   b.dealer "N"
 end
 
-Factory.define :board_1N_by_S, :parent => :board do |f|
+Factory.define :board_1S_by_N, :parent => :board do |f|
   f.after_create do |board|
     board.bids.create!(:value => "1S", :user => board.user_n)
     board.bids.create!(:value => "PASS", :user => board.user_e)

@@ -2,7 +2,7 @@ require 'test_helper'
 
 class CardTest < ActiveSupport::TestCase
   setup do
-    @board = Factory(:board_1N_by_S)
+    @board = Factory(:board_1S_by_N)
   end
 
   test "return suit of card" do
@@ -40,7 +40,7 @@ end
 
 class CardValidationTest < ActiveSupport::TestCase
   setup do
-    @board = Factory(:board_1N_by_S)
+    @board = Factory(:board_1S_by_N)
     @card = Factory.build(:card, :board => @board)
   end
 

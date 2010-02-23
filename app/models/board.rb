@@ -5,7 +5,7 @@ class Board < ActiveRecord::Base
   belongs_to :user_e, :class_name => "User", :extend => UserBoardExtension
   belongs_to :user_s, :class_name => "User", :extend => UserBoardExtension
   belongs_to :user_w, :class_name => "User", :extend => UserBoardExtension
-  has_many :cards, :order => "bids.position ASC" do
+  has_many :cards, :order => "cards.position ASC" do
     def user(position)
       proxy_owner.users[(Board::DIRECTIONS.index(proxy_owner.first_lead_user.direction) + position - 1) % 4]
     end
@@ -27,6 +27,14 @@ class Board < ActiveRecord::Base
 
   def deal
     Bridge.id_to_deal(deal_id.to_i)
+  end
+
+  def cards_left(direction = nil)
+    users_cards = cards.inject(deal) do |current_cards, card|
+      current_cards[card.user.direction.downcase.to_sym].delete(card.value)
+      current_cards = current_cards
+    end
+    direction.nil? ? users_cards : users_cards[direction]
   end
 
   def first_lead_user

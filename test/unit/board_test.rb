@@ -98,4 +98,25 @@ class BoardTest < ActiveSupport::TestCase
     @board.bids.create!(:value => "PASS", :user => @user_n)
     assert_equal @user_s, @board.first_lead_user
   end
+
+  test "cards_left should return all cards" do
+    board = Factory(:board_1S_by_N)
+    assert_equal board.deal, board.cards_left
+  end
+
+  test "cards_left should return cards without HA" do
+    board = Factory(:board_1S_by_N)
+    cards = board.deal
+    cards[:e].delete("HA")
+    board.cards.create!(:value => "HA")
+    assert_equal cards, board.cards_left
+  end
+
+  test "cards_left should return E cards without HA" do
+    board = Factory(:board_1S_by_N)
+    cards = board.deal
+    cards[:e].delete("HA")
+    board.cards.create!(:value => "HA")
+    assert_equal cards[:e], board.cards_left(:e)
+  end
 end
