@@ -24,6 +24,10 @@ class Card < ActiveRecord::Base
     value[0].downcase.to_sym
   end
 
+  def user
+    board && board.cards.user(position)
+  end
+
   private
 
   def identicalness_of_suit

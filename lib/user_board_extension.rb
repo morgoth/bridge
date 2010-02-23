@@ -1,4 +1,6 @@
 module UserBoardExtension
+  DIRECTIONS = %w(N E S W)
+
   def next_direction
     i = DIRECTIONS.index(direction)
     next_direction = DIRECTIONS[(i + 1) % 4]

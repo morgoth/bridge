@@ -5,7 +5,11 @@ class Board < ActiveRecord::Base
   belongs_to :user_e, :class_name => "User", :extend => UserBoardExtension
   belongs_to :user_s, :class_name => "User", :extend => UserBoardExtension
   belongs_to :user_w, :class_name => "User", :extend => UserBoardExtension
-  has_many :cards, :order => "bids.position ASC"
+  has_many :cards, :order => "bids.position ASC" do
+    def user(position)
+      proxy_owner.users[(Board::DIRECTIONS.index(proxy_owner.first_lead_user.direction) + position - 1) % 4]
+    end
+  end
   has_many :bids, :order => "bids.position ASC" do
     # active means beginning from the last contract
     def active
@@ -23,6 +27,10 @@ class Board < ActiveRecord::Base
 
   def deck
     Bridge.id_to_deal(deal_id.to_i)
+  end
+
+  def first_lead_user
+    bids.final.first.user.next
   end
 
   def users
