@@ -13,13 +13,16 @@ class Bid < ActiveRecord::Base
   belongs_to :board
   acts_as_list :scope => :board
 
+  attr_writer :user
+
   validates :value, :presence => true, :inclusion => BIDS
   validates :board, :presence => true
 
   validate :contract_higher_than_last_contract,
            :has_opponents_contract_to_double,
            :has_opponents_double_to_redouble,
-           :has_no_modifier_to_double, :has_no_redouble_to_redouble
+           :has_no_modifier_to_double, :has_no_redouble_to_redouble,
+           :correct_user
 
   before_validation { |bid| self.value = bid.value.to_s.upcase }
 
@@ -87,6 +90,10 @@ class Bid < ActiveRecord::Base
     !partners_bid?(bid)
   end
 
+  def user
+    board && board.nth_bid_user(position)
+  end
+
   private
 
   def contract_higher_than_last_contract
@@ -116,6 +123,12 @@ class Bid < ActiveRecord::Base
   def has_no_redouble_to_redouble
     if redouble? && last_active_redouble
       errors.add :value, "there is other redouble on the current contract"
+    end
+  end
+
+  def correct_user
+    if user != @user
+      errors.add :user, "is not allowed to give a bid at the moment"
     end
   end
 end
