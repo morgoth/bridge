@@ -2,7 +2,7 @@ class Card < ActiveRecord::Base
   acts_as_list :scope => :board
   belongs_to :board
 
-  validates :value, :presence => true
+  validates :value, :presence => true, :inclusion => Bridge::DECK
   validate :presence_of_card_in_hand
   validate :identicalness_of_suit, :if => :not_lead?
 
@@ -13,7 +13,7 @@ class Card < ActiveRecord::Base
   end
 
   def last_card
-    board.cards.last
+    board && board.cards.last
   end
 
   def in_same_suit?(other)

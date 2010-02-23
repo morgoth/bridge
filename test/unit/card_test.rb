@@ -36,3 +36,14 @@ class CardTest < ActiveSupport::TestCase
 
   end
 end
+
+class CardValidationTest < ActiveSupport::TestCase
+  setup do
+    @card = Factory.build(:card)
+  end
+
+  test "not valid with wrong value" do
+    @card.value = "G2"
+    assert @card.invalid?
+  end
+end
