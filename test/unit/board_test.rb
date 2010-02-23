@@ -18,49 +18,49 @@ class BoardTest < ActiveSupport::TestCase
 
   test "nth bid user returns correct users when dealer is N" do
     @board.dealer = "N"
-    assert_equal @user_n, @board.nth_bid_user(1)
-    assert_equal @user_e, @board.nth_bid_user(2)
-    assert_equal @user_s, @board.nth_bid_user(3)
-    assert_equal @user_w, @board.nth_bid_user(4)
-    assert_equal @user_n, @board.nth_bid_user(5)
-    assert_equal @user_e, @board.nth_bid_user(6)
-    assert_equal @user_s, @board.nth_bid_user(7)
-    assert_equal @user_w, @board.nth_bid_user(8)
+    assert_equal @user_n, @board.bids.user(1)
+    assert_equal @user_e, @board.bids.user(2)
+    assert_equal @user_s, @board.bids.user(3)
+    assert_equal @user_w, @board.bids.user(4)
+    assert_equal @user_n, @board.bids.user(5)
+    assert_equal @user_e, @board.bids.user(6)
+    assert_equal @user_s, @board.bids.user(7)
+    assert_equal @user_w, @board.bids.user(8)
   end
 
   test "nth bid user returns correct users when dealer is E" do
     @board.dealer = "E"
-    assert_equal @user_e, @board.nth_bid_user(1)
-    assert_equal @user_s, @board.nth_bid_user(2)
-    assert_equal @user_w, @board.nth_bid_user(3)
-    assert_equal @user_n, @board.nth_bid_user(4)
-    assert_equal @user_e, @board.nth_bid_user(5)
-    assert_equal @user_s, @board.nth_bid_user(6)
-    assert_equal @user_w, @board.nth_bid_user(7)
-    assert_equal @user_n, @board.nth_bid_user(8)
+    assert_equal @user_e, @board.bids.user(1)
+    assert_equal @user_s, @board.bids.user(2)
+    assert_equal @user_w, @board.bids.user(3)
+    assert_equal @user_n, @board.bids.user(4)
+    assert_equal @user_e, @board.bids.user(5)
+    assert_equal @user_s, @board.bids.user(6)
+    assert_equal @user_w, @board.bids.user(7)
+    assert_equal @user_n, @board.bids.user(8)
   end
 
   test "nth bid user returns correct users when dealer is S" do
     @board.dealer = "S"
-    assert_equal @user_s, @board.nth_bid_user(1)
-    assert_equal @user_w, @board.nth_bid_user(2)
-    assert_equal @user_n, @board.nth_bid_user(3)
-    assert_equal @user_e, @board.nth_bid_user(4)
-    assert_equal @user_s, @board.nth_bid_user(5)
-    assert_equal @user_w, @board.nth_bid_user(6)
-    assert_equal @user_n, @board.nth_bid_user(7)
-    assert_equal @user_e, @board.nth_bid_user(8)
+    assert_equal @user_s, @board.bids.user(1)
+    assert_equal @user_w, @board.bids.user(2)
+    assert_equal @user_n, @board.bids.user(3)
+    assert_equal @user_e, @board.bids.user(4)
+    assert_equal @user_s, @board.bids.user(5)
+    assert_equal @user_w, @board.bids.user(6)
+    assert_equal @user_n, @board.bids.user(7)
+    assert_equal @user_e, @board.bids.user(8)
   end
 
   test "nth bid user returns correct users when dealer is W" do
     @board.dealer = "W"
-    assert_equal @user_w, @board.nth_bid_user(1)
-    assert_equal @user_n, @board.nth_bid_user(2)
-    assert_equal @user_e, @board.nth_bid_user(3)
-    assert_equal @user_s, @board.nth_bid_user(4)
-    assert_equal @user_w, @board.nth_bid_user(5)
-    assert_equal @user_n, @board.nth_bid_user(6)
-    assert_equal @user_e, @board.nth_bid_user(7)
-    assert_equal @user_s, @board.nth_bid_user(8)
+    assert_equal @user_w, @board.bids.user(1)
+    assert_equal @user_n, @board.bids.user(2)
+    assert_equal @user_e, @board.bids.user(3)
+    assert_equal @user_s, @board.bids.user(4)
+    assert_equal @user_w, @board.bids.user(5)
+    assert_equal @user_n, @board.bids.user(6)
+    assert_equal @user_e, @board.bids.user(7)
+    assert_equal @user_s, @board.bids.user(8)
   end
 end

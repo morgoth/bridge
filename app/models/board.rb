@@ -1,4 +1,6 @@
 class Board < ActiveRecord::Base
+  DIRECTIONS = %w(N E S W)
+
   belongs_to :user_n, :class_name => "User", :extend => UserBoardExtension
   belongs_to :user_e, :class_name => "User", :extend => UserBoardExtension
   belongs_to :user_s, :class_name => "User", :extend => UserBoardExtension
@@ -13,6 +15,10 @@ class Board < ActiveRecord::Base
     def final
       with_suit(contracts.last).of_side(contracts.last)
     end
+
+    def user(position)
+      proxy_owner.users[(Board::DIRECTIONS.index(proxy_owner.dealer) + position - 1) % 4]
+    end
   end
 
   def deck
@@ -21,14 +27,6 @@ class Board < ActiveRecord::Base
 
   def users
     [user_n, user_e, user_s, user_w]
-  end
-
-  def dealer_offset
-    ["N", "E", "S", "W"].index(dealer)
-  end
-
-  def nth_bid_user(n)
-    users[(dealer_offset + n - 1) % 4]
   end
 
   [:n, :e, :s, :w].each do |hand|

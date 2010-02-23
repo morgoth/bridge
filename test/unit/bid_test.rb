@@ -68,7 +68,7 @@ class BiddingTest < ActiveSupport::TestCase
     assert_equal "5", bid.level
   end
 
-  test "suit and level of 7NTH are correct" do
+  test "suit and level of 7NT are correct" do
     bid = @board.bids.create!(:value => "7NT", :user => @user_n)
     assert_equal "NT", bid.suit
     assert_equal "7", bid.level

@@ -91,7 +91,7 @@ class Bid < ActiveRecord::Base
   end
 
   def user
-    board && board.nth_bid_user(position)
+    board && board.bids.user(position)
   end
 
   private
