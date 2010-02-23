@@ -19,12 +19,16 @@ class Board < ActiveRecord::Base
     Bridge.id_to_deal(deal_id.to_i)
   end
 
+  def users
+    [user_n, user_e, user_s, user_w]
+  end
+
   def dealer_offset
     ["N", "E", "S", "W"].index(dealer)
   end
 
   def nth_bid_user(n)
-
+    users[(dealer_offset + n - 1) % 4]
   end
 
   [:n, :e, :s, :w].each do |hand|
