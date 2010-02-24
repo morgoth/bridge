@@ -77,7 +77,7 @@ class Card < ActiveRecord::Base
     board.users[direction]
   end
 
-  def current_user
+  def expected_user
     if lead?
       previous_trick_winner || board.first_lead_user
     else
@@ -105,7 +105,7 @@ class Card < ActiveRecord::Base
   end
 
   def correct_user
-    if user != current_user #board.cards.reload.current_user
+    if user != expected_user
       errors.add :user, "can not play card at this moment"
     end
   end
