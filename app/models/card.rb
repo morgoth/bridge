@@ -7,6 +7,12 @@ class Card < ActiveRecord::Base
   validate :identicalness_of_suit, :unless => :lead?
 
   delegate :deal, :to => :board, :prefix => true
+  delegate :suit, :to => :bridge_card, :allow_nil => true
+
+  def bridge_card
+    Bridge::Card.new(value)
+  rescue ArgumentError
+  end
 
   def position
     read_attribute(:position) || (board.cards.count + 1)
@@ -14,10 +20,6 @@ class Card < ActiveRecord::Base
 
   def in_same_suit?(other)
     suit == other
-  end
-
-  def suit
-    value[0]
   end
 
   def user_direction
