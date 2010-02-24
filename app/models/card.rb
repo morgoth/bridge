@@ -12,12 +12,8 @@ class Card < ActiveRecord::Base
     read_attribute(:position) || (board.cards.count + 1)
   end
 
-  def last_card
-    board && board.cards.last
-  end
-
   def in_same_suit?(other)
-    suit == other.suit
+    suit == other
   end
 
   def suit
@@ -26,12 +22,8 @@ class Card < ActiveRecord::Base
 
   # TODO: FIXME
   def user
-    if lead?
-      board.last_trick_winner
-    else
-      board.cards.last.user.next
-    end
-    #board && board.cards.user(position)
+    direction = board.deal.owner(value)
+    board.send("user_#{direction.downcase}")
   end
 
   def lead_position
@@ -49,15 +41,15 @@ class Card < ActiveRecord::Base
   private
 
   def identicalness_of_suit
-    errors.add(:value, "of card must be in #{last_card.suit} suit") if !in_same_suit?(last_card) and cards_left_in_suit?
+    errors.add(:value, "of card must be in #{board.cards.current_trick_suit} suit") if !in_same_suit?(board.cards.current_trick_suit) and cards_left_in_current_trick_suit?
   end
 
   def presence_of_card_in_hand
     errors.add(:value, "#{value} doesn't belong to player") unless card_in_hand?
   end
 
-  def cards_left_in_suit?
-    board.cards_left(user.direction).any? { |c| c.suit == last_card.suit }
+  def cards_left_in_current_trick_suit?
+    board.cards_left(user.direction).any? { |c| c.suit == board.cards.current_trick_suit }
   end
 
   def card_in_hand?

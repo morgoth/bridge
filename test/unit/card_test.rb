@@ -13,7 +13,7 @@ class CardTest < ActiveSupport::TestCase
   test "return true if cards in same suit" do
     card = Factory.build(:card, :value => "SA")
     other = Factory.build(:card, :value => "SQ")
-    assert card.in_same_suit?(other)
+    assert card.in_same_suit?(other.suit)
   end
 
   test "return false if cards not in same suit" do

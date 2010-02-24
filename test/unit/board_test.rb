@@ -64,20 +64,6 @@ class BoardTest < ActiveSupport::TestCase
     assert_equal @user_s, @board.bids.user(8)
   end
 
-  test "nth card user returns correct user when plays N" do
-    @board.dealer = "N"
-    @board.save!
-    @board.bids.create!(:value => "1S", :user => @user_n)
-    @board.bids.create!(:value => "PASS", :user => @user_e)
-    @board.bids.create!(:value => "PASS", :user => @user_s)
-    @board.bids.create!(:value => "PASS", :user => @user_w)
-    assert_equal @user_e, @board.cards.user(1)
-    assert_equal @user_s, @board.cards.user(2)
-    assert_equal @user_w, @board.cards.user(3)
-    assert_equal @user_n, @board.cards.user(4)
-    assert_equal @user_e, @board.cards.user(5)
-  end
-
   test "return E as first lead user when plays N" do
     @board.dealer = "N"
     @board.save!

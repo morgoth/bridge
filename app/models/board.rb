@@ -20,8 +20,32 @@ class Board < ActiveRecord::Base
       where(:position => current_lead_position...(current_lead_position + 4))
     end
 
+    def current_trick_suit
+      current_lead.suit
+    end
+
+    def current_lead?
+      current_position % 4 == 1
+    end
+
+    def current_user
+      if current_lead?
+        last_trick_winner || first_lead_user
+      else
+        direction = proxy_owner.deal.owner(proxy_owner.cards.last.value)
+        proxy_owner.send("user_#{direction.downcase}")
+      end
+    end
+
     def last_trick
       where(:position => (current_lead_position - 4)...current_lead_position)
+    end
+
+    def last_trick_winner
+      c = proxy_owner.cards.last_trick.select { |c| c.suit == proxy_owner.trump }.max if proxy_owner.trump
+      c ||= proxy_owner.cards.last_trick.select { |c| c.suit == proxy_owner.cards.last_trick.first.suit }.max
+      direction = proxy_owner.deal.owner(c.value)
+      proxy_owner.send("user_#{direction.downcase}")
     end
   end
 
@@ -44,20 +68,16 @@ class Board < ActiveRecord::Base
     Bridge::Deal.from_id(deal_id.to_i)
   end
 
+  def trump
+    bids.final.last.suit == "NT" ? nil : bids.final.last.suit
+  end
+
   def cards_left(direction = nil)
     users_cards = cards.inject(deal) do |current_cards, card|
       current_cards[card.user.direction].delete(card.value)
       current_cards = current_cards
     end
     direction.nil? ? users_cards : users_cards[direction]
-  end
-
-  def last_trick_winner
-    if cards.last_trick.present?
-      cards.last_trick.select { |c| c.suit == cards.last_trick.first.suit }.max.user
-    else
-      first_lead_user
-    end
   end
 
   def first_lead_user
