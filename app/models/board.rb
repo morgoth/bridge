@@ -3,54 +3,8 @@ class Board < ActiveRecord::Base
   belongs_to :user_e, :class_name => "User", :extend => UserBoardExtension
   belongs_to :user_s, :class_name => "User", :extend => UserBoardExtension
   belongs_to :user_w, :class_name => "User", :extend => UserBoardExtension
-  has_many :cards, :order => "cards.position ASC" do
-    def current_position
-      proxy_target.count + 1
-    end
-
-    def current_lead_position
-      ((current_position - 1) - (current_position - 1) % 4) + 1
-    end
-
-    def current_lead
-      where(:position => current_lead_position).first
-    end
-
-    def current_trick
-      where(:position => current_lead_position...(current_lead_position + 4))
-    end
-
-    def current_trick_suit
-      current_lead.suit
-    end
-
-    def current_lead?
-      current_position % 4 == 1
-    end
-
-    def current_user
-      if current_lead?
-        last_trick_winner || proxy_owner.first_lead_user
-      else
-        direction = proxy_owner.deal.owner(proxy_owner.cards.last.value)
-        proxy_owner.users[direction].next
-      end
-    end
-
-    def last_trick
-      where(:position => (current_lead_position - 4)...current_lead_position)
-    end
-
-    def last_trick_winner
-      c = proxy_owner.cards.last_trick.select { |c| c.suit == proxy_owner.trump }.max if proxy_owner.trump
-      c ||= proxy_owner.cards.last_trick.select { |c| c.suit == proxy_owner.cards.last_trick.first.suit }.max
-      return nil unless c
-      direction = proxy_owner.deal.owner(c.value)
-      proxy_owner.users[direction]
-    end
-  end
-
-  has_many :bids, :order => "bids.position ASC" do
+  has_many :cards, :order => "cards.position"
+  has_many :bids, :order => "bids.position" do
     # active means beginning from the last contract
     def active
       where("position >= ?", contracts.last.try(:position) || 1)
