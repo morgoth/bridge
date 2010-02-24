@@ -33,7 +33,7 @@ class Board < ActiveRecord::Base
         last_trick_winner || first_lead_user
       else
         direction = proxy_owner.deal.owner(proxy_owner.cards.last.value)
-        proxy_owner.send("user_#{direction.downcase}")
+        proxy_owner.users[direction]
       end
     end
 
@@ -45,7 +45,7 @@ class Board < ActiveRecord::Base
       c = proxy_owner.cards.last_trick.select { |c| c.suit == proxy_owner.trump }.max if proxy_owner.trump
       c ||= proxy_owner.cards.last_trick.select { |c| c.suit == proxy_owner.cards.last_trick.first.suit }.max
       direction = proxy_owner.deal.owner(c.value)
-      proxy_owner.send("user_#{direction.downcase}")
+      proxy_owner.users[direction]
     end
   end
 
