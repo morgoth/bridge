@@ -89,7 +89,7 @@ class Board < ActiveRecord::Base
   end
 
   def users
-    [user_n, user_e, user_s, user_w]
+    [user_n, user_e, user_s, user_w].extend(UsersBoardExtension)
   end
 
   state_machine :initial => :auction do
