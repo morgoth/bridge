@@ -53,7 +53,7 @@ class CardValidationTest < ActiveSupport::TestCase
   test "valid when card is in hand of first lead user" do
     # E is first lead user
     hand = @board.e_hand
-    @card.value = hand.first
+    @card.value = hand.first.to_s
     assert @card.valid?
   end
 
@@ -76,5 +76,54 @@ class CardValidationTest < ActiveSupport::TestCase
     card = board.cards.build(:value => "HT")
     assert card.invalid?
     assert card.errors[:value].present?
+  end
+
+end
+
+class CardPlayintTest < ActiveSupport::TestCase
+  setup do
+    @board = Factory(:board_1S_by_N, :deal_id => 636839108127179982824423290.to_s )
+    # :n => ["SA", "SK", "SQ", "S8", "S6", "HK", "H7", "H6", "H4", "DK", "DQ", "DJ", "C3"]
+    # :e => ["S5", "S4", "S3", "HA", "HQ", "HJ", "H9", "D5", "D4", "CK", "CJ", "C9", "C5"]
+    # :s => ["ST", "S7", "S2", "HT", "H8", "H2", "DT", "D8", "D3", "CA", "CT", "C6", "C2"]
+    # :w => ["SJ", "S9", "H5", "H3", "DA", "D9", "D7", "D6", "D2", "CQ", "C8", "C7", "C4"]
+    # E is first lead user
+  end
+
+  test "return first lead as current lead" do
+    lead_card = @board.cards.create!(:value => "S5")
+    assert_equal lead_card, @board.cards.current_lead
+    @board.cards.create!(:value => "ST")
+    assert_equal lead_card, @board.cards.current_lead
+    @board.cards.create!(:value => "SJ")
+    assert_equal lead_card, @board.cards.current_lead
+    @board.cards.create!(:value => "SA")
+    second_card = @board.cards.create!(:value => "S4")
+    assert_equal second_card, @board.cards.current_lead
+  end
+
+  test "return current trick" do
+    c1 = @board.cards.create!(:value => "S5")
+    c2 = @board.cards.create!(:value => "ST")
+    c3 = @board.cards.create!(:value => "SJ")
+    assert_equal [c1, c2, c3], @board.cards.current_trick.all
+  end
+
+  test "return [] for last trick if first trick is played" do
+    assert_equal [], @board.cards.last_trick.all
+    @board.cards.create!(:value => "S5")
+    assert_equal [], @board.cards.last_trick.all
+    @board.cards.create!(:value => "ST")
+    assert_equal [], @board.cards.last_trick.all
+    @board.cards.create!(:value => "SJ")
+    assert_equal [], @board.cards.last_trick.all
+  end
+
+  test "return last trick" do
+    c1 = @board.cards.create!(:value => "S5")
+    c2 = @board.cards.create!(:value => "ST")
+    c3 = @board.cards.create!(:value => "SJ")
+    c4 = @board.cards.create!(:value => "SA")
+    assert_equal [c1, c2, c3, c4], @board.cards.last_trick.all
   end
 end

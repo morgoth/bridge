@@ -7,7 +7,28 @@ class Board < ActiveRecord::Base
     def user(position)
       proxy_owner.users[(Bridge::DIRECTIONS.index(proxy_owner.first_lead_user.direction) + position - 1) % 4]
     end
+
+    def current_position
+      proxy_target.count + 1
+    end
+
+    def current_lead_position
+      ((current_position - 1) - (current_position - 1) % 4) + 1
+    end
+
+    def current_lead
+      where(:position => current_lead_position).first
+    end
+
+    def current_trick
+      where(:position => current_lead_position...(current_lead_position + 4))
+    end
+
+    def last_trick
+      where(:position => (current_lead_position - 4)...current_lead_position)
+    end
   end
+
   has_many :bids, :order => "bids.position ASC" do
     # active means beginning from the last contract
     def active

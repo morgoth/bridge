@@ -24,8 +24,21 @@ class Card < ActiveRecord::Base
     value[0]
   end
 
+  # TODO: FIXME
   def user
     board && board.cards.user(position)
+  end
+
+  def lead_position
+    position - position % 4
+  end
+
+  def lead
+    board.cards.where(:position => lead_position).first
+  end
+
+  def trick
+    board.cards.where(:position => lead_position...(lead_position + 4))
   end
 
   private
@@ -35,7 +48,7 @@ class Card < ActiveRecord::Base
   end
 
   def presence_of_card_in_hand
-    errors.add(:value, "#{value} doesn't belongs to player") unless card_in_hand?
+    errors.add(:value, "#{value} doesn't belong to player") unless card_in_hand?
   end
 
   def cards_left_in_suit?
