@@ -64,7 +64,7 @@ class Bid < ActiveRecord::Base
   end
 
   def user
-    board && board.send("user_#{user_direction.downcase}")
+    board && board.users[user_direction]
   end
 
   private
