@@ -103,6 +103,38 @@ class CardPlayingTest < ActiveSupport::TestCase
     # E is first lead user
   end
 
+  test "play all deal" do
+    @board.cards.create!(:value => "S5", :user => @board.user_e)
+    @board.cards.create!(:value => "ST", :user => @board.user_s)
+    @board.cards.create!(:value => "SJ", :user => @board.user_w)
+    @board.cards.create!(:value => "SA", :user => @board.user_n)
+
+    @board.cards.create!(:value => "SK", :user => @board.user_n)
+    @board.cards.create!(:value => "S3", :user => @board.user_e)
+    @board.cards.create!(:value => "S2", :user => @board.user_s)
+    @board.cards.create!(:value => "S9", :user => @board.user_w)
+
+    @board.cards.create!(:value => "SQ", :user => @board.user_n)
+    @board.cards.create!(:value => "S4", :user => @board.user_e)
+    @board.cards.create!(:value => "S7", :user => @board.user_s)
+    @board.cards.create!(:value => "D2", :user => @board.user_w)
+
+    @board.cards.create!(:value => "DK", :user => @board.user_n)
+    @board.cards.create!(:value => "D4", :user => @board.user_e)
+    @board.cards.create!(:value => "D3", :user => @board.user_s)
+    @board.cards.create!(:value => "D9", :user => @board.user_w)
+
+    @board.cards.create!(:value => "C3", :user => @board.user_n)
+    @board.cards.create!(:value => "CK", :user => @board.user_e)
+    @board.cards.create!(:value => "CA", :user => @board.user_s)
+    @board.cards.create!(:value => "C4", :user => @board.user_w)
+
+    @board.cards.create!(:value => "", :user => @board.user_s)
+    @board.cards.create!(:value => "", :user => @board.user_w)
+    @board.cards.create!(:value => "", :user => @board.user_n)
+    @board.cards.create!(:value => "", :user => @board.user_e)
+  end
+
   # test "return first lead as current lead" do
   #   lead_card = @board.cards.create!(:value => "S5", :user => @board.user_e)
   #   assert_equal lead_card, @board.cards.current_lead
