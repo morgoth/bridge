@@ -103,7 +103,7 @@ class CardPlayingTest < ActiveSupport::TestCase
     # E is first lead user
   end
 
-  test "play all deal" do
+  test "play whole deal" do
     @board.cards.create!(:value => "S5", :user => @board.user_e)
     @board.cards.create!(:value => "ST", :user => @board.user_s)
     @board.cards.create!(:value => "SJ", :user => @board.user_w)

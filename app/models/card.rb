@@ -33,7 +33,7 @@ class Card < ActiveRecord::Base
   end
 
   def lead_position
-    position - position % 4 + 1
+    position - (position - 1) % 4
   end
 
   def previous_lead_position
@@ -69,8 +69,8 @@ class Card < ActiveRecord::Base
   end
 
   def previous_trick_winner
-    card   = previous_trick.select { |c| c.suit == board.trump }.max if board.trump
-    card ||= previous_trick.select { |c| c.suit == previous_trick_suit }.max
+    card   = previous_trick.to_a.select { |c| c.suit == board.trump }.max { |a, b| a.bridge_card <=> b.bridge_card } if board.trump
+    card ||= previous_trick.to_a.select { |c| c.suit == previous_trick_suit }.max { |a, b| a.bridge_card <=> b.bridge_card }
     return nil unless card
     direction = board.deal.owner(card.value)
     board.users[direction]
@@ -92,6 +92,11 @@ class Card < ActiveRecord::Base
   end
 
   def identicalness_of_suit
+    # puts "********************************************************************************"
+    # puts position.inspect
+    # puts lead_position.inspect
+    # puts lead.inspect
+    # puts "********************************************************************************"
     errors.add(:value, "of card must be in #{trick_suit} suit") if !in_same_suit?(trick_suit) and cards_left_in_trick_suit?
   end
 
