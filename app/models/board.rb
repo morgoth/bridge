@@ -60,7 +60,7 @@ class Board < ActiveRecord::Base
     end
   end
 
-  delegate :n, :e, :s, :w, :to => :deal, :prefix => true,
+  delegate :n, :e, :s, :w, :owner, :to => :deal, :prefix => true,
            :allow_nil => true
 
   def deal

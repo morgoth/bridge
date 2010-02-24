@@ -20,10 +20,12 @@ class Card < ActiveRecord::Base
     value[0]
   end
 
-  # TODO: FIXME
+  def user_direction
+    board.deal_owner(value)
+  end
+
   def user
-    direction = board.deal.owner(value)
-    board.send("user_#{direction.downcase}")
+    board.users[user_direction]
   end
 
   def lead_position
