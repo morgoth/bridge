@@ -26,7 +26,12 @@ class Card < ActiveRecord::Base
 
   # TODO: FIXME
   def user
-    board && board.cards.user(position)
+    if lead?
+      board.last_trick_winner
+    else
+      board.cards.last.user.next
+    end
+    #board && board.cards.user(position)
   end
 
   def lead_position

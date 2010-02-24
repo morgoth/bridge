@@ -4,10 +4,6 @@ class Board < ActiveRecord::Base
   belongs_to :user_s, :class_name => "User", :extend => UserBoardExtension
   belongs_to :user_w, :class_name => "User", :extend => UserBoardExtension
   has_many :cards, :order => "cards.position ASC" do
-    def user(position)
-      proxy_owner.users[(Bridge::DIRECTIONS.index(proxy_owner.first_lead_user.direction) + position - 1) % 4]
-    end
-
     def current_position
       proxy_target.count + 1
     end
@@ -54,6 +50,14 @@ class Board < ActiveRecord::Base
       current_cards = current_cards
     end
     direction.nil? ? users_cards : users_cards[direction]
+  end
+
+  def last_trick_winner
+    if cards.last_trick.present?
+      cards.last_trick.select { |c| c.suit == cards.last_trick.first.suit }.max.user
+    else
+      first_lead_user
+    end
   end
 
   def first_lead_user
