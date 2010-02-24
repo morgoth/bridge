@@ -1,4 +1,3 @@
-
 class Card < ActiveRecord::Base
   acts_as_list :scope => :board
   belongs_to :board
@@ -34,7 +33,7 @@ class Card < ActiveRecord::Base
   end
 
   def lead_position
-    position - position % 4
+    position - position % 4 + 1
   end
 
   def previous_lead_position
@@ -42,7 +41,7 @@ class Card < ActiveRecord::Base
   end
 
   def lead?
-    position % 4 == 1
+    position == lead_position
   end
 
   def lead
@@ -54,7 +53,7 @@ class Card < ActiveRecord::Base
   end
 
   def trick_suit
-    lead && lead.suit
+    lead.suit
   end
 
   def trick
@@ -88,16 +87,16 @@ class Card < ActiveRecord::Base
 
   private
 
+  def cards_left_in_trick_suit?
+    board.cards_left(@user.direction).any? { |c| c.suit == trick_suit }
+  end
+
   def identicalness_of_suit
-    errors.add(:value, "of card must be in #{trick_suit} suit") if !in_same_suit?(trick_suit) and cards_left_in_current_trick_suit?
+    errors.add(:value, "of card must be in #{trick_suit} suit") if !in_same_suit?(trick_suit) and cards_left_in_trick_suit?
   end
 
   def presence_of_card_in_hand
     errors.add(:value, "#{value} doesn't belong to player") unless card_in_hand?
-  end
-
-  def cards_left_in_current_trick_suit?
-    board.cards_left(@user.direction).any? { |c| c.suit == trick_suit }
   end
 
   def card_in_hand?
