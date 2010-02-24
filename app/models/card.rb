@@ -3,7 +3,7 @@ class Card < ActiveRecord::Base
   belongs_to :board
 
   validates :value, :presence => true, :inclusion => Bridge::DECK
-  validate :presence_of_card_in_hand
+  validate :presence_of_card_in_hand, :correct_user
   validate :identicalness_of_suit, :unless => :lead?
 
   delegate :deal, :to => :board, :prefix => true
