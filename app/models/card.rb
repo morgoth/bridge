@@ -4,7 +4,7 @@ class Card < ActiveRecord::Base
 
   validates :value, :presence => true, :inclusion => Bridge::DECK
   validate :presence_of_card_in_hand
-  validate :identicalness_of_suit, :if => :not_lead?
+  validate :identicalness_of_suit, :unless => :lead?
 
   delegate :deal, :to => :board, :prefix => true
 
@@ -32,6 +32,10 @@ class Card < ActiveRecord::Base
     position - position % 4
   end
 
+  def lead?
+    position % 4 == 1
+  end
+
   def lead
     board.cards.where(:position => lead_position).first
   end
@@ -56,13 +60,5 @@ class Card < ActiveRecord::Base
 
   def card_in_hand?
     board.deal[user.direction].include?(value)
-  end
-
-  def lead?
-    position % 4 == 1
-  end
-
-  def not_lead?
-    not lead?
   end
 end
