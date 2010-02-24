@@ -62,7 +62,7 @@ class Card < ActiveRecord::Base
   end
 
   def previous_trick
-    board.cards.where(:position => (lead_position - 4)...lead_position)
+    board.cards.where(:position => previous_lead_position...(previous_lead_position + 4))
   end
 
   def previous_trick_suit
