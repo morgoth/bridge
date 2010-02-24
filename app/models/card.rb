@@ -92,11 +92,6 @@ class Card < ActiveRecord::Base
   end
 
   def identicalness_of_suit
-    # puts "********************************************************************************"
-    # puts position.inspect
-    # puts lead_position.inspect
-    # puts lead.inspect
-    # puts "********************************************************************************"
     errors.add(:value, "of card must be in #{trick_suit} suit") if !in_same_suit?(trick_suit) and cards_left_in_trick_suit?
   end
 
