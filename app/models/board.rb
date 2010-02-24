@@ -73,7 +73,7 @@ class Board < ActiveRecord::Base
   end
 
   def trump
-    bids.final.last.suit == "NT" ? nil : bids.final.last.suit
+    bids.final.last.trump
   end
 
   def cards_left(direction = nil)

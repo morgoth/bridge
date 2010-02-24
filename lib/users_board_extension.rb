@@ -8,4 +8,20 @@ module UsersBoardExtension
       Array.new(self)[i]
     end
   end
+
+  def n
+    self["N"]
+  end
+
+  def e
+    self["E"]
+  end
+
+  def s
+    self["S"]
+  end
+
+  def w
+    self["W"]
+  end
 end
