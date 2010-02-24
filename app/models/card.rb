@@ -39,7 +39,7 @@ class Card < ActiveRecord::Base
   end
 
   def cards_left_in_suit?
-    board.cards_left(user.direction).any? { |c| c[0] == last_card.suit }
+    board.cards_left(user.direction).any? { |c| c.suit == last_card.suit }
   end
 
   def card_in_hand?
