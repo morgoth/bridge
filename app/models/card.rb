@@ -9,6 +9,8 @@ class Card < ActiveRecord::Base
   delegate :deal, :to => :board, :prefix => true
   delegate :suit, :to => :bridge_card, :allow_nil => true
 
+  attr_writer :user
+
   def bridge_card
     Bridge::Card.new(value)
   rescue ArgumentError
@@ -57,10 +59,16 @@ class Card < ActiveRecord::Base
   end
 
   def cards_left_in_current_trick_suit?
-    board.cards_left(user.direction).any? { |c| c.suit == board.cards.current_trick_suit }
+    board.cards_left(@user.direction).any? { |c| c.suit == board.cards.current_trick_suit }
   end
 
   def card_in_hand?
-    board.deal[user.direction].include?(value)
+    board.deal[@user.direction].include?(value)
+  end
+
+  def correct_user
+    if @user != board.cards.current_user
+      errors.add :user, "can not play card at this moment"
+    end
   end
 end

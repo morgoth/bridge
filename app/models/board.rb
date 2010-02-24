@@ -30,10 +30,10 @@ class Board < ActiveRecord::Base
 
     def current_user
       if current_lead?
-        last_trick_winner || first_lead_user
+        last_trick_winner || proxy_owner.first_lead_user
       else
         direction = proxy_owner.deal.owner(proxy_owner.cards.last.value)
-        proxy_owner.users[direction]
+        proxy_owner.users[direction].next
       end
     end
 
@@ -44,6 +44,7 @@ class Board < ActiveRecord::Base
     def last_trick_winner
       c = proxy_owner.cards.last_trick.select { |c| c.suit == proxy_owner.trump }.max if proxy_owner.trump
       c ||= proxy_owner.cards.last_trick.select { |c| c.suit == proxy_owner.cards.last_trick.first.suit }.max
+      return nil unless c
       direction = proxy_owner.deal.owner(c.value)
       proxy_owner.users[direction]
     end
