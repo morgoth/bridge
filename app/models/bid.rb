@@ -23,36 +23,16 @@ class Bid < ActiveRecord::Base
   scope :with_suit, lambda { |bid| where("value LIKE ?", "_#{bid.respond_to?(:suit) ? bid.suit : bid}") }
   scope :of_side,   lambda { |bid| where("position % 2 = ? % 2", bid.respond_to?(:position) ? bid.position : bid) }
 
-  def level
-    value[0] if contract?
-  end
+  delegate :level, :suit, :trump, :pass?, :double?, :redouble?,
+           :contract?, :to => :bridge_bid, :allow_nil => true
 
-  def suit
-    value[1..-1] if contract?
+  def bridge_bid
+    Bridge::Bid.new(value)
+  rescue ArgumentError # return nil if invalid or no bid
   end
 
   def position
     read_attribute(:position) || (board.bids.count + 1)
-  end
-
-  def pass?
-    value == Bridge::PASS
-  end
-
-  def double?
-    value == Bridge::DOUBLE
-  end
-
-  def redouble?
-    value == Bridge::REDOUBLE
-  end
-
-  def contract?
-    Bridge::CONTRACTS.include?(value)
-  end
-
-  def contract_compare(other)
-    Bridge::CONTRACTS.index(value) <=> Bridge::CONTRACTS.index(other.value)
   end
 
   def last_contract
@@ -79,14 +59,18 @@ class Bid < ActiveRecord::Base
     !partners_bid?(bid)
   end
 
+  def user_direction
+    board && Bridge::DIRECTIONS[(board.dealer_number + position - 1) % 4]
+  end
+
   def user
-    board && board.bids.user(position)
+    board && board.send("user_#{user_direction.downcase}")
   end
 
   private
 
   def contract_higher_than_last_contract
-    if last_contract && contract? && contract_compare(last_contract) <= 0
+    if last_contract && contract? && bridge_bid <= last_contract.bridge_bid
       errors.add :value, "is not greater than the last contract"
     end
   end

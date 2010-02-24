@@ -9,59 +9,11 @@ class BoardTest < ActiveSupport::TestCase
     @user_w = @board.user_w
   end
 
-  test "hands methods should return cards" do
-    assert_equal @board.deal[:n], @board.n_hand
-    assert_equal @board.deal[:e], @board.e_hand
-    assert_equal @board.deal[:s], @board.s_hand
-    assert_equal @board.deal[:w], @board.w_hand
-  end
-
-  test "nth bid user returns correct users when dealer is N" do
-    @board.dealer = "N"
-    assert_equal @user_n, @board.bids.user(1)
-    assert_equal @user_e, @board.bids.user(2)
-    assert_equal @user_s, @board.bids.user(3)
-    assert_equal @user_w, @board.bids.user(4)
-    assert_equal @user_n, @board.bids.user(5)
-    assert_equal @user_e, @board.bids.user(6)
-    assert_equal @user_s, @board.bids.user(7)
-    assert_equal @user_w, @board.bids.user(8)
-  end
-
-  test "nth bid user returns correct users when dealer is E" do
-    @board.dealer = "E"
-    assert_equal @user_e, @board.bids.user(1)
-    assert_equal @user_s, @board.bids.user(2)
-    assert_equal @user_w, @board.bids.user(3)
-    assert_equal @user_n, @board.bids.user(4)
-    assert_equal @user_e, @board.bids.user(5)
-    assert_equal @user_s, @board.bids.user(6)
-    assert_equal @user_w, @board.bids.user(7)
-    assert_equal @user_n, @board.bids.user(8)
-  end
-
-  test "nth bid user returns correct users when dealer is S" do
-    @board.dealer = "S"
-    assert_equal @user_s, @board.bids.user(1)
-    assert_equal @user_w, @board.bids.user(2)
-    assert_equal @user_n, @board.bids.user(3)
-    assert_equal @user_e, @board.bids.user(4)
-    assert_equal @user_s, @board.bids.user(5)
-    assert_equal @user_w, @board.bids.user(6)
-    assert_equal @user_n, @board.bids.user(7)
-    assert_equal @user_e, @board.bids.user(8)
-  end
-
-  test "nth bid user returns correct users when dealer is W" do
-    @board.dealer = "W"
-    assert_equal @user_w, @board.bids.user(1)
-    assert_equal @user_n, @board.bids.user(2)
-    assert_equal @user_e, @board.bids.user(3)
-    assert_equal @user_s, @board.bids.user(4)
-    assert_equal @user_w, @board.bids.user(5)
-    assert_equal @user_n, @board.bids.user(6)
-    assert_equal @user_e, @board.bids.user(7)
-    assert_equal @user_s, @board.bids.user(8)
+  test "deal_<direction> methods should return cards" do
+    assert_equal @board.deal[:n], @board.deal_n
+    assert_equal @board.deal[:e], @board.deal_e
+    assert_equal @board.deal[:s], @board.deal_s
+    assert_equal @board.deal[:w], @board.deal_w
   end
 
   test "return E as first lead user when plays N" do

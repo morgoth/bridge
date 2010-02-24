@@ -53,7 +53,7 @@ class Card < ActiveRecord::Base
   end
 
   def card_in_hand?
-    board.send("#{user.direction.downcase}_hand").include?(value)
+    board.send("deal_#{user.direction.downcase}").include?(value)
   end
 
   def lead?

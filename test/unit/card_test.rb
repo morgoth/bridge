@@ -52,14 +52,14 @@ class CardValidationTest < ActiveSupport::TestCase
 
   test "valid when card is in hand of first lead user" do
     # E is first lead user
-    hand = @board.e_hand
+    hand = @board.deal_e
     @card.value = hand.first.to_s
     assert @card.valid?
   end
 
   test "not valid when card is not in hand of first lead user" do
     # E is first lead user
-    hand = @board.w_hand
+    hand = @board.deal_w
     @card.value = hand.first
     assert @card.invalid?
     assert @card.errors[:value].present?

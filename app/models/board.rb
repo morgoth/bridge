@@ -58,14 +58,18 @@ class Board < ActiveRecord::Base
     def final
       with_suit(contracts.last).of_side(contracts.last)
     end
-
-    def user(position)
-      proxy_owner.users[(Bridge::DIRECTIONS.index(proxy_owner.dealer) + position - 1) % 4]
-    end
   end
+
+  delegate :n, :e, :s, :w, :to => :deal, :prefix => true,
+           :allow_nil => true
 
   def deal
     Bridge::Deal.from_id(deal_id.to_i)
+  rescue ArgumentError
+  end
+
+  def dealer_number
+    Bridge::DIRECTIONS.index(dealer)
   end
 
   def trump
@@ -86,12 +90,6 @@ class Board < ActiveRecord::Base
 
   def users
     [user_n, user_e, user_s, user_w]
-  end
-
-  [:n, :e, :s, :w].each do |hand|
-    define_method("#{hand}_hand") do
-      deal[hand]
-    end
   end
 
   state_machine :initial => :auction do
