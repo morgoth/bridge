@@ -93,7 +93,7 @@ class CardValidationTest < ActiveSupport::TestCase
 
 end
 
-class CardPlayintTest < ActiveSupport::TestCase
+class CardPlayingTest < ActiveSupport::TestCase
   setup do
     @board = Factory(:board_1S_by_N, :deal_id => 636839108127179982824423290.to_s )
     # :n => ["SA", "SK", "SQ", "S8", "S6", "HK", "H7", "H6", "H4", "DK", "DQ", "DJ", "C3"]
@@ -134,8 +134,7 @@ class CardPlayintTest < ActiveSupport::TestCase
 
   test "return last trick" do
     c1 = @board.cards.create!(:value => "S5", :user => @board.user_e)
-    # throw [@board.cards.current_user, @board.user_s]
-    c2 = @board.cards.create!(:value => "ST", :user => @board.user_s)
+    c2 = @board.cards.create!(:value => "ST", :user => @board.user_s) # FIXME
     c3 = @board.cards.create!(:value => "SJ", :user => @board.user_w)
     c4 = @board.cards.create!(:value => "SA", :user => @board.user_n)
     assert_equal [c1, c2, c3, c4], @board.cards.last_trick.all

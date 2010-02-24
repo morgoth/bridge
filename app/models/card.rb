@@ -1,3 +1,4 @@
+
 class Card < ActiveRecord::Base
   acts_as_list :scope => :board
   belongs_to :board
@@ -29,7 +30,7 @@ class Card < ActiveRecord::Base
   end
 
   def user
-    board.users[user_direction]
+    @user ||= board.users[user_direction]
   end
 
   def lead_position
@@ -67,7 +68,7 @@ class Card < ActiveRecord::Base
   end
 
   def correct_user
-    if @user != board.cards.current_user
+    if user != board.cards.reload.current_user
       errors.add :user, "can not play card at this moment"
     end
   end
