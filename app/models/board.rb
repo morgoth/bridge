@@ -1,16 +1,7 @@
 class Board < ActiveRecord::Base
   %w(n e s w).each { |d| belongs_to "user_#{d}", :class_name => "User", :extend => UserBoardExtension }
   has_many :cards, :order => "cards.position"
-  has_many :bids, :order => "bids.position" do
-    # active means beginning from the last contract
-    def active
-      where("position >= ?", contracts.last.try(:position) || 1)
-    end
-
-    def final
-      with_suit(contracts.last).of_side(contracts.last)
-    end
-  end
+  has_many :bids, :order => "bids.position", :extend => BidsBoardExtension
 
   delegate :n, :e, :s, :w, :owner, :to => :deal, :prefix => true, :allow_nil => true
 
