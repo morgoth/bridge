@@ -19,21 +19,21 @@ class BoardTest < ActiveSupport::TestCase
   test "return E as first lead user when plays N" do
     @board.dealer = "N"
     @board.save!
-    @board.bids.create!(:value => "1S", :user => @user_n)
-    @board.bids.create!(:value => "PASS", :user => @user_e)
-    @board.bids.create!(:value => "PASS", :user => @user_s)
-    @board.bids.create!(:value => "PASS", :user => @user_w)
+    @board.bids.create!(:bid => "1S", :user => @user_n)
+    @board.bids.create!(:bid => "PASS", :user => @user_e)
+    @board.bids.create!(:bid => "PASS", :user => @user_s)
+    @board.bids.create!(:bid => "PASS", :user => @user_w)
     assert_equal @user_e, @board.first_lead_user
   end
 
   test "return S as first lead user when plays E" do
     @board.dealer = "N"
     @board.save!
-    @board.bids.create!(:value => "PASS", :user => @user_n)
-    @board.bids.create!(:value => "1S", :user => @user_e)
-    @board.bids.create!(:value => "PASS", :user => @user_s)
-    @board.bids.create!(:value => "PASS", :user => @user_w)
-    @board.bids.create!(:value => "PASS", :user => @user_n)
+    @board.bids.create!(:bid => "PASS", :user => @user_n)
+    @board.bids.create!(:bid => "1S", :user => @user_e)
+    @board.bids.create!(:bid => "PASS", :user => @user_s)
+    @board.bids.create!(:bid => "PASS", :user => @user_w)
+    @board.bids.create!(:bid => "PASS", :user => @user_n)
     assert_equal @user_s, @board.first_lead_user
   end
 

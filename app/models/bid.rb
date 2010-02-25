@@ -4,7 +4,7 @@ class Bid < ActiveRecord::Base
 
   attr_writer :user
 
-  validates :value, :presence => true, :inclusion => Bridge::BIDS
+  validates :bid, :presence => true
   validates :board, :presence => true
 
   validate :contract_higher_than_last_contract,
@@ -13,22 +13,26 @@ class Bid < ActiveRecord::Base
            :has_no_modifier_to_double, :has_no_redouble_to_redouble,
            :correct_user
 
-  before_validation { |bid| self.value = bid.value.to_s.upcase }
-
-  scope :passes,    where(:value => Bridge::PASS)
-  scope :doubles,   where(:value => Bridge::DOUBLE)
-  scope :redoubles, where(:value => Bridge::REDOUBLE)
-  scope :modifiers, where(:value => Bridge::MODIFIERS)
-  scope :contracts, where(:value => Bridge::CONTRACTS)
-  scope :with_suit, lambda { |bid| where("value LIKE ?", "_#{bid.respond_to?(:suit) ? bid.suit : bid}") }
+  scope :passes,    where(:bid => Bridge::PASS)
+  scope :doubles,   where(:bid => Bridge::DOUBLE)
+  scope :redoubles, where(:bid => Bridge::REDOUBLE)
+  scope :modifiers, where(:bid => Bridge::MODIFIERS)
+  scope :contracts, where(:bid => Bridge::CONTRACTS)
+  scope :with_suit, lambda { |bid| where("bid LIKE ?", "_#{bid.respond_to?(:suit) ? bid.suit : bid}") }
   scope :of_side,   lambda { |bid| where("position % 2 = ? % 2", bid.respond_to?(:position) ? bid.position : bid) }
 
-  delegate :level, :suit, :trump, :pass?, :double?, :redouble?,
-           :contract?, :to => :bridge_bid, :allow_nil => true
+  delegate :level, :suit, :trump, :pass?, :double?, :redouble?, :contract?, :to => :bid, :allow_nil => true
 
-  def bridge_bid
-    Bridge::Bid.new(value)
-  rescue ArgumentError # return nil if invalid or no bid
+  def bid
+    Bridge::Bid.new(read_attribute(:bid))
+  rescue ArgumentError
+  end
+
+  def bid=(string)
+    bid = Bridge::Bid.new(string).to_s
+  rescue ArgumentError
+  ensure
+    write_attribute(:bid, bid)
   end
 
   def position
@@ -66,36 +70,37 @@ class Bid < ActiveRecord::Base
   def user
     board && board.users[user_direction]
   end
+  alias :expected_user :user
 
   private
 
   def contract_higher_than_last_contract
-    if last_contract && contract? && bridge_bid <= last_contract.bridge_bid
-      errors.add :value, "is not greater than the last contract"
+    if last_contract && contract? && bid <= last_contract.bid
+      errors.add :bid, "is not greater than the last contract"
     end
   end
 
   def has_opponents_contract_to_double
     if double? && (last_contract.nil? || partners_bid?(last_contract))
-      errors.add :value, "there is no opponent's contract to double"
+      errors.add :bid, "there is no opponent's contract to double"
     end
   end
 
   def has_opponents_double_to_redouble
     if redouble? && (last_active_double.nil? || partners_bid?(last_active_double))
-      errors.add :value, "there is no opponent's double to redouble"
+      errors.add :bid, "there is no opponent's double to redouble"
     end
   end
 
   def has_no_modifier_to_double
     if double? && last_active_modifier
-      errors.add :value, "there is other modifier on the current contract"
+      errors.add :bid, "there is other modifier on the current contract"
     end
   end
 
   def has_no_redouble_to_redouble
     if redouble? && last_active_redouble
-      errors.add :value, "there is other redouble on the current contract"
+      errors.add :bid, "there is other redouble on the current contract"
     end
   end
 
