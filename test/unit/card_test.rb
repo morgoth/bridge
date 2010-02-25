@@ -122,10 +122,47 @@ class CardPlayingTest < ActiveSupport::TestCase
     @board.cards.create!(:card => "CA", :user => @board.user_s)
     @board.cards.create!(:card => "C4", :user => @board.user_w)
 
-    # @board.cards.create!(:card => "", :user => @board.user_s)
-    # @board.cards.create!(:card => "", :user => @board.user_w)
-    # @board.cards.create!(:card => "", :user => @board.user_n)
-    # @board.cards.create!(:card => "", :user => @board.user_e)
+    @board.cards.create!(:card => "D8", :user => @board.user_s)
+    @board.cards.create!(:card => "DA", :user => @board.user_w)
+    @board.cards.create!(:card => "DJ", :user => @board.user_n)
+    @board.cards.create!(:card => "D5", :user => @board.user_e)
+
+    @board.cards.create!(:card => "H3", :user => @board.user_w)
+    @board.cards.create!(:card => "H4", :user => @board.user_n)
+    @board.cards.create!(:card => "HJ", :user => @board.user_e)
+    @board.cards.create!(:card => "H2", :user => @board.user_s)
+
+    @board.cards.create!(:card => "C5", :user => @board.user_e)
+    @board.cards.create!(:card => "C2", :user => @board.user_s)
+    @board.cards.create!(:card => "C7", :user => @board.user_w)
+    @board.cards.create!(:card => "S6", :user => @board.user_n)
+
+    @board.cards.create!(:card => "DJ", :user => @board.user_n)
+    @board.cards.create!(:card => "C9", :user => @board.user_e)
+    @board.cards.create!(:card => "D8", :user => @board.user_s)
+    @board.cards.create!(:card => "D6", :user => @board.user_w)
+
+    @board.cards.create!(:card => "H6", :user => @board.user_n)
+    @board.cards.create!(:card => "HQ", :user => @board.user_e)
+    @board.cards.create!(:card => "H8", :user => @board.user_s)
+    @board.cards.create!(:card => "H5", :user => @board.user_w)
+
+    @board.cards.create!(:card => "CJ", :user => @board.user_e)
+    @board.cards.create!(:card => "C6", :user => @board.user_s)
+    @board.cards.create!(:card => "C8", :user => @board.user_w)
+    @board.cards.create!(:card => "S8", :user => @board.user_n)
+
+    @board.cards.create!(:card => "H7", :user => @board.user_n)
+    @board.cards.create!(:card => "HA", :user => @board.user_e)
+    @board.cards.create!(:card => "HT", :user => @board.user_s)
+    @board.cards.create!(:card => "D7", :user => @board.user_w)
+
+    @board.cards.create!(:card => "H9", :user => @board.user_e)
+    @board.cards.create!(:card => "CT", :user => @board.user_s)
+    @board.cards.create!(:card => "CQ", :user => @board.user_w)
+    @board.cards.create!(:card => "HK", :user => @board.user_n)
+
+    # result: 1S-N +2
   end
 
   test "return first lead as lead" do

@@ -16,3 +16,85 @@ Factory.define :board_1S_by_N, :parent => :board do |f|
     board.bids.create!(:bid => "PASS", :user => board.user_w)
   end
 end
+
+# :n => ["SA", "SK", "SQ", "S8", "S6", "HK", "H7", "H6", "H4", "DK", "DQ", "DJ", "C3"]
+# :e => ["S5", "S4", "S3", "HA", "HQ", "HJ", "H9", "D5", "D4", "CK", "CJ", "C9", "C5"]
+# :s => ["ST", "S7", "S2", "HT", "H8", "H2", "DT", "D8", "D3", "CA", "CT", "C6", "C2"]
+# :w => ["SJ", "S9", "H5", "H3", "DA", "D9", "D7", "D6", "D2", "CQ", "C8", "C7", "C4"]
+Factory.define :full_board, :parent => :board do |f|
+  f.deal_id 636839108127179982824423290.to_s
+  f.dealer "N"
+  f.after_create do |board|
+    board.bids.create!(:bid => "1S", :user => board.user_n)
+    board.bids.create!(:bid => "PASS", :user => board.user_e)
+    board.bids.create!(:bid => "PASS", :user => board.user_s)
+    board.bids.create!(:bid => "PASS", :user => board.user_w)
+    # contract: 1S by N
+
+    board.cards.create!(:card => "S5", :user => board.user_e)
+    board.cards.create!(:card => "ST", :user => board.user_s)
+    board.cards.create!(:card => "SJ", :user => board.user_w)
+    board.cards.create!(:card => "SA", :user => board.user_n)
+
+    board.cards.create!(:card => "SK", :user => board.user_n)
+    board.cards.create!(:card => "S3", :user => board.user_e)
+    board.cards.create!(:card => "S2", :user => board.user_s)
+    board.cards.create!(:card => "S9", :user => board.user_w)
+
+    board.cards.create!(:card => "SQ", :user => board.user_n)
+    board.cards.create!(:card => "S4", :user => board.user_e)
+    board.cards.create!(:card => "S7", :user => board.user_s)
+    board.cards.create!(:card => "D2", :user => board.user_w)
+
+    board.cards.create!(:card => "DK", :user => board.user_n)
+    board.cards.create!(:card => "D4", :user => board.user_e)
+    board.cards.create!(:card => "D3", :user => board.user_s)
+    board.cards.create!(:card => "D9", :user => board.user_w)
+
+    board.cards.create!(:card => "C3", :user => board.user_n)
+    board.cards.create!(:card => "CK", :user => board.user_e)
+    board.cards.create!(:card => "CA", :user => board.user_s)
+    board.cards.create!(:card => "C4", :user => board.user_w)
+
+    board.cards.create!(:card => "D8", :user => board.user_s)
+    board.cards.create!(:card => "DA", :user => board.user_w)
+    board.cards.create!(:card => "DJ", :user => board.user_n)
+    board.cards.create!(:card => "D5", :user => board.user_e)
+
+    board.cards.create!(:card => "H3", :user => board.user_w)
+    board.cards.create!(:card => "H4", :user => board.user_n)
+    board.cards.create!(:card => "HJ", :user => board.user_e)
+    board.cards.create!(:card => "H2", :user => board.user_s)
+
+    board.cards.create!(:card => "C5", :user => board.user_e)
+    board.cards.create!(:card => "C2", :user => board.user_s)
+    board.cards.create!(:card => "C7", :user => board.user_w)
+    board.cards.create!(:card => "S6", :user => board.user_n)
+
+    board.cards.create!(:card => "DJ", :user => board.user_n)
+    board.cards.create!(:card => "C9", :user => board.user_e)
+    board.cards.create!(:card => "D8", :user => board.user_s)
+    board.cards.create!(:card => "D6", :user => board.user_w)
+
+    board.cards.create!(:card => "H6", :user => board.user_n)
+    board.cards.create!(:card => "HQ", :user => board.user_e)
+    board.cards.create!(:card => "H8", :user => board.user_s)
+    board.cards.create!(:card => "H5", :user => board.user_w)
+
+    board.cards.create!(:card => "CJ", :user => board.user_e)
+    board.cards.create!(:card => "C6", :user => board.user_s)
+    board.cards.create!(:card => "C8", :user => board.user_w)
+    board.cards.create!(:card => "S8", :user => board.user_n)
+
+    board.cards.create!(:card => "H7", :user => board.user_n)
+    board.cards.create!(:card => "HA", :user => board.user_e)
+    board.cards.create!(:card => "HT", :user => board.user_s)
+    board.cards.create!(:card => "D7", :user => board.user_w)
+
+    board.cards.create!(:card => "H9", :user => board.user_e)
+    board.cards.create!(:card => "CT", :user => board.user_s)
+    board.cards.create!(:card => "CQ", :user => board.user_w)
+    board.cards.create!(:card => "HK", :user => board.user_n)
+    # result: 1S-N +2
+  end
+end
