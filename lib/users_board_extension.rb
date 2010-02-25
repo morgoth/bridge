@@ -9,19 +9,7 @@ module UsersBoardExtension
     end
   end
 
-  def n
-    self["N"]
-  end
-
-  def e
-    self["E"]
-  end
-
-  def s
-    self["S"]
-  end
-
-  def w
-    self["W"]
+  %w(n e s w).each do |direction|
+    define_method(direction) { self[direction] }
   end
 end
