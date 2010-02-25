@@ -3,7 +3,7 @@ class Board < ActiveRecord::Base
   has_many :bids, :order => "bids.position", :extend => BidsBoardExtension
   has_many :cards, :order => "cards.position" do
     def trick(n)
-      where(:position => ((n - 1) * 4 + 1)...(n * 4 + 1))
+      where(:position => ((n - 1) * 4 + 1)...(n * 4 + 1)).all
     end
 
     def tricks
