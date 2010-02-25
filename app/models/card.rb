@@ -75,9 +75,8 @@ class Card < ActiveRecord::Base
   end
 
   def previous_trick_winner
-    compare_cards = lambda { |a, b| a.card <=> b.card }
-    card   = previous_trick.to_a.select { |c| c.suit == board.trump }.max(&:compare_cards)
-    card ||= previous_trick.to_a.select { |c| c.suit == previous_trick_suit }.max(&:compare_cards)
+    card   = previous_trick.to_a.select { |c| c.suit == board.trump }.max { |a, b| a.card <=> b.card }
+    card ||= previous_trick.to_a.select { |c| c.suit == previous_trick_suit }.max { |a, b| a.card <=> b.card }
     return nil unless card
     direction = board.deal.owner(card.card)
     board.users[direction]
