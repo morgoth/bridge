@@ -1,7 +1,15 @@
 class Board < ActiveRecord::Base
   %w(n e s w).each { |d| belongs_to "user_#{d}", :class_name => "User", :extend => UserBoardExtension }
-  has_many :cards, :order => "cards.position"
   has_many :bids, :order => "bids.position", :extend => BidsBoardExtension
+  has_many :cards, :order => "cards.position" do
+    def trick(n)
+      where(:position => ((n - 1) * 4 + 1)...(n * 4 + 1))
+    end
+
+    def tricks
+      in_groups_of(4, false)
+    end
+  end
 
   delegate :n, :e, :s, :w, :owner, :to => :deal, :prefix => true, :allow_nil => true
 
@@ -32,6 +40,15 @@ class Board < ActiveRecord::Base
 
   def users
     [user_n, user_e, user_s, user_w].extend(UsersBoardExtension)
+  end
+
+  def tricks_taken
+    cards.tricks.inject({}) do |result, trick|
+      card = Bridge::Trick.new(trick.map(&:card)).winner(trump)
+      direction = deal_owner(card)
+      result[direction] = (result[direction] || 0) + 1
+      result
+    end
   end
 
   state_machine :initial => :auction do
