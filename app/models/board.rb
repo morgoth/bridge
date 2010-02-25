@@ -12,8 +12,7 @@ class Board < ActiveRecord::Base
     end
   end
 
-  delegate :n, :e, :s, :w, :owner, :to => :deal, :prefix => true,
-           :allow_nil => true
+  delegate :n, :e, :s, :w, :owner, :to => :deal, :prefix => true, :allow_nil => true
 
   def deal
     Bridge::Deal.from_id(deal_id.to_i)
@@ -30,7 +29,7 @@ class Board < ActiveRecord::Base
 
   def cards_left(direction = nil)
     users_cards = cards.inject(deal) do |current_cards, card|
-      current_cards[card.user.direction].delete(card.value)
+      current_cards[card.user.direction].delete(card.card)
       current_cards = current_cards
     end
     direction.nil? ? users_cards : users_cards[direction]

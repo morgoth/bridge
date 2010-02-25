@@ -46,7 +46,7 @@ class BoardTest < ActiveSupport::TestCase
     board = Factory(:board_1S_by_N)
     cards = board.deal
     cards[:e].delete("HA")
-    board.cards.create!(:value => "HA", :user => board.user_e)
+    board.cards.create!(:card => "HA", :user => board.user_e)
     assert_equal cards, board.cards_left
   end
 
@@ -54,7 +54,7 @@ class BoardTest < ActiveSupport::TestCase
     board = Factory(:board_1S_by_N)
     cards = board.deal
     cards[:e].delete("HA")
-    board.cards.create!(:value => "HA", :user => board.user_e)
+    board.cards.create!(:card => "HA", :user => board.user_e)
     assert_equal cards[:e], board.cards_left(:e)
   end
 end

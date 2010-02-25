@@ -2,35 +2,41 @@ class Card < ActiveRecord::Base
   acts_as_list :scope => :board
   belongs_to :board
 
-  validates :value, :presence => true, :inclusion => Bridge::DECK
+  validates :card, :presence => true
   validate :presence_of_card_in_hand, :correct_user
   validate :identicalness_of_suit, :unless => :lead?
 
   delegate :deal, :to => :board, :prefix => true
-  delegate :suit, :to => :bridge_card, :allow_nil => true
+  delegate :suit, :value, :to => :card, :allow_nil => true
 
   attr_writer :user
 
-  def bridge_card
-    Bridge::Card.new(value)
+  def card
+    Bridge::Card.new(read_attribute(:card))
   rescue ArgumentError
+  end
+
+  def card=(string)
+    card = nil
+    card = Bridge::Card.new(string).to_s
+  rescue ArgumentError
+  ensure
+    write_attribute(:card, card)
   end
 
   def position
     read_attribute(:position) || (board.cards.count + 1)
   end
 
-  def in_same_suit?(other)
-    suit == other
-  end
-
   def user_direction
-    board.deal_owner(value)
+    board.deal_owner(card)
   end
 
   def user
     @user ||= board.users[user_direction]
   end
+
+  private
 
   def lead_position
     position - (position - 1) % 4
@@ -69,10 +75,11 @@ class Card < ActiveRecord::Base
   end
 
   def previous_trick_winner
-    card   = previous_trick.to_a.select { |c| c.suit == board.trump }.max { |a, b| a.bridge_card <=> b.bridge_card } if board.trump
-    card ||= previous_trick.to_a.select { |c| c.suit == previous_trick_suit }.max { |a, b| a.bridge_card <=> b.bridge_card }
+    compare_cards = lambda { |a, b| a.card <=> b.card }
+    card   = previous_trick.to_a.select { |c| c.suit == board.trump }.max(&:compare_cards)
+    card ||= previous_trick.to_a.select { |c| c.suit == previous_trick_suit }.max(&:compare_cards)
     return nil unless card
-    direction = board.deal.owner(card.value)
+    direction = board.deal.owner(card.card)
     board.users[direction]
   end
 
@@ -80,27 +87,25 @@ class Card < ActiveRecord::Base
     if lead?
       previous_trick_winner || board.first_lead_user
     else
-      direction = board.deal.owner(board.cards.last.value)
+      direction = board.deal.owner(board.cards.last.card)
       board.users[direction].next
     end
   end
-
-  private
 
   def cards_left_in_trick_suit?
     board.cards_left(@user.direction).any? { |c| c.suit == trick_suit }
   end
 
   def identicalness_of_suit
-    errors.add(:value, "of card must be in #{trick_suit} suit") if !in_same_suit?(trick_suit) and cards_left_in_trick_suit?
+    errors.add(:card, "of card must be in #{trick_suit} suit") if suit != trick_suit and cards_left_in_trick_suit?
   end
 
   def presence_of_card_in_hand
-    errors.add(:value, "#{value} doesn't belong to player") unless card_in_hand?
+    errors.add(:card, "#{card} doesn't belong to player") unless card_in_hand?
   end
 
   def card_in_hand?
-    board.deal[@user.direction].include?(value)
+    board.deal[@user.direction].include?(card)
   end
 
   def correct_user

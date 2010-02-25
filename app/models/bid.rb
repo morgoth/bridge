@@ -29,15 +29,24 @@ class Bid < ActiveRecord::Base
   end
 
   def bid=(string)
+    bid = nil
     bid = Bridge::Bid.new(string).to_s
   rescue ArgumentError
   ensure
     write_attribute(:bid, bid)
   end
 
+  def user
+    board && board.users[user_direction]
+  end
+
   def position
     read_attribute(:position) || (board.bids.count + 1)
   end
+
+  private
+
+  alias :expected_user :user
 
   def last_contract
     board && board.bids.contracts.last
@@ -66,13 +75,6 @@ class Bid < ActiveRecord::Base
   def user_direction
     board && Bridge::DIRECTIONS[(board.dealer_number + position - 1) % 4]
   end
-
-  def user
-    board && board.users[user_direction]
-  end
-  alias :expected_user :user
-
-  private
 
   def contract_higher_than_last_contract
     if last_contract && contract? && bid <= last_contract.bid
@@ -105,7 +107,7 @@ class Bid < ActiveRecord::Base
   end
 
   def correct_user
-    if user != @user
+    if expected_user != @user
       errors.add :user, "is not allowed to give a bid at the moment"
     end
   end
