@@ -3,11 +3,13 @@ class Card < ActiveRecord::Base
   belongs_to :board
 
   validates :card, :presence => true
-  validate :presence_of_card_in_hand, :correct_user
+  validate :presence_of_card_in_hand, :correct_user, :state_of_board
   validate :identicalness_of_suit, :unless => :lead?
 
-  delegate :deal, :to => :board, :prefix => true
+  delegate :deal, :card_played, :to => :board, :prefix => true
   delegate :suit, :value, :to => :card, :allow_nil => true
+
+  after_create :board_card_played
 
   attr_writer :user
 
@@ -109,6 +111,12 @@ class Card < ActiveRecord::Base
   def correct_user
     if user != expected_user
       errors.add :user, "can not play card at this moment"
+    end
+  end
+
+  def state_of_board
+    unless board && board.playing?
+      errors.add :board, "is not in the playing state"
     end
   end
 end

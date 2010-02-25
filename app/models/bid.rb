@@ -11,7 +11,7 @@ class Bid < ActiveRecord::Base
            :has_opponents_contract_to_double,
            :has_opponents_double_to_redouble,
            :has_no_modifier_to_double, :has_no_redouble_to_redouble,
-           :correct_user
+           :correct_user, :state_of_board
 
   scope :passes,    where(:bid => Bridge::PASS)
   scope :doubles,   where(:bid => Bridge::DOUBLE)
@@ -21,7 +21,10 @@ class Bid < ActiveRecord::Base
   scope :with_suit, lambda { |bid| where("bid LIKE ?", "_#{bid.respond_to?(:suit) ? bid.suit : bid}") }
   scope :of_side,   lambda { |bid| where("position % 2 = ? % 2", bid.respond_to?(:position) ? bid.position : bid) }
 
+  delegate :bid_made, :to => :board, :prefix => true
   delegate :level, :suit, :trump, :pass?, :double?, :redouble?, :contract?, :to => :bid, :allow_nil => true
+
+  after_create :board_bid_made
 
   def bid
     Bridge::Bid.new(read_attribute(:bid))
@@ -109,6 +112,12 @@ class Bid < ActiveRecord::Base
   def correct_user
     if expected_user != @user
       errors.add :user, "is not allowed to give a bid at the moment"
+    end
+  end
+
+  def state_of_board
+    unless board && board.auction?
+      errors.add :board, "is not in the auction state"
     end
   end
 end

@@ -53,13 +53,26 @@ class Board < ActiveRecord::Base
 
   state_machine :initial => :auction do
     event :bid_made do
-      transition :auction => :playing, :if => :passed?
-    end
-    event :card_played do
-      transition :playing => :completed, :if => :cards_played?
+      transition :auction => :completed, :if => :four_passes?
+      transition :auction => :playing, :if => :end_of_auction?
     end
 
-    # after_transition :auction => :playing, :do => :set_contract
-    # after_transition :playing => :completed, :do => :set_result
+    event :card_played do
+      transition :playing => :completed, :if => :end_of_play?
+    end
+  end
+
+  private
+
+  def four_passes?
+    bids.count == 4 && bids.where(:bid => Bridge::PASS).count == 4
+  end
+
+  def end_of_auction?
+    bids.count > 3 && bids.where(:bid => Bridge::PASS).order("position DESC").limit(3).count == 3
+  end
+
+  def end_of_play?
+    cards.count == 52
   end
 end
