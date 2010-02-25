@@ -75,10 +75,9 @@ class Card < ActiveRecord::Base
   end
 
   def previous_trick_winner
-    card   = previous_trick.to_a.select { |c| c.suit == board.trump }.max { |a, b| a.card <=> b.card }
-    card ||= previous_trick.to_a.select { |c| c.suit == previous_trick_suit }.max { |a, b| a.card <=> b.card }
-    return nil unless card
-    direction = board.deal.owner(card.card)
+    return if previous_trick.empty?
+    card = Bridge::Trick.new(previous_trick.map(&:card)).winner(board.trump)
+    direction = board.deal.owner(card)
     board.users[direction]
   end
 
