@@ -2,6 +2,7 @@ source "http://gemcutter.org"
 
 gem "rails", :git => "git://github.com/rails/rails.git"
 
+gem "bundler", "=0.9.7"
 gem "acts_as_list"
 gem "bridge"
 gem "haml"
