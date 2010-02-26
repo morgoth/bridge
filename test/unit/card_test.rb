@@ -54,6 +54,7 @@ class CardValidationTest < ActiveSupport::TestCase
     # E is first lead user
     hand = @board.deal_e
     @card.card = hand.first.to_s
+    @card.user = @board.user_e
     assert @card.valid?
   end
 
@@ -61,6 +62,7 @@ class CardValidationTest < ActiveSupport::TestCase
     # E is first lead user
     hand = @board.deal_w
     @card.card = hand.first
+    @card.user = @board.user_e
     assert @card.invalid?
     assert @card.errors[:card].present?
   end
