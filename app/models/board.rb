@@ -9,6 +9,12 @@ class Board < ActiveRecord::Base
     def tricks
       in_groups_of(4, false)
     end
+
+    # Count completed tricks
+    # TODO: test
+    def completed_tricks_count
+      count.div(4)
+    end
   end
 
   delegate :n, :e, :s, :w, :owner, :to => :deal, :prefix => true, :allow_nil => true

@@ -4,9 +4,12 @@ class Claim < ActiveRecord::Base
 
   attr_accessor :user
 
+  validates :board, :presence => true
   validates :tricks, :presence => true, :numericality => true
   validates :state, :presence => true
   validates :user, :presence => true, :unless => :new_record?
+
+  validate :tricks_number_below_maximum
 
   scope :proposed, where(:state => "proposed")
   scope :accepted, where(:state => "accepted")
@@ -20,8 +23,8 @@ class Claim < ActiveRecord::Base
     event :accept do
       transition :proposed => :previous_accepted, :if => :user_previous?
       transition :proposed => :next_accepted, :if => :user_next?
-      transition :previous_accepted => :accepted
-      transition :next_accepted => :accepted
+      transition :previous_accepted => :accepted, :if => :user_next?
+      transition :next_accepted => :accepted, :if => :user_previous?
     end
     event :reject do
       transition [:proposed, :previous_accepted, :next_accepted] => :rejected
@@ -46,5 +49,11 @@ class Claim < ActiveRecord::Base
 
   def user_next?
     claiming_user.next == user
+  end
+
+  def tricks_number_below_maximum
+    unless tricks > (13 - board.completed_tricks_count)
+      errors.add :tricks, "claimed tricks number exceeds 13"
+    end
   end
 end
