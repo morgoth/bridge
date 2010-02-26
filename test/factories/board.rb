@@ -23,6 +23,7 @@ Factory.define :board_1S_by_N, :parent => :board do |f|
     board.bids.create!(:bid => "PASS", :user => board.user_e)
     board.bids.create!(:bid => "PASS", :user => board.user_s)
     board.bids.create!(:bid => "PASS", :user => board.user_w)
+    board.reload
   end
 end
 
@@ -104,6 +105,7 @@ Factory.define :full_board, :parent => :board do |f|
     board.cards.create!(:card => "CT", :user => board.user_s)
     board.cards.create!(:card => "CQ", :user => board.user_w)
     board.cards.create!(:card => "HK", :user => board.user_n)
+    board.reload
     # result: 1S-N +2
   end
 end
