@@ -5,9 +5,9 @@ gem "rails", :git => "git://github.com/rails/rails.git", :ref => "76237f163ff7ad
 gem "acts_as_list"
 gem "bridge"
 gem "haml"
+gem "rails3-generators"
 gem "sqlite3"
 gem "state_machine"
-gem "rails3-generators"
 
 group :test do
   gem "capybara"
