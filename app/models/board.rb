@@ -39,20 +39,36 @@ class Board < ActiveRecord::Base
     users[direction]
   end
 
+  # TODO: test
+  def declarer_user
+    bids.final.first.user
+  end
+
+  # TODO: test
   def first_lead_user
-    bids.final.first.user.next
+    declarer_user.next
+  end
+
+  # TODO: test
+  def dummy_user
+    first_lead_user.next
   end
 
   def users
     [user_n, user_e, user_s, user_w].extend(UsersBoardExtension)
   end
 
-  def tricks_taken
-    cards.tricks.inject({}) do |result, trick|
+  def tricks_taken(side = nil)
+    hash = cards.tricks.inject({}) do |h, trick|
       card = Bridge::Trick.new(trick.map(&:card)).winner(trump)
       direction = deal_owner(card)
-      result[direction] = (result[direction] || 0) + 1
-      result
+      h[direction] = (h[direction] || 0) + 1
+      h
+    end
+    if side
+      side.to_s.upcase.split("").inject(0) { |sum, direction| sum += hash[direction] }
+    else
+      hash
     end
   end
 
