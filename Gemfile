@@ -1,8 +1,7 @@
 source "http://gemcutter.org"
 
-gem "rails", :git => "git://github.com/rails/rails.git"
+gem "rails", :git => "git://github.com/rails/rails.git", :ref => "76237f163ff7ad2a64af926030e3449c547cafa2"
 
-gem "bundler", "=0.9.7"
 gem "acts_as_list"
 gem "bridge"
 gem "haml"
