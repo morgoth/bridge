@@ -6,7 +6,7 @@ class Card < ActiveRecord::Base
   validate :presence_of_card_in_hand, :correct_user, :state_of_board
   validate :identicalness_of_suit, :unless => :lead?
 
-  delegate :deal, :card_played, :to => :board, :prefix => true
+  delegate :deal, :card_played, :card_owner, :to => :board, :prefix => true
   delegate :suit, :value, :to => :card, :allow_nil => true
 
   after_create :board_card_played
@@ -30,12 +30,8 @@ class Card < ActiveRecord::Base
     read_attribute(:position) || (board.cards.count + 1)
   end
 
-  def user_direction
-    board.deal_owner(card)
-  end
-
   def user
-    @user ||= board.users[user_direction]
+    @user ||= board_card_owner(card)
   end
 
   private
@@ -79,16 +75,14 @@ class Card < ActiveRecord::Base
   def previous_trick_winner
     return if previous_trick.empty?
     card = Bridge::Trick.new(previous_trick.map(&:card)).winner(board.trump)
-    direction = board.deal.owner(card)
-    board.users[direction]
+    board_card_owner(card)
   end
 
   def expected_user
     if lead?
       previous_trick_winner || board.first_lead_user
     else
-      direction = board.deal.owner(board.cards.last.card)
-      board.users[direction].next
+      board_card_owner(board.cards.last.card).next
     end
   end
 

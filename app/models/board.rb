@@ -34,6 +34,11 @@ class Board < ActiveRecord::Base
     direction.nil? ? users_cards : users_cards[direction]
   end
 
+  def card_owner(card)
+    direction = deal_owner(card)
+    users[direction]
+  end
+
   def first_lead_user
     bids.final.first.user.next
   end
