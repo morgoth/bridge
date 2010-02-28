@@ -29,12 +29,12 @@ class CardTest < ActiveSupport::TestCase
 
   test "lead? should return true if first card" do
     card = Factory.build(:card)
-    assert card.send(:lead?)
+    assert card.current_lead?
   end
 
   test "lead? should return true if fifth card" do
     card = Factory.build(:card, :position => 5)
-    assert card.send(:lead?)
+    assert card.current_lead?
   end
 end
 
@@ -169,29 +169,29 @@ class CardPlayingTest < ActiveSupport::TestCase
 
   test "return first lead as lead" do
     lead_card = @board.cards.create!(:card => "S5", :user => @board.user_e)
-    assert_equal lead_card, @board.cards.last.send(:lead)
+    assert_equal lead_card, @board.cards.current_lead
     @board.cards.create!(:card => "ST", :user => @board.user_s)
-    assert_equal lead_card, @board.cards.last.send(:lead)
+    assert_equal lead_card, @board.cards.current_lead
     @board.cards.create!(:card => "SJ", :user => @board.user_w)
-    assert_equal lead_card, @board.cards.last.send(:lead)
+    assert_equal lead_card, @board.cards.current_lead
   end
 
   test "return current trick" do
     c1 = @board.cards.create!(:card => "S5", :user => @board.user_e)
     c2 = @board.cards.create!(:card => "ST", :user => @board.user_s)
     c3 = @board.cards.create!(:card => "SJ", :user => @board.user_w)
-    assert_equal [c1, c2, c3], c3.send(:trick).all
+    assert_equal [c1, c2, c3], @board.cards.current_trick.all
     c4 = @board.cards.create!(:card => "SA", :user => @board.user_n)
-    assert_equal [c1, c2, c3, c4], @board.cards.build.send(:previous_trick).all
+    assert_equal [c1, c2, c3, c4], @board.cards.previous_trick.all
   end
 
   test "return [] for previous trick if first trick is played" do
     @board.cards.create!(:card => "S5", :user => @board.user_e)
-    assert_equal [], @board.cards.last.send(:previous_trick).all
+    assert_equal [], @board.cards.previous_trick.all
     @board.cards.create!(:card => "ST", :user => @board.user_s)
-    assert_equal [], @board.cards.last.send(:previous_trick).all
+    assert_equal [], @board.cards.previous_trick.all
     @board.cards.create!(:card => "SJ", :user => @board.user_w)
-    assert_equal [], @board.cards.last.send(:previous_trick).all
+    assert_equal [], @board.cards.previous_trick.all
   end
 
   test "return previous trick" do
@@ -200,16 +200,16 @@ class CardPlayingTest < ActiveSupport::TestCase
     c3 = @board.cards.create!(:card => "SJ", :user => @board.user_w)
     c4 = @board.cards.create!(:card => "SA", :user => @board.user_n)
     @board.cards.create!(:card => "SK", :user => @board.user_n)
-    assert_equal [c1, c2, c3, c4], @board.cards.last.send(:previous_trick).all
+    assert_equal [c1, c2, c3, c4], @board.cards.previous_trick.all
   end
 
   test "return trick suit" do
     @board.cards.create!(:card => "S5", :user => @board.user_e)
-    assert_equal "S", @board.cards.last.send(:trick_suit)
+    assert_equal "S", @board.cards.current_trick_suit
     @board.cards.create!(:card => "ST", :user => @board.user_s)
-    assert_equal "S", @board.cards.last.send(:trick_suit)
+    assert_equal "S", @board.cards.current_trick_suit
     @board.cards.create!(:card => "SJ", :user => @board.user_w)
-    assert_equal "S", @board.cards.last.send(:trick_suit)
+    assert_equal "S", @board.cards.current_trick_suit
   end
 
   test "return previous trick suit" do
@@ -218,7 +218,7 @@ class CardPlayingTest < ActiveSupport::TestCase
     @board.cards.create!(:card => "SJ", :user => @board.user_w)
     @board.cards.create!(:card => "SA", :user => @board.user_n)
     @board.cards.create!(:card => "HK", :user => @board.user_n)
-    assert_equal "S", @board.cards.last.send(:previous_trick_suit)
+    assert_equal "S", @board.cards.previous_trick_suit
   end
 end
 
@@ -236,7 +236,7 @@ class CardPreviousTrickWinnerTest < ActiveSupport::TestCase
     @board.cards.create!(:card => "CK", :user => @board.user_s)
     @board.cards.create!(:card => "C8", :user => @board.user_w)
     @board.cards.create!(:card => "CA", :user => @board.user_n)
-    assert @board.user_n, @board.cards.build.send(:previous_trick_winner)
+    assert @board.user_n, @board.cards.previous_trick_winner
   end
 
   test "return W as trick winner when cards in not one suit" do
@@ -244,7 +244,7 @@ class CardPreviousTrickWinnerTest < ActiveSupport::TestCase
     @board.cards.create!(:card => "H5", :user => @board.user_s)
     @board.cards.create!(:card => "HA", :user => @board.user_w)
     @board.cards.create!(:card => "DT", :user => @board.user_n)
-    assert @board.user_w, @board.cards.build.send(:previous_trick_winner)
+    assert @board.user_w, @board.cards.previous_trick_winner
   end
 
   test "return trick N as winner when trump played" do
@@ -252,6 +252,6 @@ class CardPreviousTrickWinnerTest < ActiveSupport::TestCase
     @board.cards.create!(:card => "H5", :user => @board.user_s)
     @board.cards.create!(:card => "HA", :user => @board.user_w)
     @board.cards.create!(:card => "SJ", :user => @board.user_n)
-    assert @board.user_n, @board.cards.build.send(:previous_trick_winner)
+    assert @board.user_n, @board.cards.previous_trick_winner
   end
 end
