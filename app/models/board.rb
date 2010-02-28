@@ -64,6 +64,10 @@ class Board < ActiveRecord::Base
     end
   end
 
+  scope :auction, where(:state => "auction")
+  scope :playing, where(:state => "playing")
+  scope :completed, where(:state => "completed")
+
   state_machine :initial => :auction do
     event :bid_made do
       transition :auction => :completed, :if => :four_passes?

@@ -1,7 +1,7 @@
-require 'test_helper'
+require "test_helper"
 
 class BoardTest < ActiveSupport::TestCase
-  def setup
+  setup do
     @board = Factory(:board, :dealer => "N")
     @user_n = @board.user_n
     @user_e = @board.user_e
@@ -43,7 +43,7 @@ class BoardTest < ActiveSupport::TestCase
 end
 
 class PlayingBoardTest < ActiveSupport::TestCase
-  def setup
+  setup do
     @board = Factory(:board_1S_by_N)
     @user_n = @board.user_n
     @user_e = @board.user_e
@@ -72,10 +72,14 @@ class PlayingBoardTest < ActiveSupport::TestCase
     @board.cards.create!(:card => "HA", :user => @user_e)
     assert_equal cards[:e], @board.cards_left(:e)
   end
+
+  test "completed tricks count returns 0" do
+    assert_equal 0, @board.cards.completed_tricks_count
+  end
 end
 
 class CompletedBoardTest < ActiveSupport::TestCase
-  def setup
+  setup do
     @board = Factory(:full_board)
   end
 

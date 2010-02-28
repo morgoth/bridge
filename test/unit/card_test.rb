@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class CardTest < ActiveSupport::TestCase
   setup do
@@ -41,7 +41,7 @@ end
 class CardValidationTest < ActiveSupport::TestCase
   setup do
     @board = Factory(:board_1S_by_N)
-    @card = Factory.build(:card, :board => @board)
+    @card = Factory.build(:card, :board => @board, :user => @board.user_n)
   end
 
   test "not valid with wrong card" do
@@ -220,10 +220,22 @@ class CardPlayingTest < ActiveSupport::TestCase
     @board.cards.create!(:card => "HK", :user => @board.user_n)
     assert_equal "S", @board.cards.previous_trick_suit
   end
+
+  test "completed tricks count returns 1 after first trick" do
+    assert_equal 0, @board.cards.completed_tricks_count
+    @board.cards.create!(:card => "S5", :user => @board.user_e)
+    assert_equal 0, @board.cards.completed_tricks_count
+    @board.cards.create!(:card => "ST", :user => @board.user_s)
+    assert_equal 0, @board.cards.completed_tricks_count
+    @board.cards.create!(:card => "SJ", :user => @board.user_w)
+    assert_equal 0, @board.cards.completed_tricks_count
+    @board.cards.create!(:card => "SA", :user => @board.user_n)
+    assert_equal 1, @board.cards.completed_tricks_count
+  end
 end
 
 class CardPreviousTrickWinnerTest < ActiveSupport::TestCase
-  def setup
+  setup do
     @board = Factory(:board_1S_by_N, :deal_id => 2354882295268699396238561385.to_s)
     # "N"=>["SA", "SK", "SJ", "ST", "S8", "S5", "DT", "D2", "CA", "C9", "C7", "C5", "C2"]
     # "E"=>["S4", "HK", "HQ", "H8", "H6", "DA", "DK", "DQ", "D9", "D6", "D4", "CJ", "C4"]

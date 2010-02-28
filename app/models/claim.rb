@@ -1,6 +1,6 @@
 class Claim < ActiveRecord::Base
   belongs_to :board
-  belongs_to :claiming_user, :extend => ClaimingUserClaimExtension
+  belongs_to :claiming_user, :class_name => "User", :extend => ClaimingUserClaimExtension
 
   attr_accessor :user
 
@@ -9,7 +9,10 @@ class Claim < ActiveRecord::Base
   validates :state, :presence => true
   validates :user, :presence => true, :unless => :new_record?
 
-  validate :tricks_number_below_maximum
+  validate :tricks_number_below_maximum, :correct_user
+
+  delegate :cards, :to => :board, :prefix => true
+  delegate :current_user, :completed_tricks_count, :to => :board_cards
 
   scope :proposed, where(:state => "proposed")
   scope :accepted, where(:state => "accepted")
@@ -52,8 +55,14 @@ class Claim < ActiveRecord::Base
   end
 
   def tricks_number_below_maximum
-    unless tricks > (13 - board.completed_tricks_count)
+    unless tricks > (13 - completed_tricks_count)
       errors.add :tricks, "claimed tricks number exceeds 13"
+    end
+  end
+
+  def correct_user
+    if user != current_user
+      errors.add :user, "can not claim at the moment"
     end
   end
 end

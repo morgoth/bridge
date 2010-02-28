@@ -1,7 +1,7 @@
-require 'test_helper'
+require "test_helper"
 
 class BidValidationTest < ActiveSupport::TestCase
-  def setup
+  setup do
     @board = Factory(:board)
     @bid = Factory.build(:bid, :board => @board)
   end
@@ -31,7 +31,7 @@ class BidValidationTest < ActiveSupport::TestCase
 end
 
 class BiddingTest < ActiveSupport::TestCase
-  def setup
+  setup do
     @board = Factory(:board, :dealer => "N")
     @user_n = @board.user_n
     @user_e = @board.user_e

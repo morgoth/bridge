@@ -51,7 +51,7 @@ class Card < ActiveRecord::Base
 
   def correct_user
     if user != current_user
-      errors.add :user, "can not play card at this moment"
+      errors.add :user, "can not play card at the moment"
     end
   end
 

@@ -49,7 +49,7 @@ class Bid < ActiveRecord::Base
 
   private
 
-  alias :expected_user :user
+  alias :current_user :user
 
   def last_contract
     board && board.bids.contracts.last
@@ -110,7 +110,7 @@ class Bid < ActiveRecord::Base
   end
 
   def correct_user
-    if expected_user != @user
+    if current_user != @user
       errors.add :user, "is not allowed to give a bid at the moment"
     end
   end
