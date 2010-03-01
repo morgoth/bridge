@@ -18,7 +18,7 @@ module ClaimingUserClaimExtension
   end
 
   def direction
-    board.users.find { |user| user == proxy_target }
+    proxy_owner.board.users.find { |user| user == proxy_target }.direction
   end
 
   def first_lead?

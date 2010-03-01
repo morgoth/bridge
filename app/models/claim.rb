@@ -7,9 +7,10 @@ class Claim < ActiveRecord::Base
   validates :board, :presence => true
   validates :tricks, :presence => true, :numericality => true
   validates :state, :presence => true
-  validates :user, :presence => true, :unless => :new_record?
 
-  validate :tricks_number_below_maximum, :correct_user
+  validate :tricks_number_below_maximum
+  # TODO: should user be able to claim in any moment of game?
+  # validate :correct_user
 
   delegate :cards, :to => :board, :prefix => true
   delegate :current_user, :completed_tricks_count, :to => :board_cards
@@ -30,6 +31,7 @@ class Claim < ActiveRecord::Base
       transition :next_accepted => :accepted, :if => :user_previous?
     end
     event :reject do
+      # TODO: validate user reject
       transition [:proposed, :previous_accepted, :next_accepted] => :rejected
     end
   end
@@ -55,14 +57,14 @@ class Claim < ActiveRecord::Base
   end
 
   def tricks_number_below_maximum
-    unless tricks > (13 - completed_tricks_count)
+    if tricks > (13 - completed_tricks_count)
       errors.add :tricks, "claimed tricks number exceeds 13"
     end
   end
 
-  def correct_user
-    if user != current_user
-      errors.add :user, "can not claim at the moment"
-    end
-  end
+  # def correct_user
+  #  if claiming_user != current_user
+  #    errors.add :user, "can not claim at the moment"
+  #  end
+  # end
 end
