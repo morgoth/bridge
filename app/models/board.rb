@@ -15,7 +15,17 @@ class Board < ActiveRecord::Base
   end
 
   def trump
-    bids.final.last.trump
+    final_contract.trump
+  end
+
+  def final_contract
+    bids.final.last
+  end
+
+  def final_contract_string
+    final_contract.bid.to_s.tap do |contract|
+      contract << bids.active.modifiers.last.bid.to_s if bids.active.modifiers.present?
+    end
   end
 
   def cards_left(direction = nil)
@@ -62,6 +72,10 @@ class Board < ActiveRecord::Base
     else
       hash
     end
+  end
+
+  def made?
+    #Bridge::Score.new(:contract => final_contract_string, :declarer => declarer.direction, :)
   end
 
   scope :auction, where(:state => "auction")

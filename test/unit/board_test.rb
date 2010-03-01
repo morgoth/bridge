@@ -40,6 +40,33 @@ class BoardTest < ActiveSupport::TestCase
     @board.bids.create!(:bid => "PASS", :user => @user_w)
     assert @board.reload.completed?
   end
+
+  test "return contract string without modifiers" do
+    @board.bids.create!(:bid => "5S", :user => @user_n)
+    @board.bids.create!(:bid => "PASS", :user => @user_e)
+    @board.bids.create!(:bid => "PASS", :user => @user_s)
+    @board.bids.create!(:bid => "PASS", :user => @user_w)
+    assert_equal "5S", @board.final_contract_string
+  end
+
+  test "return contract string with double modifier" do
+    @board.bids.create!(:bid => "5S", :user => @user_n)
+    @board.bids.create!(:bid => "X", :user => @user_e)
+    @board.bids.create!(:bid => "PASS", :user => @user_s)
+    @board.bids.create!(:bid => "PASS", :user => @user_w)
+    @board.bids.create!(:bid => "PASS", :user => @user_n)
+    assert_equal "5SX", @board.final_contract_string
+  end
+
+  test "return contract string with redouble modifier" do
+    @board.bids.create!(:bid => "5S", :user => @user_n)
+    @board.bids.create!(:bid => "X", :user => @user_e)
+    @board.bids.create!(:bid => "XX", :user => @user_s)
+    @board.bids.create!(:bid => "PASS", :user => @user_w)
+    @board.bids.create!(:bid => "PASS", :user => @user_n)
+    @board.bids.create!(:bid => "PASS", :user => @user_e)
+    assert_equal "5SXX", @board.final_contract_string
+  end
 end
 
 class PlayingBoardTest < ActiveSupport::TestCase
