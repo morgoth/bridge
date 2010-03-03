@@ -36,4 +36,12 @@ module UserBoardExtension
   def dummy?
     proxy_owner.dummy_user == proxy_target
   end
+
+  def has_card?(card)
+    proxy_owner.deal[direction].include?(card)
+  end
+
+  def has_cards_in_suit?(suit)
+    proxy_owner.cards_left(direction).any? { |c| c.suit == suit }
+  end
 end

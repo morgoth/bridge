@@ -33,20 +33,14 @@ class Card < ActiveRecord::Base
 
   private
 
-  def cards_left_in_trick_suit?
-    board_cards_left(current_user.direction).any? { |c| c.suit == current_trick_suit }
-  end
-
   def identicalness_of_suit
-    errors.add(:card, "of card must be in #{current_trick_suit} suit") if suit != current_trick_suit and cards_left_in_trick_suit?
+    if suit != current_trick_suit and current_user.has_cards_in_suit?(current_trick_suit)
+      errors.add(:card, "of card must be in #{current_trick_suit} suit")
+    end
   end
 
   def presence_of_card_in_hand
-    errors.add(:card, "#{card} doesn't belong to player") unless card_in_hand?
-  end
-
-  def card_in_hand?
-    board_deal[current_user.direction].include?(card)
+    errors.add(:card, "#{card} doesn't belong to player") unless current_user.has_card?(card)
   end
 
   # TODO: test that dummy user can't actually play cards
