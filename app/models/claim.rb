@@ -6,13 +6,11 @@ class Claim < ActiveRecord::Base
 
   validates :board, :presence => true
   validates :tricks, :presence => true, :numericality => true
-  validates :state, :presence => true
 
   validate :tricks_number_below_maximum
-  # TODO: should user be able to claim in any moment of game?
-  # validate :correct_user
+  validate :correct_user
 
-  delegate :cards, :to => :board, :prefix => true
+  delegate :cards, :users, :to => :board, :prefix => true
   delegate :current_user, :completed_tricks_count, :to => :board_cards
 
   scope :proposed, where(:state => "proposed")
@@ -21,9 +19,15 @@ class Claim < ActiveRecord::Base
   scope :next_accepted, where(:state => "next_accepted")
   scope :rejected, where(:state => "rejected")
 
-  after_create :autoaccept_by_dummy
+  before_validation lambda { |claim| claim.claiming_user = claim.user }, :if => :new_record?
+  before_validation lambda { |claim| claim.state_event = :propose }, :if => :new_record?
 
-  state_machine :initial => :proposed do
+  state_machine do
+    event :propose do
+      transition nil => :previous_accepted, :if => :previous_user_dummy?
+      transition nil => :next_accepted, :if => :next_user_dummy?
+      transition nil => :proposed, :if => :user_declarer?
+    end
     event :accept do
       transition :proposed => :previous_accepted, :if => :user_previous?
       transition :proposed => :next_accepted, :if => :user_next?
@@ -31,21 +35,26 @@ class Claim < ActiveRecord::Base
       transition :next_accepted => :accepted, :if => :user_previous?
     end
     event :reject do
-      # TODO: validate user reject
-      transition [:proposed, :previous_accepted, :next_accepted] => :rejected
+      transition [:proposed, :previous_accepted, :next_accepted] => :rejected, :if => :playing_user?
     end
   end
 
   private
 
-  def autoaccept_by_dummy
-    if claiming_user.previous.dummy?
-      self.user = claiming_user.previous
-      accept!
-    elsif claiming_user.next.dummy?
-      self.user = claiming_user.next
-      accept!
-    end
+  def user_declarer?
+    claiming_user.declarer?
+  end
+
+  def previous_user_dummy?
+    claiming_user.previous.dummy?
+  end
+
+  def next_user_dummy?
+    claiming_user.next.dummy?
+  end
+
+  def playing_user?
+    board_users.without_dummy.include?(user)
   end
 
   def user_previous?
@@ -62,9 +71,9 @@ class Claim < ActiveRecord::Base
     end
   end
 
-  # def correct_user
-  #  if claiming_user != current_user
-  #    errors.add :user, "can not claim at the moment"
-  #  end
-  # end
+  def correct_user
+    unless playing_user?
+      errors.add :user, "can not claim"
+    end
+  end
 end

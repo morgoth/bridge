@@ -45,8 +45,6 @@ class Card < ActiveRecord::Base
     end
   end
 
-  # TODO: test that dummy user can't actually play cards
-  # TODO: test that opponent can't play cards not in order
   def correct_user
     if (!current_user.dummy? && user != current_user) || (current_user.dummy? && user != current_user.partner)
       errors.add(:user, "can not play card at the moment")

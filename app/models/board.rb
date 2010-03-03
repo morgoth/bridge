@@ -2,6 +2,7 @@ class Board < ActiveRecord::Base
   %w(n e s w).each { |d| belongs_to "user_#{d}", :class_name => "User", :extend => UserBoardExtension }
   has_many :bids, :order => "bids.position", :extend => BidsBoardExtension
   has_many :cards, :order => "cards.position", :extend => CardsBoardExtension
+  has_many :claims
 
   delegate :n, :e, :s, :w, :owner, :to => :deal, :prefix => true, :allow_nil => true
 

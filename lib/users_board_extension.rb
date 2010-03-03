@@ -12,4 +12,8 @@ module UsersBoardExtension
   %w(n e s w).each do |direction|
     define_method(direction) { self[direction] }
   end
+
+  def without_dummy
+    reject { |user| user.dummy? }
+  end
 end
