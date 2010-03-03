@@ -34,7 +34,7 @@ class Card < ActiveRecord::Base
   private
 
   def cards_left_in_trick_suit?
-    board_cards_left(@user.direction).any? { |c| c.suit == current_trick_suit }
+    board_cards_left(current_user.direction).any? { |c| c.suit == current_trick_suit }
   end
 
   def identicalness_of_suit
@@ -46,11 +46,12 @@ class Card < ActiveRecord::Base
   end
 
   def card_in_hand?
-    board_deal[@user.direction].include?(card)
+    board_deal[current_user.direction].include?(card)
   end
 
+  # TODO: test that dummy user can't actually play cards
   def correct_user
-    if user != current_user
+    if (current_user.declarer? && user != current_user) || (current_user.dummy? && user != current_user.partner)
       errors.add :user, "can not play card at the moment"
     end
   end

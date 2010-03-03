@@ -100,31 +100,31 @@ class CardPlayingTest < ActiveSupport::TestCase
 
   test "play whole deal" do
     @board.cards.create!(:card => "S5", :user => @board.user_e)
-    @board.cards.create!(:card => "ST", :user => @board.user_s)
+    @board.cards.create!(:card => "ST", :user => @board.user_n)
     @board.cards.create!(:card => "SJ", :user => @board.user_w)
     @board.cards.create!(:card => "SA", :user => @board.user_n)
 
     @board.cards.create!(:card => "SK", :user => @board.user_n)
     @board.cards.create!(:card => "S3", :user => @board.user_e)
-    @board.cards.create!(:card => "S2", :user => @board.user_s)
+    @board.cards.create!(:card => "S2", :user => @board.user_n)
     @board.cards.create!(:card => "S9", :user => @board.user_w)
 
     @board.cards.create!(:card => "SQ", :user => @board.user_n)
     @board.cards.create!(:card => "S4", :user => @board.user_e)
-    @board.cards.create!(:card => "S7", :user => @board.user_s)
+    @board.cards.create!(:card => "S7", :user => @board.user_n)
     @board.cards.create!(:card => "D2", :user => @board.user_w)
 
     @board.cards.create!(:card => "DK", :user => @board.user_n)
     @board.cards.create!(:card => "D4", :user => @board.user_e)
-    @board.cards.create!(:card => "D3", :user => @board.user_s)
+    @board.cards.create!(:card => "D3", :user => @board.user_n)
     @board.cards.create!(:card => "D9", :user => @board.user_w)
 
     @board.cards.create!(:card => "C3", :user => @board.user_n)
     @board.cards.create!(:card => "CK", :user => @board.user_e)
-    @board.cards.create!(:card => "CA", :user => @board.user_s)
+    @board.cards.create!(:card => "CA", :user => @board.user_n)
     @board.cards.create!(:card => "C4", :user => @board.user_w)
 
-    @board.cards.create!(:card => "D8", :user => @board.user_s)
+    @board.cards.create!(:card => "D8", :user => @board.user_n)
     @board.cards.create!(:card => "DA", :user => @board.user_w)
     @board.cards.create!(:card => "DJ", :user => @board.user_n)
     @board.cards.create!(:card => "D5", :user => @board.user_e)
@@ -132,35 +132,35 @@ class CardPlayingTest < ActiveSupport::TestCase
     @board.cards.create!(:card => "H3", :user => @board.user_w)
     @board.cards.create!(:card => "H4", :user => @board.user_n)
     @board.cards.create!(:card => "HJ", :user => @board.user_e)
-    @board.cards.create!(:card => "H2", :user => @board.user_s)
+    @board.cards.create!(:card => "H2", :user => @board.user_n)
 
     @board.cards.create!(:card => "C5", :user => @board.user_e)
-    @board.cards.create!(:card => "C2", :user => @board.user_s)
+    @board.cards.create!(:card => "C2", :user => @board.user_n)
     @board.cards.create!(:card => "C7", :user => @board.user_w)
     @board.cards.create!(:card => "S6", :user => @board.user_n)
 
     @board.cards.create!(:card => "DJ", :user => @board.user_n)
     @board.cards.create!(:card => "C9", :user => @board.user_e)
-    @board.cards.create!(:card => "D8", :user => @board.user_s)
+    @board.cards.create!(:card => "D8", :user => @board.user_n)
     @board.cards.create!(:card => "D6", :user => @board.user_w)
 
     @board.cards.create!(:card => "H6", :user => @board.user_n)
     @board.cards.create!(:card => "HQ", :user => @board.user_e)
-    @board.cards.create!(:card => "H8", :user => @board.user_s)
+    @board.cards.create!(:card => "H8", :user => @board.user_n)
     @board.cards.create!(:card => "H5", :user => @board.user_w)
 
     @board.cards.create!(:card => "CJ", :user => @board.user_e)
-    @board.cards.create!(:card => "C6", :user => @board.user_s)
+    @board.cards.create!(:card => "C6", :user => @board.user_n)
     @board.cards.create!(:card => "C8", :user => @board.user_w)
     @board.cards.create!(:card => "S8", :user => @board.user_n)
 
     @board.cards.create!(:card => "H7", :user => @board.user_n)
     @board.cards.create!(:card => "HA", :user => @board.user_e)
-    @board.cards.create!(:card => "HT", :user => @board.user_s)
+    @board.cards.create!(:card => "HT", :user => @board.user_n)
     @board.cards.create!(:card => "D7", :user => @board.user_w)
 
     @board.cards.create!(:card => "H9", :user => @board.user_e)
-    @board.cards.create!(:card => "CT", :user => @board.user_s)
+    @board.cards.create!(:card => "CT", :user => @board.user_n)
     @board.cards.create!(:card => "CQ", :user => @board.user_w)
     @board.cards.create!(:card => "HK", :user => @board.user_n)
 
@@ -170,7 +170,7 @@ class CardPlayingTest < ActiveSupport::TestCase
   test "return first lead as lead" do
     lead_card = @board.cards.create!(:card => "S5", :user => @board.user_e)
     assert_equal lead_card, @board.cards.current_lead
-    @board.cards.create!(:card => "ST", :user => @board.user_s)
+    @board.cards.create!(:card => "ST", :user => @board.user_n)
     assert_equal lead_card, @board.cards.current_lead
     @board.cards.create!(:card => "SJ", :user => @board.user_w)
     assert_equal lead_card, @board.cards.current_lead
@@ -178,7 +178,7 @@ class CardPlayingTest < ActiveSupport::TestCase
 
   test "return current trick" do
     c1 = @board.cards.create!(:card => "S5", :user => @board.user_e)
-    c2 = @board.cards.create!(:card => "ST", :user => @board.user_s)
+    c2 = @board.cards.create!(:card => "ST", :user => @board.user_n)
     c3 = @board.cards.create!(:card => "SJ", :user => @board.user_w)
     assert_equal [c1, c2, c3], @board.cards.current_trick.all
     c4 = @board.cards.create!(:card => "SA", :user => @board.user_n)
@@ -188,7 +188,7 @@ class CardPlayingTest < ActiveSupport::TestCase
   test "return [] for previous trick if first trick is played" do
     @board.cards.create!(:card => "S5", :user => @board.user_e)
     assert_equal [], @board.cards.previous_trick.all
-    @board.cards.create!(:card => "ST", :user => @board.user_s)
+    @board.cards.create!(:card => "ST", :user => @board.user_n)
     assert_equal [], @board.cards.previous_trick.all
     @board.cards.create!(:card => "SJ", :user => @board.user_w)
     assert_equal [], @board.cards.previous_trick.all
@@ -196,7 +196,7 @@ class CardPlayingTest < ActiveSupport::TestCase
 
   test "return previous trick" do
     c1 = @board.cards.create!(:card => "S5", :user => @board.user_e)
-    c2 = @board.cards.create!(:card => "ST", :user => @board.user_s)
+    c2 = @board.cards.create!(:card => "ST", :user => @board.user_n)
     c3 = @board.cards.create!(:card => "SJ", :user => @board.user_w)
     c4 = @board.cards.create!(:card => "SA", :user => @board.user_n)
     @board.cards.create!(:card => "SK", :user => @board.user_n)
@@ -206,7 +206,7 @@ class CardPlayingTest < ActiveSupport::TestCase
   test "return trick suit" do
     @board.cards.create!(:card => "S5", :user => @board.user_e)
     assert_equal "S", @board.cards.current_trick_suit
-    @board.cards.create!(:card => "ST", :user => @board.user_s)
+    @board.cards.create!(:card => "ST", :user => @board.user_n)
     assert_equal "S", @board.cards.current_trick_suit
     @board.cards.create!(:card => "SJ", :user => @board.user_w)
     assert_equal "S", @board.cards.current_trick_suit
@@ -214,7 +214,7 @@ class CardPlayingTest < ActiveSupport::TestCase
 
   test "return previous trick suit" do
     @board.cards.create!(:card => "S5", :user => @board.user_e)
-    @board.cards.create!(:card => "ST", :user => @board.user_s)
+    @board.cards.create!(:card => "ST", :user => @board.user_n)
     @board.cards.create!(:card => "SJ", :user => @board.user_w)
     @board.cards.create!(:card => "SA", :user => @board.user_n)
     @board.cards.create!(:card => "HK", :user => @board.user_n)
@@ -225,7 +225,7 @@ class CardPlayingTest < ActiveSupport::TestCase
     assert_equal 0, @board.cards.completed_tricks_count
     @board.cards.create!(:card => "S5", :user => @board.user_e)
     assert_equal 0, @board.cards.completed_tricks_count
-    @board.cards.create!(:card => "ST", :user => @board.user_s)
+    @board.cards.create!(:card => "ST", :user => @board.user_n)
     assert_equal 0, @board.cards.completed_tricks_count
     @board.cards.create!(:card => "SJ", :user => @board.user_w)
     assert_equal 0, @board.cards.completed_tricks_count
@@ -245,7 +245,7 @@ class CardPreviousTrickWinnerTest < ActiveSupport::TestCase
 
   test "return N as trick winner when cards in one suit" do
     @board.cards.create!(:card => "CJ", :user => @board.user_e)
-    @board.cards.create!(:card => "CK", :user => @board.user_s)
+    @board.cards.create!(:card => "CK", :user => @board.user_n)
     @board.cards.create!(:card => "C8", :user => @board.user_w)
     @board.cards.create!(:card => "CA", :user => @board.user_n)
     assert @board.user_n, @board.cards.previous_trick_winner
@@ -253,7 +253,7 @@ class CardPreviousTrickWinnerTest < ActiveSupport::TestCase
 
   test "return W as trick winner when cards in not one suit" do
     @board.cards.create!(:card => "HQ", :user => @board.user_e)
-    @board.cards.create!(:card => "H5", :user => @board.user_s)
+    @board.cards.create!(:card => "H5", :user => @board.user_n)
     @board.cards.create!(:card => "HA", :user => @board.user_w)
     @board.cards.create!(:card => "DT", :user => @board.user_n)
     assert @board.user_w, @board.cards.previous_trick_winner
@@ -261,7 +261,7 @@ class CardPreviousTrickWinnerTest < ActiveSupport::TestCase
 
   test "return trick N as winner when trump played" do
     @board.cards.create!(:card => "HQ", :user => @board.user_e)
-    @board.cards.create!(:card => "H5", :user => @board.user_s)
+    @board.cards.create!(:card => "H5", :user => @board.user_n)
     @board.cards.create!(:card => "HA", :user => @board.user_w)
     @board.cards.create!(:card => "SJ", :user => @board.user_n)
     assert @board.user_n, @board.cards.previous_trick_winner

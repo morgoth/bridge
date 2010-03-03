@@ -4,6 +4,10 @@ module UserBoardExtension
     next_direction = Bridge::DIRECTIONS[(i + 1) % 4]
   end
 
+  def partner
+    self.next.next
+  end
+
   def next
     proxy_owner.send("user_#{next_direction.downcase}")
   end
