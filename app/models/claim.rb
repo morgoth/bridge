@@ -13,6 +13,7 @@ class Claim < ActiveRecord::Base
   delegate :cards, :users, :to => :board, :prefix => true
   delegate :current_user, :completed_tricks_count, :to => :board_cards
 
+  scope :active, where(:state => ["proposed", "previous_accepted", "next_accepted"])
   scope :proposed, where(:state => "proposed")
   scope :accepted, where(:state => "accepted")
   scope :previous_accepted, where(:state => "previous_accepted")
