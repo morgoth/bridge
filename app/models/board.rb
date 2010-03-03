@@ -5,9 +5,15 @@ class Board < ActiveRecord::Base
   has_many :claims
 
   delegate :n, :e, :s, :w, :owner, :to => :deal, :prefix => true, :allow_nil => true
+  delegate :made?, :points, :result, :to => :score, :prefix => true, :allow_nil => true
 
   def deal
     Bridge::Deal.from_id(deal_id.to_i)
+  rescue ArgumentError
+  end
+
+  def score
+    Bridge::Score.new(:contract => final_contract_string, :vulnerable => declarer_vulnerable?, :tricks => tricks_taken(Bridge.side_of(declarer_user.direction)))
   rescue ArgumentError
   end
 
@@ -75,8 +81,15 @@ class Board < ActiveRecord::Base
     end
   end
 
-  def made?
-    #Bridge::Score.new(:contract => final_contract_string, :declarer => declarer.direction, :)
+  def declarer_vulnerable?
+    case vulnerable
+    when "BOTH"
+     true
+    when "NONE"
+     false
+    else
+      vulnerable.split('').include?(declarer_user.direction)
+    end
   end
 
   scope :auction, where(:state => "auction")

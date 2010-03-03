@@ -108,6 +108,7 @@ end
 class CompletedBoardTest < ActiveSupport::TestCase
   setup do
     @board = Factory(:full_board)
+    # 1S-N +2
   end
 
   test "is in the completed state" do
@@ -137,5 +138,17 @@ class CompletedBoardTest < ActiveSupport::TestCase
 
   test "return tricks taken by ew" do
     assert_equal 4, @board.tricks_taken("ew")
+  end
+
+  test "return true for made contract" do
+    assert @board.score_made?
+  end
+
+  test "return 2 as score result" do
+    assert_equal 2, @board.score_result
+  end
+
+  test "return 140 as score points" do
+    assert_equal 140, @board.score_points
   end
 end
