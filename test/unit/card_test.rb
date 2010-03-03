@@ -74,6 +74,27 @@ class CardValidationTest < ActiveSupport::TestCase
     assert card.errors[:user].present?
   end
 
+  test "not valid when the current_user is dummy and user is dummy" do
+    @board.cards.create!(:card => "HA", :user => @board.user_e)
+    card = @board.cards.build(:card => "DA", :user => @board.user_s)
+    assert card.invalid?
+    assert card.errors[:user].present?
+  end
+
+  test "not valid when the current_user is dummy and user is W opponent" do
+    @board.cards.create!(:card => "HA", :user => @board.user_e)
+    card = @board.cards.build(:card => "DA", :user => @board.user_w)
+    assert card.invalid?
+    assert card.errors[:user].present?
+  end
+
+  test "not valid when the current_user is dummy and user is E opponent" do
+    @board.cards.create!(:card => "HA", :user => @board.user_e)
+    card = @board.cards.build(:card => "DA", :user => @board.user_e)
+    assert card.invalid?
+    assert card.errors[:user].present?
+  end
+
   test "not valid when card is in other suit than last card and suit is present on hand" do
     board = Factory(:board_1S_by_N, :deal_id => 636839108127179982824423290.to_s)
     # :n => ["SA", "SK", "SQ", "S8", "S6", "HK", "H7", "H6", "H4", "DK", "DQ", "DJ", "C3"]

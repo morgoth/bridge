@@ -34,25 +34,28 @@ class Card < ActiveRecord::Base
   private
 
   def identicalness_of_suit
-    if suit != current_trick_suit and current_user.has_cards_in_suit?(current_trick_suit)
+    if suit != current_trick_suit && current_user.has_cards_in_suit?(current_trick_suit)
       errors.add(:card, "of card must be in #{current_trick_suit} suit")
     end
   end
 
   def presence_of_card_in_hand
-    errors.add(:card, "#{card} doesn't belong to player") unless current_user.has_card?(card)
+    unless current_user.has_card?(card)
+      errors.add(:card, "#{card} doesn't belong to player")
+    end
   end
 
   # TODO: test that dummy user can't actually play cards
+  # TODO: test that opponent can't play cards not in order
   def correct_user
-    if (current_user.declarer? && user != current_user) || (current_user.dummy? && user != current_user.partner)
-      errors.add :user, "can not play card at the moment"
+    if (!current_user.dummy? && user != current_user) || (current_user.dummy? && user != current_user.partner)
+      errors.add(:user, "can not play card at the moment")
     end
   end
 
   def state_of_board
     unless board_playing?
-      errors.add :board, "is not in the playing state"
+      errors.add(:board, "is not in the playing state")
     end
   end
 end
