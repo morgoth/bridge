@@ -1,6 +1,8 @@
 Libre::Application.routes.draw do |map|
   resource :home, :only => [:show]
 
+  # authentication
+
   namespace :guest do
     resource :user_session, :only => [:new, :create]
     resource :user, :only => [:new, :create]
@@ -9,6 +11,22 @@ Libre::Application.routes.draw do |map|
   namespace :user do
     resource :user_session, :only => [:destroy]
     resource :user, :only => [:show]
+  end
+
+  # bridge
+
+  resources :tables, :only => [:create, :show] do
+    resources :boards, :only => [] do
+      resources :bids, :only => [:create]
+      resources :cards, :only => [:create]
+      resources :claims, :only => [:create] do
+        member do
+          put :accept
+          put :reject
+        end
+      end
+    end
+    resources :players, :only => [:create, :destroy]
   end
 
   root :to => "homes#show"
