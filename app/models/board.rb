@@ -13,7 +13,7 @@ class Board < ActiveRecord::Base
   end
 
   def score
-    Bridge::Score.new(:contract => final_contract_string, :vulnerable => declarer_vulnerable?, :tricks => tricks_taken(Bridge.side_of(declarer_user.direction)))
+    Bridge::Score.new(:contract => contract, :vulnerable => declarer_vulnerable?, :tricks => tricks_taken(Bridge.side_of(declarer)))
   rescue ArgumentError
   end
 
@@ -21,18 +21,16 @@ class Board < ActiveRecord::Base
     Bridge::DIRECTIONS.index(dealer)
   end
 
-  def trump
-    final_contract.trump
+  def contract_trump
+    contract_without_modifier.trump
   end
 
-  def final_contract
-    bids.final.last
+  def contract_suit
+    contract_without_modifier.suit
   end
 
-  def final_contract_string
-    final_contract.bid.to_s.tap do |contract|
-      contract << bids.active.modifiers.last.bid.to_s if bids.active.modifiers.present?
-    end
+  def contract_without_modifier
+    Bridge::Bid.new(contract.gsub(/(X+)/, ""))
   end
 
   def cards_left(direction = nil)
@@ -50,7 +48,7 @@ class Board < ActiveRecord::Base
 
   # TODO: test
   def declarer_user
-    bids.final.first.user
+    users[declarer]
   end
 
   # TODO: test
@@ -69,7 +67,7 @@ class Board < ActiveRecord::Base
 
   def tricks_taken(side = nil)
     hash = cards.tricks.inject({}) do |h, trick|
-      card = Bridge::Trick.new(trick.map(&:card)).winner(trump)
+      card = Bridge::Trick.new(trick.map(&:card)).winner(contract_trump)
       direction = deal_owner(card)
       h[direction] = (h[direction] || 0) + 1
       h
@@ -88,7 +86,7 @@ class Board < ActiveRecord::Base
     when "NONE"
      false
     else
-      vulnerable.split('').include?(declarer_user.direction)
+      vulnerable.split('').include?(declarer)
     end
   end
 
@@ -109,6 +107,8 @@ class Board < ActiveRecord::Base
     event :claimed do
       transition :playing => :completed, :if => :claim_accepted?
     end
+
+    before_transition :auction => :playing, :do => [:set_contract, :set_declarer]
   end
 
   private
@@ -127,5 +127,15 @@ class Board < ActiveRecord::Base
 
   def claim_accepted?
     claims.accepted.exists?
+  end
+
+  def set_contract
+    self.contract = bids.final.last.bid.to_s.tap do |c|
+      c << bids.active.modifiers.last.bid.to_s if bids.active.modifiers.present?
+    end
+  end
+
+  def set_declarer
+    self.declarer = bids.final.first.user.direction
   end
 end

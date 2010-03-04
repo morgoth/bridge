@@ -120,6 +120,24 @@ class BidAuctionTest < ActiveSupport::TestCase
     assert_equal [bid1, bid2], @board.bids.final.all
   end
 
+  test "set contract after auction complete" do
+    @board.bids.create!(:bid => "1S", :user => @user_n)
+    assert_nil @board.contract
+    @board.bids.create!(:bid => "X", :user => @user_e)
+    @board.bids.create!(:bid => "PASS", :user => @user_s)
+    @board.bids.create!(:bid => "PASS", :user => @user_w)
+    @board.bids.create!(:bid => "PASS", :user => @user_n)
+    assert_equal "1SX", @board.reload.contract
+  end
+
+  test "set declarer after auction complete" do
+    @board.bids.create!(:bid => "1S", :user => @user_n)
+    assert_nil @board.contract
+    @board.bids.create!(:bid => "PASS", :user => @user_e)
+    @board.bids.create!(:bid => "PASS", :user => @user_s)
+    @board.bids.create!(:bid => "PASS", :user => @user_w)
+    assert_equal "N", @board.reload.declarer
+  end
   # CONTRACT
 
   test "bid lower than the last contract is invalid" do

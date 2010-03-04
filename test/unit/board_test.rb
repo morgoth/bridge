@@ -21,7 +21,7 @@ class BoardTest < ActiveSupport::TestCase
     @board.bids.create!(:bid => "PASS", :user => @user_e)
     @board.bids.create!(:bid => "PASS", :user => @user_s)
     @board.bids.create!(:bid => "PASS", :user => @user_w)
-    assert_equal @user_e, @board.first_lead_user
+    assert_equal @user_e, @board.reload.first_lead_user
   end
 
   test "return S as first lead user when plays E" do
@@ -30,7 +30,7 @@ class BoardTest < ActiveSupport::TestCase
     @board.bids.create!(:bid => "PASS", :user => @user_s)
     @board.bids.create!(:bid => "PASS", :user => @user_w)
     @board.bids.create!(:bid => "PASS", :user => @user_n)
-    assert_equal @user_s, @board.first_lead_user
+    assert_equal @user_s, @board.reload.first_lead_user
   end
 
   test "is in the completed state after four passes auction" do
@@ -41,30 +41,28 @@ class BoardTest < ActiveSupport::TestCase
     assert @board.reload.completed?
   end
 
-  test "return contract string without modifiers" do
-    @board.bids.create!(:bid => "5S", :user => @user_n)
-    @board.bids.create!(:bid => "PASS", :user => @user_e)
-    @board.bids.create!(:bid => "PASS", :user => @user_s)
-    @board.bids.create!(:bid => "PASS", :user => @user_w)
-    assert_equal "5S", @board.final_contract_string
-  end
-
-  test "return contract string with double modifier" do
+  test "return contract string without modifier" do
     @board.bids.create!(:bid => "5S", :user => @user_n)
     @board.bids.create!(:bid => "X", :user => @user_e)
     @board.bids.create!(:bid => "PASS", :user => @user_s)
     @board.bids.create!(:bid => "PASS", :user => @user_w)
     @board.bids.create!(:bid => "PASS", :user => @user_n)
-    assert_equal "5SX", @board.final_contract_string
+    assert_equal "5S", @board.reload.contract_without_modifier.to_s
   end
 
-  test "return contract string with redouble modifier" do
+  test "return contract suit" do
     @board.bids.create!(:bid => "5S", :user => @user_n)
-    @board.bids.create!(:bid => "X", :user => @user_e)
-    @board.bids.create!(:bid => "XX", :user => @user_s)
-    @board.bids.create!(:bid => "PASS", :user => @user_w)
-    @board.bids.create!(:bid => "PASS", :user => @user_n)
     @board.bids.create!(:bid => "PASS", :user => @user_e)
-    assert_equal "5SXX", @board.final_contract_string
+    @board.bids.create!(:bid => "PASS", :user => @user_s)
+    @board.bids.create!(:bid => "PASS", :user => @user_w)
+    assert_equal "S", @board.reload.contract_suit
+  end
+
+  test "return contract trump" do
+    @board.bids.create!(:bid => "5S", :user => @user_n)
+    @board.bids.create!(:bid => "PASS", :user => @user_e)
+    @board.bids.create!(:bid => "PASS", :user => @user_s)
+    @board.bids.create!(:bid => "PASS", :user => @user_w)
+    assert_equal "S", @board.reload.contract_trump
   end
 end

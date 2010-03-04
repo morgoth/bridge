@@ -55,7 +55,7 @@ module CardsBoardExtension
 
   def previous_trick_winner
     return if previous_trick.empty?
-    card = Bridge::Trick.new(previous_trick.map(&:card)).winner(proxy_owner.trump)
+    card = Bridge::Trick.new(previous_trick.map(&:card)).winner(proxy_owner.contract_trump)
     proxy_owner.card_owner(card)
   end
 
