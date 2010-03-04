@@ -103,6 +103,11 @@ class PlayingBoardTest < ActiveSupport::TestCase
   test "completed tricks count returns 0" do
     assert_equal 0, @board.cards.completed_tricks_count
   end
+
+  test "accepted claim changes board state to completed" do
+    Factory(:accepted_claim, :board => @board, :user => @user_n)
+    assert @board.completed?
+  end
 end
 
 class CompletedBoardTest < ActiveSupport::TestCase

@@ -22,6 +22,7 @@ class Claim < ActiveRecord::Base
 
   before_validation lambda { |claim| claim.claiming_user = claim.user }, :if => :new_record?
   before_validation lambda { |claim| claim.state_event = :propose }, :if => :new_record?
+  after_save { |claim| claim.board.claimed }
 
   state_machine do
     event :propose do

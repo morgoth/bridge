@@ -105,6 +105,10 @@ class Board < ActiveRecord::Base
     event :card_played do
       transition :playing => :completed, :if => :end_of_play?
     end
+
+    event :claimed do
+      transition :playing => :completed, :if => :claim_accepted?
+    end
   end
 
   private
@@ -119,5 +123,9 @@ class Board < ActiveRecord::Base
 
   def end_of_play?
     cards.count == 52
+  end
+
+  def claim_accepted?
+    claims.accepted.exists?
   end
 end
