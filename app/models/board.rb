@@ -5,15 +5,9 @@ class Board < ActiveRecord::Base
   has_many :claims
 
   delegate :n, :e, :s, :w, :owner, :to => :deal, :prefix => true, :allow_nil => true
-  delegate :made?, :points, :result, :to => :score, :prefix => true, :allow_nil => true
 
   def deal
     Bridge::Deal.from_id(deal_id.to_i)
-  rescue ArgumentError
-  end
-
-  def score
-    Bridge::Score.new(:contract => contract, :vulnerable => declarer_vulnerable?, :tricks => tricks_taken(Bridge.side_of(declarer)))
   rescue ArgumentError
   end
 
@@ -66,17 +60,13 @@ class Board < ActiveRecord::Base
   end
 
   def tricks_taken(side = nil)
-    hash = cards.tricks.inject({}) do |h, trick|
+    hash = cards.tricks.inject(Hash.new(0)) do |h, trick|
       card = Bridge::Trick.new(trick.map(&:card)).winner(contract_trump)
       direction = deal_owner(card)
-      h[direction] = (h[direction] || 0) + 1
+      h[direction] += 1
       h
     end
-    if side
-      side.to_s.upcase.split("").inject(0) { |sum, direction| sum += hash[direction] }
-    else
-      hash
-    end
+    side.nil? ? hash : side.to_s.upcase.split("").inject(0) { |sum, direction| sum += hash[direction] }
   end
 
   def declarer_vulnerable?
@@ -88,6 +78,10 @@ class Board < ActiveRecord::Base
     else
       vulnerable.split('').include?(declarer)
     end
+  end
+
+  def tricks_ew
+    13 - tricks_ns
   end
 
   scope :auction, where(:state => "auction")
@@ -109,6 +103,7 @@ class Board < ActiveRecord::Base
     end
 
     before_transition :auction => :playing, :do => [:set_contract, :set_declarer]
+    before_transition :playing => :completed, :do => [:set_tricks, :set_points]
   end
 
   private
@@ -137,5 +132,21 @@ class Board < ActiveRecord::Base
 
   def set_declarer
     self.declarer = bids.final.first.user.direction
+  end
+
+  def set_tricks
+    if claim_accepted?
+      claim_tricks = claims.accepted.last.tricks
+      claim_direction = claims.accepted.last.claiming_user.direction
+      taken_ns = claim_tricks if ["N", "S"].include?(claim_direction)
+    end
+    taken_ns ||= 0
+    taken_ns += tricks_taken("NS")
+    self.tricks_ns = taken_ns
+  end
+
+  def set_points
+    score = Bridge::Score.new(:contract => contract, :vulnerable => declarer_vulnerable?, :tricks => send("tricks_#{Bridge.side_of(declarer).downcase}"))
+    self.points_ns = ["N", "S"].include?(declarer) ? score.points : -score.points
   end
 end

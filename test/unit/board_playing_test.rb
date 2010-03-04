@@ -52,4 +52,10 @@ class BoardPlayingTest < ActiveSupport::TestCase
     assert claim1.reload.rejected?
     assert claim2.reload.proposed?
   end
+
+  test "set tricks to ns after claim" do
+    claim = Factory(:accepted_claim, :board => @board, :tricks => 9)
+    assert_equal 9, claim.board.tricks_ns
+    assert_equal 4, claim.board.tricks_ew
+  end
 end

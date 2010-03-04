@@ -28,22 +28,14 @@ class BoardCompletedTest < ActiveSupport::TestCase
   end
 
   test "return tricks taken by ns" do
-    assert_equal 9, @board.tricks_taken("ns")
+    assert_equal 9, @board.tricks_ns
   end
 
   test "return tricks taken by ew" do
-    assert_equal 4, @board.tricks_taken("ew")
-  end
-
-  test "return true for made contract" do
-    assert @board.score_made?
-  end
-
-  test "return 2 as score result" do
-    assert_equal 2, @board.score_result
+    assert_equal 4, @board.tricks_ew
   end
 
   test "return 140 as score points" do
-    assert_equal 140, @board.score_points
+    assert_equal 140, @board.points_ns
   end
 end
