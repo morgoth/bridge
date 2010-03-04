@@ -10,7 +10,7 @@ class Claim < ActiveRecord::Base
   validate :tricks_number_below_maximum
   validate :correct_user
 
-  delegate :cards, :users, :to => :board, :prefix => true
+  delegate :claims, :cards, :users, :to => :board, :prefix => true
   delegate :current_user, :completed_tricks_count, :to => :board_cards
 
   scope :active, where(:state => ["proposed", "previous_accepted", "next_accepted"])
@@ -23,6 +23,7 @@ class Claim < ActiveRecord::Base
   before_validation lambda { |claim| claim.claiming_user = claim.user }, :if => :new_record?
   before_validation lambda { |claim| claim.state_event = :propose }, :if => :new_record?
   after_save { |claim| claim.board.claimed }
+  after_create :reject_active_claims
 
   state_machine do
     event :propose do
@@ -76,6 +77,13 @@ class Claim < ActiveRecord::Base
   def correct_user
     unless playing_user?
       errors.add :user, "can not claim"
+    end
+  end
+
+  def reject_active_claims
+    board_claims.active.where("id != ?", id).each do |claim|
+      claim.user = user
+      claim.reject!
     end
   end
 end

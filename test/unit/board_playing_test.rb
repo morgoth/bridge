@@ -45,4 +45,11 @@ class BoardPlayingTest < ActiveSupport::TestCase
     @board.cards.create!(:card => "HA", :user => @user_e)
     assert claim.reload.rejected?
   end
+
+  test "claiming rejects active claims" do
+    claim1 = Factory(:claim, :board => @board, :user => @user_n)
+    claim2 = Factory(:claim, :board => @board, :user => @user_n)
+    assert claim1.reload.rejected?
+    assert claim2.reload.proposed?
+  end
 end
