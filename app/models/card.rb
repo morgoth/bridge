@@ -6,11 +6,12 @@ class Card < ActiveRecord::Base
   validate :presence_of_card_in_hand, :correct_user, :state_of_board
   validate :identicalness_of_suit, :unless => :current_lead?
 
-  delegate :deal, :card_played, :card_owner, :cards, :cards_left, :deal, :playing?, :to => :board, :prefix => true
+  delegate :claims, :deal, :card_played, :card_owner, :cards, :cards_left, :deal, :playing?, :to => :board, :prefix => true
   delegate :suit, :value, :to => :card, :allow_nil => true
   delegate :current_trick_suit, :current_lead?, :current_user, :to => :board_cards
 
   after_create :board_card_played
+  after_create { |card| card.board.claims.active.each { |claim| claim.user = card.user; claim.reject! } }
 
   attr_writer :user
 
@@ -32,6 +33,13 @@ class Card < ActiveRecord::Base
   end
 
   private
+
+  def reject_active_claims
+    board_claims.active.each do |claim|
+      claim.user = user
+      claim.reject!
+    end
+  end
 
   def identicalness_of_suit
     if suit != current_trick_suit && current_user.has_cards_in_suit?(current_trick_suit)

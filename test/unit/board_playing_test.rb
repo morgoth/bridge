@@ -39,4 +39,10 @@ class BoardPlayingTest < ActiveSupport::TestCase
     Factory(:accepted_claim, :board => @board, :user => @user_n)
     assert @board.completed?
   end
+
+  test "playing a card rejects active claims" do
+    claim = Factory(:claim, :board => @board, :user => @user_n)
+    @board.cards.create!(:card => "HA", :user => @user_e)
+    assert claim.reload.rejected?
+  end
 end
