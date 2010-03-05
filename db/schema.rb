@@ -33,6 +33,8 @@ ActiveRecord::Schema.define(:version => 20100304145802) do
     t.integer  "user_w_id"
     t.string   "declarer"
     t.string   "contract"
+    t.integer  "points_ns"
+    t.integer  "tricks_ns"
   end
 
   create_table "cards", :force => true do |t|

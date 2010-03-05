@@ -35,12 +35,8 @@ module Libre
       g.test_framework  :test_unit, :fixture => false
     end
 
-    config.action_dispatch.cookie_verifier_secret = "707d2a134650acb093677eafef6275f72239c1e4b86fb5c19774025c64e435c11215e4c9d84c36df6e0d63c0247fd238b9562f9900fa54ad6e3acb6e806e1a88"
-
-    config.action_dispatch.session = {
-      :key    => "_libre_session",
-      :secret => "23e008610b365fe6073beec0b37b78217370671b4df84e1a06050c4755b8956d34dd463ab974773341d69a93c50af2b5d2987237ae7371e8523576c0d2e81157"
-    }
+    config.session_store :cookie_store, :key => '_libre_session'
+    config.cookie_secret = '1c2d46fe5cff6eeda1aaac49f9947c129e2cc50a0c916f0c81e36ef111e995de3e562da88550ac54aa47b9912f62a80460e7dde81a754c15e9cfa32563bf1a2e'
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters << :password
