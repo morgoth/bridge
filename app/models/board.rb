@@ -59,6 +59,10 @@ class Board < ActiveRecord::Base
     [user_n, user_e, user_s, user_w].extend(UsersBoardExtension)
   end
 
+  def users=(users)
+    user_n, user_e, user_s, user_w = users
+  end
+
   def tricks_taken(side = nil)
     hash = cards.tricks.inject(Hash.new(0)) do |h, trick|
       card = Bridge::Trick.new(trick.map(&:card)).winner(contract_trump)
