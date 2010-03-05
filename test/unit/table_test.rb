@@ -1,8 +1,11 @@
 require 'test_helper'
 
 class TableTest < ActiveSupport::TestCase
-  # Replace this with your real tests.
-  test "the truth" do
-    assert true
+  setup do
+    @table = Factory.build(:table)
+  end
+
+  test "is valid with valid attributes" do
+    assert @table.valid?
   end
 end

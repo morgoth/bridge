@@ -1,6 +1,5 @@
 class Table < ActiveRecord::Base
-  %w(n e s w).each { |d| belongs_to "player_#{d}", :class_name => "Player" }
-  has_many :boards
+  has_many :players
 
   state_machine :initial => :preparing do
     event :start do
@@ -8,13 +7,9 @@ class Table < ActiveRecord::Base
     end
   end
 
-  def players
-    [player_n, player_e, player_s, player_w]
-  end
-
   private
 
   def four_players_ready?
-    players.all? { |player| player && player.ready? }
+    players.count == 4 && players.all?(&:ready?)
   end
 end
