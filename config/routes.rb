@@ -3,15 +3,8 @@ Libre::Application.routes.draw do |map|
 
   # authentication
 
-  namespace :guest do
-    resource :user_session, :only => [:new, :create]
-    resource :user, :only => [:new, :create]
-  end
-
-  namespace :user do
-    resource :user_session, :only => [:destroy]
-    resource :user, :only => [:show]
-  end
+  resource :user_session, :only => [:new, :create, :destroy]
+  resource :user, :only => [:new, :create, :show]
 
   # bridge
 

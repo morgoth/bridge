@@ -4,6 +4,22 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def require_no_user
+    if current_user
+      store_location
+      redirect_to user_path, :notice => "You must be logged out to access this page"
+      return false
+    end
+  end
+
+  def require_user
+    unless current_user
+      store_location
+      redirect_to new_user_session_path, :notice => "You must be logged in to access this page"
+      return false
+    end
+  end
+
   def current_user_session
     return @current_user_session if defined?(@current_user_session)
     @current_user_session = UserSession.find(session)

@@ -1,4 +1,7 @@
-class Guest::UsersController < Guest::BaseController
+class UsersController < ApplicationController
+  before_filter :require_no_user, :only => [:new, :create]
+  before_filter :require_user, :only => [:show]
+
   def new
     @user = User.new
   end
@@ -10,5 +13,9 @@ class Guest::UsersController < Guest::BaseController
     else
       render :new
     end
+  end
+
+  def show
+    @user = @current_user
   end
 end
