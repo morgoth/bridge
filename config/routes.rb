@@ -26,7 +26,12 @@ Libre::Application.routes.draw do |map|
         end
       end
     end
-    resources :players, :only => [:create, :destroy]
+    resources :players, :only => [:create, :destroy] do
+      member do
+        put :start
+        put :reset
+      end
+    end
   end
 
   root :to => "homes#show"
