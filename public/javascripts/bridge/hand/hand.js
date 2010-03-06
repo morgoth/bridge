@@ -1,7 +1,6 @@
 YUI.add("hand", function(Y) {
 
-    var getClassName = Y.ClassNameManager.getClassName,
-        each = Y.each,
+    var each = Y.each,
         bind = Y.bind,
         Widget = Y.Widget,
         Node = Y.Node,
@@ -54,6 +53,8 @@ YUI.add("hand", function(Y) {
             this.after("nameChange", this._afterNameChange);
             this.after("disabledChange", this._afterDisabledChange);
             this.cardsNode.delegate("click", bind(this._onCardClick, this), "button");
+            this.joinNode.delegate("click", bind(this.fire, this, "join"));
+            this.quitNode.delegate("click", bind(this.fire, this, "quit"));
         },
 
         syncUI: function() {

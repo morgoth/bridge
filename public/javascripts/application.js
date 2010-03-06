@@ -17,9 +17,15 @@ YUI({
             type: "js",
             path: "../bridge/hand/hand.js",
             requires: ["widget"]
+        },
+        trick: {
+            name: "Bridge Trick",
+            type: "js",
+            path: "../bridge/trick/trick.js",
+            requires: ["widget"]
         }
     }
-}).use("biddingbox", "auction", "hand", function(Y) {
+}).use("biddingbox", "auction", "hand", "trick", function(Y) {
     auction = new Y.Auction();
     auction.render();
     auction.on("bid", function(event) {
@@ -44,4 +50,7 @@ YUI({
         var card = event[0];
         console.log(card);
     });
+
+    trick = new Y.Trick();
+    trick.render();
 });
