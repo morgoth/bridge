@@ -48,7 +48,6 @@ YUI.add("biddingbox", function(Y) {
             this.after("contractChange", this._afterContractChange);
             this.after("doubleChange", this._afterDoubleChange);
             this.after("redoubleChange", this._afterRedoubleChange);
-            this.after("bid", this.reset);
             this.passNode.on("click", bind(this._fireBidEvent, this, PASS));
             this._bindModifiers();
             this._bindLevels();
@@ -195,7 +194,7 @@ YUI.add("biddingbox", function(Y) {
         _renderPassButton: function() {
             var contentBox = this.get("contentBox");
 
-            this.passNode = this._createButton(PASS, this.getClassName(PASS));
+            this.passNode = this._createButton(PASS, this.getClassName(PASS.toLowerCase()));
 
             contentBox.appendChild(this.passNode);
         },
@@ -207,7 +206,7 @@ YUI.add("biddingbox", function(Y) {
             this.modifiersNode = this._createButtonGroup(this.getClassName("modifiers"));
 
             each(MODIFIERS, function(modifier) {
-                var modifierNode = this._createButtonGroupItem(modifier, this.getClassName("modifier", modifier));
+                var modifierNode = this._createButtonGroupItem(modifier, this.getClassName("modifier", modifier.toLowerCase()));
 
                 this.modifierNodes[modifier] = modifierNode;
                 this.modifiersNode.appendChild(modifierNode);
@@ -239,7 +238,7 @@ YUI.add("biddingbox", function(Y) {
             this.suitsNode = this._createButtonGroup(this.getClassName("suits"));
 
             each(SUITS, function(suit) {
-                var suitNode = this._createButtonGroupItem(suit, this.getClassName("suit", suit));
+                var suitNode = this._createButtonGroupItem(suit, this.getClassName("suit", suit.toLowerCase()));
 
                 this.suitNodes[suit] = suitNode;
                 this.suitsNode.appendChild(suitNode);
@@ -251,12 +250,12 @@ YUI.add("biddingbox", function(Y) {
         _renderAlert: function() {
             var contentBox = this.get("contentBox");
 
-            this.alertNode = Y.Node.create(ALERT_TEMPLATE);
+            this.alertNode = Node.create(ALERT_TEMPLATE);
             contentBox.appendChild(this.alertNode);
         },
 
         _createButton: function(text, className) {
-            var button = Y.Node.create(BUTTON_TEMPLATE);
+            var button = Node.create(BUTTON_TEMPLATE);
 
             button.set("innerHTML", text);
             button.set("title", text);
@@ -266,7 +265,7 @@ YUI.add("biddingbox", function(Y) {
         },
 
         _createButtonGroup: function(className) {
-            var buttonGroup = Y.Node.create(BUTTON_GROUP_TEMPLATE);
+            var buttonGroup = Node.create(BUTTON_GROUP_TEMPLATE);
 
             buttonGroup.addClass(className);
 
@@ -274,7 +273,7 @@ YUI.add("biddingbox", function(Y) {
         },
 
         _createButtonGroupItem: function(text, className) {
-            var buttonGroupItem = Y.Node.create(BUTTON_GROUP_ITEM_TEMPLATE),
+            var buttonGroupItem = Node.create(BUTTON_GROUP_ITEM_TEMPLATE),
                 button = this._createButton(text, className);
 
             buttonGroupItem.addClass(className);
