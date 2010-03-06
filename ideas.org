@@ -1,0 +1,38 @@
+* widgets (BBO inspired)
+** auction
+- history of the auction, e.g.
+|-----------+--------+------+---------|
+| Kurbalija | Spears | Rees | Murdoch |
+|-----------+--------+------+---------|
+|           |        | 1C   | PASS    |
+| 1D        | 1S     | 2H   | 2S      |
+| PASS      | PASS   | PASS |         |
+|-----------+--------+------+---------|
+** bidding box
+- replaces tricks taken during the auction phase
+Pass Double Redouble - double and redouble enabled when possible
+1 2 3 4 5 6 7        - display click on level reveals possible suits
+C D H S NT
+Alert: ____________________
+** tricks (taken)
+- replaces bidding box during the playing phase
+- contract info: 2S by Spears
+- number of tricks taken by NS
+- number of tricks taken by EW
+- tricks history (hover on trick shows it)
+** table (information)
+- vulnerable colours with dealer marked
+- table name/number, e.g.
+IMP Pairs
+Board 63
+** result
+NS: 10.5 IMPs
+EW: 4.0 IMPs
+** hand
+- direction
+- player's name
+- player status (owner of the table, disconnected, etc.)
+- hover on player to get profile info
+- cards (revealed or hidden)
+** trick (current)
+- four cards
