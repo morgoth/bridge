@@ -10,8 +10,8 @@ YUI.add("biddingbox", function(Y) {
         LEVELS = [1, 2, 3, 4, 5, 6, 7],
         SUITS = ["C", "D", "H", "S", "NT"],
         PASS = "PASS",
-        DOUBLE = "DOUBLE",
-        REDOUBLE = "REDOUBLE",
+        DOUBLE = "X",
+        REDOUBLE = "XX",
         MODIFIERS = [DOUBLE, REDOUBLE],
         ALERT = "alert",
         ALERT_CLASS = getClassName(BIDDING_BOX, ALERT),
@@ -46,6 +46,8 @@ YUI.add("biddingbox", function(Y) {
         bindUI: function() {
             this.after("levelChange", this._afterLevelChange);
             this.after("contractChange", this._afterContractChange);
+            this.after("doubleChange", this._afterDoubleChange);
+            this.after("redoubleChange", this._afterRedoubleChange);
             this.after("bid", this.reset);
             this.passNode.on("click", bind(this._fireBidEvent, this, PASS));
             this._bindModifiers();
@@ -76,6 +78,14 @@ YUI.add("biddingbox", function(Y) {
             this._uiSetLevel(event.newVal);
         },
 
+        _afterDoubleChange: function(event) {
+            this._uiSetDouble(event.newVal);
+        },
+
+        _afterRedoubleChange: function(event) {
+            this._uiSetRedouble(event.newVal);
+        },
+
         _onSuitClick: function(suit) {
             var level = this.get("level");
 
@@ -91,6 +101,7 @@ YUI.add("biddingbox", function(Y) {
         _uiSetDouble: function(dbl) {
             if(dbl) {
                 this._enableButton(this.modifierNodes[DOUBLE].one("button"));
+                this.set("redouble", false);
             } else {
                 this._disableButton(this.modifierNodes[DOUBLE].one("button"));
             }
@@ -99,6 +110,7 @@ YUI.add("biddingbox", function(Y) {
         _uiSetRedouble: function(redbl) {
             if(redbl) {
                 this._enableButton(this.modifierNodes[REDOUBLE].one("button"));
+                this.set("double", false);
             } else {
                 this._disableButton(this.modifierNodes[REDOUBLE].one("button"));
             }
