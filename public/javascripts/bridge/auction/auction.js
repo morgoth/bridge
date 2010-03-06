@@ -1,7 +1,6 @@
 YUI.add("auction", function(Y) {
 
-    var getClassName = Y.ClassNameManager.getClassName,
-        each = Y.each,
+    var each = Y.each,
         bind = Y.bind,
         indexOf = Y.Array.indexOf,
         Widget = Y.Widget,
