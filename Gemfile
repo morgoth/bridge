@@ -8,6 +8,7 @@ gem "haml"
 gem "rails3-generators"
 gem "sqlite3"
 gem "state_machine"
+gem "compass"
 
 group :test do
   gem "capybara"
