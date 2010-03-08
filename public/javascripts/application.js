@@ -26,31 +26,46 @@ YUI({
         }
     }
 }).use("biddingbox", "auction", "hand", "trick", function(Y) {
-    auction = new Y.Auction();
-    auction.render();
-    auction.on("bid", function(event) {
-        var position = event[0];
-        // console.log(position);
-    });
+    // auction = new Y.Auction();
+    // auction.render();
+    // auction.on("bid", function(event) {
+    //     var position = event[0];
+    //     // console.log(position);
+    // });
 
-    biddingBox = new Y.BiddingBox();
-    biddingBox.render();
-    biddingBox.on("bid", function(event) {
-        var bid = event[0],
-            alert = event[1];
-        // console.log(bid + " (" + alert + ")");
-        biddingBox.reset();
-        biddingBox.set("contract", bid);
-        auction.addBid(bid);
-    });
+    // biddingBox = new Y.BiddingBox();
+    // biddingBox.render();
+    // biddingBox.on("bid", function(event) {
+    //     var bid = event[0],
+    //         alert = event[1];
+    //     // console.log(bid + " (" + alert + ")");
+    //     biddingBox.reset();
+    //     biddingBox.set("contract", bid);
+    //     auction.addBid(bid);
+    // });
 
-    hand = new Y.Hand();
-    hand.render();
-    hand.on("card", function(event) {
-        var card = event[0];
-        console.log(card);
-    });
+    // trick = new Y.Trick();
+    // trick.render();
 
-    trick = new Y.Trick();
-    trick.render();
+    var each = Y.each,
+        Hand = Y.Hand,
+        hands = {},
+        DIRECTIONS = ["N", "E", "S", "W"];
+
+    function renderHands() {
+        each(DIRECTIONS, function(direction) {
+            var hand = new Hand({ direction: direction });
+
+            hands[direction] = hand;
+            hand.render();
+        });
+    }
+
+    function bindHands() {
+        each(hands, function(hand) {
+
+        });
+    }
+
+    renderHands();
 });
