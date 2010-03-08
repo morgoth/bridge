@@ -1,5 +1,6 @@
 class Table < ActiveRecord::Base
   has_many :players
+  has_many :boards
 
   state_machine :initial => :preparing do
     event :start do

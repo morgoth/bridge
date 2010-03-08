@@ -1,6 +1,6 @@
 class TablesController < ApplicationController
   before_filter :require_user
-  respond_to :html
+  respond_to :html, :json
 
   def create
     @table = Table.new(params[:table])
@@ -9,5 +9,6 @@ class TablesController < ApplicationController
 
   def show
     @table = Table.find(params[:id])
+    @board = @table.boards.last
   end
 end
