@@ -1,3 +1,0 @@
-"table": {
-  "board": <%=raw @board.serializable_hash(:only => [:state, :dealer, :declarer, :contract], :methods => ["contract_trump"]).merge("bids" => @board.bids.map(&:bid), "hands" => @board.deal).as_json %>
-}

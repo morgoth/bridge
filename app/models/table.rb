@@ -8,6 +8,20 @@ class Table < ActiveRecord::Base
     end
   end
 
+  def user_player(user)
+    players.where(:user_id => user.id).first
+  end
+
+  def as_json(options = {})
+    serializable_hash.tap do |hash|
+
+      if options[:user] && user_player(options[:user])
+        hash[:user] = user_player(options[:user]).direction
+      end
+
+    end.to_json
+  end
+
   private
 
   def four_players_ready?

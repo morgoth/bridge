@@ -8,19 +8,19 @@ Libre::Application.routes.draw do |map|
 
   # bridge
 
-  resources :tables, :only => [:create, :show] do
-    resources :boards, :only => [] do
-      resources :bids, :only => [:create]
-      resources :cards, :only => [:create]
-      resources :claims, :only => [:create] do
-        member do
-          put :accept
-          put :reject
+  namespace :ajax do
+    resources :tables, :only => [:show] do
+      resources :boards, :only => [] do
+        resources :bids, :only => [:create]
+        resources :cards, :only => [:create]
+        resources :claims, :only => [:create] do
+          member do
+            put :accept
+            put :reject
+          end
         end
       end
-    end
-    resources :players, :only => [:create, :destroy] do
-      member do
+      resource :player, :only => [:create, :destroy] do
         put :start
         put :reset
       end
