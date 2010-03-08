@@ -10,6 +10,7 @@ class Player < ActiveRecord::Base
   validates_uniqueness_of :direction, :scope => :table_id
 
   delegate :start, :to => :table, :prefix => true
+  delegate :name, :to => :user
 
   state_machine :initial => :preparing do
     event :start do
@@ -21,5 +22,9 @@ class Player < ActiveRecord::Base
     end
 
     after_transition :on => :start, :do => :table_start
+  end
+
+  def for_ajax
+    serializable_hash(:only => [:direction, :state], :methods => [:name])
   end
 end

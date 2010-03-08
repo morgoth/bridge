@@ -11,6 +11,11 @@ class User < ActiveRecord::Base
     crypted_password == encrypt(password)
   end
 
+  # TODO: add display_name to user's model
+  def name
+    email
+  end
+
   private
 
   def self.secure_digest(*args)

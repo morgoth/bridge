@@ -1,7 +1,7 @@
 class AjaxResponder < ActionController::Responder
   def display(resource, given_options={})
     user = controller.send(:current_user)
-    controller.render given_options.merge!(options).merge!(format => resource.send(:"as_#{format}", :user => user))
+    controller.render given_options.merge!(options).merge!(format => resource.send(:for_ajax, :user => user))
   end
 
   def api_behavior(error)

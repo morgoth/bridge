@@ -12,14 +12,15 @@ class Table < ActiveRecord::Base
     players.where(:user_id => user.id).first
   end
 
-  def as_json(options = {})
-    serializable_hash.tap do |hash|
+  def for_ajax(options = {})
+    serializable_hash(:only => [:id, :state]).tap do |hash|
 
       if options[:user] && user_player(options[:user])
-        hash[:user] = user_player(options[:user]).direction
+        hash[:player] = user_player(options[:user]).direction
       end
 
-    end.to_json
+      hash[:players] = players.map(&:for_ajax)
+    end
   end
 
   private
