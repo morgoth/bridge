@@ -23,9 +23,15 @@ YUI({
             type: "js",
             path: "../bridge/trick/trick.js",
             requires: ["widget"]
+        },
+        "gallery-io-poller": {
+            name: "YIU3 Gallery IO Poller",
+            type: "js",
+            path: "../yui-gallery/gallery-io-poller/gallery-io-poller.js",
+            requires: ["io-base", "base-base"]
         }
     }
-}).use("biddingbox", "auction", "hand", "trick", function(Y) {
+}).use("biddingbox", "auction", "hand", "trick", "gallery-io-poller", function(Y) {
     // auction = new Y.Auction();
     // auction.render();
     // auction.on("bid", function(event) {
@@ -52,20 +58,36 @@ YUI({
         hands = {},
         DIRECTIONS = ["N", "E", "S", "W"];
 
-    function renderHands() {
-        each(DIRECTIONS, function(direction) {
-            var hand = new Hand({ direction: direction });
+    poll = Y.io.poll(3000, "/ajax/tables/1.json", {
+        on: {
+            modified: function(id, o, args) {
+                console.log(o.status);
+                console.log(o.responseText);
+            },
+            failure: function(id, o, args) {
+                console.log(o.status);
+            }
+        }
+    });
 
-            hands[direction] = hand;
-            hand.render();
-        });
-    }
+    poll.start();
 
-    function bindHands() {
-        each(hands, function(hand) {
+    // myDataSource.sendRequest();
 
-        });
-    }
+    // function renderHands() {
+    //     each(DIRECTIONS, function(direction) {
+    //         var hand = new Hand({ direction: direction });
 
-    renderHands();
+    //         hands[direction] = hand;
+    //         hand.render();
+    //     });
+    // }
+
+    // function bindHands() {
+    //     each(hands, function(hand) {
+
+    //     });
+    // }
+
+    // renderHands();
 });
