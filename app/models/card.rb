@@ -2,7 +2,7 @@ class Card < ActiveRecord::Base
   acts_as_list :scope => :board
   belongs_to :board
 
-  validates :card, :presence => true
+  validates :card, :presence => true, :uniqueness => { :scope => :board_id }
   validate :presence_of_card_in_hand, :correct_user, :state_of_board
   validate :identicalness_of_suit, :unless => :current_lead?
 

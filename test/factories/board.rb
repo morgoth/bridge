@@ -86,9 +86,9 @@ Factory.define :full_board, :parent => :board do |f|
     board.cards.create!(:card => "C7", :user => board.user_w)
     board.cards.create!(:card => "S6", :user => board.user_n)
 
-    board.cards.create!(:card => "DJ", :user => board.user_n)
+    board.cards.create!(:card => "DQ", :user => board.user_n)
     board.cards.create!(:card => "C9", :user => board.user_e)
-    board.cards.create!(:card => "D8", :user => board.user_n)
+    board.cards.create!(:card => "DT", :user => board.user_n)
     board.cards.create!(:card => "D6", :user => board.user_w)
 
     board.cards.create!(:card => "H6", :user => board.user_n)
