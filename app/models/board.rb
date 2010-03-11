@@ -88,6 +88,12 @@ class Board < ActiveRecord::Base
     13 - tricks_ns
   end
 
+  def for_ajax
+    serializable_hash(:only => [:state, :dealer, :declarer, :contract], :methods => ["contract_trump"]).tap do |hash|
+      hash["bids"] = bids.map(&:bid)
+    end
+  end
+
   scope :auction, where(:state => "auction")
   scope :playing, where(:state => "playing")
   scope :completed, where(:state => "completed")

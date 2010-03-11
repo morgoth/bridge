@@ -25,6 +25,6 @@ class Player < ActiveRecord::Base
   end
 
   def for_ajax
-    serializable_hash(:only => [:direction, :state], :methods => [:name])
+    serializable_hash(:only => [:direction, :state], :methods => ["name"])
   end
 end

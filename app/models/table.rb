@@ -12,14 +12,16 @@ class Table < ActiveRecord::Base
     players.where(:user_id => user.id).first
   end
 
-  def for_ajax(options = {})
+  def for_ajax(user)
     serializable_hash(:only => [:id, :state]).tap do |hash|
 
-      if options[:user] && user_player(options[:user])
-        hash[:player] = user_player(options[:user]).direction
+      if user && user_player(user)
+        hash["player"] = user_player(user).direction
       end
 
-      hash[:players] = players.map(&:for_ajax)
+      hash["players"] = players.map(&:for_ajax)
+
+      hash["board"] = boards.last.present? ? bards.last.for_ajax : {}
     end
   end
 
