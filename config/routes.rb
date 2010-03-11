@@ -8,6 +8,10 @@ Libre::Application.routes.draw do |map|
 
   # bridge
 
+  resources :tables, :only => [:index, :show]
+
+  # ajax api
+
   namespace :ajax do
     resources :tables, :only => [:show] do
       resources :boards, :only => [] do

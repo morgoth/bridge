@@ -1,0 +1,5 @@
+%h3 Listing tables
+
+%ul
+  - @tables.each do |table|
+    %li= link_to "Table ##{table.id}", table_path(table)
