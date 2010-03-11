@@ -1,6 +1,6 @@
-source "http://gemcutter.org"
+source "http://rubygems.org"
 
-gem "rails", :git => "git://github.com/rails/rails.git"
+gem "rails", :git => "git://github.com/rails/rails.git", :ref => "f30b7a0903ac1859a139bce96856d228c59a80b7"
 
 gem "acts_as_list"
 gem "bridge"

@@ -21,7 +21,7 @@ class Table < ActiveRecord::Base
 
       hash["players"] = players.map(&:for_ajax)
 
-      hash["board"] = boards.last.present? ? bards.last.for_ajax : {}
+      hash["board"] = boards.last.present? ? boards.last.for_ajax : {}
     end
   end
 
