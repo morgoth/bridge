@@ -1,17 +1,20 @@
 source "http://rubygems.org"
 
-gem "rails", :git => "git://github.com/rails/rails.git", :ref => "f30b7a0903ac1859a139bce96856d228c59a80b7"
+gem "rails", :git => "git://github.com/rails/rails.git"
 
 gem "acts_as_list"
 gem "bridge"
-gem "haml"
-gem "rails3-generators"
+gem "haml", ">=2.2.21"
 gem "sqlite3"
-gem "state_machine"
+gem "state_machine", ">=0.8.1"
 gem "compass"
 
+group :development do
+  gem "rails3-generators"
+end
+
 group :test do
-  gem "capybara"
-  gem "factory_girl", :require => false
+  gem "capybara", :require => nil
+  gem "factory_girl", :require => nil
   gem "test-unit", ">=2.0", :require => "test/unit"
 end
