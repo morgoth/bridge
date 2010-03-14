@@ -1,40 +1,13 @@
 YUI.add("biddingbox", function(Y) {
 
-    var getClassName = Y.ClassNameManager.getClassName,
-        each = Y.each,
-        indexOf = Y.Array.indexOf,
-        bind = Y.bind,
-        Widget = Y.Widget,
-        Node = Y.Node,
-        BIDDING_BOX = "biddingbox",
-        LEVELS = [1, 2, 3, 4, 5, 6, 7],
-        SUITS = ["C", "D", "H", "S", "NT"],
-        PASS = "PASS",
-        DOUBLE = "X",
-        REDOUBLE = "XX",
-        MODIFIERS = [DOUBLE, REDOUBLE],
-        ALERT = "alert",
-        ALERT_CLASS = getClassName(BIDDING_BOX, ALERT),
-        ALERT_TEMPLATE = '<input type="text" class=' + ALERT_CLASS + '></input>',
-        BUTTON_GROUP_TEMPLATE = '<ol></ol>',
-        BUTTON_GROUP_ITEM_TEMPLATE = '<li></li>',
-        BUTTON_TEMPLATE = '<button type="button"></button>';
+    Y.namespace("Bridge");
 
     function BiddingBox() {
         BiddingBox.superclass.constructor.apply(this, arguments);
     }
 
-    Y.mix(BiddingBox, {
-        NAME: BIDDING_BOX,
-        ATTRS: {
-            level: {},
-            "double": {},
-            redouble: {},
-            contract: {}
-        }
-    });
+    Y.extend(BiddingBox, Y.Widget, {
 
-    Y.extend(BiddingBox, Widget, {
         renderUI: function() {
             this._renderPassButton();
             this._renderModifierButtons();
@@ -48,7 +21,7 @@ YUI.add("biddingbox", function(Y) {
             this.after("contractChange", this._afterContractChange);
             this.after("doubleChange", this._afterDoubleChange);
             this.after("redoubleChange", this._afterRedoubleChange);
-            this.passNode.on("click", bind(this._fireBidEvent, this, PASS));
+            this.passNode.on("click", Y.bind(this._fireBidEvent, this, BiddingBox.PASS));
             this._bindModifiers();
             this._bindLevels();
             this._bindSuits();
@@ -99,19 +72,19 @@ YUI.add("biddingbox", function(Y) {
 
         _uiSetDouble: function(dbl) {
             if(dbl) {
-                this._enableButton(this.modifierNodes[DOUBLE].one("button"));
+                this._enableButton(this.modifierNodes[BiddingBox.DOUBLE].one("button"));
                 this.set("redouble", false);
             } else {
-                this._disableButton(this.modifierNodes[DOUBLE].one("button"));
+                this._disableButton(this.modifierNodes[BiddingBox.DOUBLE].one("button"));
             }
         },
 
         _uiSetRedouble: function(redbl) {
             if(redbl) {
-                this._enableButton(this.modifierNodes[REDOUBLE].one("button"));
+                this._enableButton(this.modifierNodes[BiddingBox.REDOUBLE].one("button"));
                 this.set("double", false);
             } else {
-                this._disableButton(this.modifierNodes[REDOUBLE].one("button"));
+                this._disableButton(this.modifierNodes[BiddingBox.REDOUBLE].one("button"));
             }
         },
 
@@ -120,7 +93,7 @@ YUI.add("biddingbox", function(Y) {
                 var contractLevel = parseInt(contract),
                     contractSuit = this._parseSuit(contract);
 
-                each(this.levelNodes, function(node, level) {
+                Y.each(this.levelNodes, function(node, level) {
                     if((contractLevel > level) || (contractLevel == level && contractSuit == "NT")) {
                         this._disableButton(node.one("button"));
                     } else {
@@ -143,9 +116,9 @@ YUI.add("biddingbox", function(Y) {
                         contractSuit = this._parseSuit(contract);
 
                     if(contractLevel === parseInt(level)) {
-                        each(this.suitNodes, function(node, suit) {
-                            var suitIndex = indexOf(SUITS, suit),
-                                contractSuitIndex = indexOf(SUITS, contractSuit);
+                        Y.each(this.suitNodes, function(node, suit) {
+                            var suitIndex = Y.Array.indexOf(BiddingBox.SUITS, suit),
+                                contractSuitIndex = Y.Array.indexOf(BiddingBox.SUITS, contractSuit);
 
                             if(suitIndex <= contractSuitIndex) {
                                 this._disableButton(node.one("button"));
@@ -174,27 +147,27 @@ YUI.add("biddingbox", function(Y) {
         },
 
         _bindModifiers: function() {
-            each(this.modifierNodes, function(node, modifier) {
-                node.one("button").on("click", bind(this._fireBidEvent, this, modifier));
+            Y.each(this.modifierNodes, function(node, modifier) {
+                node.one("button").on("click", Y.bind(this._fireBidEvent, this, modifier));
             }, this);
         },
 
         _bindLevels: function() {
-            each(this.levelNodes, function(node, level) {
-                node.one("button").on("click", bind(this.set, this, "level", level));
+            Y.each(this.levelNodes, function(node, level) {
+                node.one("button").on("click", Y.bind(this.set, this, "level", level));
             }, this);
         },
 
         _bindSuits: function() {
-            each(this.suitNodes, function(node, suit) {
-                node.one("button").on("click", bind(this._onSuitClick, this, suit));
+            Y.each(this.suitNodes, function(node, suit) {
+                node.one("button").on("click", Y.bind(this._onSuitClick, this, suit));
             }, this);
         },
 
         _renderPassButton: function() {
             var contentBox = this.get("contentBox");
 
-            this.passNode = this._createButton(PASS, this.getClassName(PASS.toLowerCase()));
+            this.passNode = this._createButton(BiddingBox.PASS, this.getClassName(BiddingBox.PASS.toLowerCase()));
 
             contentBox.appendChild(this.passNode);
         },
@@ -205,8 +178,9 @@ YUI.add("biddingbox", function(Y) {
             this.modifierNodes = {};
             this.modifiersNode = this._createButtonGroup(this.getClassName("modifiers"));
 
-            each(MODIFIERS, function(modifier) {
-                var modifierNode = this._createButtonGroupItem(modifier, this.getClassName("modifier", modifier.toLowerCase()));
+            Y.each(BiddingBox.MODIFIERS, function(modifier) {
+                var className = this.getClassName("modifier", modifier.toLowerCase()),
+                    modifierNode = this._createButtonGroupItem(modifier, className);
 
                 this.modifierNodes[modifier] = modifierNode;
                 this.modifiersNode.appendChild(modifierNode);
@@ -221,7 +195,7 @@ YUI.add("biddingbox", function(Y) {
             this.levelNodes = {};
             this.levelsNode = this._createButtonGroup(this.getClassName("levels"));
 
-            each(LEVELS, function(level) {
+            Y.each(BiddingBox.LEVELS, function(level) {
                 var levelNode = this._createButtonGroupItem(level, this.getClassName("level", level));
 
                 this.levelNodes[level] = levelNode;
@@ -237,7 +211,7 @@ YUI.add("biddingbox", function(Y) {
             this.suitNodes = {};
             this.suitsNode = this._createButtonGroup(this.getClassName("suits"));
 
-            each(SUITS, function(suit) {
+            Y.each(BiddingBox.SUITS, function(suit) {
                 var suitNode = this._createButtonGroupItem(suit, this.getClassName("suit", suit.toLowerCase()));
 
                 this.suitNodes[suit] = suitNode;
@@ -250,12 +224,12 @@ YUI.add("biddingbox", function(Y) {
         _renderAlert: function() {
             var contentBox = this.get("contentBox");
 
-            this.alertNode = Node.create(ALERT_TEMPLATE);
+            this.alertNode = Y.Node.create(BiddingBox.ALERT_TEMPLATE);
             contentBox.appendChild(this.alertNode);
         },
 
         _createButton: function(text, className) {
-            var button = Node.create(BUTTON_TEMPLATE);
+            var button = Y.Node.create(BiddingBox.BUTTON_TEMPLATE);
 
             button.set("innerHTML", text);
             button.set("title", text);
@@ -265,7 +239,7 @@ YUI.add("biddingbox", function(Y) {
         },
 
         _createButtonGroup: function(className) {
-            var buttonGroup = Node.create(BUTTON_GROUP_TEMPLATE);
+            var buttonGroup = Y.Node.create(BiddingBox.BUTTON_GROUP_TEMPLATE);
 
             buttonGroup.addClass(className);
 
@@ -273,7 +247,7 @@ YUI.add("biddingbox", function(Y) {
         },
 
         _createButtonGroupItem: function(text, className) {
-            var buttonGroupItem = Node.create(BUTTON_GROUP_ITEM_TEMPLATE),
+            var buttonGroupItem = Y.Node.create(BiddingBox.BUTTON_GROUP_ITEM_TEMPLATE),
                 button = this._createButton(text, className);
 
             buttonGroupItem.addClass(className);
@@ -291,12 +265,51 @@ YUI.add("biddingbox", function(Y) {
         },
 
         _parseSuit: function(contract) {
-            return contract.match(new RegExp(SUITS.join("|")))[0];
+            return contract.match(new RegExp(BiddingBox.SUITS.join("|")))[0];
         }
+
+    }, {
+
+        NAME: "biddingbox",
+
+        ATTRS: {
+
+            level: {
+            },
+
+            "double": {
+            },
+
+            redouble: {
+            },
+
+            contract: {
+            }
+
+        },
+
+        LEVELS: [1, 2, 3, 4, 5, 6, 7],
+
+        SUITS: ["C", "D", "H", "S", "NT"],
+
+        PASS: "PASS",
+
+        DOUBLE: "X",
+
+        REDOUBLE: "XX",
+
+        MODIFIERS: [BiddingBox.DOUBLE, BiddingBox.REDOUBLE],
+
+        ALERT_TEMPLATE: '<input type="text"></input>',
+
+        BUTTON_GROUP_TEMPLATE: '<ol></ol>',
+
+        BUTTON_GROUP_ITEM_TEMPLATE: '<li></li>',
+
+        BUTTON_TEMPLATE: '<button type="button"></button>'
+
     });
 
-    Y.BiddingBox = BiddingBox;
+    Y.Bridge.BiddingBox = BiddingBox;
 
-}, "0", {
-    requires: ["widget"]
-});
+}, "0", { requires: ["widget"] });

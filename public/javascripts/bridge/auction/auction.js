@@ -1,38 +1,12 @@
 YUI.add("auction", function(Y) {
 
-    var each = Y.each,
-        bind = Y.bind,
-        indexOf = Y.Array.indexOf,
-        Widget = Y.Widget,
-        Node = Y.Node,
-        AUCTION = "auction",
-        HEADER = "header",
-        BID = "bid",
-        DIRECTIONS = ["N", "E", "S", "W"],
-        BID_GROUP_TEMPLATE = '<ol></ol>',
-        BID_TEMPLATE = '<li></li>';
-
+    Y.namespace("Bridge");
 
     function Auction() {
         Auction.superclass.constructor.apply(this, arguments);
-    }
+    };
 
-    Y.mix(Auction, {
-        NAME: AUCTION,
-        ATTRS: {
-            dealer: {
-                value: "N"
-            },
-            bids: {
-                value: []
-            },
-            names: {
-                value: DIRECTIONS
-            }
-        }
-    });
-
-    Y.extend(Auction, Widget, {
+    Y.extend(Auction, Y.Widget, {
         renderUI: function() {
             this._renderHeader();
             this._renderBids();
@@ -41,7 +15,7 @@ YUI.add("auction", function(Y) {
         bindUI: function() {
             this.after("bidsChange", this._afterBidsChange);
             this.after("dealerChange", this._afterDealerChange);
-            this.bidsNode.delegate("click", bind(this._onBidClick, this), "[position]");
+            this.bidsNode.delegate("click", Y.bind(this._onBidClick, this), "[position]");
         },
 
         syncUI: function() {
@@ -72,7 +46,7 @@ YUI.add("auction", function(Y) {
         _uiSetDealer: function(dealer) {
             this.bidsNode.all(":empty").remove();
 
-            each(DIRECTIONS.slice(0, indexOf(DIRECTIONS, dealer)), function(direction) {
+            Y.each(Auction.DIRECTIONS.slice(0, Y.Array.indexOf(Auction.DIRECTIONS, dealer)), function(direction) {
                 var bidNode = this._createBid("", this.getClassName("bid", "space"));
 
                 this.bidsNode.prepend(bidNode);
@@ -81,13 +55,13 @@ YUI.add("auction", function(Y) {
 
         _uiSetBids: function(bids) {
             var dealer = this.get("dealer"),
-                indexOfDealer = indexOf(DIRECTIONS, dealer);
+                indexOfDealer = Y.Array.indexOf(Auction.DIRECTIONS, dealer);
 
             this.bidsNode.all("*").remove();
             this._uiSetDealer(dealer);
 
-            each(bids, function(bid, i) {
-                var className = this.getClassName("bid", DIRECTIONS[(i + indexOfDealer) % 4].toLowerCase()),
+            Y.each(bids, function(bid, i) {
+                var className = this.getClassName("bid", Auction.DIRECTIONS[(i + indexOfDealer) % 4].toLowerCase()),
                     bidNode = this._createBid(bid, className);
 
                 bidNode.setAttribute("position", i + 1);
@@ -102,7 +76,7 @@ YUI.add("auction", function(Y) {
             contentBox.appendChild(this.headerNode);
 
             this.headerNodes = {};
-            each(DIRECTIONS, function(direction) {
+            Y.each(Auction.DIRECTIONS, function(direction) {
                 var headerNode = this._createBid(direction, this.getClassName("header", direction.toLowerCase()));
 
                 this.headerNodes[direction] = headerNode;
@@ -118,7 +92,7 @@ YUI.add("auction", function(Y) {
         },
 
         _createBidGroup: function(className) {
-            var bidGroup = Node.create(BID_GROUP_TEMPLATE);
+            var bidGroup = Y.Node.create(Auction.BID_GROUP_TEMPLATE);
 
             bidGroup.addClass(className);
 
@@ -126,18 +100,38 @@ YUI.add("auction", function(Y) {
         },
 
         _createBid: function(text, className) {
-            var bid = Node.create(BID_TEMPLATE);
+            var bid = Y.Node.create(Auction.BID_TEMPLATE);
 
             bid.set("innerHTML", text);
             bid.addClass(className);
 
             return bid;
         }
+    }, {
+
+        NAME: "auction",
+
+        ATTRS: {
+
+            dealer: {
+                value: "N"
+            },
+
+            bids: {
+                value: []
+            }
+
+        },
+
+        DIRECTIONS: ["N", "E", "S", "W"],
+
+        BID_GROUP_TEMPLATE: '<ol></ol>',
+
+        BID_TEMPLATE: '<li></li>'
+
+
     });
 
-    Y.Auction = Auction;
+    Y.Bridge.Auction = Auction;
 
-}, "0", {
-    requires: ["widget"]
-});
-
+}, "0", { requires: ["widget"] });

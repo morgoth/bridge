@@ -1,6 +1,6 @@
 YUI.add("table", function(Y) {
 
-    var Bridge = Y.namespace("Bridge");
+    Y.namespace("Bridge");
 
     function Table() {
         Table.superclass.constructor.apply(this, arguments);
@@ -44,9 +44,11 @@ YUI.add("table", function(Y) {
         }
 
     }, {
+
         NAME: "table",
 
         ATTRS: {
+
             id: {
                 readOnly: true,
                 getter: function() {
@@ -55,21 +57,25 @@ YUI.add("table", function(Y) {
                     return parseInt(container && container.getAttribute("data-table-id"));
                 }
             },
+
             container: {
                 value: "body",
                 setter: function(selector) {
                     return Y.one(selector);
                 }
             },
+
             pollTimeout: {
                 value: 3000,
                 validator: Y.Lang.isNumber
             }
+
         },
 
         TABLE_PATH: "/ajax/tables/{ID}.json"
+
     });
 
-    Bridge.Table = Table;
+    Y.Bridge.Table = Table;
 
 }, "0", { requires: ["base", "node", "gallery-io-poller", "json", "substitute"] });

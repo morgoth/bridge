@@ -1,43 +1,12 @@
 YUI.add("hand", function(Y) {
 
-    var each = Y.each,
-        bind = Y.bind,
-        Widget = Y.Widget,
-        Node = Y.Node,
-        HAND = "hand",
-        CARDS = "cards",
-        CARD = "card",
-        BAR = "bar",
-        NAME = "name",
-        JOIN = "join",
-        QUIT = "quit",
-        DIRECTION = "direction",
-        BUTTON_GROUP_TEMPLATE = '<ol></ol>',
-        BUTTON_GROUP_ITEM_TEMPLATE = '<li></li>',
-        BUTTON_TEMPLATE = '<button type="button"></button>',
-        DIV_TEMPLATE = '<div></div>',
-        SPAN_TEMPLATE = '<span></span>';
+    Y.namespace("Bridge");
 
     function Hand() {
         Hand.superclass.constructor.apply(this, arguments);
     }
 
-    Y.mix(Hand, {
-        NAME: HAND,
-        ATTRS: {
-            direction: {
-                value: "N"
-            },
-            name: {
-                value: ""
-            },
-            cards: {
-                value: []
-            }
-        }
-    });
-
-    Y.extend(Hand, Widget, {
+    Y.extend(Hand, Y.Widget, {
         renderUI: function() {
             this._renderCards();
             this._renderBar();
@@ -52,9 +21,9 @@ YUI.add("hand", function(Y) {
             this.after("directionChange", this._afterDirectionChange);
             this.after("nameChange", this._afterNameChange);
             this.after("disabledChange", this._afterDisabledChange);
-            this.cardsNode.delegate("click", bind(this._onCardClick, this), "button");
-            this.joinNode.delegate("click", bind(this.fire, this, "join"));
-            this.quitNode.delegate("click", bind(this.fire, this, "quit"));
+            this.cardsNode.delegate("click", Y.bind(this._onCardClick, this), "button");
+            this.joinNode.delegate("click", Y.bind(this.fire, this, "join"));
+            this.quitNode.delegate("click", Y.bind(this.fire, this, "quit"));
         },
 
         syncUI: function() {
@@ -88,7 +57,7 @@ YUI.add("hand", function(Y) {
         _renderCards: function() {
             var contentBox = this.get("contentBox");
 
-            this.cardsNode = this._createButtonGroup(this.getClassName(CARDS));
+            this.cardsNode = this._createButtonGroup(this.getClassName("cards"));
 
             contentBox.appendChild(this.cardsNode);
         },
@@ -96,41 +65,41 @@ YUI.add("hand", function(Y) {
         _renderBar: function() {
             var contentBox = this.get("contentBox");
 
-            this.barNode = Node.create(DIV_TEMPLATE);
-            this.barNode.addClass(this.getClassName(BAR));
+            this.barNode = Y.Node.create(Hand.DIV_TEMPLATE);
+            this.barNode.addClass(this.getClassName("bar"));
 
             contentBox.appendChild(this.barNode);
         },
 
         _renderDirection: function() {
-            this.directionNode = Node.create(SPAN_TEMPLATE);
-            this.directionNode.addClass(this.getClassName(BAR, DIRECTION));
+            this.directionNode = Y.Node.create(Hand.SPAN_TEMPLATE);
+            this.directionNode.addClass(this.getClassName("bar", "direction"));
 
             this.barNode.appendChild(this.directionNode);
         },
 
         _renderName: function() {
-            this.nameNode = Node.create(SPAN_TEMPLATE);
-            this.nameNode.addClass(this.getClassName(BAR, NAME));
+            this.nameNode = Y.Node.create(Hand.SPAN_TEMPLATE);
+            this.nameNode.addClass(this.getClassName("bar", "name"));
 
             this.barNode.appendChild(this.nameNode);
         },
 
         _renderJoin: function() {
-            this.joinNode = this._createButton("JOIN", this.getClassName(BAR, JOIN));
+            this.joinNode = this._createButton("JOIN", this.getClassName("bar", "join"));
             this.barNode.appendChild(this.joinNode);
         },
 
         _renderQuit: function() {
-            this.quitNode = this._createButton("QUIT", this.getClassName(BAR, QUIT));
+            this.quitNode = this._createButton("QUIT", this.getClassName("bar", "quit"));
             this.barNode.appendChild(this.quitNode);
         },
 
         _uiSetCards: function(cards) {
             this.cardsNode.all("*").remove();
 
-            each(cards, function(card) {
-                var className = this.getClassName(CARD, (card === "") ? "unknown" : card),
+            Y.each(cards, function(card) {
+                var className = this.getClassName("card", (card === "") ? "unknown" : card),
                     cardNode = this._createButtonGroupItem(card, className);
 
                 cardNode.setAttribute("card", card);
@@ -163,7 +132,7 @@ YUI.add("hand", function(Y) {
         },
 
         _createButton: function(text, className) {
-            var button = Node.create(BUTTON_TEMPLATE);
+            var button = Y.Node.create(Hand.BUTTON_TEMPLATE);
 
             button.set("innerHTML", text);
             button.set("title", text);
@@ -173,7 +142,7 @@ YUI.add("hand", function(Y) {
         },
 
         _createButtonGroup: function(className) {
-            var buttonGroup = Node.create(BUTTON_GROUP_TEMPLATE);
+            var buttonGroup = Y.Node.create(Hand.BUTTON_GROUP_TEMPLATE);
 
             buttonGroup.addClass(className);
 
@@ -181,7 +150,7 @@ YUI.add("hand", function(Y) {
         },
 
         _createButtonGroupItem: function(text, className) {
-            var buttonGroupItem = Node.create(BUTTON_GROUP_ITEM_TEMPLATE),
+            var buttonGroupItem = Y.Node.create(Hand.BUTTON_GROUP_ITEM_TEMPLATE),
                 button = this._createButton(text, className);
 
             buttonGroupItem.addClass(className);
@@ -197,11 +166,38 @@ YUI.add("hand", function(Y) {
         _enableButton: function(node) {
             node.removeAttribute("disabled");
         }
+    }, {
+
+        NAME: "hand",
+
+        ATTRS: {
+
+            direction: {
+                value: "N"
+            },
+
+            name: {
+                value: ""
+            },
+
+            cards: {
+                value: []
+            }
+
+        },
+
+        BUTTON_GROUP_TEMPLATE: '<ol></ol>',
+
+        BUTTON_GROUP_ITEM_TEMPLATE: '<li></li>',
+
+        BUTTON_TEMPLATE: '<button type="button"></button>',
+
+        DIV_TEMPLATE: '<div></div>',
+
+        SPAN_TEMPLATE: '<span></span>'
+
     });
 
-    Y.Hand = Hand;
+    Y.Bridge.Hand = Hand;
 
-}, "0", {
-    requires: ["widget"]
-});
-
+}, "0", { requires: ["widget"] });
