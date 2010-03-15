@@ -7,170 +7,116 @@ YUI.add("hand", function(Y) {
     }
 
     Y.extend(Hand, Y.Widget, {
+
+        initializer: function() {
+            var host = this.get("host");
+
+            this.publish("join");
+            this.publish("quit");
+            this.addTarget(host);
+        },
+
         renderUI: function() {
-            this._renderCards();
-            this._renderBar();
-            this._renderDirection();
-            this._renderName();
-            this._renderJoin();
-            this._renderQuit();
+            this._renderMainTemplate();
+        },
+
+        _renderMainTemplate: function() {
+            var html,
+                contentBox = this.get("contentBox");
+
+            html = Y.mustache(Hand.MAIN_TEMPLATE, {
+                direction: this.get("direction"),
+                directionCN: this.getClassName("direction"),
+                joinCN: this.getClassName("join"),
+                quitCN: this.getClassName("quit"),
+                name: this.get("name"),
+                nameCN: this.getClassName("name")
+            });
+
+            contentBox.set("innerHTML", html);
         },
 
         bindUI: function() {
+            var contentBox = this.get("contentBox");
+
             this.after("cardsChange", this._afterCardsChange);
             this.after("directionChange", this._afterDirectionChange);
             this.after("nameChange", this._afterNameChange);
             this.after("disabledChange", this._afterDisabledChange);
-            this.cardsNode.delegate("click", Y.bind(this._onCardClick, this), "button");
-            this.joinNode.delegate("click", Y.bind(this.fire, this, "join"));
-            this.quitNode.delegate("click", Y.bind(this.fire, this, "quit"));
+            contentBox.delegate("click", Y.bind(this._onButtonClick, this), "button");
+        },
+
+        _onButtonClick: function(event) {
+            var eventName,
+                target = event.target;
+
+            eventName = target.getAttribute("data-event");
+
+            this.fire(eventName);
         },
 
         syncUI: function() {
-            this._uiSetCards(this.get("cards"));
-            this._uiSetDirection(this.get("direction"));
-            this._uiSetName(this.get("name"));
+            this._uiSyncJoin();
+            this._uiSyncQuit();
         },
 
         _afterCardsChange: function(event) {
-            this._uiSetCards(event.newVal);
+            // this._uiSetCards(event.newVal);
         },
 
         _afterDirectionChange: function(event) {
-            this._uiSetDirection(event.newVal);
+            // this._uiSetDirection(event.newVal);
         },
 
         _afterNameChange: function(event) {
-            this._uiSetName(event.newVal);
+            // var joinNode, quitNode,
+            //     contentBox = this.get("contentBox");
+
+            // joinNode = contentBox.one("." + this.getClassName("join"));
+            // quitNode = contentBox.one("." + this.getClassName("quit"));
+
+            // this._uiSetName(event.newVal);
+
+        },
+
+        _uiSyncJoin: function() {
+            var joinNode,
+                contentBox = this.get("contentBox"),
+                joinEnabled = this.get("joinEnabled"),
+                name = this.get("name");
+            joinNode = contentBox.one("." + this.getClassName("join"));
+
+            joinNode.set("disabled", "disabled");
+            if((name === "") && joinEnabled) {
+                joinNode.removeAttribute("disabled");
+            }
+        },
+
+        _uiSyncQuit: function() {
+            var quitNode,
+                contentBox = this.get("contentBox"),
+                quitEnabled = this.get("quitEnabled"),
+                name = this.get("name");
+            quitNode = contentBox.one("." + this.getClassName("quit"));
+
+            quitNode.set("disabled", "disabled");
+            if((name !== "") && quitEnabled) {
+                quitNode.removeAttribute("disabled");
+            }
         },
 
         _afterDisabledChange: function(event) {
-            this._uiSetDisabled(event.newVal);
-        },
-
-        _onCardClick: function(event) {
-            var card = event.target.getAttribute("card");
-
-            this.fire("card", [card]);
-        },
-
-        _renderCards: function() {
-            var contentBox = this.get("contentBox");
-
-            this.cardsNode = this._createButtonGroup(this.getClassName("cards"));
-
-            contentBox.appendChild(this.cardsNode);
-        },
-
-        _renderBar: function() {
-            var contentBox = this.get("contentBox");
-
-            this.barNode = Y.Node.create(Hand.DIV_TEMPLATE);
-            this.barNode.addClass(this.getClassName("bar"));
-
-            contentBox.appendChild(this.barNode);
-        },
-
-        _renderDirection: function() {
-            this.directionNode = Y.Node.create(Hand.SPAN_TEMPLATE);
-            this.directionNode.addClass(this.getClassName("bar", "direction"));
-
-            this.barNode.appendChild(this.directionNode);
-        },
-
-        _renderName: function() {
-            this.nameNode = Y.Node.create(Hand.SPAN_TEMPLATE);
-            this.nameNode.addClass(this.getClassName("bar", "name"));
-
-            this.barNode.appendChild(this.nameNode);
-        },
-
-        _renderJoin: function() {
-            this.joinNode = this._createButton("JOIN", this.getClassName("bar", "join"));
-            this.barNode.appendChild(this.joinNode);
-        },
-
-        _renderQuit: function() {
-            this.quitNode = this._createButton("QUIT", this.getClassName("bar", "quit"));
-            this.barNode.appendChild(this.quitNode);
-        },
-
-        _uiSetCards: function(cards) {
-            this.cardsNode.all("*").remove();
-
-            Y.each(cards, function(card) {
-                var className = this.getClassName("card", (card === "") ? "unknown" : card),
-                    cardNode = this._createButtonGroupItem(card, className);
-
-                cardNode.setAttribute("card", card);
-
-                this.cardsNode.appendChild(cardNode);
-            }, this);
-        },
-
-        _uiSetDirection: function(direction) {
-            this.directionNode.set("innerHTML", direction);
-        },
-
-        _uiSetName: function(name) {
-            this.nameNode.set("innerHTML", name);
-            if(name === "") {
-                this._enableButton(this.joinNode);
-                this._disableButton(this.quitNode);
-            } else {
-                this._disableButton(this.joinNode);
-                this._enableButton(this.quitNode);
-            }
-        },
-
-        _uiSetDisabled: function(disabled) {
-            if(disabled) {
-                this.cardsNode && this.cardsNode.all("button").each(this._disableButton);
-            } else {
-                this.cardsNode && this.cardsNode.all("button").each(this._enableButton);
-            }
-        },
-
-        _createButton: function(text, className) {
-            var button = Y.Node.create(Hand.BUTTON_TEMPLATE);
-
-            button.set("innerHTML", text);
-            button.set("title", text);
-            button.addClass(className);
-
-            return button;
-        },
-
-        _createButtonGroup: function(className) {
-            var buttonGroup = Y.Node.create(Hand.BUTTON_GROUP_TEMPLATE);
-
-            buttonGroup.addClass(className);
-
-            return buttonGroup;
-        },
-
-        _createButtonGroupItem: function(text, className) {
-            var buttonGroupItem = Y.Node.create(Hand.BUTTON_GROUP_ITEM_TEMPLATE),
-                button = this._createButton(text, className);
-
-            buttonGroupItem.addClass(className);
-            buttonGroupItem.appendChild(button);
-
-            return buttonGroupItem;
-        },
-
-        _disableButton: function(node) {
-            node.set("disabled", "disabled");
-        },
-
-        _enableButton: function(node) {
-            node.removeAttribute("disabled");
+            // this._uiSetDisabled(event.newVal);
         }
+
     }, {
 
         NAME: "hand",
 
         ATTRS: {
+
+            host: {
+            },
 
             direction: {
                 value: "N"
@@ -182,22 +128,26 @@ YUI.add("hand", function(Y) {
 
             cards: {
                 value: []
+            },
+
+            joinEnabled: {
+                value: true
+            },
+
+            quitEnabled: {
+                value: false
             }
 
         },
 
-        BUTTON_GROUP_TEMPLATE: '<ol></ol>',
-
-        BUTTON_GROUP_ITEM_TEMPLATE: '<li></li>',
-
-        BUTTON_TEMPLATE: '<button type="button"></button>',
-
-        DIV_TEMPLATE: '<div></div>',
-
-        SPAN_TEMPLATE: '<span></span>'
+        MAIN_TEMPLATE: '' +
+            '<div class="{{directionCN}}">{{direction}}</div>' +
+            '<div class="{{nameCN}}">{{name}}</div>' +
+            '<button type="button" class="{{joinCN}}" data-event="join">Join</button>' +
+            '<button type="button" class="{{quitCN}}" data-event="quit">Quit</button>'
 
     });
 
     Y.Bridge.Hand = Hand;
 
-}, "0", { requires: ["widget"] });
+}, "0", { requires: ["widget", "mustache"] });

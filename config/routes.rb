@@ -31,7 +31,7 @@ Libre::Application.routes.draw do |map|
     end
   end
 
-  root :to => "homes#show"
+  root :to => "tables#index"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

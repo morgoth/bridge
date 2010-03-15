@@ -1,6 +1,9 @@
 YUI({
     filter: "debug",
     modules: {
+        mustache: {
+            path: "../bridge/mustache/mustache.js"
+        },
         biddingbox: {
             path: "../bridge/biddingbox/biddingbox.js",
             requires: ["widget"]
@@ -11,7 +14,7 @@ YUI({
         },
         hand: {
             path: "../bridge/hand/hand.js",
-            requires: ["widget"]
+            requires: ["widget", "mustache"]
         },
         trick: {
             path: "../bridge/trick/trick.js",
@@ -19,7 +22,7 @@ YUI({
         },
         table: {
             path: "../bridge/table/table.js",
-            requires: ["base-base", "node", "gallery-io-poller", "json", "substitute"]
+            requires: ["base-base", "node", "gallery-io-poller", "json", "mustache", "hand"]
         },
         "gallery-io-poller": {
             path: "../yui-gallery/gallery-io-poller/gallery-io-poller.js",

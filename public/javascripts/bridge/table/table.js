@@ -13,10 +13,45 @@ YUI.add("table", function(Y) {
                 container = this.get("container");
 
             if(container && id) {
-                this._renderTable();
+                this._renderUI();
+                this._bindUI();
                 this._initializePoll();
                 this.poll.start();
             }
+        },
+
+        _renderUI: function() {
+            this._renderTable();
+            this._renderHands();
+        },
+
+        _bindUI: function() {
+            this.on("hand:join", this._onHandJoin);
+        },
+
+        _onHandJoin: function(event) {
+            var direction = event.target.get("direction"),
+                tablePlayerPath = Y.mustache(Table.TABLE_PLAYER_PATH, {
+                    id: this.get("id")
+                });
+
+            this.poll.stop();
+            Y.io(tablePlayerPath, {
+                method: "POST",
+                data: "player[direction]=" + direction,
+                on: {
+                    success: Y.bind(this._onRequestSuccess, this),
+                    failure: Y.bind(this._onRequestFailure, this)
+                }
+            });
+        },
+
+        _onRequestSuccess: function() {
+            this.poll.start();
+        },
+
+        _onRequestFailure: function(id, response) {
+            Y.log(response);
         },
 
         _renderTable: function() {
@@ -25,21 +60,31 @@ YUI.add("table", function(Y) {
             container.set("innerHTML", "Bridge Libre!");
         },
 
-        _initializePoll: function() {
-            var tablePath,
-                timeout = this.get("pollTimeout"),
-                id = this.get("id");
+        _renderHands: function() {
+            this.hands = {};
 
-            tablePath = Y.substitute(Table.TABLE_PATH, { ID: id });
+            Y.each(Table.DIRECTIONS, function(direction) {
+                var hand = new Y.Bridge.Hand({ host: this, direction: direction });
+
+                this.hands[direction] = hand;
+                hand.render();
+            }, this);
+        },
+
+        _initializePoll: function() {
+            var timeout = this.get("pollTimeout"),
+                tablePath = Y.mustache(Table.TABLE_PATH, {
+                    id: this.get("id")
+                });
 
             this.poll = Y.io.poll(timeout, tablePath, {
                 on: {
-                    modified: this._pollModified
+                    modified: this._onPollModified
                 }
             });
         },
 
-        _pollModified: function(id, o) {
+        _onPollModified: function(id, o) {
             var tableData = Y.JSON.parse(o.responseText);
         }
 
@@ -72,10 +117,13 @@ YUI.add("table", function(Y) {
 
         },
 
-        TABLE_PATH: "/ajax/tables/{ID}.json"
+        TABLE_PATH: "/ajax/tables/{{id}}.json",
+        TABLE_PLAYER_PATH: "/ajax/tables/{{id}}/player",
+
+        DIRECTIONS: ["N", "E", "S", "W"]
 
     });
 
     Y.Bridge.Table = Table;
 
-}, "0", { requires: ["base", "node", "gallery-io-poller", "json", "substitute"] });
+}, "0", { requires: ["base", "node", "gallery-io-poller", "json", "mustache", "hand"] });

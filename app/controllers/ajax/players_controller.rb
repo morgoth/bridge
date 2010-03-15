@@ -2,7 +2,9 @@ class Ajax::PlayersController < Ajax::BaseController
   before_filter :fetch_player, :except => [:create]
 
   def create
-    @player = @table.players.create(params[:player])
+    @player = @table.players.build(params[:player])
+    @player.user = current_user
+    @player.save
     respond_with(@table, @player)
   end
 
