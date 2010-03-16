@@ -7,7 +7,7 @@ gem "bridge"
 gem "haml", ">=2.2.21"
 gem "state_machine", ">=0.8.1"
 gem "compass"
-
+gem "hassle"
 gem "sqlite3", :groups => [:development, :test]
 
 group :development do
@@ -22,5 +22,5 @@ end
 
 group :production do
   gem "pg"
-  gem "hassle" # make sass work on heroku
+  gem "hassle", :git => "git://github.com/merbjedi/hassle.git" # make sass work on heroku
 end
