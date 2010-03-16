@@ -19,7 +19,11 @@ class Table < ActiveRecord::Base
         hash["player"] = user_player(user).direction
       end
 
-      hash["players"] = players.map(&:for_ajax)
+      hash["players"] = Bridge::DIRECTIONS.inject({}) do |result, direction|
+        player = players.where(:direction => direction).first
+        result[direction] = player.for_ajax if player
+        result
+      end
 
       hash["board"] = boards.last.present? ? boards.last.for_ajax : {}
     end

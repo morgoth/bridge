@@ -9,7 +9,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(params[:user])
     if @user.save
-      redirect_to home_path, :notice => "Successfully signed up"
+      redirect_to root_path, :notice => "Successfully signed up"
     else
       render :new
     end

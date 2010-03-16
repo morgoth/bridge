@@ -3,3 +3,5 @@
 %ul
   - @tables.each do |table|
     %li= link_to "Table ##{table.id}", table_path(table)
+
+= button_to "New table", tables_path, :method => :post

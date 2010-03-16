@@ -9,15 +9,10 @@ YUI.add("table", function(Y) {
     Y.extend(Table, Y.Base, {
 
         initializer: function() {
-            var id = this.get("id"),
-                container = this.get("container");
-
-            if(container && id) {
-                this._renderUI();
-                this._bindUI();
-                this._initializePoll();
-                this.poll.start();
-            }
+            this._renderUI();
+            this._bindUI();
+            this._initializePoll();
+            this.poll.start();
         },
 
         _renderUI: function() {
@@ -27,6 +22,8 @@ YUI.add("table", function(Y) {
 
         _bindUI: function() {
             this.on("hand:join", this._onHandJoin);
+            this.on("hand:quit", this._onHandQuit);
+            this.after("tableDataChange", this._afterTableDataChange);
         },
 
         _onHandJoin: function(event) {
@@ -44,6 +41,26 @@ YUI.add("table", function(Y) {
                     failure: Y.bind(this._onRequestFailure, this)
                 }
             });
+        },
+
+        _onHandQuit: function(event) {
+            var tablePlayerPath = Y.mustache(Table.TABLE_PLAYER_PATH, {
+                    id: this.get("id")
+                });
+
+            this.poll.stop();
+            Y.io(tablePlayerPath, {
+                method: "POST",
+                data: "&_method=DELETE",
+                on: {
+                    success: Y.bind(this._onRequestSuccess, this),
+                    failure: Y.bind(this._onRequestFailure, this)
+                }
+            });
+        },
+
+        _afterTableDataChange: function(event) {
+            this._uiSyncTable(event.newVal);
         },
 
         _onRequestSuccess: function() {
@@ -71,6 +88,22 @@ YUI.add("table", function(Y) {
             }, this);
         },
 
+        _uiSyncTable: function(tableData) {
+            this._uiSyncHands(tableData);
+        },
+
+        _uiSyncHands: function(tableData) {
+            var userId = this.get("userId"),
+                playerDirection = tableData.player,
+                players = tableData.players;
+
+            Y.each(this.hands, function(hand, direction) {
+                hand.set("joinEnabled", !!(userId && !playerDirection));
+                hand.set("quitEnabled", !!(userId && (playerDirection === direction)));
+                hand.set("name", players[direction] && players[direction].name);
+            }, this);
+        },
+
         _initializePoll: function() {
             var timeout = this.get("pollTimeout"),
                 tablePath = Y.mustache(Table.TABLE_PATH, {
@@ -79,13 +112,15 @@ YUI.add("table", function(Y) {
 
             this.poll = Y.io.poll(timeout, tablePath, {
                 on: {
-                    modified: this._onPollModified
+                    modified: Y.bind(this._onPollModified, this)
                 }
             });
         },
 
         _onPollModified: function(id, o) {
             var tableData = Y.JSON.parse(o.responseText);
+
+            this.set("tableData", tableData);
         }
 
     }, {
@@ -95,12 +130,14 @@ YUI.add("table", function(Y) {
         ATTRS: {
 
             id: {
-                readOnly: true,
-                getter: function() {
-                    var container = this.get("container");
+                setter: parseInt
+            },
 
-                    return parseInt(container && container.getAttribute("data-table-id"));
-                }
+            userId: {
+                setter: parseInt
+            },
+
+            tableData: {
             },
 
             container: {
@@ -118,6 +155,7 @@ YUI.add("table", function(Y) {
         },
 
         TABLE_PATH: "/ajax/tables/{{id}}.json",
+
         TABLE_PLAYER_PATH: "/ajax/tables/{{id}}/player",
 
         DIRECTIONS: ["N", "E", "S", "W"]

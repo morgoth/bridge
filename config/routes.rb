@@ -8,7 +8,7 @@ Libre::Application.routes.draw do |map|
 
   # bridge
 
-  resources :tables, :only => [:index, :show]
+  resources :tables, :only => [:index, :show, :create]
 
   # ajax api
 

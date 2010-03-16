@@ -1,5 +1,5 @@
 YUI({
-    filter: "debug",
+    filter: "raw",
     modules: {
         mustache: {
             path: "../bridge/mustache/mustache.js"
@@ -29,6 +29,16 @@ YUI({
             requires: ["io-base", "base-base"]
         }
     }
-}).use("table", function(Y) {
-    new Y.Bridge.Table({ container: "#table" });
+}).use("node", "table", function(Y) {
+    var userId, tableId,
+        tableSelector = "#table",
+        userNode = Y.Node.one('meta[name="bridge-user-id"]'),
+        tableNode = Y.Node.one(tableSelector);
+
+    userId = userNode && userNode.getAttribute("content");
+    tableId = tableNode && table.getAttribute("data-table-id");
+
+    if(tableId) {
+        new Y.Bridge.Table({ container: tableSelector, userId: userId, id: tableId });
+    }
 });

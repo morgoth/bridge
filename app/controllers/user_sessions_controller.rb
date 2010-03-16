@@ -9,7 +9,7 @@ class UserSessionsController < ApplicationController
   def create
     @user_session = UserSession.new(session, params[:user_session])
     if @user_session.save
-      redirect_to home_path, :notice => "Successfully logged in"
+      redirect_to root_path, :notice => "Successfully logged in"
     else
       render :new
     end
@@ -18,6 +18,6 @@ class UserSessionsController < ApplicationController
   def destroy
     @user_session = UserSession.find(session)
     @user_session.destroy
-    redirect_to home_path, :notice => "Successfully logged out"
+    redirect_to root_path, :notice => "Successfully logged out"
   end
 end

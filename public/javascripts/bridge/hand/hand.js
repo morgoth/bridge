@@ -43,7 +43,17 @@ YUI.add("hand", function(Y) {
             this.after("directionChange", this._afterDirectionChange);
             this.after("nameChange", this._afterNameChange);
             this.after("disabledChange", this._afterDisabledChange);
+            this.after("joinEnabledChange", this._afterJoinEnabledChange);
+            this.after("quitEnabledChange", this._afterQuitEnabledChange);
             contentBox.delegate("click", Y.bind(this._onButtonClick, this), "button");
+        },
+
+        _afterJoinEnabledChange: function(event) {
+            this._uiSyncJoin(event.newVal);
+        },
+
+        _afterQuitEnabledChange: function(event) {
+            this._uiSyncQuit(event.newVal);
         },
 
         _onButtonClick: function(event) {
@@ -69,14 +79,7 @@ YUI.add("hand", function(Y) {
         },
 
         _afterNameChange: function(event) {
-            // var joinNode, quitNode,
-            //     contentBox = this.get("contentBox");
-
-            // joinNode = contentBox.one("." + this.getClassName("join"));
-            // quitNode = contentBox.one("." + this.getClassName("quit"));
-
-            // this._uiSetName(event.newVal);
-
+            this._uiSetName(event.newVal);
         },
 
         _uiSyncJoin: function() {
@@ -87,7 +90,7 @@ YUI.add("hand", function(Y) {
             joinNode = contentBox.one("." + this.getClassName("join"));
 
             joinNode.set("disabled", "disabled");
-            if((name === "") && joinEnabled) {
+            if(!name && joinEnabled) {
                 joinNode.removeAttribute("disabled");
             }
         },
@@ -100,9 +103,19 @@ YUI.add("hand", function(Y) {
             quitNode = contentBox.one("." + this.getClassName("quit"));
 
             quitNode.set("disabled", "disabled");
-            if((name !== "") && quitEnabled) {
+            if(name && quitEnabled) {
                 quitNode.removeAttribute("disabled");
             }
+        },
+
+        _uiSetName: function(name) {
+            var nameNode,
+                contentBox = this.get("contentBox");
+
+            nameNode = contentBox.one("." + this.getClassName("name"));
+            nameNode.set("innerHTML", name);
+            this._uiSyncJoin();
+            this._uiSyncQuit();
         },
 
         _afterDisabledChange: function(event) {
@@ -119,11 +132,12 @@ YUI.add("hand", function(Y) {
             },
 
             direction: {
-                value: "N"
             },
 
             name: {
-                value: ""
+                setter: function(value) {
+                    return value ? value : "";
+                }
             },
 
             cards: {
@@ -131,7 +145,7 @@ YUI.add("hand", function(Y) {
             },
 
             joinEnabled: {
-                value: true
+                value: false
             },
 
             quitEnabled: {

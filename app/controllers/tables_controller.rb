@@ -6,4 +6,9 @@ class TablesController < ApplicationController
   def show
     @table = Table.find(params[:id])
   end
+
+  def create
+    @table = Table.create
+    redirect_to table_path(@table)
+  end
 end

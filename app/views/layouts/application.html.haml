@@ -5,6 +5,9 @@
     = stylesheet_link_tag '/stylesheets/compiled/print.css', :media => 'print'
     = stylesheet_link_tag '/stylesheets/compiled/ie.css', :media => 'screen, projection'
     = stylesheet_link_tag '/stylesheets/compiled/screen.css', :media => 'screen, projection'
+    = csrf_meta_tag
+    - if current_user
+      %meta{ :name => "bridge-user-id", :content => current_user.id }
   %body
     #container
       #libre-notice= notice
