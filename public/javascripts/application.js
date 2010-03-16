@@ -36,7 +36,7 @@ YUI({
         tableNode = Y.Node.one(tableSelector);
 
     userId = userNode && userNode.getAttribute("content");
-    tableId = tableNode && table.getAttribute("data-table-id");
+    tableId = tableNode && tableNode.getAttribute("data-table-id");
 
     if(tableId) {
         new Y.Bridge.Table({ container: tableSelector, userId: userId, id: tableId });

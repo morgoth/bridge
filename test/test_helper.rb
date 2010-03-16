@@ -5,6 +5,9 @@ require 'rails/test_help'
 require "factory_girl_helper"
 require "capybara_helper"
 
+Capybara.default_selector = :css
+Capybara.default_driver = :selenium
+
 class ActiveSupport::TestCase
 end
 
