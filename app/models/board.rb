@@ -18,15 +18,15 @@ class Board < ActiveRecord::Base
   end
 
   def contract_trump
-    contract_without_modifier.trump
+    contract_without_modifier && contract_without_modifier.trump
   end
 
   def contract_suit
-    contract_without_modifier.suit
+    contract_without_modifier && contract_without_modifier.suit
   end
 
   def contract_without_modifier
-    Bridge::Bid.new(contract.gsub(/(X+)/, ""))
+    contract && Bridge::Bid.new(contract.gsub("X", ""))
   end
 
   def cards_left(direction = nil)

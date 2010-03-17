@@ -16,6 +16,6 @@ class Player < ActiveRecord::Base
   after_destroy :table_stop
 
   def for_ajax
-    serializable_hash(:only => [:state], :methods => ["name"])
+    serializable_hash(:only => [nil], :methods => ["name"])
   end
 end
