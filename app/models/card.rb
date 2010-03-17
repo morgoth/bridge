@@ -32,6 +32,10 @@ class Card < ActiveRecord::Base
     @user ||= board_card_owner(card)
   end
 
+  def to_s
+    card.to_s
+  end
+
   private
 
   def reject_active_claims

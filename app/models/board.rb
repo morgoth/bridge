@@ -31,7 +31,7 @@ class Board < ActiveRecord::Base
 
   def cards_left(direction = nil)
     users_cards = cards.inject(deal.to_hash) do |current_cards, card|
-      current_cards[card.user.direction].delete(card.card)
+      current_cards[card.user.direction].delete(card.to_s)
       current_cards = current_cards
     end
     direction.nil? ? users_cards : users_cards[direction]
