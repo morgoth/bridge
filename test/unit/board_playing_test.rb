@@ -14,21 +14,21 @@ class BoardPlayingTest < ActiveSupport::TestCase
   end
 
   test "cards_left should return all cards" do
-    assert_equal @board.deal, @board.cards_left
+    assert_equal @board.deal.to_hash, @board.cards_left
   end
 
   test "cards_left should return cards without HA" do
-    cards = @board.deal
-    cards[:e].delete("HA")
+    cards = @board.deal.to_hash
+    cards["E"].delete("HA")
     @board.cards.create!(:card => "HA", :user => @user_e)
     assert_equal cards, @board.cards_left
   end
 
   test "cards_left should return E cards without HA" do
-    cards = @board.deal
-    cards[:e].delete("HA")
+    cards = @board.deal.to_hash
+    cards["E"].delete("HA")
     @board.cards.create!(:card => "HA", :user => @user_e)
-    assert_equal cards[:e], @board.cards_left(:e)
+    assert_equal cards["E"], @board.cards_left("E")
   end
 
   test "completed tricks count returns 0" do
