@@ -1,10 +1,6 @@
 class Table < ActiveRecord::Base
   has_many :players, :extend => PlayersTableExtension
-  has_many :boards do
-    def current
-      order("position DESC").first
-    end
-  end
+  has_many :boards, :extend => BoardsTableExtension
 
   state_machine :initial => :preparing do
     event :start do
