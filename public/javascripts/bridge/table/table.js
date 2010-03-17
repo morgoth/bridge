@@ -23,6 +23,7 @@ YUI.add("table", function(Y) {
         _bindUI: function() {
             this.on("hand:join", this._onHandJoin);
             this.on("hand:quit", this._onHandQuit);
+            this.on("hand:card", this._onHandCard);
             this.after("tableDataChange", this._afterTableDataChange);
         },
 
@@ -34,6 +35,10 @@ YUI.add("table", function(Y) {
 
         _onHandQuit: function(event) {
             this._io(this._tablePlayerPath(), { method: "POST", data: "_method=DELETE" });
+        },
+
+        _onHandCard: function(event) {
+            alert(event[0]);
         },
 
         _tablePlayerPath: function() {
@@ -96,24 +101,25 @@ YUI.add("table", function(Y) {
         _uiSyncHands: function(tableData) {
             var isLoggedIn = this._isLoggedIn(),
                 playerDirection = tableData.player,
-                players = tableData.players;
+                players = tableData.players,
+                board = tableData.board;
 
             Y.each(this.hands, function(hand, direction) {
                 hand.set("joinEnabled", !!(isLoggedIn && !playerDirection));
                 hand.set("quitEnabled", !!(isLoggedIn && (playerDirection === direction)));
                 hand.set("name", players[direction] && players[direction].name);
+                if(board) {
+                    hand.set("cards", board.hands[direction]);
+                }
             }, this);
         },
 
         _initializePoll: function() {
-            var tablePath,
-                id = this.get("id"),
-                userId = this.get("userId"),
-                timeout = this.get("pollTimeout");
-            tablePath = Y.mustache(userId ? Table.USER_TABLE_PATH : Table.TABLE_PATH, {
-                id: id,
-                user_id: userId
-            });
+            var timeout = this.get("pollTimeout"),
+                tablePath = Y.mustache(Table.TABLE_PATH, {
+                    id: this.get("id"),
+                    user_id: this.get("userId")
+                });
 
             this.poll = Y.io.poll(timeout, tablePath, {
                 on: {
@@ -163,8 +169,7 @@ YUI.add("table", function(Y) {
 
         },
 
-        TABLE_PATH: "/ajax/tables/{{id}}.json",
-        USER_TABLE_PATH: "/ajax/tables/{{id}}.json?user_id={{user_id}}",
+        TABLE_PATH: "/ajax/tables/{{id}}.json{{#user_id}}?user_id={{user_id}}{{/user_id}}",
 
         TABLE_PLAYER_PATH: "/ajax/tables/{{id}}/player",
 

@@ -14,7 +14,7 @@ YUI({
         },
         hand: {
             path: "../bridge/hand/hand.js",
-            requires: ["widget", "mustache"]
+            requires: ["widget", "mustache", "collection"]
         },
         trick: {
             path: "../bridge/trick/trick.js",

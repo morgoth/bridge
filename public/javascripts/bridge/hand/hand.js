@@ -13,6 +13,7 @@ YUI.add("hand", function(Y) {
 
             this.publish("join");
             this.publish("quit");
+            this.publish("card");
             this.addTarget(host);
         },
 
@@ -30,7 +31,8 @@ YUI.add("hand", function(Y) {
                 joinCN: this.getClassName("join"),
                 quitCN: this.getClassName("quit"),
                 name: this.get("name"),
-                nameCN: this.getClassName("name")
+                nameCN: this.getClassName("name"),
+                cardsCN: this.getClassName("cards")
             });
 
             contentBox.set("innerHTML", html);
@@ -45,6 +47,7 @@ YUI.add("hand", function(Y) {
             this.after("disabledChange", this._afterDisabledChange);
             this.after("joinEnabledChange", this._afterJoinEnabledChange);
             this.after("quitEnabledChange", this._afterQuitEnabledChange);
+            this.after("cardsEnabledChange", this._afterCardsEnabledChange);
             contentBox.delegate("click", Y.bind(this._onButtonClick, this), "button");
         },
 
@@ -56,13 +59,15 @@ YUI.add("hand", function(Y) {
             this._uiSyncQuit(event.newVal);
         },
 
+        _afterCardsEnabledChange: function(event) {
+            this._uiSetCardsEnabled(event.newVal);
+        },
+
         _onButtonClick: function(event) {
-            var eventName,
-                target = event.target;
+            var eventName = event.target.getAttribute("data-event"),
+                eventArgument = event.target.getAttribute("data-event-argument");
 
-            eventName = target.getAttribute("data-event");
-
-            this.fire(eventName);
+            this.fire(eventName, [eventArgument]);
         },
 
         syncUI: function() {
@@ -71,7 +76,7 @@ YUI.add("hand", function(Y) {
         },
 
         _afterCardsChange: function(event) {
-            // this._uiSetCards(event.newVal);
+            this._uiSetCards(event.newVal);
         },
 
         _afterDirectionChange: function(event) {
@@ -118,8 +123,41 @@ YUI.add("hand", function(Y) {
             this._uiSyncQuit();
         },
 
+        _uiSetCards: function(cards) {
+            var cardsHtml, cardsData, cardsNode,
+                contentBox = this.get("contentBox");
+            cardsData = Y.Array.map(cards, function(card) {
+                var name = (card !== "") ? card : "unknown",
+                    cardClassName = this.getClassName("card", name.toLowerCase());
+
+                return {
+                    name: name,
+                    className: [this.getClassName("card"), cardClassName].join(" ")
+                };
+            }, this);
+            cardsNode = contentBox.one("." + this.getClassName("cards"));
+
+            cardsHtml = Y.mustache(Hand.CARDS_TEMPLATE, { cards: cardsData });
+            cardsNode.set("innerHTML", cardsHtml);
+            this._uiSetCardsEnabled(this.get("cardsEnabled"));
+        },
+
+        _uiSetCardsEnabled: function(cardsEnabled) {
+            var cards,
+                contentBox = this.get("contentBox");
+            cards = contentBox.all("."+ this.getClassName("cards") + " button");
+
+            if(cardsEnabled) {
+                cards.each(function(card) {
+                    card.removeAttribute("disabled");
+                });
+            } else {
+                cards.setAttribute("disabled", "disabled");
+            }
+        },
+
         _afterDisabledChange: function(event) {
-            // this._uiSetDisabled(event.newVal);
+            this.set("cardsEnabled", !event.newVal);
         }
 
     }, {
@@ -150,6 +188,10 @@ YUI.add("hand", function(Y) {
 
             quitEnabled: {
                 value: false
+            },
+
+            cardsEnabled: {
+                value: false
             }
 
         },
@@ -158,10 +200,16 @@ YUI.add("hand", function(Y) {
             '<div class="{{directionCN}}">{{direction}}</div>' +
             '<div class="{{nameCN}}">{{name}}</div>' +
             '<button type="button" class="{{joinCN}}" data-event="join">Join</button>' +
-            '<button type="button" class="{{quitCN}}" data-event="quit">Quit</button>'
+            '<button type="button" class="{{quitCN}}" data-event="quit">Quit</button>' +
+            '<div class="{{cardsCN}}"></div>',
+
+        CARDS_TEMPLATE: '' +
+            '{{#cards}}' +
+              '<button type="button" class="{{className}}" data-event="card" data-event-argument="{{name}}">{{name}}</button>' +
+            '{{/cards}}'
 
     });
 
     Y.Bridge.Hand = Hand;
 
-}, "0", { requires: ["widget", "mustache"] });
+}, "0", { requires: ["widget", "collection", "mustache"] });
