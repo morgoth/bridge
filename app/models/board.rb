@@ -164,12 +164,16 @@ class Board < ActiveRecord::Base
   end
 
   def hands_for(player)
+    if player
+      visible_directions = [player.direction]
+      visible_directions << dummy_user.direction if cards.count > 0
+      visible_directions << claims.active.last.claiming_user.direction if claims.active.present?
+      visible_directions.uniq!
+    else
+      visible_directions = []
+    end
     cards_left.tap do |left|
-      directions = left.keys
-      directions.delete(player.direction)
-      directions.delete(dummy_user.direction) if cards.count > 0
-      directions.delete(claims.active.last.claiming_user.direction) if claims.active.present?
-      directions.each { |d| left[d] = left[d].map { "" } }
+      (Bridge::DIRECTIONS - visible_directions).each { |d| left[d] = left[d].map { "" } }
     end
   end
 end

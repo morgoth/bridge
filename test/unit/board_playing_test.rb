@@ -85,4 +85,12 @@ class BoardPlayingTest < ActiveSupport::TestCase
     assert_equal @board.cards_left("S"), hands["S"]
     assert_equal ["", "", "", "", "", "", "", "", "", "", "", "", ""], hands["W"]
   end
+
+  test "return empty strings if player is nil" do
+    hands = @board.send(:hands_for, nil)
+    assert_equal ["", "", "", "", "", "", "", "", "", "", "", "", ""], hands["N"]
+    assert_equal ["", "", "", "", "", "", "", "", "", "", "", "", ""], hands["E"]
+    assert_equal ["", "", "", "", "", "", "", "", "", "", "", "", ""], hands["S"]
+    assert_equal ["", "", "", "", "", "", "", "", "", "", "", "", ""], hands["W"]
+  end
 end
