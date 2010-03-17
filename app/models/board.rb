@@ -1,4 +1,6 @@
 class Board < ActiveRecord::Base
+  acts_as_list :scope => :table
+
   %w(n e s w).each { |d| belongs_to "user_#{d}", :class_name => "User", :extend => UserBoardExtension }
   has_many :bids, :order => "bids.position", :extend => BidsBoardExtension
   has_many :cards, :order => "cards.position", :extend => CardsBoardExtension

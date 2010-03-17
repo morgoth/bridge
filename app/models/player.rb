@@ -15,18 +15,6 @@ class Player < ActiveRecord::Base
   after_create :table_start
   after_destroy :table_stop
 
-  # state_machine :initial => :preparing do
-  #   event :start do
-  #     transition :preparing => :ready
-  #   end
-
-  #   event :reset do
-  #     transition all => :preparing
-  #   end
-
-  #   after_transition :on => :start, :do => :table_start
-  # end
-
   def for_ajax
     serializable_hash(:only => [:state], :methods => ["name"])
   end

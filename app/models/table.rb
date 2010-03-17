@@ -1,6 +1,10 @@
 class Table < ActiveRecord::Base
   has_many :players, :extend => PlayersTableExtension
-  has_many :boards
+  has_many :boards do
+    def current
+      order("position DESC").first
+    end
+  end
 
   state_machine :initial => :preparing do
     event :start do
@@ -11,7 +15,7 @@ class Table < ActiveRecord::Base
       transition :playing => :preparing, :unless => :four_players?
     end
 
-    after_transition :start, :do => :create_board
+    after_transition :on => :start, :do => :create_board!
   end
 
   def user_player(user)
@@ -37,15 +41,15 @@ class Table < ActiveRecord::Base
 
   private
 
-  # def four_players_ready?
-  #   players.count == 4 && players.all?(&:ready?)
-  # end
-
   def four_players?
     players.count == 4
   end
 
-  def create_board
-    board.create!
+  def create_board!
+    attributes = %w(n e s w).inject({}) do |hash, direction|
+      hash.tap { |h| h["user_#{direction}"] = players[direction].user }
+    end
+
+    boards.create!(attributes)
   end
 end
