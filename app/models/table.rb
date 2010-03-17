@@ -20,18 +20,15 @@ class Table < ActiveRecord::Base
 
   def for_ajax(user)
     serializable_hash(:only => [:id, :state]).tap do |hash|
-
       if user && user_player(user)
         hash["player"] = user_player(user).direction
       end
 
       hash["players"] = Bridge::DIRECTIONS.inject({}) do |result, direction|
-        player = players[direction]
-        result[direction] = player.for_ajax if player
-        result
+        result.tap { |h| h[direction] = players[direction].for_ajax if players[direction] }
       end
 
-      hash["board"] = boards.last.present? ? boards.last.for_ajax : {}
+      hash["board"] = boards.current.for_ajax(user) if boards.current
     end
   end
 
