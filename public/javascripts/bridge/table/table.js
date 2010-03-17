@@ -106,10 +106,14 @@ YUI.add("table", function(Y) {
         },
 
         _initializePoll: function() {
-            var timeout = this.get("pollTimeout"),
-                tablePath = Y.mustache(Table.TABLE_PATH, {
-                    id: this.get("id")
-                });
+            var tablePath,
+                id = this.get("id"),
+                userId = this.get("userId"),
+                timeout = this.get("pollTimeout");
+            tablePath = Y.mustache(userId ? Table.USER_TABLE_PATH : Table.TABLE_PATH, {
+                id: id,
+                user_id: userId
+            });
 
             this.poll = Y.io.poll(timeout, tablePath, {
                 on: {
@@ -160,6 +164,7 @@ YUI.add("table", function(Y) {
         },
 
         TABLE_PATH: "/ajax/tables/{{id}}.json",
+        USER_TABLE_PATH: "/ajax/tables/{{id}}.json?user_id={{user_id}}",
 
         TABLE_PLAYER_PATH: "/ajax/tables/{{id}}/player",
 

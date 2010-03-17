@@ -15,7 +15,7 @@ class Table < ActiveRecord::Base
   end
 
   def user_player(user)
-    players.where(:user_id => user.id).first
+    user && players.where(:user_id => user.id).first
   end
 
   def for_ajax(user)
