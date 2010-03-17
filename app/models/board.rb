@@ -30,7 +30,7 @@ class Board < ActiveRecord::Base
   end
 
   def cards_left(direction = nil)
-    users_cards = cards.inject(deal) do |current_cards, card|
+    users_cards = cards.inject(deal.to_hash) do |current_cards, card|
       current_cards[card.user.direction].delete(card.card)
       current_cards = current_cards
     end
@@ -90,9 +90,10 @@ class Board < ActiveRecord::Base
     13 - tricks_ns
   end
 
-  def for_ajax(user)
+  def for_ajax(player)
     serializable_hash(:only => [:state, :dealer, :declarer, :contract], :methods => ["contract_trump"]).tap do |hash|
       hash["bids"] = bids.map(&:bid)
+      hash["hands"] = hands_for(player)
     end
   end
 
@@ -160,5 +161,15 @@ class Board < ActiveRecord::Base
   def set_points
     score = Bridge::Score.new(:contract => contract, :vulnerable => declarer_vulnerable?, :tricks => send("tricks_#{Bridge.side_of(declarer).downcase}"))
     self.points_ns = ["N", "S"].include?(declarer) ? score.points : -score.points
+  end
+
+  def hands_for(player)
+    cards_left.tap do |left|
+      directions = left.keys
+      directions.delete(player.direction)
+      directions.delete(dummy_user.direction) if cards.count > 0
+      directions.delete(claims.active.last.claiming_user.direction) if claims.active.present?
+      directions.each { |d| left[d] = left[d].map { "" } }
+    end
   end
 end

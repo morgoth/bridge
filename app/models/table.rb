@@ -28,7 +28,7 @@ class Table < ActiveRecord::Base
         result.tap { |h| h[direction] = players[direction].for_ajax if players[direction] }
       end
 
-      hash["board"] = boards.current.for_ajax(user) if boards.current
+      hash["board"] = boards.current.for_ajax(user_player(user)) if boards.current
     end
   end
 
