@@ -27,36 +27,29 @@ YUI.add("table", function(Y) {
         },
 
         _onHandJoin: function(event) {
-            var direction = event.target.get("direction"),
-                tablePlayerPath = Y.mustache(Table.TABLE_PLAYER_PATH, {
-                    id: this.get("id")
-                });
+            var direction = event.target.get("direction");
 
-            this.poll.stop();
-            Y.io(tablePlayerPath, {
-                method: "POST",
-                data: "player[direction]=" + direction,
-                on: {
-                    success: Y.bind(this._onRequestSuccess, this),
-                    failure: Y.bind(this._onRequestFailure, this)
-                }
-            });
+            this._io(this._tablePlayerPath(), { method: "POST", data: "player[direction]=" + direction });
         },
 
         _onHandQuit: function(event) {
-            var tablePlayerPath = Y.mustache(Table.TABLE_PLAYER_PATH, {
-                    id: this.get("id")
-                });
+            this._io(this._tablePlayerPath(), { method: "POST", data: "_method=DELETE" });
+        },
+
+        _tablePlayerPath: function() {
+            return Y.mustache(Table.TABLE_PLAYER_PATH, {
+                id: this.get("id")
+            });
+        },
+
+        _io: function(uri, configuration) {
+            configuration = configuration || {};
+            configuration.on = configuration.on || {};
+            configuration.on.success = Y.bind(this._onRequestSuccess, this);
+            configuration.on.failure = Y.bind(this._onRequestFailure, this);
 
             this.poll.stop();
-            Y.io(tablePlayerPath, {
-                method: "POST",
-                data: "&_method=DELETE",
-                on: {
-                    success: Y.bind(this._onRequestSuccess, this),
-                    failure: Y.bind(this._onRequestFailure, this)
-                }
-            });
+            Y.io(uri, configuration);
         },
 
         _afterTableDataChange: function(event) {
@@ -69,19 +62,27 @@ YUI.add("table", function(Y) {
 
         _onRequestFailure: function(id, response) {
             Y.log(response);
+            alert("Error: communication problem occured, page reload might be required.");
+            this.poll.start();
         },
 
         _renderTable: function() {
-            var container = this.get("container");
+            var container = this.get("container"),
+                html = Y.mustache(Table.MAIN_TEMPLATE, {
 
-            container.set("innerHTML", "Bridge Libre!");
+                });
+
+            container.set("innerHTML", html);
         },
 
         _renderHands: function() {
             this.hands = {};
 
             Y.each(Table.DIRECTIONS, function(direction) {
-                var hand = new Y.Bridge.Hand({ host: this, direction: direction });
+                var handNode, hand,
+                    container = this.get("container");
+                handNode = container.one(".bridge-hand-" + direction.toLowerCase());
+                hand = new Y.Bridge.Hand({ host: this, direction: direction, boundingBox: handNode });
 
                 this.hands[direction] = hand;
                 hand.render();
@@ -93,13 +94,13 @@ YUI.add("table", function(Y) {
         },
 
         _uiSyncHands: function(tableData) {
-            var userId = this.get("userId"),
+            var isLoggedIn = this._isLoggedIn(),
                 playerDirection = tableData.player,
                 players = tableData.players;
 
             Y.each(this.hands, function(hand, direction) {
-                hand.set("joinEnabled", !!(userId && !playerDirection));
-                hand.set("quitEnabled", !!(userId && (playerDirection === direction)));
+                hand.set("joinEnabled", !!(isLoggedIn && !playerDirection));
+                hand.set("quitEnabled", !!(isLoggedIn && (playerDirection === direction)));
                 hand.set("name", players[direction] && players[direction].name);
             }, this);
         },
@@ -121,6 +122,10 @@ YUI.add("table", function(Y) {
             var tableData = Y.JSON.parse(o.responseText);
 
             this.set("tableData", tableData);
+        },
+
+        _isLoggedIn: function() {
+            return !!this.get("userId");
         }
 
     }, {
@@ -148,7 +153,7 @@ YUI.add("table", function(Y) {
             },
 
             pollTimeout: {
-                value: 3000,
+                value: 10000,
                 validator: Y.Lang.isNumber
             }
 
@@ -158,7 +163,16 @@ YUI.add("table", function(Y) {
 
         TABLE_PLAYER_PATH: "/ajax/tables/{{id}}/player",
 
-        DIRECTIONS: ["N", "E", "S", "W"]
+        DIRECTIONS: ["N", "E", "S", "W"],
+
+        MAIN_TEMPLATE: '' +
+            '<div class="bridge-table">' +
+              '<h3>Bridge Libre!</h3>' +
+              '<div class="bridge-hand-n"></div>' +
+              '<div class="bridge-hand-e"></div>' +
+              '<div class="bridge-hand-s"></div>' +
+              '<div class="bridge-hand-w"></div>' +
+            '</div>'
 
     });
 

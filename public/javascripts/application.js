@@ -31,14 +31,13 @@ YUI({
     }
 }).use("node", "table", function(Y) {
     var userId, tableId,
-        tableSelector = "#table",
         userNode = Y.Node.one('meta[name="bridge-user-id"]'),
-        tableNode = Y.Node.one(tableSelector);
+        tableNode = Y.Node.one("#table");
 
     userId = userNode && userNode.getAttribute("content");
     tableId = tableNode && tableNode.getAttribute("data-table-id");
 
     if(tableId) {
-        new Y.Bridge.Table({ container: tableSelector, userId: userId, id: tableId });
+        new Y.Bridge.Table({ container: tableNode, userId: userId, id: tableId });
     }
 });
