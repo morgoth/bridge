@@ -32,7 +32,7 @@ class Board < ActiveRecord::Base
   def cards_left(direction = nil)
     users_cards = cards.inject(deal.to_hash) do |current_cards, card|
       current_cards[card.user.direction].delete(card.to_s)
-      current_cards = current_cards
+      current_cards
     end
     direction.nil? ? users_cards : users_cards[direction]
   end
@@ -42,17 +42,14 @@ class Board < ActiveRecord::Base
     users[direction]
   end
 
-  # TODO: test
   def declarer_user
     users[declarer]
   end
 
-  # TODO: test
   def first_lead_user
     declarer_user.next
   end
 
-  # TODO: test
   def dummy_user
     first_lead_user.next
   end
@@ -66,11 +63,11 @@ class Board < ActiveRecord::Base
   end
 
   def tricks_taken(side = nil)
-    hash = cards.tricks.inject(Hash.new(0)) do |h, trick|
+    hash = cards.tricks.inject(Hash.new(0)) do |taken, trick|
       card = Bridge::Trick.new(trick.map(&:card)).winner(contract_trump)
       direction = deal_owner(card)
-      h[direction] += 1
-      h
+      taken[direction] += 1
+      taken
     end
     side.nil? ? hash : side.to_s.upcase.split("").inject(0) { |sum, direction| sum += hash[direction] }
   end
@@ -160,7 +157,7 @@ class Board < ActiveRecord::Base
 
   def set_points
     score = Bridge::Score.new(:contract => contract, :vulnerable => declarer_vulnerable?, :tricks => send("tricks_#{Bridge.side_of(declarer).downcase}"))
-    self.points_ns = ["N", "S"].include?(declarer) ? score.points : -score.points
+    self.points_ns = ["N", "S"].include?(declarer) ? score.points : - score.points
   end
 
   def hands_for(player)
