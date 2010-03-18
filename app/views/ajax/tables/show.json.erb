@@ -1,0 +1,19 @@
+<%
+
+result = @table.serializable_hash(:only => [:id, :state])
+
+if current_user && @table.user_player(current_user)
+  result["player"] = @table.user_player(current_user).direction
+end
+
+result["players"] = Bridge::DIRECTIONS.inject({}) do |hash, direction|
+  hash.tap { |h| h[direction] = @table.players[direction].for_ajax if @table.players[direction] }
+end
+
+#hash["board"] = @table.boards.current.for_ajax(@table.user_player(current_user)) if @table.boards.current
+
+-%><%=
+
+result.to_json
+
+%>

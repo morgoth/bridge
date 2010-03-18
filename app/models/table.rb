@@ -18,20 +18,6 @@ class Table < ActiveRecord::Base
     user && players.where(:user_id => user.id).first
   end
 
-  def for_ajax(user)
-    serializable_hash(:only => [:id, :state]).tap do |hash|
-      if user && user_player(user)
-        hash["player"] = user_player(user).direction
-      end
-
-      hash["players"] = Bridge::DIRECTIONS.inject({}) do |result, direction|
-        result.tap { |h| h[direction] = players[direction].for_ajax if players[direction] }
-      end
-
-      hash["board"] = boards.current.for_ajax(user_player(user)) if boards.current
-    end
-  end
-
   private
 
   def four_players?
