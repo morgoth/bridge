@@ -77,9 +77,7 @@ YUI.add("table", function(Y) {
 
         _renderTable: function() {
             var container = this.get("container"),
-                html = Y.mustache(Table.MAIN_TEMPLATE, {
-
-                });
+                html = Y.mustache(Table.MAIN_TEMPLATE, {});
 
             container.set("innerHTML", html);
         },
@@ -104,7 +102,7 @@ YUI.add("table", function(Y) {
                 container = this.get("container");
             biddingBoxNode = container.one(".bridge-biddingbox");
 
-            B = biddingBox = new Y.Bridge.BiddingBox({ host: this, boundingBox: biddingBoxNode });
+            biddingBox = new Y.Bridge.BiddingBox({ host: this, boundingBox: biddingBoxNode });
             biddingBox.render();
         },
 

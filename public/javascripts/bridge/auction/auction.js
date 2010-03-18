@@ -69,44 +69,40 @@ YUI.add("auction", function(Y) {
             }, this);
         },
 
-        _renderHeader: function() {
-            var contentBox = this.get("contentBox");
-
-            this.headerNode = this._createBidGroup(this.getClassName("headers"));
-            contentBox.appendChild(this.headerNode);
-
-            this.headerNodes = {};
-            Y.each(Auction.DIRECTIONS, function(direction) {
-                var headerNode = this._createBid(direction, this.getClassName("header", direction.toLowerCase()));
-
-                this.headerNodes[direction] = headerNode;
-                this.headerNode.appendChild(headerNode);
+        _renderAuction: function() {
+            var html, headers,
+                contentBox = this.get("contentBox");
+            headers = Y.Array.map(Auction.DIRECTIONS, function(direction) {
+                return {
+                    name: direction,
+                    className: this.getClassName("header", direction.toLowerCase())
+                };
             }, this);
+            html = Y.mustache(Auction.AUCTION_TEMPLATE, {
+                headers: headers
+            });
+
+            contentBox.set("innerHTML", html);
         },
 
-        _renderBids: function() {
-            var contentBox = this.get("contentBox");
+        // TODO:
+        _uiSetBids: function(bids) {
+            var bidsNode, html,
+                contentBox = this.get("contentBox");
+            bidsNode = contentBox.one("." + this.getClassName("bids"));
+            bids = Y.Array.map(bids, function(bid, i) {
+                return {
+                    name: bid,
+                    className: this.getClassName("bid", bid.toLowerCase())
+                };
+            }, this);
+            html = Y.mustache(Auction.BIDS_TEMPLATE, {
+                bids: bids
+            });
 
-            this.bidsNode = this._createBidGroup(this.getClassName("bids"));
-            contentBox.appendChild(this.bidsNode);
-        },
-
-        _createBidGroup: function(className) {
-            var bidGroup = Y.Node.create(Auction.BID_GROUP_TEMPLATE);
-
-            bidGroup.addClass(className);
-
-            return bidGroup;
-        },
-
-        _createBid: function(text, className) {
-            var bid = Y.Node.create(Auction.BID_TEMPLATE);
-
-            bid.set("innerHTML", text);
-            bid.addClass(className);
-
-            return bid;
+            bidsNode.set("innerHTML", html);
         }
+
     }, {
 
         NAME: "auction",
@@ -125,10 +121,21 @@ YUI.add("auction", function(Y) {
 
         DIRECTIONS: ["N", "E", "S", "W"],
 
-        BID_GROUP_TEMPLATE: '<ol></ol>',
+        AUCTION_TEMPLATE: '' +
+            '<ol>' +
+              '{{#headers}}' +
+                '<li class="yui-auction-header {{className}}">{{name}}</li>' +
+              '{{/headers}}' +
+            '</ol>' +
+            '<ol class="yui-auction-bids">' +
+            '</ol>',
 
-        BID_TEMPLATE: '<li></li>'
-
+        BIDS_TEMPLATE: '' +
+            '{{#bids}}' +
+              '<li>' +
+                '<button type="button" class="yui-auction-bid {{className}}">{{name}}</button>' +
+              '</li>' +
+            '{{/bids}}'
 
     });
 
