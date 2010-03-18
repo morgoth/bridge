@@ -28,7 +28,29 @@ class Table < ActiveRecord::Base
     attributes = %w(n e s w).inject({}) do |hash, direction|
       hash.tap { |h| h["user_#{direction}"] = players[direction].user }
     end
+    attributes[:deal_id] = Bridge::Deal.random_id.to_s
+    attributes[:dealer] = next_direction(boards.current.try(:dealer))
+    attributes[:vulnerable] = next_vulnerable(boards.current.try(:vulnerable))
 
     boards.create!(attributes)
+  end
+
+  private
+
+  def four_players?
+    players.count == 4
+  end
+
+  # TODO: move to gem
+  def next_direction(direction)
+    return Bridge::DIRECTIONS.first if direction.nil?
+    i = (Bridge::DIRECTIONS.index(direction) + 1) % 4
+    Bridge::DIRECTIONS[i]
+  end
+
+  def next_vulnerable(vulnerable)
+    return Bridge::VULNERABILITIES.first if vulnerable.nil?
+    i = (Bridge::VULNERABILITIES.index(vulnerable) + 1) % 4
+    Bridge::VULNERABILITIES[i]
   end
 end

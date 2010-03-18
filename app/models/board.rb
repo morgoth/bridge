@@ -5,8 +5,14 @@ class Board < ActiveRecord::Base
   has_many :bids, :order => "bids.position", :extend => BidsBoardExtension
   has_many :cards, :order => "cards.position", :extend => CardsBoardExtension
   has_many :claims
+  belongs_to :table
+
+  validates :deal_id, :presence => true
+  validates :dealer, :presence => true, :inclusion => Bridge::DIRECTIONS
+  validates :vulnerable, :presence => true, :inclusion => Bridge::VULNERABILITIES
 
   delegate :n, :e, :s, :w, :owner, :to => :deal, :prefix => true, :allow_nil => true
+  delegate :create_board!, :to => :table, :prefix => true, :allow_nil => true
 
   def deal
     Bridge::Deal.from_id(deal_id.to_i)
@@ -114,6 +120,7 @@ class Board < ActiveRecord::Base
 
     before_transition :auction => :playing, :do => [:set_contract, :set_declarer]
     before_transition :playing => :completed, :do => [:set_tricks, :set_points]
+    after_transition any => :completed, :do => :table_create_board!
   end
 
   private
