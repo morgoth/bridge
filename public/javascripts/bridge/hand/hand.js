@@ -48,7 +48,7 @@ YUI.add("hand", function(Y) {
             this.after("joinEnabledChange", this._afterJoinEnabledChange);
             this.after("quitEnabledChange", this._afterQuitEnabledChange);
             this.after("cardsEnabledChange", this._afterCardsEnabledChange);
-            contentBox.delegate("click", Y.bind(this._onButtonClick, this), "button");
+            contentBox.delegate("click", Y.bind(this._onButtonClick, this), "button[data-event]");
         },
 
         _afterJoinEnabledChange: function(event) {

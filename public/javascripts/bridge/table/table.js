@@ -18,12 +18,16 @@ YUI.add("table", function(Y) {
         _renderUI: function() {
             this._renderTable();
             this._renderHands();
+            this._renderBiddingBox();
         },
 
         _bindUI: function() {
             this.on("hand:join", this._onHandJoin);
             this.on("hand:quit", this._onHandQuit);
             this.on("hand:card", this._onHandCard);
+            this.on("biddingbox:bid", function(event) {
+                Y.log(event[0]);
+            });
             this.after("tableDataChange", this._afterTableDataChange);
         },
 
@@ -81,17 +85,27 @@ YUI.add("table", function(Y) {
         },
 
         _renderHands: function() {
+            var container = this.get("container");
+
             this.hands = {};
 
             Y.each(Table.DIRECTIONS, function(direction) {
-                var handNode, hand,
-                    container = this.get("container");
+                var handNode, hand;
                 handNode = container.one(".bridge-hand-" + direction.toLowerCase());
                 hand = new Y.Bridge.Hand({ host: this, direction: direction, boundingBox: handNode });
 
                 this.hands[direction] = hand;
                 hand.render();
             }, this);
+        },
+
+        _renderBiddingBox: function() {
+            var biddingBoxNode, biddingBox,
+                container = this.get("container");
+            biddingBoxNode = container.one(".bridge-biddingbox");
+
+            B = biddingBox = new Y.Bridge.BiddingBox({ host: this, boundingBox: biddingBoxNode });
+            biddingBox.render();
         },
 
         _uiSyncTable: function(tableData) {
@@ -155,6 +169,10 @@ YUI.add("table", function(Y) {
             tableData: {
             },
 
+            state: {
+                value: "preparing"
+            },
+
             container: {
                 value: "body",
                 setter: function(selector) {
@@ -182,10 +200,11 @@ YUI.add("table", function(Y) {
               '<div class="bridge-hand-e"></div>' +
               '<div class="bridge-hand-s"></div>' +
               '<div class="bridge-hand-w"></div>' +
+              '<div class="bridge-biddingbox"></div>' +
             '</div>'
 
     });
 
     Y.Bridge.Table = Table;
 
-}, "0", { requires: ["base", "node", "gallery-io-poller", "json", "mustache", "hand"] });
+}, "0", { requires: ["base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox"] });

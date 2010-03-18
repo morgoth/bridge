@@ -6,7 +6,7 @@ YUI({
         },
         biddingbox: {
             path: "../bridge/biddingbox/biddingbox.js",
-            requires: ["widget"]
+            requires: ["widget", "mustache", "collection"]
         },
         auction: {
             path: "../bridge/auction/auction.js",
@@ -22,7 +22,7 @@ YUI({
         },
         table: {
             path: "../bridge/table/table.js",
-            requires: ["base-base", "node", "gallery-io-poller", "json", "mustache", "hand"]
+            requires: ["base-base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox"]
         },
         "gallery-io-poller": {
             path: "../yui-gallery/gallery-io-poller/gallery-io-poller.js",
