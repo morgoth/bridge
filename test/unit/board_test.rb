@@ -9,6 +9,12 @@ class BoardTest < ActiveSupport::TestCase
     @user_w = @board.user_w
   end
 
+  test "should not be valid without deal_id" do
+    @board.deal_id = nil
+    assert_false @board.valid?
+    assert_nil @board.deal_id
+  end
+
   test "deal_<direction> methods should return cards" do
     assert_equal @board.deal[:n], @board.deal_n
     assert_equal @board.deal[:e], @board.deal_e
