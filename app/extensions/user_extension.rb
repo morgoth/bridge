@@ -1,7 +1,7 @@
 module UserExtension
   def next_direction
     i = Bridge::DIRECTIONS.index(direction)
-    next_direction = Bridge::DIRECTIONS[(i + 1) % 4]
+    Bridge::DIRECTIONS[(i + 1) % 4]
   end
 
   def partner
@@ -14,7 +14,7 @@ module UserExtension
 
   def previous_direction
     i = Bridge::DIRECTIONS.index(direction)
-    next_direction = Bridge::DIRECTIONS[(i - 1) % 4]
+    Bridge::DIRECTIONS[(i - 1) % 4]
   end
 
   def previous
@@ -38,6 +38,6 @@ module UserExtension
   end
 
   def has_cards_in_suit?(suit)
-    board.cards_left(direction).any? { |c| c.suit == suit }
+    board.cards_left(direction).any? { |c| Bridge::Card.new(c).suit == suit }
   end
 end
