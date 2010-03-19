@@ -93,10 +93,17 @@ class Board < ActiveRecord::Base
     13 - tricks_ns
   end
 
-  def for_ajax(player)
-    serializable_hash(:only => [:state, :dealer, :declarer, :contract], :methods => ["contract_trump"]).tap do |hash|
-      hash["bids"] = bids.map(&:bid)
-      hash["hands"] = hands_for(player)
+  def visible_hands_for(player)
+    if player
+      visible_directions = [player.direction]
+      visible_directions << dummy_user.direction if cards.count > 0
+      visible_directions << claims.active.last.claiming_user.direction if claims.active.present?
+      visible_directions.uniq!
+    else
+      visible_directions = []
+    end
+    cards_left.tap do |left|
+      (Bridge::DIRECTIONS - visible_directions).each { |d| left[d] = left[d].map { "" } }
     end
   end
 
@@ -165,19 +172,5 @@ class Board < ActiveRecord::Base
   def set_points
     score = Bridge::Score.new(:contract => contract, :vulnerable => declarer_vulnerable?, :tricks => send("tricks_#{Bridge.side_of(declarer).downcase}"))
     self.points_ns = ["N", "S"].include?(declarer) ? score.points : - score.points
-  end
-
-  def hands_for(player)
-    if player
-      visible_directions = [player.direction]
-      visible_directions << dummy_user.direction if cards.count > 0
-      visible_directions << claims.active.last.claiming_user.direction if claims.active.present?
-      visible_directions.uniq!
-    else
-      visible_directions = []
-    end
-    cards_left.tap do |left|
-      (Bridge::DIRECTIONS - visible_directions).each { |d| left[d] = left[d].map { "" } }
-    end
   end
 end

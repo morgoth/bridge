@@ -72,7 +72,7 @@ class BoardPlayingTest < ActiveSupport::TestCase
   end
 
   test "return visible hands for N if no card played" do
-    hands = @board.send(:hands_for, @user_n)
+    hands = @board.visible_hands_for(@user_n)
     assert_equal @board.cards_left("N"), hands["N"]
     assert_equal ["", "", "", "", "", "", "", "", "", "", "", "", ""], hands["E"]
     assert_equal ["", "", "", "", "", "", "", "", "", "", "", "", ""], hands["S"]
@@ -81,7 +81,7 @@ class BoardPlayingTest < ActiveSupport::TestCase
 
   test "return visible hands for N if card played (self and dummy)" do
     @board.cards.create!(:card => "HA", :user => @user_e)
-    hands = @board.send(:hands_for, @user_n)
+    hands = @board.visible_hands_for(@user_n)
     assert_equal @board.cards_left("N"), hands["N"]
     assert_equal ["", "", "", "", "", "", "", "", "", "", "", ""], hands["E"]
     assert_equal @board.cards_left("S"), hands["S"]
@@ -91,7 +91,7 @@ class BoardPlayingTest < ActiveSupport::TestCase
   test "return visible hands for N if claimed (self, dummy and claiming user)" do
     @board.cards.create!(:card => "HA", :user => @user_e)
     Factory(:claim, :board => @board, :user => @user_e)
-    hands = @board.send(:hands_for, @user_n)
+    hands = @board.visible_hands_for(@user_n)
     assert_equal @board.cards_left("N"), hands["N"]
     assert_equal @board.cards_left("E"), hands["E"]
     assert_equal @board.cards_left("S"), hands["S"]
@@ -99,7 +99,7 @@ class BoardPlayingTest < ActiveSupport::TestCase
   end
 
   test "return empty strings if player is nil" do
-    hands = @board.send(:hands_for, nil)
+    hands = @board.visible_hands_for(nil)
     assert_equal ["", "", "", "", "", "", "", "", "", "", "", "", ""], hands["N"]
     assert_equal ["", "", "", "", "", "", "", "", "", "", "", "", ""], hands["E"]
     assert_equal ["", "", "", "", "", "", "", "", "", "", "", "", ""], hands["S"]
