@@ -4,33 +4,28 @@ table = {
 
     player: "N", // currently logged in user player direction
 
-    handN: {
-        direction: "N", // probably not necessary
-        name: "alice",
-        cards: ["", "", "", "", "", "", "", "", "", "", "", "", ""],
-        joinEnabled: false,
-        quitEnabled: true,
-        cardsEnabled: false,
-        suit: ""
-    },
-
-    handE: {
-        // ...
-    },
-
-    handS: {
-        // ...
-    },
-
-    handW: {
-        // ...
-    },
+    hands: [
+        {
+            name: "alice",
+            cards: ["", "", "", "", "", "", "", "", "", "", "", "", ""],
+            joinEnabled: false,
+            quitEnabled: true,
+            cardsEnabled: false,
+            suit: ""
+        }, {
+            // ...
+        }, {
+            // ...
+        }, {
+            // ...
+        }
+    ],
 
     biddingBox: {
         doubleEnabled: false,
         redoubleEnabled: false,
         contract: "1NT",
-        disabled: true // hides the widget in after auction
+        disabled: true // hides the widget when other player's bid
     },
 
     auction: {
@@ -39,7 +34,7 @@ table = {
         bids: [
             { bid: "PASS", alert: "", askable: false }, // askable is not implemented yet
             { bid: "1C", alert: "Polish club", askable: true }
-        ],
+        ]
     },
 
     trick: {

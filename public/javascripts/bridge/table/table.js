@@ -86,15 +86,14 @@ YUI.add("table", function(Y) {
         _renderHands: function() {
             var container = this.get("container");
 
-            this.hands = {};
-
-            Y.each(Table.DIRECTIONS, function(direction) {
-                var handNode, hand;
-                handNode = container.one(".bridge-hand-" + direction.toLowerCase());
+            this.hands = Y.Array.map(Y.Bridge.DIRECTIONS, function(direction, i) {
+                var hand,
+                    handNode = container.one(".bridge-hand-" + direction.toLowerCase());
                 hand = new Y.Bridge.Hand({ host: this, direction: direction, boundingBox: handNode });
 
-                this.hands[direction] = hand;
                 hand.render();
+
+                return hand;
             }, this);
         },
 
@@ -118,41 +117,31 @@ YUI.add("table", function(Y) {
         },
 
         _uiSyncTable: function(tableData) {
-            this._uiSyncHands(tableData);
+            this._uiSyncHands(tableData.hands);
         },
 
-        _uiSyncHands: function(tableData) {
-            var isLoggedIn = this._isLoggedIn(),
-                playerDirection = tableData.player,
-                players = tableData.players,
-                board = tableData.board;
-
-            Y.each(this.hands, function(hand, direction) {
-                hand.set("joinEnabled", !!(isLoggedIn && !playerDirection));
-                hand.set("quitEnabled", !!(isLoggedIn && (playerDirection === direction)));
-                hand.set("name", players[direction] && players[direction].name);
-                if(board) {
-                    hand.set("cards", board.hands[direction]);
-                }
+        _uiSyncHands: function(hands) {
+            Y.each(hands, function(hand, i) {
+                this.hands[i].setAttrs(hand);
             }, this);
         },
 
-        _uiSyncBiddingBox: function(tableData) {
-            var biddingPlayer,
-                board = tableData.board;
+        // _uiSyncBiddingBox: function(tableData) {
+        //     var biddingPlayer,
+        //         board = tableData.board;
 
-            this.biddingBox.hide();
-            if(board) {
-                var lastContract = Y.Bridge.lastContract(board.bids),
-                    lastContractPlayer = Y.Bridge.lastContractPlayer(board.dealer, board.bids);
+        //     this.biddingBox.hide();
+        //     if(board) {
+        //         var lastContract = Y.Bridge.lastContract(board.bids),
+        //             lastContractPlayer = Y.Bridge.lastContractPlayer(board.dealer, board.bids);
 
-                biddingPlayer = Y.Bridge.biddingPlayer(board.dealer, board.bids);
-                if((board.state === "auction") && (biddingPlayer === board.player)) {
-                    this.biddingBox.set("contract", lastContract);
-                    this.biddingBox.show();
-                }
-            }
-        },
+        //         biddingPlayer = Y.Bridge.biddingPlayer(board.dealer, board.bids);
+        //         if((board.state === "auction") && (biddingPlayer === board.player)) {
+        //             this.biddingBox.set("contract", lastContract);
+        //             this.biddingBox.show();
+        //         }
+        //     }
+        // },
 
         _initializePoll: function() {
             var timeout = this.get("pollTimeout"),
