@@ -87,13 +87,9 @@ YUI.add("table", function(Y) {
             var container = this.get("container");
 
             this.hands = Y.Array.map(Y.Bridge.DIRECTIONS, function(direction, i) {
-                var hand,
-                    handNode = container.one(".bridge-hand-" + direction.toLowerCase());
-                hand = new Y.Bridge.Hand({ host: this, direction: direction, boundingBox: handNode });
+                var handNode = container.one(".bridge-hand-" + direction.toLowerCase());
 
-                hand.render();
-
-                return hand;
+                return new Y.Bridge.Hand({ host: this, direction: direction, boundingBox: handNode }).render();
             }, this);
         },
 
@@ -118,6 +114,7 @@ YUI.add("table", function(Y) {
 
         _uiSyncTable: function(tableData) {
             this._uiSyncHands(tableData.hands);
+            // this.biddingBox.setAttrs(tableData.biddingBox);
         },
 
         _uiSyncHands: function(hands) {
@@ -125,23 +122,6 @@ YUI.add("table", function(Y) {
                 this.hands[i].setAttrs(hand);
             }, this);
         },
-
-        // _uiSyncBiddingBox: function(tableData) {
-        //     var biddingPlayer,
-        //         board = tableData.board;
-
-        //     this.biddingBox.hide();
-        //     if(board) {
-        //         var lastContract = Y.Bridge.lastContract(board.bids),
-        //             lastContractPlayer = Y.Bridge.lastContractPlayer(board.dealer, board.bids);
-
-        //         biddingPlayer = Y.Bridge.biddingPlayer(board.dealer, board.bids);
-        //         if((board.state === "auction") && (biddingPlayer === board.player)) {
-        //             this.biddingBox.set("contract", lastContract);
-        //             this.biddingBox.show();
-        //         }
-        //     }
-        // },
 
         _initializePoll: function() {
             var timeout = this.get("pollTimeout"),
@@ -161,10 +141,6 @@ YUI.add("table", function(Y) {
             var tableData = Y.JSON.parse(o.responseText);
 
             this.set("tableData", tableData);
-        },
-
-        _isLoggedIn: function() {
-            return !!this.get("userId");
         }
 
     }, {
