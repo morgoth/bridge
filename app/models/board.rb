@@ -48,6 +48,11 @@ class Board < ActiveRecord::Base
     users[direction]
   end
 
+  def current_user
+    return bids.current_user if auction?
+    return cards.current_user if playing?
+  end
+
   def declarer_user
     users[declarer]
   end
@@ -93,9 +98,9 @@ class Board < ActiveRecord::Base
     13 - tricks_ns
   end
 
-  def visible_hands_for(player)
-    if player
-      visible_directions = [player.direction]
+  def visible_hands_for(player_or_direction)
+    if player_or_direction
+      visible_directions = player_or_direction.respond_to?(:direction) ? [player_or_direction.direction] : [player_or_direction]
       visible_directions << dummy_user.direction if cards.count > 0
       visible_directions << claims.active.last.claiming_user.direction if claims.active.present?
       visible_directions.uniq!
