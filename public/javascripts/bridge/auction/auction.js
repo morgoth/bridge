@@ -8,31 +8,16 @@ YUI.add("auction", function(Y) {
 
     Y.extend(Auction, Y.Widget, {
         renderUI: function() {
-            this._renderHeader();
-            this._renderBids();
+            this._renderAuction();
         },
 
         bindUI: function() {
             this.after("bidsChange", this._afterBidsChange);
             this.after("dealerChange", this._afterDealerChange);
-            this.bidsNode.delegate("click", Y.bind(this._onBidClick, this), "[position]");
         },
 
         syncUI: function() {
             this._uiSetBids(this.get("bids"));
-        },
-
-        addBid: function(bid) {
-            var bids = this.get("bids");
-
-            bids.push(bid);
-            this.set("bids", bids);
-        },
-
-        _onBidClick: function(event) {
-            var position = event.target.getAttribute("position");
-
-            this.fire("bid", [position]);
         },
 
         _afterBidsChange: function(event) {
@@ -44,33 +29,12 @@ YUI.add("auction", function(Y) {
         },
 
         _uiSetDealer: function(dealer) {
-            this.bidsNode.all(":empty").remove();
-
-            Y.each(Auction.DIRECTIONS.slice(0, Y.Array.indexOf(Auction.DIRECTIONS, dealer)), function(direction) {
-                var bidNode = this._createBid("", this.getClassName("bid", "space"));
-
-                this.bidsNode.prepend(bidNode);
-            }, this);
-        },
-
-        _uiSetBids: function(bids) {
-            var dealer = this.get("dealer"),
-                indexOfDealer = Y.Array.indexOf(Auction.DIRECTIONS, dealer);
-
-            this.bidsNode.all("*").remove();
-            this._uiSetDealer(dealer);
-
-            Y.each(bids, function(bid, i) {
-                var className = this.getClassName("bid", Auction.DIRECTIONS[(i + indexOfDealer) % 4].toLowerCase()),
-                    bidNode = this._createBid(bid, className);
-
-                bidNode.setAttribute("position", i + 1);
-                this.bidsNode.appendChild(bidNode);
-            }, this);
+            this._uiSetBids(this.get("bids"));
         },
 
         _renderAuction: function() {
             var html, headers,
+                dealer = this.get("dealer"),
                 contentBox = this.get("contentBox");
             headers = Y.Array.map(Auction.DIRECTIONS, function(direction) {
                 return {
@@ -85,17 +49,26 @@ YUI.add("auction", function(Y) {
             contentBox.set("innerHTML", html);
         },
 
-        // TODO:
         _uiSetBids: function(bids) {
-            var bidsNode, html,
+            var bidsNode, html, dealerPosition,
+                dealer = this.get("dealer"),
                 contentBox = this.get("contentBox");
             bidsNode = contentBox.one("." + this.getClassName("bids"));
+            dealerPosition = Y.Array.indexOf(Auction.DIRECTIONS, dealer);
             bids = Y.Array.map(bids, function(bid, i) {
+                var player = Auction.DIRECTIONS[(i + dealerPosition) % 4];
+
                 return {
                     name: bid,
-                    className: this.getClassName("bid", bid.toLowerCase())
+                    className: this.getClassName("bid", bid.toLowerCase()),
+                    player: player
                 };
             }, this);
+
+            for(var i = 0; i < dealerPosition; i++) {
+                bids.unshift({});
+            }
+
             html = Y.mustache(Auction.BIDS_TEMPLATE, {
                 bids: bids
             });
@@ -121,21 +94,25 @@ YUI.add("auction", function(Y) {
 
         DIRECTIONS: ["N", "E", "S", "W"],
 
-        AUCTION_TEMPLATE: '' +
-            '<ol>' +
-              '{{#headers}}' +
-                '<li class="yui-auction-header {{className}}">{{name}}</li>' +
-              '{{/headers}}' +
-            '</ol>' +
-            '<ol class="yui-auction-bids">' +
-            '</ol>',
+        AUCTION_TEMPLATE: ''
+            + '<ol>'
+            +   '{{#headers}}'
+            +     '<li class="yui-auction-header {{className}}">{{name}}</li>'
+            +   '{{/headers}}'
+            +   '</ol>'
+            +   '<ol class="yui-auction-bids"></ol>'
+            + '</ol>',
 
-        BIDS_TEMPLATE: '' +
-            '{{#bids}}' +
-              '<li>' +
-                '<button type="button" class="yui-auction-bid {{className}}">{{name}}</button>' +
-              '</li>' +
-            '{{/bids}}'
+        BIDS_TEMPLATE: ''
+            + '{{#bids}}'
+            +   '<li>'
+            +     '{{#name}}'
+            +       '<button type="button" class="yui-auction-bid {{className}}" data-player="{{player}}">'
+            +         '{{name}}'
+            +       '</button>'
+            +     '{{/name}}'
+            +   '</li>'
+            + '{{/bids}}'
 
     });
 

@@ -22,7 +22,7 @@ YUI({
         },
         table: {
             path: "../bridge/table/table.js",
-            requires: ["base-base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox"]
+            requires: ["base-base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox", "auction"]
         },
         "gallery-io-poller": {
             path: "../yui-gallery/gallery-io-poller/gallery-io-poller.js",

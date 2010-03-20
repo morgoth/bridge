@@ -28,9 +28,9 @@ YUI.add("biddingbox", function(Y) {
             this.after("redoubleEnabledChange", this._afterRedoubleEnabledChange);
 
             contentBox.delegate("click", Y.bind(this._onButtonClick, this), "button[data-event]");
-            this.on("pass", Y.bind(this.fire, this, "bid", ["pass"]));
-            this.on("x", Y.bind(this.fire, this, "bid", ["double"]));
-            this.on("xx", Y.bind(this.fire, this, "bid", ["redouble"]));
+            this.on("pass", Y.bind(this.fire, this, "bid", ["PASS"]));
+            this.on("x", Y.bind(this.fire, this, "bid", ["DOUBLE"]));
+            this.on("xx", Y.bind(this.fire, this, "bid", ["REDOUBLE"]));
             this.on("level", this._onLevel);
             this.on("suit", this._onSuit);
         },

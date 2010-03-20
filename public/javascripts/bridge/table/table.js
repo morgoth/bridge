@@ -19,6 +19,7 @@ YUI.add("table", function(Y) {
             this._renderTable();
             this._renderHands();
             this._renderBiddingBox();
+            this._renderAuction();
         },
 
         _bindUI: function() {
@@ -104,6 +105,16 @@ YUI.add("table", function(Y) {
 
             biddingBox = new Y.Bridge.BiddingBox({ host: this, boundingBox: biddingBoxNode });
             biddingBox.render();
+        },
+
+        _renderAuction: function() {
+            var auctionNode, auction,
+                container = this.get("container");
+
+            auctionNode = container.one(".bridge-auction");
+
+            auction = new Y.Bridge.Auction({ host: this, boundingBox: container });
+            auction.render();
         },
 
         _uiSyncTable: function(tableData) {
@@ -199,10 +210,11 @@ YUI.add("table", function(Y) {
               '<div class="bridge-hand-s"></div>' +
               '<div class="bridge-hand-w"></div>' +
               '<div class="bridge-biddingbox"></div>' +
+              '<div class="bridge-auction"></div>' +
             '</div>'
 
     });
 
     Y.Bridge.Table = Table;
 
-}, "0", { requires: ["base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox"] });
+}, "0", { requires: ["base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox", "auction"] });
