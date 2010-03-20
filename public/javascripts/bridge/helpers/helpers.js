@@ -40,22 +40,21 @@ YUI.add("helpers", function(Y) {
         return Y.Bridge.bidPlayer(dealer, bids, contract);
     };
 
-    Y.Bridge.isLastContractDoubled = function(bids) {
+    Y.Bridge.isLastContractModified = function(bids, modifier) {
         var contractIndex,
             clonedBids = Y.clone(bids),
             contract = Y.Bridge.lastContract(bids);
         contractIndex = Y.Array.indexOf(clonedBids, contract);
 
-        return Y.Array.indexOf(clonedBids.splice(contractIndex), "X") !== -1;
+        return Y.Array.indexOf(clonedBids.splice(contractIndex), modifier) !== -1;
+    };
+
+    Y.Bridge.isLastContractDoubled = function(bids) {
+        return Y.Bridge.isLastContractModified(bids, "X");
     };
 
     Y.Bridge.isLastContractRedoubled = function(bids) {
-        var contractIndex,
-            clonedBids = Y.clone(bids),
-            contract = Y.Bridge.lastContract(bids);
-        contractIndex = Y.Array.indexOf(clonedBids, contract);
-
-        return Y.Array.indexOf(clonedBids.splice(contractIndex), "XX") !== -1;
+        return Y.Bridge.isLastContractModified(bids, "XX");
     };
 
     Y.Bridge.arePartners = function(firstPlayer, secondPlayer) {
