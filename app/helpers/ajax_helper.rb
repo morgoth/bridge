@@ -4,16 +4,19 @@ module AjaxHelper
       result["id"] = table.id
       result["state"] = table.state
       result["player"] = table.user_player(current_user).direction if table.user_player(current_user)
-      Bridge::DIRECTIONS.each do |direction|
-        result["hand#{direction}"] = serialize_hand(table, direction) if table.players[direction]
+      Bridge::DIRECTIONS.each_with_index do |direction, i|
+        serialize_hand!(result["hands"][i], table, direction)
       end
     end
   end
 
-  def serialize_hand(table, direction)
-    table.players[direction].serializable_hash(:only => [:direction], :methods => ["name"]).tap do |hash|
+  def serialize_hand!(result, table, direction)
+    result.tap do |hash|
       hash["joinEnabled"] = join_enabled?(table, direction)
       hash["quitEnabled"] = quit_enabled?(table, direction)
+      if table.players[direction]
+        hash["name"] = table.players[direction].name
+      end
       if table.boards.current
         hash["cards"] = table.boards.current.visible_hands_for(table.user_player(current_user))[direction]
         hash["cardsEnabled"] = cards_enabled?(table, direction)
@@ -26,10 +29,12 @@ module AjaxHelper
     { "id" => "",
       "state" => "",
       "player" =>"",
-      "handN" => { "direction" => "", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false },
-      "handE" => { "direction" => "", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false },
-      "handS" => { "direction" => "", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false },
-      "handW" => { "direction" => "", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false },
+      "hands" => [
+                  { "direction" => "N", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false },
+                  { "direction" => "E", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false },
+                  { "direction" => "S", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false },
+                  { "direction" => "W", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false }
+                 ]
     }
   end
 
