@@ -99,12 +99,12 @@ YUI.add("table", function(Y) {
         },
 
         _renderBiddingBox: function() {
-            var biddingBoxNode, biddingBox,
+            var biddingBoxNode,
                 container = this.get("container");
             biddingBoxNode = container.one(".bridge-biddingbox");
 
-            biddingBox = new Y.Bridge.BiddingBox({ host: this, boundingBox: biddingBoxNode });
-            biddingBox.render();
+            this.biddingBox = new Y.Bridge.BiddingBox({ host: this, boundingBox: biddingBoxNode });
+            this.biddingBox.render();
         },
 
         _renderAuction: function() {
@@ -135,6 +135,20 @@ YUI.add("table", function(Y) {
                     hand.set("cards", board.hands[direction]);
                 }
             }, this);
+        },
+
+        _uiSyncBiddingBox: function(tableData) {
+            var biddingPlayer,
+                board = tableData.board;
+
+            this.biddingBox.hide();
+            if(board) {
+                biddingPlayer = Y.Bridge.biddingPlayer(board.dealer, board.bids);
+                if((board.state === "auction") && (biddingPlayer === board.player)) {
+                    this.biddingBox.set("contract", board.bids[board.bids.length - 1]);
+                    this.biddingBox.show();
+                }
+            }
         },
 
         _initializePoll: function() {

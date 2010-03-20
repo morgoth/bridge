@@ -66,6 +66,7 @@ YUI.add("auction", function(Y) {
             }, this);
 
             for(var i = 0; i < dealerPosition; i++) {
+                // add empty bids
                 bids.unshift({});
             }
 

@@ -4,6 +4,10 @@ YUI({
         mustache: {
             path: "../bridge/mustache/mustache.js"
         },
+        helpers: {
+            path: "../bridge/helpers/helpers.js",
+            requires: ["collection", "oop"]
+        },
         biddingbox: {
             path: "../bridge/biddingbox/biddingbox.js",
             requires: ["widget", "mustache", "collection"]
@@ -22,7 +26,7 @@ YUI({
         },
         table: {
             path: "../bridge/table/table.js",
-            requires: ["base-base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox", "auction"]
+            requires: ["base-base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox", "auction", "helpers"]
         },
         "gallery-io-poller": {
             path: "../yui-gallery/gallery-io-poller/gallery-io-poller.js",
