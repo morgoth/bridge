@@ -34,6 +34,7 @@ table = {
     },
 
     auction: {
+        names: ["alice", "bob", "darth", "john"], // maybe it's a bit redundant
         dealer: "N",
         bids: [
             { bid: "PASS", alert: "", askable: false }, // askable is not implemented yet
