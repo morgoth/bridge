@@ -143,9 +143,12 @@ YUI.add("table", function(Y) {
 
             this.biddingBox.hide();
             if(board) {
+                var lastContract = Y.Bridge.lastContract(board.bids),
+                    lastContractPlayer = Y.Bridge.lastContractPlayer(board.dealer, board.bids);
+
                 biddingPlayer = Y.Bridge.biddingPlayer(board.dealer, board.bids);
                 if((board.state === "auction") && (biddingPlayer === board.player)) {
-                    this.biddingBox.set("contract", board.bids[board.bids.length - 1]);
+                    this.biddingBox.set("contract", lastContract);
                     this.biddingBox.show();
                 }
             }

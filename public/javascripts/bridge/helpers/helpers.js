@@ -18,12 +18,19 @@ YUI.add("helpers", function(Y) {
         return Y.Array.indexOf(Y.Bridge.DIRECTIONS, dealer);
     };
 
+
     Y.Bridge.bidPlayer = function(dealer, bids, bid) {
         var clonedBids = Y.clone(bids),
             dealerPosition = Y.Bridge.dealerPosition(dealer),
             bidPosition = Y.Array.indexOf(clonedBids.reverse(), bid);
 
         return Y.Bridge.DIRECTIONS[(dealerPosition + bidPosition) % 4];
+    };
+
+    Y.Bridge.currentBidPlayer = function(dealer, bids) {
+        var dealerPosition = Y.Bridge.dealerPosition(dealer);
+
+        return Y.Bridge.DIRECTIONS[(bids.length + dealerPosition) % 4];
     };
 
     Y.Bridge.lastContract = function(bids) {
@@ -67,12 +74,5 @@ YUI.add("helpers", function(Y) {
     Y.Bridge.areOpponents = function(firstPlayer, secondPlayer) {
         return !Y.Bridge.arePartners(firstPlayer, secondPlayer);
     };
-
-    Y.Bridge.biddingPlayer = function(dealer, bids) {
-        var dealerPosition = Y.Array.indexOf(Y.Bridge.DIRECTIONS, dealer);
-
-        return Y.Bridge.DIRECTIONS[(bids.length + dealerPosition) % 4];
-    };
-
 
 }, "0", { requires: ["collection", "oop"] });
