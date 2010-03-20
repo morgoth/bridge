@@ -238,26 +238,26 @@ YUI.add("biddingbox", function(Y) {
 
         MODIFIERS: ["PASS", "X", "XX"],
 
-        BIDDING_BOX_TEMPLATE: '' +
-            '<div>' +
-              '{{#modifiers}}' +
-                '<button type="button" class="yui-biddingbox-modifier {{className}}" data-event="{{eventName}}">{{name}}</button>' +
-              '{{/modifiers}}' +
-            '</div>' +
-            '<div>' +
-              '{{#levels}}' +
-                '<button type="button" class="yui-biddingbox-level {{className}}" data-event="level" data-event-argument="{{name}}">' +
-                  '{{name}}' +
-                '</button>' +
-              '{{/levels}}' +
-            '</div>' +
-            '<div>' +
-              '{{#suits}}' +
-                '<button type="button" class="yui-biddingbox-suit {{className}}" data-event="suit" data-event-argument="{{name}}">' +
-                  '{{name}}' +
-                '</button>' +
-              '{{/suits}}' +
-            '</div>'
+        BIDDING_BOX_TEMPLATE: + ''
+            + '<div>'
+            +   '{{#modifiers}}'
+            +     '<button type="button" class="yui-biddingbox-modifier {{className}}" data-event="{{eventName}}">{{name}}</button>'
+            +   '{{/modifiers}}'
+            + '</div>'
+            + '<div>'
+            +   '{{#levels}}'
+            +     '<button type="button" class="yui-biddingbox-level {{className}}" data-event="level" data-event-argument="{{name}}">'
+            +       '{{name}}'
+            +     '</button>'
+            +   '{{/levels}}'
+            + '</div>'
+            + '<div>'
+            +   '{{#suits}}'
+            +     '<button type="button" class="yui-biddingbox-suit {{className}}" data-event="suit" data-event-argument="{{name}}">'
+            +       '{{name}}'
+            +     '</button>'
+            +   '{{/suits}}'
+            + '</div>'
 
     });
 
