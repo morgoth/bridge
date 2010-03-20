@@ -48,7 +48,15 @@ table = {
     },
 
     tricks: { // trick history
-
+        contract: "4NTX",
+        declarer: "E",
+        resultNS: 1,
+        resultEW: 2,
+        tricks: [
+            { won: true },
+            { won: false },
+            { lead: "N", cards: ["HA", "S8", "H3", "H9"], won: true }
+        ]
     }
 
 };
