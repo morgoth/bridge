@@ -72,14 +72,14 @@ YUI.add("biddingbox", function(Y) {
                 };
             }, this);
 
-            levels = Y.Array.map(BiddingBox.LEVELS, function(level) {
+            levels = Y.Array.map(Y.Bridge.LEVELS, function(level) {
                 return {
                     name: level,
                     className: this.getClassName("level", level)
                 };
             }, this);
 
-            suits = Y.Array.map(BiddingBox.SUITS, function(suit) {
+            suits = Y.Array.map(Y.Bridge.SUITS, function(suit) {
                 return {
                     name: suit,
                     className: this.getClassName("suit", suit.toLowerCase())
@@ -214,27 +214,27 @@ YUI.add("biddingbox", function(Y) {
         ATTRS: {
 
             level: {
+                validator: Y.Bridge.isLevel
             },
 
             doubleEnabled: {
+                validator: Y.Lang.isBoolean,
                 value: false
             },
 
             redoubleEnabled: {
+                validator: Y.Lang.isBoolean,
                 value: false
             },
 
             contract: {
+                validator: Y.Bridge.isContract
             },
 
             host: {
             }
 
         },
-
-        LEVELS: [1, 2, 3, 4, 5, 6, 7],
-
-        SUITS: ["C", "D", "H", "S", "NT"],
 
         MODIFIERS: ["PASS", "X", "XX"],
 
@@ -263,4 +263,4 @@ YUI.add("biddingbox", function(Y) {
 
     Y.Bridge.BiddingBox = BiddingBox;
 
-}, "0", { requires: ["widget", "mustache", "collection"] });
+}, "0", { requires: ["widget", "mustache", "collection", "helpers"] });

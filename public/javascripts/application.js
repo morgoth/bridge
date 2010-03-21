@@ -10,7 +10,7 @@ YUI({
         },
         biddingbox: {
             path: "../bridge/biddingbox/biddingbox.js",
-            requires: ["widget", "mustache", "collection"]
+            requires: ["widget", "mustache", "collection", "helpers"]
         },
         auction: {
             path: "../bridge/auction/auction.js",
