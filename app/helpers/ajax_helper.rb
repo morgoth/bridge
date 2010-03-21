@@ -7,6 +7,7 @@ module AjaxHelper
       Bridge::DIRECTIONS.each_with_index do |direction, i|
         serialize_hand!(result["hands"][i], table, direction)
       end
+      serialize_bidding_box!(result["biddingBox"], table.boards.current) if table.boards.current and table.boards.current.auction? and table.user_player(current_user)
     end
   end
 
@@ -24,6 +25,18 @@ module AjaxHelper
     end
   end
 
+  def serialize_bidding_box!(result, board)
+    result.tap do |hash|
+      hash["contract"] = board.bids.active.contracts.first
+      if current_user_turn?(board)
+        hash["disabled"] = false
+        # change it probably
+        hash["doubleEnabled"] = board.bids.new(:user => current_user, :bid => "X").valid?
+        hash["redoubleEnabled"] = board.bids.new(:user => current_user, :bid => "XX").valid?
+      end
+    end
+  end
+
   # to have always default values
   def table_structure
     { "id" => "",
@@ -34,7 +47,13 @@ module AjaxHelper
                   { "direction" => "E", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false },
                   { "direction" => "S", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false },
                   { "direction" => "W", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false }
-                 ]
+                 ],
+      "biddingBox" => {
+        "doubleEnabled" => false,
+        "redoubleEnabled" => false,
+        "contract" => nil,
+        "disabled" => true
+      }
     }
   end
 
@@ -47,6 +66,10 @@ module AjaxHelper
   end
 
   def cards_enabled?(table, direction)
-    quit_enabled?(table, direction) and table.boards.current.playing? and current_user == table.boards.current.current_user
+    quit_enabled?(table, direction) and table.boards.current.playing? and current_user_turn?(table.boards.current)
+  end
+
+  def current_user_turn?(board)
+    board and board.current_user == current_user
   end
 end
