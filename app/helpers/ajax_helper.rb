@@ -28,10 +28,10 @@ module AjaxHelper
 
   def serialize_bidding_box!(result, board)
     result.tap do |hash|
-      hash["contract"] = board.bids.active.contracts.first
+      hash["contract"] = board.bids.active.contracts.first.bid.to_s
       if current_user_turn?(board)
         hash["disabled"] = false
-        # change it probably
+        # FIXME: don't build objects
         hash["doubleEnabled"] = board.bids.new(:user => current_user, :bid => "X").valid?
         hash["redoubleEnabled"] = board.bids.new(:user => current_user, :bid => "XX").valid?
       end
