@@ -22,16 +22,17 @@ module AjaxHelper
       if table.boards.current
         hash["cards"] = table.boards.current.visible_hands_for(table.user_player(current_user))[direction]
         hash["cardsEnabled"] = cards_enabled?(table, direction)
+        hash["suit"] = table.boards.current.cards.current_trick_suit
       end
     end
   end
 
   def serialize_bidding_box!(result, board)
     result.tap do |hash|
-      hash["contract"] = board.bids.active.contracts.first
+      hash["contract"] = board.bids.active.contracts.first.bid.to_s
       if current_user_turn?(board)
         hash["disabled"] = false
-        # change it probably
+        # FIXME: don't build objects
         hash["doubleEnabled"] = board.bids.new(:user => current_user, :bid => "X").valid?
         hash["redoubleEnabled"] = board.bids.new(:user => current_user, :bid => "XX").valid?
       end
@@ -52,10 +53,10 @@ module AjaxHelper
       "state" => "",
       "player" =>"",
       "hands" => [
-                  { "direction" => "N", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false },
-                  { "direction" => "E", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false },
-                  { "direction" => "S", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false },
-                  { "direction" => "W", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false }
+                  { "direction" => "N", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false, "suit" => nil },
+                  { "direction" => "E", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false, "suit" => nil },
+                  { "direction" => "S", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false, "suit" => nil },
+                  { "direction" => "W", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false, "suit" => nil },
                  ],
       "biddingBox" => {
         "doubleEnabled" => false,
