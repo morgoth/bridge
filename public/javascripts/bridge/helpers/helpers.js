@@ -23,7 +23,7 @@ YUI.add("helpers", function(Y) {
     };
 
     Y.Bridge.isLevel = function(level) {
-        return Y.Array.indexOf(Y.Bridge.CONTRACTS, parseInt(level)) !== -1;
+        return Y.Array.indexOf(Y.Bridge.LEVELS, parseInt(level)) !== -1;
     };
 
 }, "0", { requires: ["collection", "oop"] });
