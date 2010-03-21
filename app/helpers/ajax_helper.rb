@@ -9,6 +9,7 @@ module AjaxHelper
       end
       serialize_bidding_box!(result["biddingBox"], table.boards.current) if table.boards.current and table.boards.current.auction? and table.user_player(current_user)
       serialize_auction!(result["auction"], table.boards.current) if table.boards.current
+      serialize_trick!(result["trick"], table.boards.current) if table.boards.current and table.boards.current.playing?
     end
   end
 
@@ -29,7 +30,7 @@ module AjaxHelper
 
   def serialize_bidding_box!(result, board)
     result.tap do |hash|
-      hash["contract"] = board.bids.active.contracts.first.bid.to_s
+      hash["contract"] = (board.bids.active.contracts.first and board.bids.active.contracts.first.bid.to_s)
       if current_user_turn?(board)
         hash["disabled"] = false
         # FIXME: don't build objects
@@ -47,6 +48,13 @@ module AjaxHelper
     end
   end
 
+  def serialize_trick!(result, board)
+    result.tap do |hash|
+      hash["lead"] = board.deal_owner(board.cards.current_lead.try(:card))
+      hash["cards"] = (board.cards.current_trick.present? and board.cards.current_trick.map { |c| c.card.to_s })
+    end
+  end
+
   # to have always default values
   def table_structure
     { "id" => "",
@@ -59,16 +67,20 @@ module AjaxHelper
                   { "direction" => "W", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false, "suit" => nil },
                  ],
       "biddingBox" => {
-        "doubleEnabled" => false,
-        "redoubleEnabled" => false,
-        "contract" => nil,
-        "disabled" => true
-      },
+                       "doubleEnabled" => false,
+                       "redoubleEnabled" => false,
+                       "contract" => nil,
+                       "disabled" => true
+                      },
       "auction" => {
                     "names" => [],
                     "dealer" => "",
                     "bids" => []
-                   }
+                   },
+      "trick" => {
+                  "lead" => nil,
+                  "cards" => nil
+                 }
     }
   end
 
