@@ -22,6 +22,7 @@ module AjaxHelper
       if table.boards.current
         hash["cards"] = table.boards.current.visible_hands_for(table.user_player(current_user))[direction]
         hash["cardsEnabled"] = cards_enabled?(table, direction)
+        hash["suit"] = table.boards.current.cards.current_trick_suit
       end
     end
   end
@@ -52,10 +53,10 @@ module AjaxHelper
       "state" => "",
       "player" =>"",
       "hands" => [
-                  { "direction" => "N", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false },
-                  { "direction" => "E", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false },
-                  { "direction" => "S", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false },
-                  { "direction" => "W", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false }
+                  { "direction" => "N", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false, "suit" => nil },
+                  { "direction" => "E", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false, "suit" => nil },
+                  { "direction" => "S", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false, "suit" => nil },
+                  { "direction" => "W", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false, "suit" => nil },
                  ],
       "biddingBox" => {
         "doubleEnabled" => false,
