@@ -8,6 +8,7 @@ module AjaxHelper
         serialize_hand!(result["hands"][i], table, direction)
       end
       serialize_bidding_box!(result["biddingBox"], table.boards.current) if table.boards.current and table.boards.current.auction? and table.user_player(current_user)
+      serialize_auction!(result["auction"], table.boards.current) if table.boards.current
     end
   end
 
@@ -37,6 +38,14 @@ module AjaxHelper
     end
   end
 
+  def serialize_auction!(result, board)
+    result.tap do |hash|
+      hash["names"] = board.users.map(&:name)
+      hash["dealer"] = board.dealer
+      hash["bids"] = board.bids.map { |b| { "bid" => b.bid.to_s, "alert" => b.alert } }
+    end
+  end
+
   # to have always default values
   def table_structure
     { "id" => "",
@@ -53,7 +62,12 @@ module AjaxHelper
         "redoubleEnabled" => false,
         "contract" => nil,
         "disabled" => true
-      }
+      },
+      "auction" => {
+                    "names" => [],
+                    "dealer" => "",
+                    "bids" => []
+                   }
     }
   end
 
