@@ -1,5 +1,5 @@
 class Ajax::BaseController < ApplicationController
-  before_filter :fetch_table, :fetch_board
+  before_filter :fetch_table, :fetch_board, :fetch_user
 
   respond_to :json
 
@@ -12,6 +12,10 @@ class Ajax::BaseController < ApplicationController
   end
 
   def fetch_board
-    @board = @table.boards.find_by_id(params[:board_id])
+    @board = @table.boards.current
+  end
+
+  def fetch_user
+    @user = current_user
   end
 end

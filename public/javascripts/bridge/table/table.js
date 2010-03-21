@@ -26,9 +26,7 @@ YUI.add("table", function(Y) {
             this.on("hand:join", this._onHandJoin);
             this.on("hand:quit", this._onHandQuit);
             this.on("hand:card", this._onHandCard);
-            this.on("biddingbox:bid", function(event) {
-                Y.log(event[0]);
-            });
+            this.on("biddingbox:bid", this._onBiddingBoxBid);
             this.after("tableDataChange", this._afterTableDataChange);
         },
 
@@ -42,12 +40,24 @@ YUI.add("table", function(Y) {
             this._io(this._tablePlayerPath(), { method: "POST", data: "_method=DELETE" });
         },
 
+        _onBiddingBoxBid: function(event) {
+            var bid = event[0];
+
+            this._io(this._tableBidsPath(), { method: "POST", data: "bid[bid]=" + bid });
+        },
+
         _onHandCard: function(event) {
             alert(event[0]);
         },
 
         _tablePlayerPath: function() {
             return Y.mustache(Table.TABLE_PLAYER_PATH, {
+                id: this.get("id")
+            });
+        },
+
+        _tableBidsPath: function() {
+            return Y.mustache(Table.TABLE_BIDS_PATH, {
                 id: this.get("id")
             });
         },
@@ -98,23 +108,22 @@ YUI.add("table", function(Y) {
                 container = this.get("container");
             biddingBoxNode = container.one(".bridge-biddingbox");
 
-            this.biddingBox = new Y.Bridge.BiddingBox({ host: this, boundingBox: biddingBoxNode });
-            this.biddingBox.render();
+            this.biddingBox = new Y.Bridge.BiddingBox({ host: this, boundingBox: biddingBoxNode }).render();
         },
 
         _renderAuction: function() {
-            var auctionNode, auction,
+            var auctionNode,
                 container = this.get("container");
 
             auctionNode = container.one(".bridge-auction");
 
-            auction = new Y.Bridge.Auction({ host: this, boundingBox: container });
-            auction.render();
+            this.auction = new Y.Bridge.Auction({ host: this, boundingBox: auctionNode }).render();
         },
 
         _uiSyncTable: function(tableData) {
             this._uiSyncHands(tableData.hands);
-            // this.biddingBox.setAttrs(tableData.biddingBox);
+            this.biddingBox.setAttrs(tableData.biddingBox);
+            this.auction.setAttrs(tableData.auction);
         },
 
         _uiSyncHands: function(hands) {
@@ -181,6 +190,8 @@ YUI.add("table", function(Y) {
         TABLE_PATH: "/ajax/tables/{{id}}.json{{#user_id}}?user_id={{user_id}}{{/user_id}}",
 
         TABLE_PLAYER_PATH: "/ajax/tables/{{id}}/player",
+
+        TABLE_BIDS_PATH: "/ajax/tables/{{id}}/bids",
 
         DIRECTIONS: ["N", "E", "S", "W"],
 

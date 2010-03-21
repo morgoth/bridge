@@ -42,7 +42,6 @@ YUI.add("hand", function(Y) {
             var contentBox = this.get("contentBox");
 
             this.after("cardsChange", this._afterCardsChange);
-            this.after("directionChange", this._afterDirectionChange);
             this.after("nameChange", this._afterNameChange);
             this.after("disabledChange", this._afterDisabledChange);
             this.after("joinEnabledChange", this._afterJoinEnabledChange);
@@ -77,10 +76,6 @@ YUI.add("hand", function(Y) {
 
         _afterCardsChange: function(event) {
             this._uiSetCards(event.newVal);
-        },
-
-        _afterDirectionChange: function(event) {
-            // this._uiSetDirection(event.newVal);
         },
 
         _afterNameChange: function(event) {

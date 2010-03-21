@@ -238,7 +238,7 @@ YUI.add("biddingbox", function(Y) {
 
         MODIFIERS: ["PASS", "X", "XX"],
 
-        BIDDING_BOX_TEMPLATE: + ''
+        BIDDING_BOX_TEMPLATE: ''
             + '<div>'
             +   '{{#modifiers}}'
             +     '<button type="button" class="yui-biddingbox-modifier {{className}}" data-event="{{eventName}}">{{name}}</button>'

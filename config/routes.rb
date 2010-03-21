@@ -14,14 +14,12 @@ Libre::Application.routes.draw do |map|
 
   namespace :ajax do
     resources :tables, :only => [:show] do
-      resources :boards, :only => [] do
-        resources :bids, :only => [:create]
-        resources :cards, :only => [:create]
-        resources :claims, :only => [:create] do
-          member do
-            put :accept
-            put :reject
-          end
+      resources :bids, :only => [:create]
+      resources :cards, :only => [:create]
+      resources :claims, :only => [:create] do
+        member do
+          put :accept
+          put :reject
         end
       end
       resource :player, :only => [:create, :destroy] do

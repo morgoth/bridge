@@ -59,8 +59,9 @@ YUI.add("auction", function(Y) {
                 var player = Auction.DIRECTIONS[(i + dealerPosition) % 4];
 
                 return {
-                    name: bid,
-                    className: this.getClassName("bid", bid.toLowerCase()),
+                    name: bid.bid,
+                    className: this.getClassName("bid", bid.bid.toLowerCase()),
+                    alert: bid.alert,
                     player: player
                 };
             }, this);
@@ -108,7 +109,7 @@ YUI.add("auction", function(Y) {
             + '{{#bids}}'
             +   '<li>'
             +     '{{#name}}'
-            +       '<button type="button" class="yui-auction-bid {{className}}" data-player="{{player}}">'
+            +       '<button type="button" class="yui-auction-bid {{className}}" data-player="{{player}}" title="{{alert}}">'
             +         '{{name}}'
             +       '</button>'
             +     '{{/name}}'
