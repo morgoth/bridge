@@ -4,10 +4,9 @@ gem "rails", :git => "git://github.com/rails/rails.git"
 
 gem "acts_as_list"
 gem "bridge", ">=0.0.20"
-gem "haml", ">=2.2.21"
+gem "haml", ">=2.2.22"
 gem "state_machine", ">=0.8.1"
 gem "compass"
-gem "hassle"
 gem "sqlite3", :groups => [:development, :test]
 
 group :development do
