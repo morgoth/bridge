@@ -85,7 +85,7 @@ module AjaxHelper
   end
 
   def join_enabled?(table, direction)
-    table.players[direction].blank? and current_user.present?
+    current_user.present? and table.players[direction].blank? and table.user_player(current_user).nil?
   end
 
   def quit_enabled?(table, direction)
