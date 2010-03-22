@@ -43,7 +43,8 @@ YUI.add("auction", function(Y) {
                 };
             }, this);
             html = Y.mustache(Auction.AUCTION_TEMPLATE, {
-                headers: headers
+                headers: headers,
+                headersCN: this.getClassName("headers")
             });
 
             contentBox.set("innerHTML", html);
@@ -97,7 +98,7 @@ YUI.add("auction", function(Y) {
         DIRECTIONS: ["N", "E", "S", "W"],
 
         AUCTION_TEMPLATE: ''
-            + '<ol>'
+            + '<ol class="{{headersCN}}">'
             +   '{{#headers}}'
             +     '<li class="yui-auction-header {{className}}">{{name}}</li>'
             +   '{{/headers}}'
@@ -107,7 +108,7 @@ YUI.add("auction", function(Y) {
 
         BIDS_TEMPLATE: ''
             + '{{#bids}}'
-            +   '<li>'
+            +   '<li class="yui-auction-bid">'
             +     '{{#name}}'
             +       '<button type="button" class="yui-auction-bid {{className}}" data-player="{{player}}" title="{{alert}}">'
             +         '{{name}}'
