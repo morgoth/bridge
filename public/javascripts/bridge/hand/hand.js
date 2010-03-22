@@ -30,9 +30,11 @@ YUI.add("hand", function(Y) {
                 directionCN: this.getClassName("direction"),
                 joinCN: this.getClassName("join"),
                 quitCN: this.getClassName("quit"),
+                buttonsCN: this.getClassName("buttons"),
                 name: this.get("name"),
                 nameCN: this.getClassName("name"),
-                cardsCN: this.getClassName("cards")
+                cardsCN: this.getClassName("cards"),
+                barCN: this.getClassName("bar")
             });
 
             contentBox.set("innerHTML", html);
@@ -89,9 +91,9 @@ YUI.add("hand", function(Y) {
                 name = this.get("name");
             joinNode = contentBox.one("." + this.getClassName("join"));
 
-            joinNode.set("disabled", "disabled");
+            this._disableButton(joinNode);
             if(!name && joinEnabled) {
-                joinNode.removeAttribute("disabled");
+                this._enableButton(joinNode);
             }
         },
 
@@ -102,9 +104,9 @@ YUI.add("hand", function(Y) {
                 name = this.get("name");
             quitNode = contentBox.one("." + this.getClassName("quit"));
 
-            quitNode.set("disabled", "disabled");
+            this._disableButton(quitNode);
             if(name && quitEnabled) {
-                quitNode.removeAttribute("disabled");
+                this._enableButton(quitNode);
             }
         },
 
@@ -153,6 +155,16 @@ YUI.add("hand", function(Y) {
 
         _afterDisabledChange: function(event) {
             this.set("cardsEnabled", !event.newVal);
+        },
+
+        _enableButton: function(node) {
+            node.removeAttribute("disabled");
+            node.removeClass(this.getClassName("button", "disabled"));
+        },
+
+        _disableButton: function(node) {
+            node.setAttribute("disabled", "disabled");
+            node.addClass(this.getClassName("button", "disabled"));
         }
 
     }, {
@@ -191,17 +203,21 @@ YUI.add("hand", function(Y) {
 
         },
 
-        MAIN_TEMPLATE: '' +
-            '<div class="{{directionCN}}">{{direction}}</div>' +
-            '<div class="{{nameCN}}">{{name}}</div>' +
-            '<button type="button" class="{{joinCN}}" data-event="join">Join</button>' +
-            '<button type="button" class="{{quitCN}}" data-event="quit">Quit</button>' +
-            '<div class="{{cardsCN}}"></div>',
+        MAIN_TEMPLATE: ''
+            + '<div class="{{cardsCN}}"></div>'
+            + '<div class="{{barCN}}">'
+            +   '<div class="{{directionCN}}">{{direction}}</div>'
+            +   '<div class="{{nameCN}}">{{name}}</div>'
+            +   '<div class="{{buttonsCN}}"'
+            +     '<button type="button" class="{{joinCN}}" data-event="join">Join</button>'
+            +     '<button type="button" class="{{quitCN}}" data-event="quit">Quit</button>'
+            +   '</div>'
+            + '</div>',
 
-        CARDS_TEMPLATE: '' +
-            '{{#cards}}' +
-              '<button type="button" class="{{className}}" data-event="card" data-event-argument="{{name}}">{{name}}</button>' +
-            '{{/cards}}'
+        CARDS_TEMPLATE: ''
+            + '{{#cards}}'
+            +   '<button type="button" class="{{className}}" data-event="card" data-event-argument="{{name}}">{{name}}</button>'
+            + '{{/cards}}'
 
     });
 

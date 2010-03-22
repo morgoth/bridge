@@ -204,7 +204,7 @@ YUI.add("biddingbox", function(Y) {
         },
 
         _parseSuit: function(contract) {
-            return contract.match(new RegExp(BiddingBox.SUITS.join("|")))[0];
+            return contract.match(new RegExp(Y.Bridge.SUITS.join("|")))[0];
         }
 
     }, {
