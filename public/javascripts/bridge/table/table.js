@@ -28,6 +28,7 @@ YUI.add("table", function(Y) {
             this.on("hand:card", this._onHandCard);
             this.on("biddingbox:bid", this._onBiddingBoxBid);
             this.after("tableDataChange", this._afterTableDataChange);
+            this.after("playerChange", this._afterPlayerChange);
         },
 
         _onHandJoin: function(event) {
@@ -76,6 +77,10 @@ YUI.add("table", function(Y) {
             this._uiSyncTable(event.newVal);
         },
 
+        _afterPlayerChange: function(event) {
+            this._uiSetPlayer(event.newVal);
+        },
+
         _onRequestSuccess: function() {
             this.poll.start();
         },
@@ -121,9 +126,32 @@ YUI.add("table", function(Y) {
         },
 
         _uiSyncTable: function(tableData) {
+            this.set("player", tableData.player);
             this._uiSyncHands(tableData.hands);
             this.biddingBox.setAttrs(tableData.biddingBox);
             this.auction.setAttrs(tableData.auction);
+        },
+
+        _uiSetPlayer: function(player) {
+            var handNodes, slotNodes,
+                position = Y.Bridge.dealerPosition(player),
+                container = this.get("container");
+            handNodes = [
+                container.one(".bridge-hand-n"),
+                container.one(".bridge-hand-e"),
+                container.one(".bridge-hand-s"),
+                container.one(".bridge-hand-w")
+            ];
+            slotNodes = [
+                container.one(".bridge-table-row-1 .bridge-table-col-2"),
+                container.one(".bridge-table-row-2 .bridge-table-col-3"),
+                container.one(".bridge-table-row-3 .bridge-table-col-2"),
+                container.one(".bridge-table-row-2 .bridge-table-col-1")
+            ];
+
+            Y.each(slotNodes, function(slotNode, i) {
+                slotNode.append(handNodes[(i + position + 2) % 4]);
+            }, this);
         },
 
         _uiSyncHands: function(hands) {
@@ -166,6 +194,10 @@ YUI.add("table", function(Y) {
                 setter: parseInt
             },
 
+            player: {
+                validator: Y.Bridge.isDirection
+            },
+
             tableData: {
             },
 
@@ -193,18 +225,42 @@ YUI.add("table", function(Y) {
 
         TABLE_BIDS_PATH: "/ajax/tables/{{id}}/bids",
 
-        DIRECTIONS: ["N", "E", "S", "W"],
-
-        MAIN_TEMPLATE: '' +
-            '<div class="bridge-table">' +
-              '<h3>Bridge Libre!</h3>' +
-              '<div class="bridge-hand-n"></div>' +
-              '<div class="bridge-hand-e"></div>' +
-              '<div class="bridge-hand-s"></div>' +
-              '<div class="bridge-hand-w"></div>' +
-              '<div class="bridge-biddingbox"></div>' +
-              '<div class="bridge-auction"></div>' +
-            '</div>'
+        MAIN_TEMPLATE: ''
+            + '<div class="bridge-table">'
+            +   '<div class="bridge-table-row-1">'
+            +     '<div class="bridge-table-col-1">'
+            +       '<div>&nbsp;</div>'
+            +     '</div>'
+            +     '<div class="bridge-table-col-2">'
+            +       '<div class="bridge-hand-n"></div>'
+            +     '</div>'
+            +     '<div class="bridge-table-col-3">'
+            +       '<div class="bridge-auction"></div>'
+            +     '</div>'
+            +   '</div>'
+            +   '<div class="bridge-table-row-2">'
+            +     '<div class="bridge-table-col-1">'
+            +       '<div class="bridge-hand-w"></div>'
+            +     '</div>'
+            +     '<div class="bridge-table-col-2">'
+            +       '<div>&nbsp;</div>'
+            +     '</div>'
+            +     '<div class="bridge-table-col-3">'
+            +       '<div class="bridge-hand-e"></div>'
+            +     '</div>'
+            +   '</div>'
+            +   '<div class="bridge-table-row-3">'
+            +     '<div class="bridge-table-col-1">'
+            +       '<div>&nbsp;</div>'
+            +     '</div>'
+            +     '<div class="bridge-table-col-2">'
+            +       '<div class="bridge-hand-s"></div>'
+            +     '</div>'
+            +     '<div class="bridge-table-col-3">'
+            +       '<div class="bridge-biddingbox"></div>'
+            +     '</div>'
+            +   '</div>'
+            + '</div>'
 
     });
 

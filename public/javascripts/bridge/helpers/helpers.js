@@ -26,4 +26,8 @@ YUI.add("helpers", function(Y) {
         return Y.Array.indexOf(Y.Bridge.LEVELS, parseInt(level)) !== -1;
     };
 
+    Y.Bridge.isDirection = function(direction) {
+        return Y.Array.indexOf(Y.Bridge.DIRECTIONS, direction) !== -1;
+    };
+
 }, "0", { requires: ["collection", "oop"] });
