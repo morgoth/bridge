@@ -1,25 +1,35 @@
+!auction_bid_width = 70px
+!auction_bid_height = 30px
+
 .yui-auction
-  width= 300px
   margin: auto
 
 .yui-auction-headers
   +inline-list
+  +no-bullets
 
 .yui-auction-header
   +float-left
+  text-align: center
   background-color: lightgray
   font-size: 18px
-  width= 75px
+  width= !auction_bid_width
 
 .yui-auction-bids
   +inline-list
+  +no-bullets
   +float-left
   display: block
-  overflow-y: scroll
-  height: 60px
-  width: 300px
+  overflow-y: auto
+  height= 4 * !auction_bid_height
+  width= 4.3 * !auction_bid_width
+  li
+    +float-left
+    display: block
+    width= !auction_bid_width
+    height= !auction_bid_height
 
 .yui-auction-bid
   +float-left
-  width= 175px
-  height= 30px
+  width= !auction_bid_width
+  height= !auction_bid_height

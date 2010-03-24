@@ -108,7 +108,7 @@ YUI.add("auction", function(Y) {
 
         BIDS_TEMPLATE: ''
             + '{{#bids}}'
-            +   '<li class="yui-auction-bid">'
+            +   '<li>'
             +     '{{#name}}'
             +       '<button type="button" class="yui-auction-bid {{className}}" data-player="{{player}}" title="{{alert}}">'
             +         '{{name}}'

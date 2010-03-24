@@ -204,11 +204,11 @@ YUI.add("hand", function(Y) {
         },
 
         MAIN_TEMPLATE: ''
-            + '<ul class="{{cardsCN}}"></div>'
+            + '<ul class="{{cardsCN}}"></ul>'
             + '<div class="{{barCN}}">'
             +   '<div class="{{directionCN}}">{{direction}}</div>'
             +   '<div class="{{nameCN}}">{{name}}</div>'
-            +   '<div class="{{buttonsCN}}"'
+            +   '<div class="{{buttonsCN}}">'
             +     '<button type="button" class="{{joinCN}}" data-event="join">Join</button>'
             +     '<button type="button" class="{{quitCN}}" data-event="quit">Quit</button>'
             +   '</div>'
