@@ -213,7 +213,7 @@ YUI.add("table", function(Y) {
             },
 
             pollTimeout: {
-                value: 10000,
+                value: 50000,
                 validator: Y.Lang.isNumber
             }
 

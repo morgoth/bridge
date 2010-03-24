@@ -2,9 +2,11 @@
 !card_width   = 71px
 !card_overlap = 57px
 
-.yui-hand
+.yui-hand-content
   width= !card_width + (!card_width - !card_overlap) * 12 + !card_height / 3
   height= 1.5 * !card_height
+  margin: auto
+  text-align: center
 
 .yui-hand-bar
   background-color: white
@@ -29,7 +31,6 @@
   +float-right
   line-height= !card_height / 3
 
-
 .yui-hand-join
   border: none
   background: none
@@ -49,10 +50,12 @@
   display: none
 
 .yui-hand-cards
+  +inline-list
+  +no-bullets
   padding-left= !card_overlap
 
 .yui-hand-card
-  border: 0
+  border: none
   height= !card_height
   width= !card_width
   margin-left= -!card_overlap

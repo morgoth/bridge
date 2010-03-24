@@ -204,7 +204,7 @@ YUI.add("hand", function(Y) {
         },
 
         MAIN_TEMPLATE: ''
-            + '<div class="{{cardsCN}}"></div>'
+            + '<ul class="{{cardsCN}}"></div>'
             + '<div class="{{barCN}}">'
             +   '<div class="{{directionCN}}">{{direction}}</div>'
             +   '<div class="{{nameCN}}">{{name}}</div>'
@@ -216,7 +216,9 @@ YUI.add("hand", function(Y) {
 
         CARDS_TEMPLATE: ''
             + '{{#cards}}'
-            +   '<button type="button" class="{{className}}" data-event="card" data-event-argument="{{name}}">{{name}}</button>'
+            +   '<li>'
+            +     '<button type="button" class="{{className}}" data-event="card" data-event-argument="{{name}}">{{name}}</button>'
+            +   '</li>'
             + '{{/cards}}'
 
     });
