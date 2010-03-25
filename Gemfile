@@ -16,7 +16,8 @@ end
 group :test do
   gem "capybara", :require => nil
   gem "factory_girl", :require => nil
-  gem "test-unit", ">=2.0", :require => "test/unit"
+  gem "test-unit", ">=2", :require => "test/unit"
+  gem "database_cleaner"
 end
 
 group :production do

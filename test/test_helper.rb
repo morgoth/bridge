@@ -8,9 +8,36 @@ require "capybara_helper"
 Capybara.default_selector = :css
 Capybara.default_driver = :selenium
 
+DatabaseCleaner.strategy = :truncation
+
 class ActiveSupport::TestCase
 end
 
 class ActionController::IntegrationTest
   include Capybara
+
+  self.use_transactional_fixtures = false
+
+  setup do
+    DatabaseCleaner.clean
+  end
+
+  def login(user = Factory(:user))
+    click_button("Log out") rescue
+    visit(root_path)
+    click("Log in")
+    fill_in("Email", :with => user.email)
+    fill_in("Password", :with => user.password)
+    click_button("Login")
+  end
+
+  def wait_until_ready
+    until(execute_script("return window.READY;"))
+      sleep 0.2
+    end
+  end
+
+  def execute_script(script)
+    Capybara.current_session.driver.browser.execute_script(script)
+  end
 end

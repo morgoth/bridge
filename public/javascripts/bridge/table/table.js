@@ -67,6 +67,7 @@ YUI.add("table", function(Y) {
         _io: function(uri, configuration) {
             configuration = configuration || {};
             configuration.on = configuration.on || {};
+            configuration.on.start = Y.bind(this._onRequestStart, this);
             configuration.on.success = Y.bind(this._onRequestSuccess, this);
             configuration.on.failure = Y.bind(this._onRequestFailure, this);
 
@@ -84,6 +85,10 @@ YUI.add("table", function(Y) {
 
         _afterBoardStateChange: function(event) {
             this._uiSetBoardState(event.newVal);
+        },
+
+        _onRequestStart: function() {
+            window.READY = false;
         },
 
         _onRequestSuccess: function() {
@@ -197,15 +202,29 @@ YUI.add("table", function(Y) {
 
             this.poll = Y.io.poll(timeout, tablePath, {
                 on: {
-                    modified: Y.bind(this._onPollModified, this)
+                    start: Y.bind(this._onPollStart, this),
+                    modified: Y.bind(this._onPollModified, this),
+                    failure: Y.bind(this._onPollFailure, this),
+                    complete: Y.bind(this._onPollComplete, this)
                 }
             });
+        },
+
+        _onPollStart: function(id, o) {
+            window.READY = false;
         },
 
         _onPollModified: function(id, o) {
             var tableData = Y.JSON.parse(o.responseText);
 
             this.set("tableData", tableData);
+        },
+
+        _onPollFailure: function(id, o) {
+        },
+
+        _onPollComplete: function() {
+            window.READY = true;
         }
 
     }, {
