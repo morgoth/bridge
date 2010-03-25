@@ -23,6 +23,10 @@ class Board < ActiveRecord::Base
     Bridge::DIRECTIONS.index(dealer)
   end
 
+  def dealer_user
+    users[dealer]
+  end
+
   def contract_trump
     contract_without_modifier && contract_without_modifier.trump
   end

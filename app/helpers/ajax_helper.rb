@@ -33,9 +33,8 @@ module AjaxHelper
       hash["contract"] = (board.bids.active.contracts.first and board.bids.active.contracts.first.bid.to_s)
       if current_user_turn?(board)
         hash["disabled"] = false
-        # FIXME: don't build objects
-        hash["doubleEnabled"] = board.bids.new(:user => current_user, :bid => "X").valid?
-        hash["redoubleEnabled"] = board.bids.new(:user => current_user, :bid => "XX").valid?
+        hash["doubleEnabled"] = board.bids.double_allowed?
+        hash["redoubleEnabled"] = board.bids.redouble_allowed?
       end
     end
   end

@@ -19,11 +19,6 @@ class BidValidationTest < ActiveSupport::TestCase
     assert @bid.invalid?
   end
 
-  test "is invalid without a board" do
-    @bid.board = nil
-    assert @bid.invalid?
-  end
-
   test "is invalid with invalid bid" do
     @bid.bid = "pas"
     assert @bid.invalid?

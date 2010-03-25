@@ -48,24 +48,8 @@ class BidAuctionTest < ActiveSupport::TestCase
     bid1 = @board.bids.create!(:bid => "1S", :user => @user_n)
     bid2 = @board.bids.create!(:bid => "PASS", :user => @user_e)
     bid3 = @board.bids.build(:bid => "1NT", :user => @user_s)
-    assert bid1.send(:partners_bid?, bid3)
-    assert bid3.send(:partners_bid?, bid1)
-    assert_false bid2.send(:partners_bid?, bid1)
-    assert_false bid1.send(:partners_bid?, bid2)
-    assert_false bid2.send(:partners_bid?, bid3)
-    assert_false bid3.send(:partners_bid?, bid2)
-  end
-
-  test "partners_bid? returns valid results when saved" do
-    bid1 = @board.bids.create!(:bid => "1S", :user => @user_n)
-    bid2 = @board.bids.create!(:bid => "PASS", :user => @user_e)
-    bid3 = @board.bids.create!(:bid => "1NT", :user => @user_s)
-    assert bid1.send(:partners_bid?, bid3)
-    assert bid3.send(:partners_bid?, bid1)
-    assert_false bid2.send(:partners_bid?, bid1)
-    assert_false bid1.send(:partners_bid?, bid2)
-    assert_false bid2.send(:partners_bid?, bid3)
-    assert_false bid3.send(:partners_bid?, bid2)
+    assert @board.bids.partners_bid?(bid1)
+    assert_false @board.bids.partners_bid?(bid2)
   end
 
   test "active returns only bids beginning from the last contract" do
