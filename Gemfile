@@ -18,6 +18,7 @@ group :test do
   gem "factory_girl", :require => nil
   gem "test-unit", ">=2", :require => "test/unit"
   gem "database_cleaner"
+  gem "mocha"
 end
 
 group :production do
