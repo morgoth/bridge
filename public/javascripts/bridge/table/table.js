@@ -29,6 +29,7 @@ YUI.add("table", function(Y) {
             this.on("biddingbox:bid", this._onBiddingBoxBid);
             this.after("tableDataChange", this._afterTableDataChange);
             this.after("playerChange", this._afterPlayerChange);
+            this.after("boardStateChange", this._afterBoardStateChange);
         },
 
         _onHandJoin: function(event) {
@@ -81,6 +82,10 @@ YUI.add("table", function(Y) {
             this._uiSetPlayer(event.newVal);
         },
 
+        _afterBoardStateChange: function(event) {
+            this._uiSetBoardState(event.newVal);
+        },
+
         _onRequestSuccess: function() {
             this.poll.start();
         },
@@ -127,6 +132,7 @@ YUI.add("table", function(Y) {
 
         _uiSyncTable: function(tableData) {
             this.set("player", tableData.player);
+            this.set("boardState", tableData.boardState);
             this._uiSyncHands(tableData.hands);
             this.biddingBox.setAttrs(tableData.biddingBox);
             this.auction.setAttrs(tableData.auction);
@@ -152,6 +158,28 @@ YUI.add("table", function(Y) {
             Y.each(slotNodes, function(slotNode, i) {
                 slotNode.append(handNodes[(i + position + 2) % 4]);
             }, this);
+        },
+
+        _uiSetBoardState: function(boardState) {
+            var auctionNode, auctionSlotNodes,
+                container = this.get("container");
+            auctionNode = container.one(".bridge-auction");
+            auctionSlotNodes = [
+                container.one(".bridge-table-row-1 .bridge-table-col-3"),
+                container.one(".bridge-table-row-2 .bridge-table-col-2")
+            ];
+
+            switch(boardState) {
+            case "preparing":
+                auctionSlotNodes[0].append(auctionNode);
+                break;
+            case "auction":
+                auctionSlotNodes[1].append(auctionNode);
+                break;
+            case "playing":
+                auctionSlotNodes[0].append(auctionNode);
+                break;
+            }
         },
 
         _uiSyncHands: function(hands) {
@@ -201,8 +229,7 @@ YUI.add("table", function(Y) {
             tableData: {
             },
 
-            state: {
-                value: "preparing"
+            boardState: {
             },
 
             container: {

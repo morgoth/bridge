@@ -3,6 +3,7 @@ module AjaxHelper
     table_structure.tap do |result|
       result["id"] = table.id
       result["state"] = table.state
+      result["boardState"] = table.boards.current.state if table.boards.current
       result["player"] = table.user_player(current_user).direction if table.user_player(current_user)
       Bridge::DIRECTIONS.each_with_index do |direction, i|
         serialize_hand!(result["hands"][i], table, direction)

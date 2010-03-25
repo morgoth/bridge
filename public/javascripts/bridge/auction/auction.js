@@ -102,8 +102,8 @@ YUI.add("auction", function(Y) {
             +   '{{#headers}}'
             +     '<li class="yui-auction-header {{className}}">{{name}}</li>'
             +   '{{/headers}}'
-            +   '</ol>'
-            +   '<ol class="yui-auction-bids"></ol>'
+            + '</ol>'
+            + '<ol class="yui-auction-bids"></ol>'
             + '</ol>',
 
         BIDS_TEMPLATE: ''
