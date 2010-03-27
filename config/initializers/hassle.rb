@@ -1,1 +1,1 @@
-Rails::Application.middleware.use Hassle if Rails.env.production?
+# Rails::Application.middleware.use Hassle # if Rails.env.production?

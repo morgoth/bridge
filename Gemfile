@@ -23,5 +23,4 @@ end
 
 group :production do
   gem "pg"
-  gem "hassle", :git => "git://github.com/merbjedi/hassle.git" # make sass work on heroku
 end
