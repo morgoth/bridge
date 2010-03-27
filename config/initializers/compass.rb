@@ -1,3 +1,7 @@
+require "fileutils"
+
+FileUtils.mkdir_p(Rails.root.join("tmp", "public", "stylesheets"))
+
 Compass.configuration do |config|
   config.project_type = :rails
   config.project_path = Rails.root if defined?(Rails.root)
