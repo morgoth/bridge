@@ -11,6 +11,7 @@ module AjaxHelper
       serialize_bidding_box!(result["biddingBox"], table.boards.current) if table.boards.current and table.boards.current.auction? and table.user_player(current_user)
       serialize_auction!(result["auction"], table.boards.current) if table.boards.current
       serialize_trick!(result["trick"], table.boards.current) if table.boards.current and table.boards.current.playing?
+      serialize_tricks!(result["tricks"], table.boards.current) if table.boards.current and table.boards.current.playing?
     end
   end
 
@@ -55,16 +56,29 @@ module AjaxHelper
     end
   end
 
+  def serialize_tricks!(result, board)
+    result.tap do |hash|
+      hash["contract"] = board.contract
+      hash["declarer"] = board.declarer
+      hash["resultNS"] = board.tricks_taken("NS")
+      hash["resultEW"] = board.tricks_taken("EW")
+      board.cards.completed_tricks.each do |trick|
+        hash["tricks"] << { "cards" => trick.map { |t| t.card.to_s }, "lead" => board.deal_owner(trick.first.card), "winner" => board.trick_winner(trick) }
+      end
+    end
+  end
+
   # to have always default values
   def table_structure
     { "id" => "",
       "state" => "",
-      "player" =>"",
+      "boardState" => "",
+      "player" => "",
       "hands" => [
                   { "direction" => "N", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false, "suit" => nil },
                   { "direction" => "E", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false, "suit" => nil },
                   { "direction" => "S", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false, "suit" => nil },
-                  { "direction" => "W", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false, "suit" => nil },
+                  { "direction" => "W", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false, "suit" => nil }
                  ],
       "biddingBox" => {
                        "doubleEnabled" => false,
@@ -80,7 +94,14 @@ module AjaxHelper
       "trick" => {
                   "lead" => nil,
                   "cards" => nil
-                 }
+                 },
+      "tricks" => {
+                   "contract" => "",
+                   "declarer" => "",
+                   "resultNS" => 0,
+                   "resultEW" => 0,
+                   "tricks" => []
+                  }
     }
   end
 

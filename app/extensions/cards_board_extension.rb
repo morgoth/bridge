@@ -7,10 +7,12 @@ module CardsBoardExtension
     in_groups_of(4, false)
   end
 
-  # Count completed tricks
-  # TODO: test
   def completed_tricks_count
     count.div(4)
+  end
+
+  def completed_tricks
+    tricks[0...completed_tricks_count]
   end
 
   def current_position

@@ -144,6 +144,42 @@ class CardPlayingTest < ActiveSupport::TestCase
     @board.cards.create!(:card => "SA", :user => @board.user_n)
     assert_equal 1, @board.cards.completed_tricks_count
   end
+
+  test "completed tricks returns only tricks with 4 cards" do
+    assert_equal [], @board.cards.completed_tricks
+    @board.cards.create!(:card => "S5", :user => @board.user_e)
+    assert_equal [], @board.cards.completed_tricks
+    @board.cards.create!(:card => "ST", :user => @board.user_n)
+    assert_equal [], @board.cards.completed_tricks
+    @board.cards.create!(:card => "SJ", :user => @board.user_w)
+    assert_equal [], @board.cards.completed_tricks
+    @board.cards.create!(:card => "SA", :user => @board.user_n)
+    assert_equal [@board.cards.all], @board.cards.completed_tricks
+    @board.cards.create!(:card => "SK", :user => @board.user_n)
+    assert_equal [@board.cards.limit(4).all], @board.cards.completed_tricks
+  end
+
+  test "return tricks taken by both sides" do
+    @board.cards.create!(:card => "S5", :user => @board.user_e)
+    assert_equal 0, @board.tricks_taken("NS")
+    assert_equal 0, @board.tricks_taken("EW")
+    @board.cards.create!(:card => "ST", :user => @board.user_n)
+    @board.cards.create!(:card => "SJ", :user => @board.user_w)
+    @board.cards.create!(:card => "SA", :user => @board.user_n)
+    assert_equal 1, @board.tricks_taken("NS")
+    assert_equal 0, @board.tricks_taken("EW")
+    @board.cards.create!(:card => "SK", :user => @board.user_n)
+    assert_equal 1, @board.tricks_taken("NS")
+    assert_equal 0, @board.tricks_taken("EW")
+  end
+
+  test "return trick winner of given trick" do
+    @board.cards.create!(:card => "S5", :user => @board.user_e)
+    @board.cards.create!(:card => "ST", :user => @board.user_n)
+    @board.cards.create!(:card => "SJ", :user => @board.user_w)
+    @board.cards.create!(:card => "SA", :user => @board.user_n)
+    assert_equal "N", @board.trick_winner(@board.cards.all)
+  end
 end
 
 class CardPreviousTrickWinnerTest < ActiveSupport::TestCase
