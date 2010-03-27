@@ -77,7 +77,6 @@ class Board < ActiveRecord::Base
     user_n, user_e, user_s, user_w = users
   end
 
-  # TODO: test including completed tricks
   def tricks_taken(side = nil)
     hash = cards.completed_tricks.inject(Hash.new(0)) do |taken, trick|
       direction = trick_winner(trick)
@@ -87,7 +86,6 @@ class Board < ActiveRecord::Base
     side.nil? ? hash : side.to_s.upcase.split("").inject(0) { |sum, direction| sum += hash[direction] }
   end
 
-  # TODO: test
   def trick_winner(trick)
     card = Bridge::Trick.new(trick.map(&:card)).winner(contract_trump)
     deal_owner(card)
