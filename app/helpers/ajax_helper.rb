@@ -26,7 +26,7 @@ module AjaxHelper
       end
       if board = table.boards.current
         hash["cards"] = board.visible_hands_for(table.user_player(current_user))[direction]
-        hash["cardsEnabled"] = cards_enabled?(table, direction)
+        hash["cardsEnabled"] = cards_enabled?(board, direction)
         hash["suit"] = board.cards.current_trick_suit
       end
     end
@@ -115,8 +115,14 @@ module AjaxHelper
     table.players[direction].present? and current_user.present? and table.players[direction] == table.user_player(current_user)
   end
 
-  def cards_enabled?(table, direction)
-    quit_enabled?(table, direction) and table.boards.current.playing? and current_user_turn?(table.boards.current)
+  # TODO: do some refactoring
+  def cards_enabled?(board, direction)
+    if board.playing?
+      (quit_enabled?(board.table, direction) and current_user_turn?(board) and board.dummy_user != current_user) ||
+      (current_user.present? and board.current_user.dummy? and board.users[direction] == board.dummy_user and board.declarer_user == current_user)
+    else
+      false
+    end
   end
 
   def current_user_turn?(board)
