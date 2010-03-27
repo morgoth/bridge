@@ -44,6 +44,7 @@ YUI.add("hand", function(Y) {
             var contentBox = this.get("contentBox");
 
             this.after("cardsChange", this._afterCardsChange);
+            this.after("suitChange", this._afterSuitChange);
             this.after("nameChange", this._afterNameChange);
             this.after("disabledChange", this._afterDisabledChange);
             this.after("joinEnabledChange", this._afterJoinEnabledChange);
@@ -80,6 +81,10 @@ YUI.add("hand", function(Y) {
             this._uiSetCards(event.newVal);
         },
 
+        _afterSuitChange: function(event) {
+            this._uiSetSuit(event.newVal);
+        },
+
         _afterNameChange: function(event) {
             this._uiSetName(event.newVal);
         },
@@ -91,9 +96,9 @@ YUI.add("hand", function(Y) {
                 name = this.get("name");
             joinNode = contentBox.one("." + this.getClassName("join"));
 
-            this._disableButton(joinNode);
+            this._disableButton.apply(this, [joinNode]);
             if(!name && joinEnabled) {
-                this._enableButton(joinNode);
+                this._enableButton.apply(this, [joinNode]);
             }
         },
 
@@ -104,9 +109,9 @@ YUI.add("hand", function(Y) {
                 name = this.get("name");
             quitNode = contentBox.one("." + this.getClassName("quit"));
 
-            this._disableButton(quitNode);
+            this._disableButton.apply(this, [quitNode]);
             if(name && quitEnabled) {
-                this._enableButton(quitNode);
+                this._enableButton.apply(this, [quitNode]);
             }
         },
 
@@ -124,12 +129,20 @@ YUI.add("hand", function(Y) {
             var cardsHtml, cardsData, cardsNode,
                 contentBox = this.get("contentBox");
             cardsData = Y.Array.map(cards, function(card) {
-                var name = (card !== "") ? card : "unknown",
-                    cardClassName = this.getClassName("card", name.toLowerCase());
+                var suit = Y.Bridge.parseSuit(card),
+                    name = (card !== "") ? card : "unknown",
+                    classNames = [
+                        this.getClassName("card"),
+                        this.getClassName("card", name.toLowerCase())
+                    ];
+
+                if(suit) {
+                    classNames.push(this.getClassName("card", suit.toLowerCase()));
+                }
 
                 return {
                     name: name,
-                    className: [this.getClassName("card"), cardClassName].join(" ")
+                    classNames: classNames.join(" ")
                 };
             }, this);
             cardsNode = contentBox.one("." + this.getClassName("cards"));
@@ -139,17 +152,25 @@ YUI.add("hand", function(Y) {
             this._uiSetCardsEnabled(this.get("cardsEnabled"));
         },
 
+        _uiSetSuit: function(suit) {
+            var cardsEnabled = this.get("cardsEnabled"),
+                contentBox = this.get("contentBox");
+
+            if(suit && cardsEnabled) {
+                this._uiSetCardsEnabled(false);
+                contentBox.all("." + this.getClassName("card", suit.toLowerCase())).each(Y.bind(this._enableButton, this));
+            }
+        },
+
         _uiSetCardsEnabled: function(cardsEnabled) {
             var cards,
                 contentBox = this.get("contentBox");
             cards = contentBox.all("."+ this.getClassName("cards") + " button");
 
             if(cardsEnabled) {
-                cards.each(function(card) {
-                    card.removeAttribute("disabled");
-                });
+                cards.each(Y.bind(this._enableButton, this));
             } else {
-                cards.setAttribute("disabled", "disabled");
+                cards.each(Y.bind(this._disableButton, this));
             }
         },
 
@@ -158,13 +179,15 @@ YUI.add("hand", function(Y) {
         },
 
         _enableButton: function(node) {
-            node.removeAttribute("disabled");
-            node.removeClass(this.getClassName("button", "disabled"));
+            var className = this.getClassName("button", "disabled");
+
+            node.removeAttribute("disabled").removeClass(className);
         },
 
         _disableButton: function(node) {
-            node.setAttribute("disabled", "disabled");
-            node.addClass(this.getClassName("button", "disabled"));
+            var className = this.getClassName("button", "disabled");
+
+            node.setAttribute("disabled", "disabled").addClass(className);
         }
 
     }, {
@@ -177,11 +200,18 @@ YUI.add("hand", function(Y) {
             },
 
             direction: {
+                validator: Y.Bridge.isDirection
+            },
+
+            suit: {
+                setter: function(suit) {
+                    return (Y.Lang.isValue(suit) && Y.Bridge.isSuit(suit)) ? suit : undefined;
+                }
             },
 
             name: {
                 setter: function(value) {
-                    return value ? value : "";
+                    return Y.Lang.isValue(value) ? value.toString() : undefined;
                 }
             },
 
@@ -217,7 +247,7 @@ YUI.add("hand", function(Y) {
         CARDS_TEMPLATE: ''
             + '{{#cards}}'
             +   '<li>'
-            +     '<button type="button" class="{{className}}" data-event="card" data-event-argument="{{name}}">{{name}}</button>'
+            +     '<button type="button" class="{{classNames}}" data-event="card" data-event-argument="{{name}}">{{name}}</button>'
             +   '</li>'
             + '{{/cards}}'
 

@@ -1,230 +1,168 @@
 !card_height  = 96px
 !card_width   = 71px
-!card_overlap = 57px
 
-.yui-hand-content
-  margin: auto
-  text-align: center
-
-.yui-hand-bar
-  background-color: white
-  border: 1px solid black
-  line-height= !card_height / 3
-  overflow: hidden
-  margin-top: -2em
-  position: relative
-
-.yui-hand-direction
-  +float-left
-  line-height= !card_height / 3
-  width= !card_height / 3
-  font-size: 18px
-
-.yui-hand-name
-  +float-left
-  line-height= !card_height / 3
-  font-size: 18px
-
-.yui-hand-buttons
-  +float-right
-  line-height= !card_height / 3
-
-.yui-hand-join
-  +reset-box-model
-  border: none
-  background: none
-  height= !card_height / 4
-  margin: 0
-  border: none
-  cursor: pointer
-
-.yui-hand-quit
-  +reset-box-model
-  height= !card_height / 4
-  background: none
-  margin: 0
-  border: none
-  cursor: pointer
-
-.yui-hand-quit.yui-hand-button-disabled
-  display: none
-
-.yui-hand-join.yui-hand-button-disabled
-  display: none
-
-.yui-hand-card
-  cursor: pointer
-
-.yui-hand-card.yui-hand-button-disabled
-  cursor: auto
-
-.yui-hand-cards
-  +inline-list
+.yui-trick-cards
   +no-bullets
-  padding-left= !card_overlap
-  height= !card_height
-  display: block
 
-.yui-hand-card
+.yui-trick-card
   +reset-box-model
   border: none
   height= !card_height
   width= !card_width
-  margin-left= -!card_overlap
   +replace-text("cards/ours.png", 0, 0)
 
-.yui-hand-card-sa
+.yui-trick-card-sa
   :background-image= image_url("cards/sa.png")
 
-.yui-hand-card-sk
+.yui-trick-card-sk
   :background-image= image_url("cards/sk.png")
 
-.yui-hand-card-sq
+.yui-trick-card-sq
   :background-image= image_url("cards/sq.png")
 
-.yui-hand-card-sj
+.yui-trick-card-sj
   :background-image= image_url("cards/sj.png")
 
-.yui-hand-card-st
+.yui-trick-card-st
   :background-image= image_url("cards/st.png")
 
-.yui-hand-card-s9
+.yui-trick-card-s9
   :background-image= image_url("cards/s9.png")
 
-.yui-hand-card-s8
+.yui-trick-card-s8
   :background-image= image_url("cards/s8.png")
 
-.yui-hand-card-s7
+.yui-trick-card-s7
   :background-image= image_url("cards/s7.png")
 
-.yui-hand-card-s6
+.yui-trick-card-s6
   :background-image= image_url("cards/s6.png")
 
-.yui-hand-card-s5
+.yui-trick-card-s5
   :background-image= image_url("cards/s5.png")
 
-.yui-hand-card-s4
+.yui-trick-card-s4
   :background-image= image_url("cards/s4.png")
 
-.yui-hand-card-s3
+.yui-trick-card-s3
   :background-image= image_url("cards/s3.png")
 
-.yui-hand-card-s2
+.yui-trick-card-s2
   :background-image= image_url("cards/s2.png")
 
-.yui-hand-card-ha
+.yui-trick-card-ha
   :background-image= image_url("cards/ha.png")
 
-.yui-hand-card-hk
+.yui-trick-card-hk
   :background-image= image_url("cards/hk.png")
 
-.yui-hand-card-hq
+.yui-trick-card-hq
   :background-image= image_url("cards/hq.png")
 
-.yui-hand-card-hj
+.yui-trick-card-hj
   :background-image= image_url("cards/hj.png")
 
-.yui-hand-card-ht
+.yui-trick-card-ht
   :background-image= image_url("cards/ht.png")
 
-.yui-hand-card-h9
+.yui-trick-card-h9
   :background-image= image_url("cards/h9.png")
 
-.yui-hand-card-h8
+.yui-trick-card-h8
   :background-image= image_url("cards/h8.png")
 
-.yui-hand-card-h7
+.yui-trick-card-h7
   :background-image= image_url("cards/h7.png")
 
-.yui-hand-card-h6
+.yui-trick-card-h6
   :background-image= image_url("cards/h6.png")
 
-.yui-hand-card-h5
+.yui-trick-card-h5
   :background-image= image_url("cards/h5.png")
 
-.yui-hand-card-h4
+.yui-trick-card-h4
   :background-image= image_url("cards/h4.png")
 
-.yui-hand-card-h3
+.yui-trick-card-h3
   :background-image= image_url("cards/h3.png")
 
-.yui-hand-card-h2
+.yui-trick-card-h2
   :background-image= image_url("cards/h2.png")
 
-.yui-hand-card-da
+.yui-trick-card-da
   :background-image= image_url("cards/da.png")
 
-.yui-hand-card-dk
+.yui-trick-card-dk
   :background-image= image_url("cards/dk.png")
 
-.yui-hand-card-dq
+.yui-trick-card-dq
   :background-image= image_url("cards/dq.png")
 
-.yui-hand-card-dj
+.yui-trick-card-dj
   :background-image= image_url("cards/dj.png")
 
-.yui-hand-card-dt
+.yui-trick-card-dt
   :background-image= image_url("cards/dt.png")
 
-.yui-hand-card-d9
+.yui-trick-card-d9
   :background-image= image_url("cards/d9.png")
 
-.yui-hand-card-d8
+.yui-trick-card-d8
   :background-image= image_url("cards/d8.png")
 
-.yui-hand-card-d7
+.yui-trick-card-d7
   :background-image= image_url("cards/d7.png")
 
-.yui-hand-card-d6
+.yui-trick-card-d6
   :background-image= image_url("cards/d6.png")
 
-.yui-hand-card-d5
+.yui-trick-card-d5
   :background-image= image_url("cards/d5.png")
 
-.yui-hand-card-d4
+.yui-trick-card-d4
   :background-image= image_url("cards/d4.png")
 
-.yui-hand-card-d3
+.yui-trick-card-d3
   :background-image= image_url("cards/d3.png")
 
-.yui-hand-card-d2
+.yui-trick-card-d2
   :background-image= image_url("cards/d2.png")
 
-.yui-hand-card-ca
+.yui-trick-card-ca
   :background-image= image_url("cards/ca.png")
 
-.yui-hand-card-ck
+.yui-trick-card-ck
   :background-image= image_url("cards/ck.png")
 
-.yui-hand-card-cq
+.yui-trick-card-cq
   :background-image= image_url("cards/cq.png")
 
-.yui-hand-card-cj
+.yui-trick-card-cj
   :background-image= image_url("cards/cj.png")
 
-.yui-hand-card-ct
+.yui-trick-card-ct
   :background-image= image_url("cards/ct.png")
 
-.yui-hand-card-c9
+.yui-trick-card-c9
   :background-image= image_url("cards/c9.png")
 
-.yui-hand-card-c8
+.yui-trick-card-c8
   :background-image= image_url("cards/c8.png")
 
-.yui-hand-card-c7
+.yui-trick-card-c7
   :background-image= image_url("cards/c7.png")
 
-.yui-hand-card-c6
+.yui-trick-card-c6
   :background-image= image_url("cards/c6.png")
 
-.yui-hand-card-c5
+.yui-trick-card-c5
   :background-image= image_url("cards/c5.png")
 
-.yui-hand-card-c4
+.yui-trick-card-c4
   :background-image= image_url("cards/c4.png")
 
-.yui-hand-card-c3
+.yui-trick-card-c3
   :background-image= image_url("cards/c3.png")
 
-.yui-hand-card-c2
+.yui-trick-card-c2
   :background-image= image_url("cards/c2.png")

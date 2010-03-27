@@ -20,6 +20,7 @@ YUI.add("table", function(Y) {
             this._renderHands();
             this._renderBiddingBox();
             this._renderAuction();
+            this._renderTrick();
         },
 
         _bindUI: function() {
@@ -49,7 +50,9 @@ YUI.add("table", function(Y) {
         },
 
         _onHandCard: function(event) {
-            alert(event[0]);
+            var card = event[0];
+
+            this._io(this._tableCardsPath(), { method: "POST", data: "card[card]=" + card });
         },
 
         _tablePlayerPath: function() {
@@ -60,6 +63,12 @@ YUI.add("table", function(Y) {
 
         _tableBidsPath: function() {
             return Y.mustache(Table.TABLE_BIDS_PATH, {
+                id: this.get("id")
+            });
+        },
+
+        _tableCardsPath: function() {
+            return Y.mustache(Table.TABLE_CARDS_PATH, {
                 id: this.get("id")
             });
         },
@@ -135,12 +144,22 @@ YUI.add("table", function(Y) {
             this.auction = new Y.Bridge.Auction({ host: this, boundingBox: auctionNode }).render();
         },
 
+        _renderTrick: function() {
+            var trickNode,
+                container = this.get("container");
+
+            trickNode = container.one(".bridge-trick");
+
+            this.trick = new Y.Bridge.Trick({ host: this, boundingBox: trickNode }).render();
+        },
+
         _uiSyncTable: function(tableData) {
             this.set("player", tableData.player);
             this.set("boardState", tableData.boardState);
             this._uiSyncHands(tableData.hands);
             this.biddingBox.setAttrs(tableData.biddingBox);
             this.auction.setAttrs(tableData.auction);
+            this.trick.setAttrs(tableData.trick);
         },
 
         _uiSetPlayer: function(player) {
@@ -271,6 +290,8 @@ YUI.add("table", function(Y) {
 
         TABLE_BIDS_PATH: "/ajax/tables/{{id}}/bids",
 
+        TABLE_CARDS_PATH: "/ajax/tables/{{id}}/cards",
+
         MAIN_TEMPLATE: ''
             + '<div class="bridge-table">'
             +   '<div class="bridge-table-row-1">'
@@ -289,7 +310,7 @@ YUI.add("table", function(Y) {
             +       '<div class="bridge-hand-w"></div>'
             +     '</div>'
             +     '<div class="bridge-table-col-2">'
-            +       '<div>&nbsp;</div>'
+            +       '<div class="bridge-trick"></div>'
             +     '</div>'
             +     '<div class="bridge-table-col-3">'
             +       '<div class="bridge-hand-e"></div>'
@@ -312,4 +333,4 @@ YUI.add("table", function(Y) {
 
     Y.Bridge.Table = Table;
 
-}, "0", { requires: ["base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox", "auction"] });
+}, "0", { requires: ["base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox", "auction", "trick"] });

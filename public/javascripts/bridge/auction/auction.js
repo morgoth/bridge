@@ -36,7 +36,7 @@ YUI.add("auction", function(Y) {
             var html, headers,
                 dealer = this.get("dealer"),
                 contentBox = this.get("contentBox");
-            headers = Y.Array.map(Auction.DIRECTIONS, function(direction) {
+            headers = Y.Array.map(Y.Bridge.DIRECTIONS, function(direction) {
                 return {
                     name: direction,
                     className: this.getClassName("header", direction.toLowerCase())
@@ -55,9 +55,9 @@ YUI.add("auction", function(Y) {
                 dealer = this.get("dealer"),
                 contentBox = this.get("contentBox");
             bidsNode = contentBox.one("." + this.getClassName("bids"));
-            dealerPosition = Y.Array.indexOf(Auction.DIRECTIONS, dealer);
+            dealerPosition = Y.Array.indexOf(Y.Bridge.DIRECTIONS, dealer);
             bids = Y.Array.map(bids, function(bid, i) {
-                var player = Auction.DIRECTIONS[(i + dealerPosition) % 4];
+                var player = Y.Bridge.DIRECTIONS[(i + dealerPosition) % 4];
 
                 return {
                     name: Y.Bridge.renderBid(bid.bid),
@@ -110,8 +110,6 @@ YUI.add("auction", function(Y) {
                 }
             }
         },
-
-        DIRECTIONS: ["N", "E", "S", "W"],
 
         AUCTION_TEMPLATE: ''
             + '<ol class="{{headersCN}}">'

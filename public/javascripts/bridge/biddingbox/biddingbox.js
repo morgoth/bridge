@@ -167,17 +167,23 @@ YUI.add("biddingbox", function(Y) {
         },
 
         _uiSetLevel: function(level) {
-            var suitNodes,
+            var suitNodes, levelNodes, levelNode,
+                levelSelectedCN = this.getClassName("level", "selected"),
                 contract = this.get("contract"),
                 contentBox = this.get("contentBox");
+            levelNode = contentBox.one("." + this.getClassName("level", level));
+            levelNodes = contentBox.all("." + this.getClassName("level"));
             suitNodes = contentBox.all("." + this.getClassName("suit"));
 
+            levelNodes.removeClass(levelSelectedCN);
+
             if(level) {
+                levelNode.addClass(levelSelectedCN);
                 suitNodes.each(Y.bind(this._enableButton, this));
 
                 if(contract) {
                     var contractLevel = parseInt(contract),
-                        contractSuit = this._parseSuit(contract);
+                        contractSuit = Y.Bridge.parseSuit(contract);
 
                     if(contractLevel === parseInt(level)) {
                         Y.each(suitNodes, function(node, i) {
@@ -217,7 +223,9 @@ YUI.add("biddingbox", function(Y) {
         ATTRS: {
 
             level: {
-                validator: Y.Bridge.isLevel
+                setter: function(level) {
+                    return (Y.Lang.isValue(level) && Y.Bridge.isLevel(level)) ? level : undefined;
+                }
             },
 
             doubleEnabled: {
@@ -231,7 +239,9 @@ YUI.add("biddingbox", function(Y) {
             },
 
             contract: {
-                validator: Y.Bridge.isContract
+                setter: function(contract) {
+                    return (Y.Lang.isValue(contract) && Y.Bridge.isContract(contract)) ? contract : undefined;
+                }
             },
 
             host: {

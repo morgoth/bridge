@@ -9,7 +9,7 @@ YUI.add("trick", function(Y) {
     Y.extend(Trick, Y.Widget, {
 
         renderUI: function() {
-            this._renderCards();
+            this._renderTrick();
         },
 
         bindUI: function() {
@@ -24,27 +24,36 @@ YUI.add("trick", function(Y) {
             this._uiSetCards(event.newVal);
         },
 
-        _renderCards: function() {
-            var contentBox = this.get("contentBox");
+        _renderTrick: function() {
+            var html,
+                contentBox = this.get("contentBox");
+            html = Y.mustache(Trick.TRICK_TEMPLATE, {
+                cardsCN: this.getClassName("cards")
+            });
 
-            this.cardsNode = Y.Node.create(Trick.OL_TEMPLATE);
-            this.cardsNode.addClass(this.getClassName("cards"));
-
-            contentBox.appendChild(this.cardsNode);
+            contentBox.set("innerHTML", html);
         },
 
         _uiSetCards: function(cards) {
-            this.cardsNode.all("*").remove();
+            var html, cardsNode, cardsData,
+                contentBox = this.get("contentBox");
+            cardsNode = contentBox.one("." + this.getClassName("cards"));
+            cardsData = Y.Array.map(cards, function(card) {
+                var classNames = [
+                    this.getClassName("card"),
+                    this.getClassName("card", card.toLowerCase())
+                ];
 
-            Y.each(cards, function(card) {
-                var className = this.getClassName("card", card),
-                    cardNode = Y.Node.create(Trick.LI_TEMPLATE);
-
-                cardNode.addClass(className);
-                cardNode.set("innerHTML", card);
-
-                this.cardsNode.appendChild(cardNode);
+                return {
+                    card: card,
+                    classNames: classNames.join(" ")
+                };
             }, this);
+            html = Y.mustache(Trick.CARDS_TEMPLATE, {
+                cards: cardsData
+            });
+
+            cardsNode.set("innerHTML", html);
         }
 
     }, {
@@ -59,9 +68,18 @@ YUI.add("trick", function(Y) {
 
         },
 
-        OL_TEMPLATE: '<ol></ol>',
+        TRICK_TEMPLATE: ''
+            + '<ul class="{{cardsCN}}">'
+            + '</ul>',
 
-        LI_TEMPLATE: '<li></li>'
+        CARDS_TEMPLATE: ''
+            + '{{#cards}}'
+            +   '<li>'
+            +     '<button type="button" class="{{classNames}}" data-event="card" data-event-argument="{{card}}" disabled="disabled">'
+            +       '{{card}}'
+            +     '</button>'
+            +   '</li>'
+            + '{{/cards}}'
 
     });
 

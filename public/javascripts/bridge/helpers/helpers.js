@@ -20,6 +20,10 @@ YUI.add("helpers", function(Y) {
         return Y.Array.indexOf(Y.Bridge.DIRECTIONS, dealer);
     };
 
+    Y.Bridge.isSuit = function(suit) {
+        return Y.Array.indexOf(Y.Bridge.SUITS, suit);
+    };
+
     Y.Bridge.isModifier = function(modifier) {
         return Y.Array.indexOf(Y.Bridge.MODIFIERS, modifier) !== -1;
     };
@@ -86,7 +90,9 @@ YUI.add("helpers", function(Y) {
     };
 
     Y.Bridge.parseSuit = function(contract) {
-        return contract.match(new RegExp(Y.Bridge.SUITS.join("|")))[0];
+        var matchData = contract.match(new RegExp(Y.Bridge.SUITS.join("|")));
+
+        return matchData && matchData[0];
     };
 
 }, "0", { requires: ["collection", "oop", "classnamemanager"] });
