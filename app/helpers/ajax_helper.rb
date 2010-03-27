@@ -3,15 +3,17 @@ module AjaxHelper
     table_structure.tap do |result|
       result["id"] = table.id
       result["state"] = table.state
-      result["boardState"] = table.boards.current.state if table.boards.current
       result["player"] = table.user_player(current_user).direction if table.user_player(current_user)
       Bridge::DIRECTIONS.each_with_index do |direction, i|
         serialize_hand!(result["hands"][i], table, direction)
       end
-      serialize_bidding_box!(result["biddingBox"], table.boards.current) if table.boards.current and table.boards.current.auction? and table.user_player(current_user)
-      serialize_auction!(result["auction"], table.boards.current) if table.boards.current
-      serialize_trick!(result["trick"], table.boards.current) if table.boards.current and table.boards.current.playing?
-      serialize_tricks!(result["tricks"], table.boards.current) if table.boards.current and table.boards.current.playing?
+      if board = table.boards.current
+        result["boardState"] = board.state if board.auction? and table.user_player(current_user)
+        serialize_bidding_box!(result["biddingBox"], board) if board.auction?
+        serialize_auction!(result["auction"], board)
+        serialize_trick!(result["trick"], board) if board.playing?
+        serialize_tricks!(result["tricks"], board) if board.playing?
+      end
     end
   end
 
@@ -22,10 +24,10 @@ module AjaxHelper
       if table.players[direction]
         hash["name"] = table.players[direction].name
       end
-      if table.boards.current
-        hash["cards"] = table.boards.current.visible_hands_for(table.user_player(current_user))[direction]
+      if board = table.boards.current
+        hash["cards"] = board.visible_hands_for(table.user_player(current_user))[direction]
         hash["cardsEnabled"] = cards_enabled?(table, direction)
-        hash["suit"] = table.boards.current.cards.current_trick_suit
+        hash["suit"] = board.cards.current_trick_suit
       end
     end
   end
@@ -63,7 +65,7 @@ module AjaxHelper
       hash["resultNS"] = board.tricks_taken("NS")
       hash["resultEW"] = board.tricks_taken("EW")
       board.cards.completed_tricks.each do |trick|
-        hash["tricks"] << { "cards" => trick.map { |t| t.card.to_s }, "lead" => board.deal_owner(trick.first.card), "winner" => board.trick_winner(trick) }
+        hash["tricks"] << { "cards" => trick.map { |t| t.card.to_s }, "lead" => board.deal_owner(trick.first.card.to_s), "winner" => board.trick_winner(trick) }
       end
     end
   end
