@@ -60,7 +60,7 @@ YUI.add("auction", function(Y) {
                 var player = Auction.DIRECTIONS[(i + dealerPosition) % 4];
 
                 return {
-                    name: bid.bid,
+                    name: Y.Bridge.renderBid(bid.bid),
                     className: this.getClassName("bid", bid.bid.toLowerCase()),
                     alert: bid.alert,
                     player: player
@@ -91,8 +91,24 @@ YUI.add("auction", function(Y) {
 
             bids: {
                 value: []
-            }
+            },
 
+            strings: {
+                value: {
+                    modifiers: {
+                        PASS: "Pass",
+                        X: "Dbl",
+                        XX: "Rdbl"
+                    },
+                    suits: {
+                        C: "&clubs;",
+                        D: "&diams;",
+                        H: "&hearts;",
+                        S: "&spades;",
+                        NT: "NT"
+                    }
+                }
+            }
         },
 
         DIRECTIONS: ["N", "E", "S", "W"],
@@ -111,7 +127,7 @@ YUI.add("auction", function(Y) {
             +   '<li>'
             +     '{{#name}}'
             +       '<button type="button" class="yui-auction-bid {{className}}" data-player="{{player}}" title="{{alert}}">'
-            +         '{{name}}'
+            +         '{{{name}}}'
             +       '</button>'
             +     '{{/name}}'
             +   '</li>'

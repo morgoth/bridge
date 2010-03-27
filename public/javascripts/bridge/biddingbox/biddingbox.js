@@ -66,7 +66,7 @@ YUI.add("biddingbox", function(Y) {
 
             modifiers = Y.Array.map(BiddingBox.MODIFIERS, function(modifier, i) {
                 return {
-                    name: modifier,
+                    name: Y.Bridge.renderBid(modifier),
                     className: this.getClassName("modifier", modifier.toLowerCase()),
                     eventName: modifier.toLowerCase()
                 };
@@ -81,12 +81,17 @@ YUI.add("biddingbox", function(Y) {
 
             suits = Y.Array.map(Y.Bridge.SUITS, function(suit) {
                 return {
-                    name: suit,
-                    className: this.getClassName("suit", suit.toLowerCase())
+                    name: Y.Bridge.renderSuit(suit),
+                    eventArgument: suit,
+                    className: this.getClassName("suit", suit.toLowerCase()),
+                    suitCN: Y.ClassNameManager.getClassName("bridge", "suit", suit.toLowerCase())
                 };
             }, this);
 
             html = Y.mustache(BiddingBox.BIDDING_BOX_TEMPLATE, {
+                modifiersCN: this.getClassName("modifiers"),
+                levelsCN: this.getClassName("levels"),
+                suitsCN: this.getClassName("suits"),
                 modifiers: modifiers,
                 levels: levels,
                 suits: suits
@@ -118,10 +123,10 @@ YUI.add("biddingbox", function(Y) {
             doubleNode = contentBox.one("." + this.getClassName("modifier", "x"));
 
             if(doubleEnabled) {
-                this._enableButton(doubleNode);
+                this._enableButton.apply(this, [doubleNode]);
                 this.set("redoubleEnabled", false);
             } else {
-                this._disableButton(doubleNode);
+                this._disableButton.apply(this, [doubleNode]);
             }
         },
 
@@ -131,10 +136,10 @@ YUI.add("biddingbox", function(Y) {
             redoubleNode = contentBox.one("." + this.getClassName("modifier", "xx"));
 
             if(redoubleEnabled) {
-                this._enableButton(redoubleNode);
+                this._enableButton.apply(this, [redoubleNode]);
                 this.set("doubleEnabled", false);
             } else {
-                this._disableButton(redoubleNode);
+                this._disableButton.apply(this, [redoubleNode]);
             }
         },
 
@@ -145,19 +150,19 @@ YUI.add("biddingbox", function(Y) {
 
             if(contract) {
                 var contractLevel = parseInt(contract),
-                    contractSuit = this._parseSuit(contract);
+                    contractSuit = Y.Bridge.parseSuit(contract);
 
                 Y.each(levelNodes, function(node, i) {
                     var level = i + 1;
 
                     if((contractLevel > level) || (contractLevel == level && contractSuit == "NT")) {
-                        this._disableButton(node);
+                        this._disableButton.apply(this, [node]);
                     } else {
-                        this._enableButton(node);
+                        this._enableButton.apply(this, [node]);
                     }
                 }, this);
             } else {
-                levelNodes.each(this._enableButton);
+                levelNodes.each(Y.bind(this._enableButton, this));
             }
         },
 
@@ -168,7 +173,7 @@ YUI.add("biddingbox", function(Y) {
             suitNodes = contentBox.all("." + this.getClassName("suit"));
 
             if(level) {
-                suitNodes.each(this._enableButton);
+                suitNodes.each(Y.bind(this._enableButton, this));
 
                 if(contract) {
                     var contractLevel = parseInt(contract),
@@ -179,32 +184,30 @@ YUI.add("biddingbox", function(Y) {
                             var contractSuitIndex = Y.Array.indexOf(BiddingBox.SUITS, contractSuit);
 
                             if(i <= contractSuitIndex) {
-                                this._disableButton(node);
+                                this._disableButton.apply(this, [node]);
                             } else {
-                                this._enableButton(node);
+                                this._enableButton.apply(this, [node]);
                             }
                         }, this);
                     } else {
-                        suitNodes.each(this._enableButton);
+                        suitNodes.each(Y.bind(this._enableButton, this));
                     }
                 } else {
-                    suitNodes.each(this._enableButton);
+                    suitNodes.each(Y.bind(this._enableButton, this));
                 }
             } else {
-                suitNodes.each(this._disableButton);
+                suitNodes.each(Y.bind(this._disableButton, this));
             }
         },
 
         _enableButton: function(node) {
-            node.removeAttribute("disabled");
+            var className = this.getClassName("button", "disabled");
+            node.removeAttribute("disabled").removeClass(className);
         },
 
         _disableButton: function(node) {
-            node.setAttribute("disabled", "disabled");
-        },
-
-        _parseSuit: function(contract) {
-            return contract.match(new RegExp(Y.Bridge.SUITS.join("|")))[0];
+            var className = this.getClassName("button", "disabled");
+            node.setAttribute("disabled", "disabled").addClass(className);
         }
 
     }, {
@@ -239,25 +242,33 @@ YUI.add("biddingbox", function(Y) {
         MODIFIERS: ["PASS", "X", "XX"],
 
         BIDDING_BOX_TEMPLATE: ''
-            + '<div>'
+            + '<ul class="{{modifiersCN}}">'
             +   '{{#modifiers}}'
-            +     '<button type="button" class="yui-biddingbox-modifier {{className}}" data-event="{{eventName}}">{{name}}</button>'
+            +     '<li>'
+            +       '<button type="button" class="yui-biddingbox-modifier {{className}}" data-event="{{eventName}}">'
+            +         '{{{name}}}'
+            +       '</button>'
+            +     '</li>'
             +   '{{/modifiers}}'
-            + '</div>'
-            + '<div>'
+            + '</ul>'
+            + '<ul class="{{levelsCN}}">'
             +   '{{#levels}}'
-            +     '<button type="button" class="yui-biddingbox-level {{className}}" data-event="level" data-event-argument="{{name}}">'
-            +       '{{name}}'
-            +     '</button>'
+            +     '<li>'
+            +       '<button type="button" class="yui-biddingbox-level {{className}}" data-event="level" data-event-argument="{{name}}">'
+            +         '{{{name}}}'
+            +       '</button>'
+            +     '</li>'
             +   '{{/levels}}'
-            + '</div>'
-            + '<div>'
+            + '</ul>'
+            + '<ul class="{{suitsCN}}">'
             +   '{{#suits}}'
-            +     '<button type="button" class="yui-biddingbox-suit {{className}}" data-event="suit" data-event-argument="{{name}}">'
-            +       '{{name}}'
-            +     '</button>'
+            +     '<li>'
+            +       '<button type="button" class="yui-biddingbox-suit {{className}}" data-event="suit" data-event-argument="{{eventArgument}}">'
+            +         '<span class="{{suitCN}}">{{{name}}}</span>'
+            +       '</button>'
+            +     '</li>'
             +   '{{/suits}}'
-            + '</div>'
+            + '</ul>'
 
     });
 
