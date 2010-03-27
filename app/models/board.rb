@@ -112,7 +112,7 @@ class Board < ActiveRecord::Base
       visible_directions = []
     end
     cards_left.tap do |left|
-      (Bridge::DIRECTIONS - visible_directions).each { |d| left[d] = left[d].map { "" } }
+      (Bridge::DIRECTIONS - visible_directions).each { |d| left[d].fill("") }
     end
   end
 

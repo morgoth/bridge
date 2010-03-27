@@ -30,7 +30,7 @@ class Table < ActiveRecord::Base
     end
     attributes[:deal_id] = Bridge::Deal.random_id.to_s
     attributes[:dealer] = Bridge.next_direction(boards.current.try(:dealer))
-    attributes[:vulnerable] = Bridge.next_vulnerable(boards.current.try(:vulnerable))
+    attributes[:vulnerable] = Bridge.vulnerable_in_deal(boards.count + 1)
 
     boards.create!(attributes)
   end
