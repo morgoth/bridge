@@ -54,7 +54,11 @@ module AjaxHelper
   def serialize_trick!(result, board)
     result.tap do |hash|
       hash["lead"] = board.deal_owner(board.cards.current_lead.try(:card))
-      hash["cards"] = (board.cards.current_trick.present? and board.cards.current_trick.map { |c| c.card.to_s })
+      if board.cards.current_trick.present?
+        hash["cards"] = board.cards.current_trick.map { |c| c.card.to_s }
+      elsif board.cards.previous_trick.present?
+        hash["cards"] = board.cards.previous_trick.map { |c| c.card.to_s }
+      end
     end
   end
 

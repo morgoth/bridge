@@ -1,8 +1,49 @@
-!card_height  = 96px
-!card_width   = 71px
+!trick_width    = 200px
+!trick_height   = 200px
+!card_height    = 96px
+!card_width     = 71px
+!width_offset  = !card_width / 8
+!height_offset = !card_height / 8
 
 .yui-trick-cards
+  +reset-box-model
   +no-bullets
+  margin: auto
+  width= !trick_width
+  height= !trick_height
+  position: relative
+  display: block
+
+.yui-trick-direction
+  position: absolute
+
+.yui-trick-card-1
+  z-index: 1
+
+.yui-trick-card-2
+  z-index: 2
+
+.yui-trick-card-3
+  z-index: 3
+
+.yui-trick-card-4
+  z-index: 4
+
+.yui-trick-direction-n
+  left= !trick_width / 2 - !card_width / 2 - !width_offset / 2
+  top= !trick_height / 2 - !card_height + !height_offset
+
+.yui-trick-direction-e
+  left= !trick_width / 2 - !width_offset
+  top= !trick_height / 2 - !card_height / 2 - !height_offset / 2
+
+.yui-trick-direction-s
+  left= !trick_width / 2 - !card_width / 2 + !width_offset / 2
+  top= !trick_height / 2 - !height_offset
+
+.yui-trick-direction-w
+  left= !trick_width / 2 - !card_width + !width_offset
+  top= !trick_height / 2 - !card_height / 2 + !height_offset / 2
 
 .yui-trick-card
   +reset-box-model

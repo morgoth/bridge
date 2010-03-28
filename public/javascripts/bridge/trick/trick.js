@@ -25,35 +25,52 @@ YUI.add("trick", function(Y) {
         },
 
         _renderTrick: function() {
-            var html,
+            var html, directions,
                 contentBox = this.get("contentBox");
+            directions = Y.Array.map(Y.Bridge.DIRECTIONS, function(direction) {
+                var classNames = [
+                    this.getClassName("direction"),
+                    this.getClassName("direction", direction.toLowerCase())
+                ];
+
+                return {
+                    classNames: classNames.join(" ")
+                };
+            }, this);
             html = Y.mustache(Trick.TRICK_TEMPLATE, {
-                cardsCN: this.getClassName("cards")
+                cardsCN: this.getClassName("cards"),
+                directions: directions
             });
 
             contentBox.set("innerHTML", html);
         },
 
         _uiSetCards: function(cards) {
-            var html, cardsNode, cardsData,
+            var html, cardNodes, position,
+                player = this.get("player"),
                 contentBox = this.get("contentBox");
-            cardsNode = contentBox.one("." + this.getClassName("cards"));
-            cardsData = Y.Array.map(cards, function(card) {
-                var classNames = [
-                    this.getClassName("card"),
-                    this.getClassName("card", card.toLowerCase())
-                ];
+            position = Y.Bridge.dealerPosition(player);
+            cardNodes = contentBox.all("." + this.getClassName("direction"));
+            cardNodes.set("innerHTML", "");
+            cardNodes.removeClass("card", "1");
+            cardNodes.removeClass("card", "2");
+            cardNodes.removeClass("card", "3");
+            cardNodes.removeClass("card", "4");
 
-                return {
-                    card: card,
+            Y.log(cardNodes);
+
+            Y.each(cards, function(card, i) {
+                var html,
+                    cardNumber = i + 1,
+                    classNames = [
+                        this.getClassName("card"),
+                        this.getClassName("card", card.toLowerCase())
+                    ];
+                html = Y.mustache(Trick.CARD_TEMPLATE, {
                     classNames: classNames.join(" ")
-                };
+                });
+                cardNodes.item((i + position + 3) % 4).set("innerHTML", html).addClass(this.getClassName("card", cardNumber));
             }, this);
-            html = Y.mustache(Trick.CARDS_TEMPLATE, {
-                cards: cardsData
-            });
-
-            cardsNode.set("innerHTML", html);
         }
 
     }, {
@@ -64,22 +81,23 @@ YUI.add("trick", function(Y) {
 
             cards: {
                 value: []
+            },
+
+            player: {
+                value: "N"
             }
 
         },
 
         TRICK_TEMPLATE: ''
             + '<ul class="{{cardsCN}}">'
+            +   '{{#directions}}'
+            +     '<li class="{{classNames}}"></li>'
+            +   '{{/directions}}'
             + '</ul>',
 
-        CARDS_TEMPLATE: ''
-            + '{{#cards}}'
-            +   '<li>'
-            +     '<button type="button" class="{{classNames}}" data-event="card" data-event-argument="{{card}}" disabled="disabled">'
-            +       '{{card}}'
-            +     '</button>'
-            +   '</li>'
-            + '{{/cards}}'
+        CARD_TEMPLATE: ''
+            + '<div class="{{classNames}}"></div>'
 
     });
 
