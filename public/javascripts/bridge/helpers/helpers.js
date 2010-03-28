@@ -20,6 +20,19 @@ YUI.add("helpers", function(Y) {
         return Y.Array.indexOf(Y.Bridge.DIRECTIONS, dealer);
     };
 
+    Y.Bridge.directionDistance = function(firstDirection, secondDirection) {
+        var difference,
+            firstPosition = Y.Bridge.dealerPosition(firstDirection),
+            secondPosition = Y.Bridge.dealerPosition(secondDirection);
+        difference = secondPosition - firstPosition;
+
+        if(difference < 0) {
+            difference += 4;
+        }
+
+        return difference % 4;
+    };
+
     Y.Bridge.isSuit = function(suit) {
         return Y.Array.indexOf(Y.Bridge.SUITS, suit);
     };

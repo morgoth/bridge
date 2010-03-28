@@ -55,12 +55,11 @@ YUI.add("trick", function(Y) {
         },
 
         _uiSetCards: function(cards) {
-            var html, cardNodes, playerPosition, leadPosition,
+            var html, cardNodes, playerPosition, leadPosition, positionDistance,
                 player = this.get("player"),
-                lead = this.get("lead"),
+                lead =  this.get("lead"),
                 contentBox = this.get("contentBox");
-            playerPosition = Y.Bridge.dealerPosition(player);
-            leadPosition = Y.Bridge.dealerPosition(lead);
+            positionDistance = Y.Bridge.directionDistance(player, lead);
             cardNodes = contentBox.all("." + this.getClassName("direction"));
             cardNodes.set("innerHTML", "");
             cardNodes.removeClass("card", "1");
@@ -68,22 +67,23 @@ YUI.add("trick", function(Y) {
             cardNodes.removeClass("card", "3");
             cardNodes.removeClass("card", "4");
 
-            Y.each(cards, function(card, i) {
-                var html,
-                    position = (i + playerPosition + leadPosition + 2) % 4,
-                    cardNumber = i + 1,
-                    classNames = [
-                        this.getClassName("card"),
-                        this.getClassName("card", card.toLowerCase())
-                    ];
-                html = Y.mustache(Trick.CARD_TEMPLATE, {
-                    classNames: classNames.join(" ")
-                });
+            if(cards) {
+                Y.each(cards, function(card, i) {
+                    var html,
+                        position = (i + 2 + positionDistance) % 4, // TODO: test me please!
+                        cardNumber = i + 1,
+                        classNames = [
+                            this.getClassName("card"),
+                            this.getClassName("card", card.toLowerCase())
+                        ];
+                    html = Y.mustache(Trick.CARD_TEMPLATE, {
+                        classNames: classNames.join(" ")
+                    });
 
-                cardNodes.item(position).set("innerHTML", html).addClass(this.getClassName("card", cardNumber));
-            }, this);
+                    cardNodes.item(position).set("innerHTML", html).addClass(this.getClassName("card", cardNumber));
+                }, this);
+            }
         }
-
     }, {
 
         NAME: "trick",
