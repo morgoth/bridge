@@ -179,6 +179,7 @@ YUI.add("table", function(Y) {
                 container.one(".bridge-table-row-2 .bridge-table-col-1")
             ];
 
+            this.trick.set("player", player);
             Y.each(slotNodes, function(slotNode, i) {
                 slotNode.append(handNodes[(i + position + 2) % 4]);
             }, this);

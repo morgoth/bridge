@@ -14,6 +14,7 @@ YUI.add("trick", function(Y) {
 
         bindUI: function() {
             this.after("cardsChange", this._afterCardsChange);
+            this.after("playerChange", this._afterPlayerChange);
         },
 
         syncUI: function() {
@@ -22,6 +23,10 @@ YUI.add("trick", function(Y) {
 
         _afterCardsChange: function(event) {
             this._uiSetCards(event.newVal);
+        },
+
+        _afterPlayerChange: function(event) {
+            this._uiSetPlayer(event.newVal);
         },
 
         _renderTrick: function() {
@@ -43,6 +48,10 @@ YUI.add("trick", function(Y) {
             });
 
             contentBox.set("innerHTML", html);
+        },
+
+        _uiSetPlayer: function(player) {
+            this._uiSetCards(this.get("cards"));
         },
 
         _uiSetCards: function(cards) {
