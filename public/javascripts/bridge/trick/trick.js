@@ -55,10 +55,12 @@ YUI.add("trick", function(Y) {
         },
 
         _uiSetCards: function(cards) {
-            var html, cardNodes, position,
+            var html, cardNodes, playerPosition, leadPosition,
                 player = this.get("player"),
+                lead = this.get("lead"),
                 contentBox = this.get("contentBox");
-            position = Y.Bridge.dealerPosition(player);
+            playerPosition = Y.Bridge.dealerPosition(player);
+            leadPosition = Y.Bridge.dealerPosition(lead);
             cardNodes = contentBox.all("." + this.getClassName("direction"));
             cardNodes.set("innerHTML", "");
             cardNodes.removeClass("card", "1");
@@ -66,10 +68,9 @@ YUI.add("trick", function(Y) {
             cardNodes.removeClass("card", "3");
             cardNodes.removeClass("card", "4");
 
-            Y.log(cardNodes);
-
             Y.each(cards, function(card, i) {
                 var html,
+                    position = (i + playerPosition + leadPosition + 2) % 4,
                     cardNumber = i + 1,
                     classNames = [
                         this.getClassName("card"),
@@ -78,7 +79,8 @@ YUI.add("trick", function(Y) {
                 html = Y.mustache(Trick.CARD_TEMPLATE, {
                     classNames: classNames.join(" ")
                 });
-                cardNodes.item((i + position + 3) % 4).set("innerHTML", html).addClass(this.getClassName("card", cardNumber));
+
+                cardNodes.item(position).set("innerHTML", html).addClass(this.getClassName("card", cardNumber));
             }, this);
         }
 
@@ -87,6 +89,10 @@ YUI.add("trick", function(Y) {
         NAME: "trick",
 
         ATTRS: {
+
+            lead: {
+                value: "N"
+            },
 
             cards: {
                 value: []
