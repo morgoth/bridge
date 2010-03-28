@@ -153,10 +153,11 @@ YUI.add("hand", function(Y) {
         },
 
         _uiSetSuit: function(suit) {
-            var cardsEnabled = this.get("cardsEnabled"),
+            var cards = this.get("cards"),
+                cardsEnabled = this.get("cardsEnabled"),
                 contentBox = this.get("contentBox");
 
-            if(suit && cardsEnabled) {
+            if(suit && cardsEnabled && Y.Bridge.hasSuit(suit, cards)) {
                 this._uiSetCardsEnabled(false);
                 contentBox.all("." + this.getClassName("card", suit.toLowerCase())).each(Y.bind(this._enableButton, this));
             }

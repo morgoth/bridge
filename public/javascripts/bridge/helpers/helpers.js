@@ -37,6 +37,12 @@ YUI.add("helpers", function(Y) {
         return Y.Array.indexOf(Y.Bridge.SUITS, suit);
     };
 
+    Y.Bridge.hasSuit = function(suit, cards) {
+        return Y.Array.find(cards, function(card) {
+            return Y.Bridge.parseSuit(card) === suit;
+        }) !== null;
+    };
+
     Y.Bridge.isModifier = function(modifier) {
         return Y.Array.indexOf(Y.Bridge.MODIFIERS, modifier) !== -1;
     };
