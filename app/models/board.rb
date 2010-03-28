@@ -40,7 +40,7 @@ class Board < ActiveRecord::Base
   end
 
   def cards_left(direction = nil)
-    users_cards = cards.inject(deal.to_hash) do |current_cards, card|
+    users_cards = cards.inject(deal.sort_by_color!(contract_trump).to_hash) do |current_cards, card|
       current_cards[card.user.direction].delete(card.to_s)
       current_cards
     end
