@@ -8,8 +8,9 @@ gem "bridge", ">=0.0.23"
 gem "haml", ">=2.2.22"
 gem "state_machine", ">=0.8.1"
 gem "compass"
-gem "sqlite3", :group => [:development, :test]
 gem "proxies"
+gem "devise", :git => "git://github.com/plataformatec/devise.git"
+gem "sqlite3", :group => [:development, :test]
 
 group :development do
   gem "rails3-generators"

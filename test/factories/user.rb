@@ -1,4 +1,5 @@
-Factory.define :user do |u|
-  u.email { Factory.next(:email) }
-  u.password "secret"
+Factory.define :user do |f|
+  f.email { Factory.next(:email) }
+  f.password "secret"
+  f.password_confirmation { |u| u.password }
 end

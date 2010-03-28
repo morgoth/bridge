@@ -1,10 +1,11 @@
 Libre::Application.routes.draw do |map|
+  devise_for :users
+
   resource :home, :only => [:show]
 
   # authentication
 
-  resource :user_session, :only => [:new, :create, :destroy]
-  resource :user, :only => [:new, :create, :show]
+  #resource :user, :only => [:show]
 
   # bridge
 

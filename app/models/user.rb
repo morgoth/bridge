@@ -1,48 +1,12 @@
 class User < ActiveRecord::Base
-  attr_accessor :password
+  # Include default devise modules. Others available are:
+  # :http_authenticatable, :token_authenticatable, :lockable, :timeoutable, activatable, :confirmable, :recoverable
+  devise :registerable, :authenticatable, :rememberable, :trackable, :validatable
 
-  validates :password, :presence => true, :length => 6..40, :if => :password_required?
-  validates :email, :uniqueness => true
-  validates_with EmailValidator
-
-  before_save :encrypt_password
-
-  def authenticated?(password)
-    crypted_password == encrypt(password)
-  end
+  attr_accessible :email, :password, :password_confirmation
 
   # TODO: add display_name to user's model
   def name
     email
-  end
-
-  private
-
-  def self.secure_digest(*args)
-    Digest::SHA1.hexdigest(args.flatten.join('--'))
-  end
-
-  def self.make_token
-    secure_digest(Time.now, 10.times.map { rand.to_s })
-  end
-
-  def self.password_digest(password, password_salt)
-    digest = ""
-    10.times { digest = secure_digest(digest, password_salt, password) }
-    digest
-  end
-
-  def encrypt(password)
-    self.class.password_digest(password, password_salt)
-  end
-
-  def encrypt_password
-    return if password.blank?
-    self.password_salt    = self.class.make_token if new_record?
-    self.crypted_password = encrypt(password)
-  end
-
-  def password_required?
-    crypted_password.blank? or password.present?
   end
 end

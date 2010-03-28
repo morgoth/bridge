@@ -1,6 +1,10 @@
 --- 
-hash: 0353accec57e705693b858f094925aa6acb43913
+hash: 31d5fae98d3d8e9c453fb1cd9f7c1600c1f79bb9
 sources: 
+- Git: 
+    git: git://github.com/plataformatec/devise.git
+    uri: git://github.com/plataformatec/devise.git
+    ref: bc00a13a3a577c04a66d91370568b1e746992bb5
 - Git: 
     git: git://github.com/rails/rails.git
     uri: git://github.com/rails/rails.git
@@ -22,10 +26,10 @@ specs:
     version: 0.3.19
 - activesupport: 
     version: 3.0.0.beta3
-    source: 0
+    source: 1
 - activemodel: 
     version: 3.0.0.beta3
-    source: 0
+    source: 1
 - erubis: 
     version: 2.6.5
 - rack: 
@@ -36,7 +40,7 @@ specs:
     version: 0.5.3
 - actionpack: 
     version: 3.0.0.beta3
-    source: 0
+    source: 1
 - mime-types: 
     version: "1.16"
 - polyglot: 
@@ -51,15 +55,15 @@ specs:
     version: 1.0.0
 - actionmailer: 
     version: 3.0.0.beta3
-    source: 0
+    source: 1
 - arel: 
     version: 0.3.3
 - activerecord: 
     version: 3.0.0.beta3
-    source: 0
+    source: 1
 - activeresource: 
     version: 3.0.0.beta3
-    source: 0
+    source: 1
 - acts_as_list: 
     version: 0.1.2
 - bridge: 
@@ -84,6 +88,11 @@ specs:
     version: 0.8.17
 - database_cleaner: 
     version: 0.5.0
+- warden: 
+    version: 0.10.3
+- devise: 
+    version: 1.1.pre4
+    source: 0
 - factory_girl: 
     version: 1.2.4
 - mocha: 
@@ -96,10 +105,10 @@ specs:
     version: 0.13.4
 - railties: 
     version: 3.0.0.beta3
-    source: 0
+    source: 1
 - rails: 
     version: 3.0.0.beta3
-    source: 0
+    source: 1
 - rails3-generators: 
     version: 0.5.4
 - sqlite3: 
@@ -137,15 +146,19 @@ dependencies:
     version: ">= 0"
     group: 
     - :default
+  proxies: 
+    version: ">= 0"
+    group: 
+    - :default
+  devise: 
+    version: ">= 0"
+    group: 
+    - :default
   sqlite3: 
     version: ">= 0"
     group: 
     - :development
     - :test
-  proxies: 
-    version: ">= 0"
-    group: 
-    - :default
   rails3-generators: 
     version: ">= 0"
     group: 
