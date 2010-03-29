@@ -67,7 +67,7 @@ YUI.add("trick", function(Y) {
 
             if(cards) {
                 cardsData = Y.Array.map(cards, function(card, i) {
-                    var position = (i + positionDistance) % 4, // TODO: test me please!
+                    var position = (i +  positionDistance + 2) % 4, // TODO: test me please!
                         classNames = [
                             this.getClassName("card"),
                             this.getClassName("card", card.toLowerCase()),
@@ -93,6 +93,7 @@ YUI.add("trick", function(Y) {
         ATTRS: {
 
             lead: {
+                validator: Y.Bridge.isDirection,
                 value: "N"
             },
 
@@ -101,7 +102,10 @@ YUI.add("trick", function(Y) {
             },
 
             player: {
-                value: "N"
+                setter: function(player) {
+                    return Y.Bridge.isDirection(player) ? player : "S";
+                },
+                value: "S"
             }
 
         },
@@ -120,4 +124,3 @@ YUI.add("trick", function(Y) {
     Y.Bridge.Trick = Trick;
 
 }, "0", { requires: ["widget"] });
-
