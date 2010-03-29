@@ -34,10 +34,4 @@ class Table < ActiveRecord::Base
 
     boards.create!(attributes)
   end
-
-  private
-
-  def four_players?
-    players.count == 4
-  end
 end
