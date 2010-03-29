@@ -1,0 +1,172 @@
+--- 
+hash: 44dfe5a1c8a79ceb82aa9e69abf9bd8db1f6bc35
+sources: 
+- Git: 
+    git: git://github.com/rails/rails.git
+    uri: git://github.com/rails/rails.git
+    ref: a509b0b18fd02d1d712248ce94e1d36750d58565
+- Rubygems: 
+    uri: http://rubygems.org
+specs: 
+- rake: 
+    version: 0.8.7
+- abstract: 
+    version: 1.0.0
+- builder: 
+    version: 2.1.2
+- i18n: 
+    version: 0.3.6
+- memcache-client: 
+    version: 1.8.1
+- tzinfo: 
+    version: 0.3.18
+- activesupport: 
+    version: 3.0.0.beta1
+    source: 0
+- activemodel: 
+    version: 3.0.0.beta1
+    source: 0
+- erubis: 
+    version: 2.6.5
+- rack: 
+    version: 1.1.0
+- rack-mount: 
+    version: 0.6.1
+- rack-test: 
+    version: 0.5.3
+- actionpack: 
+    version: 3.0.0.beta1
+    source: 0
+- mime-types: 
+    version: "1.16"
+- polyglot: 
+    version: 0.3.1
+- treetop: 
+    version: 1.4.5
+- mail: 
+    version: 2.1.5.3
+- text-hyphen: 
+    version: 1.0.0
+- text-format: 
+    version: 1.0.0
+- actionmailer: 
+    version: 3.0.0.beta1
+    source: 0
+- arel: 
+    version: 0.3.3
+- activerecord: 
+    version: 3.0.0.beta1
+    source: 0
+- activeresource: 
+    version: 3.0.0.beta1
+    source: 0
+- acts_as_list: 
+    version: 0.1.2
+- bridge: 
+    version: 0.0.23
+- bundler: 
+    version: 0.9.13
+- culerity: 
+    version: 0.2.9
+- nokogiri: 
+    version: 1.4.1
+- ffi: 
+    version: 0.6.3
+- json_pure: 
+    version: 1.2.3
+- selenium-webdriver: 
+    version: 0.0.17
+- capybara: 
+    version: 0.3.6
+- haml: 
+    version: 2.2.22
+- compass: 
+    version: 0.8.17
+- database_cleaner: 
+    version: 0.5.0
+- factory_girl: 
+    version: 1.2.3
+- mocha: 
+    version: 0.9.8
+- pg: 
+    version: 0.9.0
+- thor: 
+    version: 0.13.4
+- railties: 
+    version: 3.0.0.beta1
+    source: 0
+- rails: 
+    version: 3.0.0.beta1
+    source: 0
+- rails3-generators: 
+    version: 0.5.3
+- sqlite3: 
+    version: 0.0.8
+- state_machine: 
+    version: 0.8.1
+- test-unit: 
+    version: 2.0.7
+dependencies: 
+  rails: 
+    version: ">= 0"
+    group: 
+    - :default
+  acts_as_list: 
+    version: ">= 0"
+    group: 
+    - :default
+  bridge: 
+    version: ">= 0.0.23"
+    group: 
+    - :default
+  haml: 
+    version: ">= 2.2.22"
+    group: 
+    - :default
+  state_machine: 
+    version: ">= 0.8.1"
+    group: 
+    - :default
+  compass: 
+    version: ">= 0"
+    group: 
+    - :default
+  sqlite3: 
+    version: ">= 0"
+    group: 
+    - :development
+    - :test
+  rails3-generators: 
+    version: ">= 0"
+    group: 
+    - :development
+  capybara: 
+    version: ">= 0"
+    group: 
+    - :test
+    require: []
+
+  factory_girl: 
+    version: ">= 0"
+    group: 
+    - :test
+    require: []
+
+  test-unit: 
+    version: ">= 2"
+    group: 
+    - :test
+    require: 
+    - test/unit
+  database_cleaner: 
+    version: ">= 0"
+    group: 
+    - :test
+  mocha: 
+    version: ">= 0"
+    group: 
+    - :test
+  pg: 
+    version: ">= 0"
+    group: 
+    - :production

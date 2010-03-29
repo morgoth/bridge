@@ -140,7 +140,9 @@ class Board < ActiveRecord::Base
 
     before_transition :auction => :playing, :do => [:set_contract, :set_declarer]
     before_transition :playing => :completed, :do => [:set_tricks, :set_points]
-    after_transition any => :completed, :do => :table_create_board!
+    after_transition any => :completed do |board, transition|
+      board.table_create_board!
+    end
   end
 
   private
