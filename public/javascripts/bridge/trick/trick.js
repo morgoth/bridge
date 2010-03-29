@@ -62,9 +62,6 @@ YUI.add("trick", function(Y) {
             positionDistance = Y.Bridge.directionDistance(player, lead);
             cardsNode = contentBox.one("." + this.getClassName("cards"));
 
-            Y.log("lead: " + lead);
-            Y.log("player: " + player);
-
             if(cards) {
                 cardsData = Y.Array.map(cards, function(card, i) {
                     var position = (i +  positionDistance + 2) % 4, // TODO: test me please!
