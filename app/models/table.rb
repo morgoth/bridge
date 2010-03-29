@@ -18,12 +18,6 @@ class Table < ActiveRecord::Base
     user && players.where(:user_id => user.id).first
   end
 
-  private
-
-  def four_players?
-    players.count == 4
-  end
-
   def create_board!
     attributes = %w(n e s w).inject({}) do |hash, direction|
       hash.tap { |h| h["user_#{direction}"] = players[direction].user }
@@ -33,5 +27,11 @@ class Table < ActiveRecord::Base
     attributes[:vulnerable] = Bridge.vulnerable_in_deal(boards.count + 1)
 
     boards.create!(attributes)
+  end
+
+  private
+
+  def four_players?
+    players.count == 4
   end
 end

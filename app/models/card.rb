@@ -29,7 +29,7 @@ class Card < ActiveRecord::Base
   end
 
   def user
-    @user ||= board_card_owner(card)
+    @user || board_card_owner(card)
   end
 
   def to_s
@@ -58,7 +58,7 @@ class Card < ActiveRecord::Base
   end
 
   def correct_user
-    if (!current_user.dummy? && user != current_user) || (current_user.dummy? && user != current_user.partner)
+    if (!current_user.dummy? && @user != current_user) || (current_user.dummy? && @user != current_user.partner)
       errors.add(:user, "can not play card at the moment")
     end
   end
