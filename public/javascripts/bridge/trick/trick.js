@@ -55,34 +55,36 @@ YUI.add("trick", function(Y) {
         },
 
         _uiSetCards: function(cards) {
-            var html, cardNodes, playerPosition, leadPosition, positionDistance,
+            var html, cardsNode, playerPosition, leadPosition, positionDistance, cardsData,
                 player = this.get("player"),
                 lead =  this.get("lead"),
                 contentBox = this.get("contentBox");
             positionDistance = Y.Bridge.directionDistance(player, lead);
-            cardNodes = contentBox.all("." + this.getClassName("direction"));
-            cardNodes.set("innerHTML", "");
-            cardNodes.removeClass("card", "1");
-            cardNodes.removeClass("card", "2");
-            cardNodes.removeClass("card", "3");
-            cardNodes.removeClass("card", "4");
+            cardsNode = contentBox.one("." + this.getClassName("cards"));
+
+            Y.log("lead: " + lead);
+            Y.log("player: " + player);
 
             if(cards) {
-                Y.each(cards, function(card, i) {
-                    var html,
-                        position = (i + 2 + positionDistance) % 4, // TODO: test me please!
-                        cardNumber = i + 1,
+                cardsData = Y.Array.map(cards, function(card, i) {
+                    var position = (i + positionDistance) % 4, // TODO: test me please!
                         classNames = [
                             this.getClassName("card"),
-                            this.getClassName("card", card.toLowerCase())
+                            this.getClassName("card", card.toLowerCase()),
+                            this.getClassName("card", Y.Bridge.DIRECTIONS[position].toLowerCase())
                         ];
-                    html = Y.mustache(Trick.CARD_TEMPLATE, {
-                        classNames: classNames.join(" ")
-                    });
 
-                    cardNodes.item(position).set("innerHTML", html).addClass(this.getClassName("card", cardNumber));
+                    return {
+                        classNames: classNames.join(" ")
+                    };
                 }, this);
+
+                html = Y.mustache(Trick.CARDS_TEMPLATE, {
+                    cards: cardsData
+                });
             }
+
+            cardsNode.set("innerHTML", html || "");
         }
     }, {
 
@@ -106,13 +108,12 @@ YUI.add("trick", function(Y) {
 
         TRICK_TEMPLATE: ''
             + '<ul class="{{cardsCN}}">'
-            +   '{{#directions}}'
-            +     '<li class="{{classNames}}"></li>'
-            +   '{{/directions}}'
             + '</ul>',
 
-        CARD_TEMPLATE: ''
-            + '<div class="{{classNames}}"></div>'
+        CARDS_TEMPLATE: ''
+            + '{{#cards}}'
+            +   '<li class="{{classNames}}"></li>'
+            + '{{/cards}}'
 
     });
 
