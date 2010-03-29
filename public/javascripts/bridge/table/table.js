@@ -262,7 +262,9 @@ YUI.add("table", function(Y) {
             },
 
             player: {
-                validator: Y.Bridge.isDirection
+                setter: function(player) {
+                    return Y.Bridge.isDirection(player) ? player : "S";
+                }
             },
 
             tableData: {
@@ -279,7 +281,7 @@ YUI.add("table", function(Y) {
             },
 
             pollTimeout: {
-                value: 50000,
+                value: 2000,
                 validator: Y.Lang.isNumber
             }
 

@@ -56,7 +56,7 @@ YUI.add("trick", function(Y) {
 
         _uiSetCards: function(cards) {
             var html, cardNodes, playerPosition, leadPosition, positionDistance,
-                player = this.get("player"),
+                player = this.get("player") || "S",
                 lead =  this.get("lead"),
                 contentBox = this.get("contentBox");
             positionDistance = Y.Bridge.directionDistance(player, lead);
@@ -91,6 +91,7 @@ YUI.add("trick", function(Y) {
         ATTRS: {
 
             lead: {
+                validator: Y.Bridge.isDirection,
                 value: "N"
             },
 
@@ -99,7 +100,10 @@ YUI.add("trick", function(Y) {
             },
 
             player: {
-                value: "N"
+                setter: function(player) {
+                    return Y.Bridge.isDirection(player) ? player : "S";
+                },
+                value: "S"
             }
 
         },
