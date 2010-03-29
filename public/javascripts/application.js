@@ -42,6 +42,6 @@ YUI({
     tableId = tableNode && tableNode.getAttribute("data-table-id");
 
     if(tableId) {
-        new Y.Bridge.Table({ container: tableNode, userId: userId, id: tableId, pollTimeout: 50000 });
+        new Y.Bridge.Table({ container: tableNode, userId: userId, id: tableId, pollTimeout: 5000 });
     }
 });
