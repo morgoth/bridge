@@ -1,6 +1,6 @@
 module CardsBoardExtension
   def trick(n)
-    where(:position => ((n - 1) * 4 + 1)...(n * 4 + 1)).all
+    where(:position => ((n - 1) * 4 + 1)..(n * 4)).all
   end
 
   def tricks
@@ -44,11 +44,11 @@ module CardsBoardExtension
   end
 
   def current_trick
-    where(:position => current_lead_position...(current_lead_position + 4))
+    where(:position => current_lead_position..(current_lead_position + 3))
   end
 
   def previous_trick
-    where(:position => previous_lead_position...(previous_lead_position + 4))
+    where(:position => previous_lead_position..(previous_lead_position + 3))
   end
 
   def previous_trick_suit
