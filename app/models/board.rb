@@ -23,10 +23,6 @@ class Board < ActiveRecord::Base
     Bridge::DIRECTIONS.index(dealer)
   end
 
-  def dealer_user
-    users[dealer]
-  end
-
   def contract_trump
     contract_without_modifier && contract_without_modifier.trump
   end
@@ -47,30 +43,13 @@ class Board < ActiveRecord::Base
     direction.nil? ? users_cards : users_cards[direction]
   end
 
-  def card_owner(card)
-    direction = deal_owner(card)
-    users[direction]
-  end
-
   def current_user
     return bids.current_user if auction?
     return cards.current_user if playing?
   end
 
-  def declarer_user
-    users[declarer]
-  end
-
-  def first_lead_user
-    declarer_user.next
-  end
-
-  def dummy_user
-    first_lead_user.next
-  end
-
   def users
-    [user_n, user_e, user_s, user_w].extend(UsersBoardExtension)
+    Proxies::ObjectProxy.new([user_n, user_e, user_s, user_w], :owner => self, :extend => UsersBoardExtension)
   end
 
   def users=(users)
@@ -109,7 +88,7 @@ class Board < ActiveRecord::Base
   def visible_hands_for(player_or_direction)
     if player_or_direction
       visible_directions = player_or_direction.respond_to?(:direction) ? [player_or_direction.direction] : [player_or_direction]
-      visible_directions << dummy_user.direction if cards.count > 0
+      visible_directions << users.dummy.direction if cards.count > 0
       visible_directions << claims.active.last.claiming_user.direction if claims.active.present?
       visible_directions.uniq!
     else

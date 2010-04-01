@@ -8,6 +8,7 @@ gem "haml", ">=2.2.22"
 gem "state_machine", ">=0.8.1"
 gem "compass"
 gem "sqlite3", :groups => [:development, :test]
+gem "proxies"
 
 group :development do
   gem "rails3-generators"

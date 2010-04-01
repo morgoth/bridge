@@ -1,10 +1,10 @@
 --- 
-hash: 44dfe5a1c8a79ceb82aa9e69abf9bd8db1f6bc35
+hash: 6fa0d71fa1cd348c5f90af7c86fbdf40c709b97c
 sources: 
 - Git: 
     git: git://github.com/rails/rails.git
     uri: git://github.com/rails/rails.git
-    ref: a509b0b18fd02d1d712248ce94e1d36750d58565
+    ref: e8292abbcd581f2fdad368fc5760416071b4b67f
 - Rubygems: 
     uri: http://rubygems.org
 specs: 
@@ -65,7 +65,7 @@ specs:
 - bridge: 
     version: 0.0.23
 - bundler: 
-    version: 0.9.13
+    version: 0.9.14
 - culerity: 
     version: 0.2.9
 - nokogiri: 
@@ -85,11 +85,13 @@ specs:
 - database_cleaner: 
     version: 0.5.0
 - factory_girl: 
-    version: 1.2.3
+    version: 1.2.4
 - mocha: 
     version: 0.9.8
 - pg: 
     version: 0.9.0
+- proxies: 
+    version: 0.1.1
 - thor: 
     version: 0.13.4
 - railties: 
@@ -136,6 +138,10 @@ dependencies:
     group: 
     - :development
     - :test
+  proxies: 
+    version: ">= 0"
+    group: 
+    - :default
   rails3-generators: 
     version: ">= 0"
     group: 

@@ -6,7 +6,7 @@ class Card < ActiveRecord::Base
   validate :presence_of_card_in_hand, :correct_user, :state_of_board
   validate :identicalness_of_suit, :unless => :current_lead?
 
-  delegate :claims, :deal, :card_played, :card_owner, :cards, :cards_left, :deal, :playing?, :to => :board, :prefix => true
+  delegate :claims, :deal, :card_played, :users, :cards, :cards_left, :deal, :playing?, :to => :board, :prefix => true
   delegate :suit, :value, :to => :card, :allow_nil => true
   delegate :current_trick_suit, :current_lead?, :current_user, :to => :board_cards
 
@@ -29,7 +29,7 @@ class Card < ActiveRecord::Base
   end
 
   def user
-    @user || board_card_owner(card)
+    @user || board_users.owner(card)
   end
 
   def to_s

@@ -58,14 +58,14 @@ module CardsBoardExtension
   def previous_trick_winner
     return if previous_trick.empty?
     card = Bridge::Trick.new(previous_trick.map(&:card)).winner(proxy_owner.contract_trump)
-    proxy_owner.card_owner(card)
+    proxy_owner.users.owner(card)
   end
 
   def current_user
     if current_lead?
-      previous_trick_winner || proxy_owner.first_lead_user
+      previous_trick_winner || proxy_owner.users.first_lead
     else
-      proxy_owner.card_owner(last.card).next
+      proxy_owner.users.owner(last.card).next
     end
   end
 end

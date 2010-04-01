@@ -34,7 +34,7 @@ module BidsBoardExtension
 
   def current_user
     if current_position == 1
-      proxy_owner.dealer_user
+      proxy_owner.users.dealer
     else
       last.user.next
     end

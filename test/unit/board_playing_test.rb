@@ -10,15 +10,15 @@ class BoardPlayingTest < ActiveSupport::TestCase
   end
 
   test "return user N as declarer" do
-    assert_equal @user_n, @board.declarer_user
+    assert_equal @user_n, @board.users.declarer
   end
 
   test "return user E as first lead user" do
-    assert_equal @user_e, @board.first_lead_user
+    assert_equal @user_e, @board.users.first_lead
   end
 
   test "return user S as dummy user" do
-    assert_equal @user_s, @board.dummy_user
+    assert_equal @user_s, @board.users.dummy
   end
 
   test "board is in the playing state after auction" do

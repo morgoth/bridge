@@ -18,7 +18,7 @@ class Bid < ActiveRecord::Base
   scope :with_suit, lambda { |bid| where("bid LIKE ?", "_#{bid.respond_to?(:suit) ? bid.suit : bid}") }
   scope :of_side,   lambda { |bid| where("position % 2 = ? % 2", bid.respond_to?(:position) ? bid.position : bid) }
 
-  delegate :bid_made, :bids, :to => :board, :prefix => true
+  delegate :bid_made, :bids, :dealer_number, :users, :auction?, :to => :board, :prefix => true
   delegate :level, :suit, :trump, :pass?, :double?, :redouble?, :contract?, :to => :bid, :allow_nil => true
   delegate :current_contract, :double_allowed?, :redouble_allowed?, :to => :board_bids
 
@@ -38,11 +38,11 @@ class Bid < ActiveRecord::Base
   end
 
   def user
-    board && board.users[user_direction]
+    board && board_users[user_direction]
   end
 
   def position
-    read_attribute(:position) || (board.bids.count + 1)
+    read_attribute(:position) || (board_bids.count + 1)
   end
 
   private
@@ -50,7 +50,7 @@ class Bid < ActiveRecord::Base
   alias :current_user :user
 
   def user_direction
-    board && Bridge::DIRECTIONS[(board.dealer_number + position - 1) % 4]
+    board && Bridge::DIRECTIONS[(board_dealer_number + position - 1) % 4]
   end
 
   def contract_higher_than_last_contract
@@ -78,7 +78,7 @@ class Bid < ActiveRecord::Base
   end
 
   def state_of_board
-    unless board && board.auction?
+    unless board && board_auction?
       errors.add :board, "is not in the auction state"
     end
   end

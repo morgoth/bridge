@@ -123,8 +123,8 @@ module AjaxHelper
   # TODO: do some refactoring
   def cards_enabled?(board, direction)
     if board.playing?
-      (quit_enabled?(board.table, direction) and current_user_turn?(board) and board.dummy_user != current_user) ||
-      (current_user.present? and board.current_user.dummy? and board.users[direction] == board.dummy_user and board.declarer_user == current_user)
+      (quit_enabled?(board.table, direction) and current_user_turn?(board) and board.users.dummy != current_user) ||
+      (current_user.present? and board.current_user.dummy? and board.users[direction] == board.users.dummy and board.users.declarer == current_user)
     else
       false
     end

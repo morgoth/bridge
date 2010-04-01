@@ -27,7 +27,7 @@ class BoardTest < ActiveSupport::TestCase
     @board.bids.create!(:bid => "PASS", :user => @user_e)
     @board.bids.create!(:bid => "PASS", :user => @user_s)
     @board.bids.create!(:bid => "PASS", :user => @user_w)
-    assert_equal @user_e, @board.reload.first_lead_user
+    assert_equal @user_e, @board.reload.users.first_lead
   end
 
   test "return S as first lead user when plays E" do
@@ -36,7 +36,7 @@ class BoardTest < ActiveSupport::TestCase
     @board.bids.create!(:bid => "PASS", :user => @user_s)
     @board.bids.create!(:bid => "PASS", :user => @user_w)
     @board.bids.create!(:bid => "PASS", :user => @user_n)
-    assert_equal @user_s, @board.reload.first_lead_user
+    assert_equal @user_s, @board.reload.users.first_lead
   end
 
   test "is in the completed state after four passes auction" do

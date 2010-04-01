@@ -22,15 +22,15 @@ module UserExtension
   end
 
   def first_lead?
-    board.first_lead_user == proxy_target
+    board.users.first_lead == proxy_target
   end
 
   def declarer?
-    board.declarer_user == proxy_target
+    board.users.declarer == proxy_target
   end
 
   def dummy?
-    board.dummy_user == proxy_target
+    board.users.dummy == proxy_target
   end
 
   def has_card?(card)
@@ -39,5 +39,9 @@ module UserExtension
 
   def has_cards_in_suit?(suit)
     board.cards_left(direction).any? { |c| Bridge::Card.new(c).suit == suit }
+  end
+
+  def cards_left
+    board.cards_left(direction)
   end
 end
