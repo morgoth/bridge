@@ -1,10 +1,10 @@
 --- 
-hash: 6fa0d71fa1cd348c5f90af7c86fbdf40c709b97c
+hash: 91181b57887de868b9e275e85310464d0cfea6ff
 sources: 
 - Git: 
     git: git://github.com/rails/rails.git
     uri: git://github.com/rails/rails.git
-    ref: e8292abbcd581f2fdad368fc5760416071b4b67f
+    ref: 3adaef8ae73a3061a9fe4c5e0256d80bc09b1cf4
 - Rubygems: 
     uri: http://rubygems.org
 specs: 
@@ -21,10 +21,10 @@ specs:
 - tzinfo: 
     version: 0.3.18
 - activesupport: 
-    version: 3.0.0.beta1
+    version: 3.0.0.beta2
     source: 0
 - activemodel: 
-    version: 3.0.0.beta1
+    version: 3.0.0.beta2
     source: 0
 - erubis: 
     version: 2.6.5
@@ -35,7 +35,7 @@ specs:
 - rack-test: 
     version: 0.5.3
 - actionpack: 
-    version: 3.0.0.beta1
+    version: 3.0.0.beta2
     source: 0
 - mime-types: 
     version: "1.16"
@@ -50,22 +50,22 @@ specs:
 - text-format: 
     version: 1.0.0
 - actionmailer: 
-    version: 3.0.0.beta1
+    version: 3.0.0.beta2
     source: 0
 - arel: 
     version: 0.3.3
 - activerecord: 
-    version: 3.0.0.beta1
+    version: 3.0.0.beta2
     source: 0
 - activeresource: 
-    version: 3.0.0.beta1
+    version: 3.0.0.beta2
     source: 0
 - acts_as_list: 
     version: 0.1.2
 - bridge: 
     version: 0.0.23
 - bundler: 
-    version: 0.9.14
+    version: 0.9.15
 - culerity: 
     version: 0.2.9
 - nokogiri: 
@@ -95,10 +95,10 @@ specs:
 - thor: 
     version: 0.13.4
 - railties: 
-    version: 3.0.0.beta1
+    version: 3.0.0.beta2
     source: 0
 - rails: 
-    version: 3.0.0.beta1
+    version: 3.0.0.beta2
     source: 0
 - rails3-generators: 
     version: 0.5.3
@@ -111,6 +111,10 @@ specs:
 dependencies: 
   rails: 
     version: ">= 0"
+    group: 
+    - :default
+  bundler: 
+    version: ">= 0.9.15"
     group: 
     - :default
   acts_as_list: 

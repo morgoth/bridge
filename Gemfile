@@ -2,12 +2,13 @@ source "http://rubygems.org"
 
 gem "rails", :git => "git://github.com/rails/rails.git"
 
+gem "bundler", ">=0.9.15"
 gem "acts_as_list"
 gem "bridge", ">=0.0.23"
 gem "haml", ">=2.2.22"
 gem "state_machine", ">=0.8.1"
 gem "compass"
-gem "sqlite3", :groups => [:development, :test]
+gem "sqlite3", :group => [:development, :test]
 gem "proxies"
 
 group :development do

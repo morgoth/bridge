@@ -2,8 +2,9 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 
-# Auto-require default libraries and those for the current Rails environment.
-Bundler.require :default, Rails.env
+# If you have a Gemfile, require the gems listed there, including any gems
+# you've limited to :test, :development, or :production.
+Bundler.require(:default, Rails.env) if defined?(Bundler)
 
 module Libre
   class Application < Rails::Application
@@ -26,17 +27,20 @@ module Libre
     # config.time_zone = 'Central Time (US & Canada)'
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
-    # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}')]
+    # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
-    # Configure generators values. Many other options are available, be sure to check the documentation.
     config.generators do |g|
       g.template_engine :haml
       g.test_framework  :test_unit, :fixture => false
     end
 
-    config.session_store :cookie_store, :key => '_libre_session'
-    config.cookie_secret = '1c2d46fe5cff6eeda1aaac49f9947c129e2cc50a0c916f0c81e36ef111e995de3e562da88550ac54aa47b9912f62a80460e7dde81a754c15e9cfa32563bf1a2e'
+    # Configure generators values. Many other options are available, be sure to check the documentation.
+    # config.generators do |g|
+    #   g.orm             :active_record
+    #   g.template_engine :erb
+    #   g.test_framework  :test_unit, :fixture => true
+    # end
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters << :password
