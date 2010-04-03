@@ -50,6 +50,7 @@ YUI.add("hand", function(Y) {
             this.after("joinEnabledChange", this._afterJoinEnabledChange);
             this.after("quitEnabledChange", this._afterQuitEnabledChange);
             this.after("cardsEnabledChange", this._afterCardsEnabledChange);
+            this.after("activeChange", this._afterActiveChange);
             contentBox.delegate("click", Y.bind(this._onButtonClick, this), "button[data-event]");
         },
 
@@ -63,6 +64,10 @@ YUI.add("hand", function(Y) {
 
         _afterCardsEnabledChange: function(event) {
             this._uiSetCardsEnabled(event.newVal);
+        },
+
+        _afterActiveChange: function(event) {
+            this._uiSetActive(event.newVal);
         },
 
         _onButtonClick: function(event) {
@@ -166,6 +171,19 @@ YUI.add("hand", function(Y) {
             }
         },
 
+        _uiSetActive: function(active) {
+            var barNode,
+                activeCN = this.getClassName("bar", "active"),
+                contentBox = this.get("contentBox");
+            barNode = contentBox.one("." + this.getClassName("bar"));
+
+            if(active) {
+                barNode.addClass(activeCN);
+            } else {
+                barNode.removeClass(activeCN);
+            }
+        },
+
         _afterDisabledChange: function(event) {
             this.set("cardsEnabled", !event.newVal);
         },
@@ -189,6 +207,7 @@ YUI.add("hand", function(Y) {
         ATTRS: {
 
             host: {
+
             },
 
             direction: {
@@ -211,16 +230,24 @@ YUI.add("hand", function(Y) {
                 value: []
             },
 
+            active: {
+                value: false,
+                validator: Y.Lang.isBoolean
+            },
+
             joinEnabled: {
-                value: false
+                value: false,
+                validator: Y.Lang.isBoolean
             },
 
             quitEnabled: {
-                value: false
+                value: false,
+                validator: Y.Lang.isBoolean
             },
 
             cardsEnabled: {
-                value: false
+                value: false,
+                validator: Y.Lang.isBoolean
             }
 
         },

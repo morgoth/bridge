@@ -25,6 +25,7 @@ module AjaxHelper
         hash["name"] = table.players[direction].name
       end
       if board = table.boards.current
+        hash["active"] = (board.current_user.direction == direction)
         hash["cards"] = board.visible_hands_for(table.user_player(current_user))[direction]
         hash["cardsEnabled"] = cards_enabled?(board, direction)
         hash["suit"] = board.cards.current_trick_suit

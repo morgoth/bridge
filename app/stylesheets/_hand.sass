@@ -7,79 +7,64 @@
 
 .yui3-hand-content
   overflow: hidden
-
-.yui3-hand-content-expanded
-  -moz-box-sizing: border-box
-  -webkit-box-sizing: border-box
-  -ms-box-sizing: border-box
-  box-sizing: border-box
-  height: 100%
-
-.yui3-hand-tmp-forcesize
-  overflow: hidden !important
-
-.yui3-hand-content
-  margin: auto
   text-align: center
 
 .yui3-hand-bar
-  background-color: white
-  border: 1px solid black
-  line-height= !card_height / 3
+  -moz-border-radius: 5px
+  -webkit-border-radius: 5px
+  background-color= !gray_color
+  border: 1px solid white
   overflow: hidden
-  margin-top: -2em
-  position: relative
+
+.yui3-hand-bar-active
+  background-color= !yellow_color
 
 .yui3-hand-direction
   +float-left
+  -moz-border-radius: 5px
+  -webkit-border-radius: 5px
+  border: 1px solid white
+  background-color= !blue_color
+  color: white
   line-height= !card_height / 3
   width= !card_height / 3
   font-size: 18px
+  margin: -1px
 
 .yui3-hand-name
   +float-left
   line-height= !card_height / 3
+  height= !card_height / 3
+  overflow: hidden
   font-size: 18px
+  padding: 0 5px
+  color: black
 
 .yui3-hand-buttons
   +float-right
   line-height= !card_height / 3
 
-.yui3-hand-join
+.yui3-hand-join, .yui3-hand-quit
   +reset-box-model
-  border: none
-  background: none
-  height= !card_height / 4
-  margin: 0
-  border: none
+  +reset-font
+  -moz-border-radius: 5px
+  -webkit-border-radius: 5px
+  border: 1px solid white
+  background= !blue_color
+  margin: 5px
+  color: white
   cursor: pointer
 
-.yui3-hand-quit
-  +reset-box-model
-  height= !card_height / 4
-  background: none
-  margin: 0
-  border: none
-  cursor: pointer
-
-.yui3-hand-quit.yui3-hand-button-disabled
+.yui3-hand-quit.yui3-hand-button-disabled, .yui3-hand-join.yui3-hand-button-disabled
   display: none
-
-.yui3-hand-join.yui3-hand-button-disabled
-  display: none
-
-.yui3-hand-card
-  cursor: pointer
-
-.yui3-hand-card.yui3-hand-button-disabled
-  cursor: auto
 
 .yui3-hand-cards
-  +inline-list
   +no-bullets
-  padding-left= !card_overlap
-  height= !card_height
+  +inline-list
   display: block
+  overflow: hidden
+  height= !card_height * 0.75
 
-.yui3-hand-card
-  margin-left= -!card_overlap
+.yui3-hand-card > *
+  margin-right= -!card_overlap / 2
+  margin-left= -!card_overlap / 2

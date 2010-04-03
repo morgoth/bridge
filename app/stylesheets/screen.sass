@@ -1,14 +1,23 @@
 @import blueprint
 @import compass/reset, compass/utilities
 
+!green_color = #006d00
+!light_blue_color = #99cccc
+!blue_color = #336799
+!red_color = #cb0000
+!gray_color = #cbcbcb
+!yellow_color = #ffce00
+
 @import cards, hand, biddingbox, auction, trick
 
 +blueprint-typography
 +blueprint-debug
 
+body
+  background= !green_color
+
 #container
   +container
-  +showgrid
 
 .bridge-table-col-1
   +column(8)

@@ -8,10 +8,16 @@
   +inline-list
   +no-bullets
 
+.yui3-auction-header-n, .yui3-auction-header-s
+  background-color: white
+  color: black
+.yui3-auction-header-e, .yui3-auction-header-w
+  background-color= !red_color
+  color: white
+
 .yui3-auction-header
   +float-left
   text-align: center
-  background-color: lightgray
   font-size: 18px
   width= !auction_bid_width
 
@@ -19,19 +25,22 @@
   +inline-list
   +no-bullets
   +float-left
-  display: block
   overflow-y: auto
   height= 4 * !auction_bid_height
   width= 4.3 * !auction_bid_width
-  li
-    +float-left
-    display: block
-    width= !auction_bid_width
-    height= !auction_bid_height
 
-.yui3-auction-bid
+.yui3-auction-bids > *
   +float-left
   width= !auction_bid_width
   height= !auction_bid_height
-  background: lightblue
+  background= !light_blue_color
+
+.yui3-auction-bid
+  +reset-box-model
+  +reset-font
+  +float-left
+  width= !auction_bid_width
+  height= !auction_bid_height
   border: none
+  background: none
+  font-size: 18px

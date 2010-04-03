@@ -1,28 +1,47 @@
-.yui3-biddingbox-disabled
-  display: none
+.yui3-biddingbox-content
+  -moz-border-radius: 5px
+  -webkit-border-radius: 5px
+  border: 1px solid white
+  background= !gray_color
+  padding: 5px
 
 .yui3-biddingbox-modifiers, .yui3-biddingbox-levels, .yui3-biddingbox-suits
   +inline-list
   +no-bullets
   display: block
+  height: 30px
+
+.yui3-biddingbox-levels, .yui3-biddingbox-suits
+  margin-top: 5px
 
 .yui3-biddingbox-button-disabled
   display: none
 
 .yui3-biddingbox-modifier, .yui3-biddingbox-level, .yui3-biddingbox-suit
-  border: none
+  +reset-box-model
+  +reset-font
+  -moz-border-radius: 5px
+  -webkit-border-radius: 5px
+  border: 1px solid black
+  font-size: 18px
+  padding: 0 5px
+  margin-right: 1px
 
 .yui3-biddingbox-modifier-pass
-  background: lightgreen
+  background= !green_color
+  color: white
 
 .yui3-biddingbox-modifier-x
-  background: lightred
+  background= !red_color
+  color: white
 
 .yui3-biddingbox-modifier-xx
-  background: lightred
+  background= !red_color
+  color: white
 
 .yui3-biddingbox-level, .yui3-biddingbox-suit
-  background: lightblue
+  background= !light_blue_color
+  color: black
 
 .yui3-biddingbox-level-selected
-  background: yellow
+  background= !yellow_color
