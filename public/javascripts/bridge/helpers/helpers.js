@@ -10,6 +10,8 @@ YUI.add("helpers", function(Y) {
 
     Y.Bridge.SUITS = ["C", "D", "H", "S", "NT"];
 
+    Y.Bridge.VALUES = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"];
+
     Y.Bridge.CONTRACTS = Y.Array.reduce(Y.Bridge.LEVELS, [], function(result, level) {
         return result.concat(Y.Array.map(Y.Bridge.SUITS, function(suit) {
             return level + suit;
@@ -106,6 +108,49 @@ YUI.add("helpers", function(Y) {
         }
 
         return '<span class="' + className + '">' + content + '</span>';
+    };
+
+    Y.Bridge.renderValue = function(value) {
+        var className = Y.ClassNameManager.getClassName("bridge", "value", value.toLowerCase());
+
+        if(value === "T") {
+            value = "10";
+        }
+
+        return '<span class="' + className + '">' + value + '</span>';
+    };
+
+    Y.Bridge.renderCard = function(card) {
+        var suit, value,
+            content = "",
+            classNames = [
+                Y.ClassNameManager.getClassName("bridge", "card")
+            ];
+
+        if(card !== "") {
+            suit = Y.Bridge.parseSuit(card),
+            value = Y.Bridge.parseValue(card),
+            content = Y.Bridge.renderSuit(suit) + Y.Bridge.renderValue(value);
+            classNames.push(Y.ClassNameManager.getClassName("bridge", "card", card.toLowerCase()));
+        } else {
+            classNames.push(Y.ClassNameManager.getClassName("bridge", "card", "unknown"));
+        }
+
+        return ''
+            + '<button '
+            +   'class="' + classNames.join(" ") + '" '
+            +   'disabled="disabled" '
+            +   'data-event="card"'
+            +   'data-event-argument="' + card + '"'
+            + '>'
+            + content
+            + '</button>';
+    };
+
+    Y.Bridge.parseValue = function(card) {
+        var matchData = card.match(new RegExp(Y.Bridge.VALUES.join("|")));
+
+        return matchData && matchData[0];
     };
 
     Y.Bridge.parseSuit = function(contract) {

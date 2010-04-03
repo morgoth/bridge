@@ -129,20 +129,11 @@ YUI.add("hand", function(Y) {
             var cardsHtml, cardsData, cardsNode,
                 contentBox = this.get("contentBox");
             cardsData = Y.Array.map(cards, function(card) {
-                var suit = Y.Bridge.parseSuit(card),
-                    name = (card !== "") ? card : "unknown",
-                    classNames = [
-                        this.getClassName("card"),
-                        this.getClassName("card", name.toLowerCase())
-                    ];
-
-                if(suit) {
-                    classNames.push(this.getClassName("card", suit.toLowerCase()));
-                }
+                var suit = Y.Bridge.parseSuit(card);
 
                 return {
-                    name: name,
-                    classNames: classNames.join(" ")
+                    card: Y.Bridge.renderCard(card),
+                    classNames: this.getClassName("card")
                 };
             }, this);
             cardsNode = contentBox.one("." + this.getClassName("cards"));
@@ -247,8 +238,8 @@ YUI.add("hand", function(Y) {
 
         CARDS_TEMPLATE: ''
             + '{{#cards}}'
-            +   '<li>'
-            +     '<button type="button" class="{{classNames}}" data-event="card" data-event-argument="{{name}}">{{name}}</button>'
+            +   '<li class="{{classNames}}">'
+            +     '{{{card}}}'
             +   '</li>'
             + '{{/cards}}'
 

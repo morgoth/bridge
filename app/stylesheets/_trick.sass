@@ -1,11 +1,9 @@
 !trick_width    = 200px
 !trick_height   = 200px
-!card_height    = 96px
-!card_width     = 71px
 !width_offset  = !card_width / 8
 !height_offset = !card_height / 8
 
-.yui-trick-cards
+.yui3-trick-cards
   +reset-box-model
   +no-bullets
   margin: auto
@@ -14,182 +12,21 @@
   position: relative
   display: block
 
-.yui-trick-card-n
+.yui3-trick-card-n
   left= !trick_width / 2 - !card_width / 2 - !width_offset / 2
   top= !trick_height / 2 - !card_height + !height_offset
 
-.yui-trick-card-e
+.yui3-trick-card-e
   left= !trick_width / 2 - !width_offset
   top= !trick_height / 2 - !card_height / 2 - !height_offset / 2
 
-.yui-trick-card-s
+.yui3-trick-card-s
   left= !trick_width / 2 - !card_width / 2 + !width_offset / 2
   top= !trick_height / 2 - !height_offset
 
-.yui-trick-card-w
+.yui3-trick-card-w
   left= !trick_width / 2 - !card_width + !width_offset
   top= !trick_height / 2 - !card_height / 2 + !height_offset / 2
 
-.yui-trick-card
-  +reset-box-model
+.yui3-trick-card
   position: absolute
-  border: none
-  height= !card_height
-  width= !card_width
-  +replace-text("cards/ours.png", 0, 0)
-
-.yui-trick-card-sa
-  :background-image= image_url("cards/sa.png")
-
-.yui-trick-card-sk
-  :background-image= image_url("cards/sk.png")
-
-.yui-trick-card-sq
-  :background-image= image_url("cards/sq.png")
-
-.yui-trick-card-sj
-  :background-image= image_url("cards/sj.png")
-
-.yui-trick-card-st
-  :background-image= image_url("cards/st.png")
-
-.yui-trick-card-s9
-  :background-image= image_url("cards/s9.png")
-
-.yui-trick-card-s8
-  :background-image= image_url("cards/s8.png")
-
-.yui-trick-card-s7
-  :background-image= image_url("cards/s7.png")
-
-.yui-trick-card-s6
-  :background-image= image_url("cards/s6.png")
-
-.yui-trick-card-s5
-  :background-image= image_url("cards/s5.png")
-
-.yui-trick-card-s4
-  :background-image= image_url("cards/s4.png")
-
-.yui-trick-card-s3
-  :background-image= image_url("cards/s3.png")
-
-.yui-trick-card-s2
-  :background-image= image_url("cards/s2.png")
-
-.yui-trick-card-ha
-  :background-image= image_url("cards/ha.png")
-
-.yui-trick-card-hk
-  :background-image= image_url("cards/hk.png")
-
-.yui-trick-card-hq
-  :background-image= image_url("cards/hq.png")
-
-.yui-trick-card-hj
-  :background-image= image_url("cards/hj.png")
-
-.yui-trick-card-ht
-  :background-image= image_url("cards/ht.png")
-
-.yui-trick-card-h9
-  :background-image= image_url("cards/h9.png")
-
-.yui-trick-card-h8
-  :background-image= image_url("cards/h8.png")
-
-.yui-trick-card-h7
-  :background-image= image_url("cards/h7.png")
-
-.yui-trick-card-h6
-  :background-image= image_url("cards/h6.png")
-
-.yui-trick-card-h5
-  :background-image= image_url("cards/h5.png")
-
-.yui-trick-card-h4
-  :background-image= image_url("cards/h4.png")
-
-.yui-trick-card-h3
-  :background-image= image_url("cards/h3.png")
-
-.yui-trick-card-h2
-  :background-image= image_url("cards/h2.png")
-
-.yui-trick-card-da
-  :background-image= image_url("cards/da.png")
-
-.yui-trick-card-dk
-  :background-image= image_url("cards/dk.png")
-
-.yui-trick-card-dq
-  :background-image= image_url("cards/dq.png")
-
-.yui-trick-card-dj
-  :background-image= image_url("cards/dj.png")
-
-.yui-trick-card-dt
-  :background-image= image_url("cards/dt.png")
-
-.yui-trick-card-d9
-  :background-image= image_url("cards/d9.png")
-
-.yui-trick-card-d8
-  :background-image= image_url("cards/d8.png")
-
-.yui-trick-card-d7
-  :background-image= image_url("cards/d7.png")
-
-.yui-trick-card-d6
-  :background-image= image_url("cards/d6.png")
-
-.yui-trick-card-d5
-  :background-image= image_url("cards/d5.png")
-
-.yui-trick-card-d4
-  :background-image= image_url("cards/d4.png")
-
-.yui-trick-card-d3
-  :background-image= image_url("cards/d3.png")
-
-.yui-trick-card-d2
-  :background-image= image_url("cards/d2.png")
-
-.yui-trick-card-ca
-  :background-image= image_url("cards/ca.png")
-
-.yui-trick-card-ck
-  :background-image= image_url("cards/ck.png")
-
-.yui-trick-card-cq
-  :background-image= image_url("cards/cq.png")
-
-.yui-trick-card-cj
-  :background-image= image_url("cards/cj.png")
-
-.yui-trick-card-ct
-  :background-image= image_url("cards/ct.png")
-
-.yui-trick-card-c9
-  :background-image= image_url("cards/c9.png")
-
-.yui-trick-card-c8
-  :background-image= image_url("cards/c8.png")
-
-.yui-trick-card-c7
-  :background-image= image_url("cards/c7.png")
-
-.yui-trick-card-c6
-  :background-image= image_url("cards/c6.png")
-
-.yui-trick-card-c5
-  :background-image= image_url("cards/c5.png")
-
-.yui-trick-card-c4
-  :background-image= image_url("cards/c4.png")
-
-.yui-trick-card-c3
-  :background-image= image_url("cards/c3.png")
-
-.yui-trick-card-c2
-  :background-image= image_url("cards/c2.png")

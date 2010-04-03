@@ -4,7 +4,7 @@ sources:
 - Git: 
     git: git://github.com/rails/rails.git
     uri: git://github.com/rails/rails.git
-    ref: 3adaef8ae73a3061a9fe4c5e0256d80bc09b1cf4
+    ref: 3eb97531b8650db5cc7b9558cc3828c56a526b6a
 - Rubygems: 
     uri: http://rubygems.org
 specs: 
@@ -65,7 +65,7 @@ specs:
 - bridge: 
     version: 0.0.23
 - bundler: 
-    version: 0.9.15
+    version: 0.9.16
 - culerity: 
     version: 0.2.9
 - nokogiri: 
@@ -101,7 +101,7 @@ specs:
     version: 3.0.0.beta2
     source: 0
 - rails3-generators: 
-    version: 0.5.3
+    version: 0.5.4
 - sqlite3: 
     version: 0.0.8
 - state_machine: 

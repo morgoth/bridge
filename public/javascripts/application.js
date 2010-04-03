@@ -29,7 +29,7 @@ YUI({
             requires: ["base-base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox", "auction", "helpers", "trick"]
         },
         "gallery-io-poller": {
-            path: "../yui-gallery/gallery-io-poller/gallery-io-poller.js",
+            path: "../yui3-gallery/gallery-io-poller/gallery-io-poller.js",
             requires: ["io-base", "base-base"]
         }
     }
@@ -42,6 +42,6 @@ YUI({
     tableId = tableNode && tableNode.getAttribute("data-table-id");
 
     if(tableId) {
-        new Y.Bridge.Table({ container: tableNode, userId: userId, id: tableId, pollTimeout: 10000 });
+        new Y.Bridge.Table({ container: tableNode, userId: userId, id: tableId, pollTimeout: 100000 });
     }
 });

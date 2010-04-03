@@ -123,7 +123,11 @@ YUI.add("table", function(Y) {
             this.hands = Y.Array.map(Y.Bridge.DIRECTIONS, function(direction, i) {
                 var handNode = container.one(".bridge-hand-" + direction.toLowerCase());
 
-                return new Y.Bridge.Hand({ host: this, direction: direction, boundingBox: handNode }).render();
+                return new Y.Bridge.Hand({
+                    host: this,
+                    direction: direction,
+                    boundingBox: handNode
+                }).render();
             }, this);
         },
 

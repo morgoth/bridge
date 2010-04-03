@@ -67,12 +67,12 @@ YUI.add("trick", function(Y) {
                     var position = (i +  positionDistance + 2) % 4, // TODO: test me please!
                         classNames = [
                             this.getClassName("card"),
-                            this.getClassName("card", card.toLowerCase()),
                             this.getClassName("card", Y.Bridge.DIRECTIONS[position].toLowerCase())
                         ];
 
                     return {
-                        classNames: classNames.join(" ")
+                        classNames: classNames.join(" "),
+                        card: Y.Bridge.renderCard(card)
                     };
                 }, this);
 
@@ -113,7 +113,9 @@ YUI.add("trick", function(Y) {
 
         CARDS_TEMPLATE: ''
             + '{{#cards}}'
-            +   '<li class="{{classNames}}"></li>'
+            +   '<li class="{{classNames}}">'
+            +     '{{{card}}}'
+            +   '</li>'
             + '{{/cards}}'
 
     });
