@@ -29,8 +29,8 @@ YUI.add("biddingbox", function(Y) {
 
             contentBox.delegate("click", Y.bind(this._onButtonClick, this), "button[data-event]");
             this.on("pass", Y.bind(this.fire, this, "bid", ["PASS"]));
-            this.on("x", Y.bind(this.fire, this, "bid", ["DOUBLE"]));
-            this.on("xx", Y.bind(this.fire, this, "bid", ["REDOUBLE"]));
+            this.on("x", Y.bind(this.fire, this, "bid", ["X"]));
+            this.on("xx", Y.bind(this.fire, this, "bid", ["XX"]));
             this.on("level", this._onLevel);
             this.on("suit", this._onSuit);
         },
@@ -108,12 +108,12 @@ YUI.add("biddingbox", function(Y) {
             this._uiSetLevel(event.newVal);
         },
 
-        _afterDoubleChange: function(event) {
-            this._uiSetDouble(event.newVal);
+        _afterDoubleEnabledChange: function(event) {
+            this._uiSetDoubleEnabled(event.newVal);
         },
 
-        _afterRedoubleChange: function(event) {
-            this._uiSetRedouble(event.newVal);
+        _afterRedoubleEnabledChange: function(event) {
+            this._uiSetRedoubleEnabled(event.newVal);
         },
 
         _uiSetDoubleEnabled: function(doubleEnabled) {
@@ -152,7 +152,7 @@ YUI.add("biddingbox", function(Y) {
                 var contractLevel = parseInt(contract),
                     contractSuit = Y.Bridge.parseSuit(contract);
 
-                Y.each(levelNodes, function(node, i) {
+                levelNodes.each(function(node, i) {
                     var level = i + 1;
 
                     if((contractLevel > level) || (contractLevel == level && contractSuit == "NT")) {
@@ -176,30 +176,24 @@ YUI.add("biddingbox", function(Y) {
             suitNodes = contentBox.all("." + this.getClassName("suit"));
 
             levelNodes.removeClass(levelSelectedCN);
+            suitNodes.each(Y.bind(this._enableButton, this));
 
             if(level) {
                 levelNode.addClass(levelSelectedCN);
-                suitNodes.each(Y.bind(this._enableButton, this));
 
                 if(contract) {
                     var contractLevel = parseInt(contract),
                         contractSuit = Y.Bridge.parseSuit(contract);
 
                     if(contractLevel === parseInt(level)) {
-                        Y.each(suitNodes, function(node, i) {
-                            var contractSuitIndex = Y.Array.indexOf(BiddingBox.SUITS, contractSuit);
+                        suitNodes.each(function(node, i) {
+                            var contractSuitIndex = Y.Bridge.suitPosition(contractSuit);
 
                             if(i <= contractSuitIndex) {
                                 this._disableButton.apply(this, [node]);
-                            } else {
-                                this._enableButton.apply(this, [node]);
                             }
                         }, this);
-                    } else {
-                        suitNodes.each(Y.bind(this._enableButton, this));
                     }
-                } else {
-                    suitNodes.each(Y.bind(this._enableButton, this));
                 }
             } else {
                 suitNodes.each(Y.bind(this._disableButton, this));
@@ -229,12 +223,16 @@ YUI.add("biddingbox", function(Y) {
             },
 
             doubleEnabled: {
-                validator: Y.Lang.isBoolean,
+                setter: function(doubleEnabled) {
+                    return !!doubleEnabled;
+                },
                 value: false
             },
 
             redoubleEnabled: {
-                validator: Y.Lang.isBoolean,
+                setter: function(redoubleEnabled) {
+                    return !!redoubleEnabled;
+                },
                 value: false
             },
 

@@ -8,7 +8,7 @@ module AjaxHelper
         serialize_hand!(result["hands"][i], table, direction)
       end
       if board = table.boards.current
-        result["boardState"] = board.state if board.auction? and table.user_player(current_user)
+        result["boardState"] = board.state # if board.auction? and table.user_player(current_user)
         serialize_bidding_box!(result["biddingBox"], board) if board.auction?
         serialize_auction!(result["auction"], board)
         serialize_trick!(result["trick"], board) if board.playing?
@@ -38,6 +38,7 @@ module AjaxHelper
       hash["contract"] = (board.bids.active.contracts.first and board.bids.active.contracts.first.bid.to_s)
       if current_user_turn?(board)
         hash["disabled"] = false
+        hash["visible"] = true
         hash["doubleEnabled"] = board.bids.double_allowed?
         hash["redoubleEnabled"] = board.bids.redouble_allowed?
       end
@@ -83,21 +84,23 @@ module AjaxHelper
       "boardState" => "",
       "player" => "",
       "hands" => [
-                  { "direction" => "N", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false, "suit" => nil },
-                  { "direction" => "E", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false, "suit" => nil },
-                  { "direction" => "S", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false, "suit" => nil },
-                  { "direction" => "W", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false, "suit" => nil }
+                  { "direction" => "N", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false, "suit" => nil, "visible" => true },
+                  { "direction" => "E", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false, "suit" => nil, "visible" => true },
+                  { "direction" => "S", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false, "suit" => nil, "visible" => true },
+                  { "direction" => "W", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false, "suit" => nil, "visible" => true }
                  ],
       "biddingBox" => {
                        "doubleEnabled" => false,
                        "redoubleEnabled" => false,
                        "contract" => nil,
-                       "disabled" => true
+                       "disabled" => true,
+                       "visible" => false
                       },
       "auction" => {
                     "names" => [],
                     "dealer" => "",
-                    "bids" => []
+                    "bids" => [],
+                    "visible" => true
                    },
       "trick" => {
                   "lead" => nil,

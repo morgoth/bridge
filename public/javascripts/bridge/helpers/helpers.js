@@ -18,6 +18,10 @@ YUI.add("helpers", function(Y) {
         }));
     });
 
+    Y.Bridge.suitPosition = function(suit) {
+        return Y.Array.indexOf(Y.Bridge.SUITS, suit);
+    };
+
     Y.Bridge.dealerPosition = function(dealer) {
         return Y.Array.indexOf(Y.Bridge.DIRECTIONS, dealer);
     };

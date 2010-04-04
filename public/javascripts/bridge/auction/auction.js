@@ -77,6 +77,12 @@ YUI.add("auction", function(Y) {
             });
 
             bidsNode.set("innerHTML", html);
+            Y.later(0, this, function() {
+                var scrollHeight = bidsNode.get("scrollHeight"),
+                    offsetHeight = bidsNode.get("offsetHeight");
+
+                bidsNode.set("scrollTop", scrollHeight - offsetHeight);
+            });
         }
 
     }, {
@@ -118,7 +124,8 @@ YUI.add("auction", function(Y) {
             +   '{{/headers}}'
             + '</ol>'
             + '<ol class="yui3-auction-bids"></ol>'
-            + '</ol>',
+            + '</ol>'
+            + '<div class="yui3-auction-clear"></div>',
 
         BIDS_TEMPLATE: ''
             + '{{#bids}}'

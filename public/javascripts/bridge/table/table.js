@@ -126,7 +126,8 @@ YUI.add("table", function(Y) {
                 return new Y.Bridge.Hand({
                     host: this,
                     direction: direction,
-                    boundingBox: handNode
+                    boundingBox: handNode,
+                    visible: false
                 }).render();
             }, this);
         },
@@ -136,7 +137,11 @@ YUI.add("table", function(Y) {
                 container = this.get("container");
             biddingBoxNode = container.one(".bridge-biddingbox");
 
-            this.biddingBox = new Y.Bridge.BiddingBox({ host: this, boundingBox: biddingBoxNode }).render();
+            this.biddingBox = new Y.Bridge.BiddingBox({
+                host: this,
+                boundingBox: biddingBoxNode,
+                visible: false
+            }).render();
         },
 
         _renderAuction: function() {
@@ -145,7 +150,11 @@ YUI.add("table", function(Y) {
 
             auctionNode = container.one(".bridge-auction");
 
-            this.auction = new Y.Bridge.Auction({ host: this, boundingBox: auctionNode }).render();
+            this.auction = new Y.Bridge.Auction({
+                host: this,
+                boundingBox: auctionNode,
+                visible: false
+            }).render();
         },
 
         _renderTrick: function() {
@@ -154,7 +163,11 @@ YUI.add("table", function(Y) {
 
             trickNode = container.one(".bridge-trick");
 
-            this.trick = new Y.Bridge.Trick({ host: this, boundingBox: trickNode }).render();
+            this.trick = new Y.Bridge.Trick({
+                host: this,
+                boundingBox: trickNode,
+                visible: false
+            }).render();
         },
 
         _uiSyncTable: function(tableData) {
@@ -198,6 +211,8 @@ YUI.add("table", function(Y) {
                 container.one(".bridge-table-row-2 .bridge-table-col-2")
             ];
 
+            this.trick.hide();
+
             switch(boardState) {
             case "preparing":
                 auctionSlotNodes[0].append(auctionNode);
@@ -206,6 +221,7 @@ YUI.add("table", function(Y) {
                 auctionSlotNodes[1].append(auctionNode);
                 break;
             case "playing":
+                this.trick.show();
                 auctionSlotNodes[0].append(auctionNode);
                 break;
             }

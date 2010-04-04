@@ -1,14 +1,20 @@
+.yui3-biddingbox-hidden
+  display: none
+
 .yui3-biddingbox-content
   -moz-border-radius: 5px
   -webkit-border-radius: 5px
   border: 1px solid white
   background= !gray_color
   padding: 5px
+  button:active
+    background= !yellow_color
 
 .yui3-biddingbox-modifiers, .yui3-biddingbox-levels, .yui3-biddingbox-suits
   +inline-list
   +no-bullets
   display: block
+  line-height: 30px
   height: 30px
 
 .yui3-biddingbox-levels, .yui3-biddingbox-suits

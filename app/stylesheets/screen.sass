@@ -19,6 +19,15 @@ body
 #container
   +container
 
+.bridge-table-row-1 > *
+  height= 155px
+
+.bridge-table-row-2 > *
+  height: 200px
+
+.bridge-table-row-3 > *
+  height= 120px
+
 .bridge-table-col-1
   +column(8)
 
@@ -28,5 +37,8 @@ body
 .bridge-table-col-3
   +column(8, true)
 
+.yui3-bridge-suit-c, .yui3-bridge-suit-s
+  color: black
+
 .yui3-bridge-suit-d, .yui3-bridge-suit-h
-  color: red
+  color= !red_color
