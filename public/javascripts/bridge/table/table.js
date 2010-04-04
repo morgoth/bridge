@@ -81,6 +81,9 @@ YUI.add("table", function(Y) {
             configuration.on.failure = Y.bind(this._onRequestFailure, this);
 
             this.poll.stop();
+            // actually stops polling (previous stop can kill active
+            // transaction only) - weird behaviour
+            this.poll.stop();
             Y.io(uri, configuration);
         },
 
@@ -240,7 +243,7 @@ YUI.add("table", function(Y) {
                     user_id: this.get("userId")
                 });
 
-            this.poll = Y.io.poll(timeout, tablePath, {
+            P = this.poll = Y.io.poll(timeout, tablePath, {
                 on: {
                     start: Y.bind(this._onPollStart, this),
                     modified: Y.bind(this._onPollModified, this),
@@ -301,13 +304,13 @@ YUI.add("table", function(Y) {
             },
 
             pollTimeout: {
-                value: 3000,
+                value: 5000,
                 validator: Y.Lang.isNumber
             }
 
         },
 
-        TABLE_PATH: "/ajax/tables/{{id}}.json{{#user_id}}?user_id={{user_id}}{{/user_id}}",
+        TABLE_PATH: "/ajax{{#user_id}}/users/{{user_id}}{{/user_id}}/tables/{{id}}.json",
 
         TABLE_PLAYER_PATH: "/ajax/tables/{{id}}/player",
 

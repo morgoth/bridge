@@ -1,4 +1,6 @@
 class Ajax::ClaimsController < Ajax::BaseController
+  cache_sweeper :table_sweeper
+
   def create
     @claim = @board.claims.create(params[:claim])
     respond_with(@table, @board, @claim)

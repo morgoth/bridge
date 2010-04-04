@@ -27,6 +27,9 @@ Libre::Application.routes.draw do |map|
         put :reset
       end
     end
+    resources :users, :only => [] do
+      resources :tables, :only => [:show]
+    end
   end
 
   root :to => "tables#index"

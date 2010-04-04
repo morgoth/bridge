@@ -1,4 +1,6 @@
 class Ajax::BidsController < Ajax::BaseController
+  cache_sweeper :table_sweeper
+
   def create
     @bid = @board.bids.build(params[:bid])
     @bid.user = @user
