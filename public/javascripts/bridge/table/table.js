@@ -81,9 +81,11 @@ YUI.add("table", function(Y) {
             configuration.on.failure = Y.bind(this._onRequestFailure, this);
 
             this.poll.stop();
-            // actually stops polling (previous stop can kill active
-            // transaction only) - weird behaviour
-            this.poll.stop();
+            Y.later(0, this, function() {
+                // actually stops polling (previous stop can kill
+                // active transaction only) - weird behaviour
+                this.poll.stop();
+            });
             Y.io(uri, configuration);
         },
 
