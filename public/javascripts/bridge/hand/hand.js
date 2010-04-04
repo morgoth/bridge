@@ -149,20 +149,23 @@ YUI.add("hand", function(Y) {
         },
 
         _uiSetSuit: function(suit) {
-            var cards = this.get("cards"),
+            var className,
+                cards = this.get("cards"),
                 cardsEnabled = this.get("cardsEnabled"),
                 contentBox = this.get("contentBox");
 
             if(suit && cardsEnabled && Y.Bridge.hasSuit(suit, cards)) {
+                className = Y.ClassNameManager.getClassName("bridge", "card", suit.toLowerCase());
+
                 this._uiSetCardsEnabled(false);
-                contentBox.all("." + this.getClassName("card", suit.toLowerCase())).each(Y.bind(this._enableButton, this));
+                contentBox.all("." + className).each(Y.bind(this._enableButton, this));
             }
         },
 
         _uiSetCardsEnabled: function(cardsEnabled) {
             var cards,
                 contentBox = this.get("contentBox");
-            cards = contentBox.all("."+ this.getClassName("cards") + " button");
+            cards = contentBox.all("." + this.getClassName("cards") + " button");
 
             if(cardsEnabled) {
                 cards.each(Y.bind(this._enableButton, this));
@@ -189,15 +192,17 @@ YUI.add("hand", function(Y) {
         },
 
         _enableButton: function(node) {
-            var className = this.getClassName("button", "disabled");
+            var disabledCN = this.getClassName("button", "disabled"),
+                enabledCN = this.getClassName("button", "enabled");
 
-            node.removeAttribute("disabled").removeClass(className);
+            node.removeAttribute("disabled").replaceClass(disabledCN, enabledCN);
         },
 
         _disableButton: function(node) {
-            var className = this.getClassName("button", "disabled");
+            var disabledCN = this.getClassName("button", "disabled"),
+                enabledCN = this.getClassName("button", "enabled");
 
-            node.setAttribute("disabled", "disabled").addClass(className);
+            node.setAttribute("disabled", "disabled").replaceClass(enabledCN, disabledCN);
         }
 
     }, {

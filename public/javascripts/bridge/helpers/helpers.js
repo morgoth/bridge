@@ -136,6 +136,7 @@ YUI.add("helpers", function(Y) {
             value = Y.Bridge.parseValue(card),
             content = Y.Bridge.renderSuit(suit) + Y.Bridge.renderValue(value);
             classNames.push(Y.ClassNameManager.getClassName("bridge", "card", card.toLowerCase()));
+            classNames.push(Y.ClassNameManager.getClassName("bridge", "card", suit.toLowerCase()));
         } else {
             classNames.push(Y.ClassNameManager.getClassName("bridge", "card", "unknown"));
         }
