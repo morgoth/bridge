@@ -1,6 +1,6 @@
 class Ajax::TablesController < Ajax::BaseController
   skip_before_filter :fetch_table, :fetch_board
-  caches_action :show, :cache_path => :show_cache_path.to_proc
+  # caches_action :show, :cache_path => :show_cache_path.to_proc
 
   def show
     @table = Table.find(params[:id])
@@ -10,10 +10,6 @@ class Ajax::TablesController < Ajax::BaseController
   protected
 
   def show_cache_path
-    if current_user
-      "users/#{current_user.id}/tables/#{params[:id]}"
-    else
-      "tables/#{params[:id]}"
-    end
+    current_user ? ajax_user_table_path(current_user, params[:id]) : ajax_table_path(params[:id])
   end
 end

@@ -12,6 +12,9 @@ class TableSweeper < ActionController::Caching::Sweeper
         record.board.table
       end
 
+    logger.info "********************************************************************************"
+    logger.info "sweeper is running!"
+    logger.info "********************************************************************************"
     expire_action(:controller => "ajax/tables", :action => "show", :id => table.id)
   end
 end

@@ -1,5 +1,5 @@
 class Ajax::PlayersController < Ajax::BaseController
-  cache_sweeper :table_sweeper
+  # cache_sweeper :table_sweeper
   before_filter :fetch_player, :except => [:create]
 
   def create

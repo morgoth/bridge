@@ -4,7 +4,7 @@ sources:
 - Git: 
     git: git://github.com/rails/rails.git
     uri: git://github.com/rails/rails.git
-    ref: 3eb97531b8650db5cc7b9558cc3828c56a526b6a
+    ref: 5c8b4c6e231257bc08d32722e098927885e5e74d
 - Rubygems: 
     uri: http://rubygems.org
 specs: 
@@ -17,14 +17,14 @@ specs:
 - i18n: 
     version: 0.3.6
 - memcache-client: 
-    version: 1.8.1
+    version: 1.8.2
 - tzinfo: 
     version: 0.3.18
 - activesupport: 
-    version: 3.0.0.beta2
+    version: 3.0.0.beta3
     source: 0
 - activemodel: 
-    version: 3.0.0.beta2
+    version: 3.0.0.beta3
     source: 0
 - erubis: 
     version: 2.6.5
@@ -35,7 +35,7 @@ specs:
 - rack-test: 
     version: 0.5.3
 - actionpack: 
-    version: 3.0.0.beta2
+    version: 3.0.0.beta3
     source: 0
 - mime-types: 
     version: "1.16"
@@ -50,15 +50,15 @@ specs:
 - text-format: 
     version: 1.0.0
 - actionmailer: 
-    version: 3.0.0.beta2
+    version: 3.0.0.beta3
     source: 0
 - arel: 
     version: 0.3.3
 - activerecord: 
-    version: 3.0.0.beta2
+    version: 3.0.0.beta3
     source: 0
 - activeresource: 
-    version: 3.0.0.beta2
+    version: 3.0.0.beta3
     source: 0
 - acts_as_list: 
     version: 0.1.2
@@ -95,10 +95,10 @@ specs:
 - thor: 
     version: 0.13.4
 - railties: 
-    version: 3.0.0.beta2
+    version: 3.0.0.beta3
     source: 0
 - rails: 
-    version: 3.0.0.beta2
+    version: 3.0.0.beta3
     source: 0
 - rails3-generators: 
     version: 0.5.4
