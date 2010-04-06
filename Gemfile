@@ -2,7 +2,7 @@ source "http://rubygems.org"
 
 gem "rails", :git => "git://github.com/rails/rails.git"
 
-gem "bundler", ">=0.9.15"
+gem "bundler", ">=0.9.16"
 gem "acts_as_list"
 gem "bridge", ">=0.0.23"
 gem "haml", ">=2.2.22"

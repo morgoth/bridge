@@ -1,10 +1,10 @@
 --- 
-hash: 91181b57887de868b9e275e85310464d0cfea6ff
+hash: 0353accec57e705693b858f094925aa6acb43913
 sources: 
 - Git: 
     git: git://github.com/rails/rails.git
     uri: git://github.com/rails/rails.git
-    ref: 5c8b4c6e231257bc08d32722e098927885e5e74d
+    ref: 46e2a44ee14a19cc2392d8ca174529ad70ee36dc
 - Rubygems: 
     uri: http://rubygems.org
 specs: 
@@ -19,7 +19,7 @@ specs:
 - memcache-client: 
     version: 1.8.2
 - tzinfo: 
-    version: 0.3.18
+    version: 0.3.19
 - activesupport: 
     version: 3.0.0.beta3
     source: 0
@@ -114,7 +114,7 @@ dependencies:
     group: 
     - :default
   bundler: 
-    version: ">= 0.9.15"
+    version: ">= 0.9.16"
     group: 
     - :default
   acts_as_list: 
