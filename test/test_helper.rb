@@ -24,11 +24,11 @@ class ActionController::IntegrationTest
 
   def login(user = Factory(:user))
     visit(root_path)
-    click_button("Log out") rescue nil
-    click("Log in")
+    click_button("Sign out") rescue nil
+    click("Sign in")
     fill_in("Email", :with => user.email)
     fill_in("Password", :with => user.password)
-    click_button("Login")
+    click_button("Sign in")
   end
 
   def wait_until_ready

@@ -5,11 +5,11 @@ class UserSessionTest < ActionController::IntegrationTest
     user = Factory(:user)
 
     visit(root_path)
-    click("Log in")
+    click("Sign in")
     fill_in("Email", :with => user.email)
     fill_in("Password", :with => user.password)
-    click_button("Login")
+    click_button("Sign in")
 
-    assert page.has_content?("Successfully logged in")
+    assert page.has_content?("Signed in successfully.")
   end
 end

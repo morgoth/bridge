@@ -8,7 +8,7 @@ sources:
 - Git: 
     git: git://github.com/rails/rails.git
     uri: git://github.com/rails/rails.git
-    ref: 149d13e1f0d157a48c04c8b3944f09ce463e9416
+    ref: ec8610cfdc32d0fe816fb22405e00ef1b6c90d73
 - Rubygems: 
     uri: http://rubygems.org
 specs: 
@@ -69,7 +69,7 @@ specs:
 - bridge: 
     version: 0.0.23
 - bundler: 
-    version: 0.9.16
+    version: 0.9.17
 - culerity: 
     version: 0.2.9
 - nokogiri: 
