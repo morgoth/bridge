@@ -4,11 +4,11 @@ sources:
 - Git: 
     git: git://github.com/plataformatec/devise.git
     uri: git://github.com/plataformatec/devise.git
-    ref: fd934f1434149be3d8cbb373de821a83aae38e8c
+    ref: a96fdcf0bd56e07b8088c086b34f028603f0afb8
 - Git: 
     git: git://github.com/rails/rails.git
     uri: git://github.com/rails/rails.git
-    ref: ec8610cfdc32d0fe816fb22405e00ef1b6c90d73
+    ref: 5f808b865cc0bbb10af7733cc0c4da3add572a95
 - Rubygems: 
     uri: http://rubygems.org
 specs: 
@@ -77,7 +77,7 @@ specs:
 - ffi: 
     version: 0.6.3
 - json_pure: 
-    version: 1.2.3
+    version: 1.2.4
 - selenium-webdriver: 
     version: 0.0.17
 - capybara: 

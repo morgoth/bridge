@@ -1,12 +1,6 @@
 Libre::Application.routes.draw do |map|
   devise_for :users
 
-  resource :home, :only => [:show]
-
-  # authentication
-
-  #resource :user, :only => [:show]
-
   # bridge
 
   resources :tables, :only => [:index, :show, :create]
