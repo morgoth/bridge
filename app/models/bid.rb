@@ -1,12 +1,9 @@
 class Bid < ActiveRecord::Base
-  belongs_to :board
   acts_as_list :scope => :board
-
-  attr_writer :user
+  belongs_to :board
 
   validates :bid, :presence => true
   validates :board, :presence => true
-
   validate :contract_higher_than_last_contract, :double_allowed,
            :redouble_allowed, :correct_user, :state_of_board
 
@@ -19,10 +16,12 @@ class Bid < ActiveRecord::Base
   scope :of_side,   lambda { |bid| where("position % 2 = ? % 2", bid.respond_to?(:position) ? bid.position : bid) }
 
   delegate :bid_made, :bids, :dealer_number, :users, :auction?, :to => :board, :prefix => true
-  delegate :level, :suit, :trump, :pass?, :double?, :redouble?, :contract?, :to => :bid, :allow_nil => true
+  delegate :level, :suit, :trump, :pass?, :double?, :redouble?, :contract?, :to_s, :to => :bid, :allow_nil => true
   delegate :current_contract, :double_allowed?, :redouble_allowed?, :to => :board_bids
 
   after_create :board_bid_made
+
+  attr_writer :user
 
   def bid
     Bridge::Bid.new(read_attribute(:bid))

@@ -2,16 +2,10 @@ class Claim < ActiveRecord::Base
   belongs_to :board
   belongs_to :claiming_user, :class_name => "User", :extend => ClaimingUserClaimExtension
 
-  attr_accessor :user
-
   validates :board, :presence => true
   validates :tricks, :presence => true, :numericality => true
-
   validate :tricks_number_below_maximum
   validate :correct_user
-
-  delegate :claims, :cards, :users, :to => :board, :prefix => true
-  delegate :current_user, :completed_tricks_count, :to => :board_cards
 
   scope :active, where(:state => ["proposed", "previous_accepted", "next_accepted"])
   scope :proposed, where(:state => "proposed")
@@ -20,10 +14,15 @@ class Claim < ActiveRecord::Base
   scope :next_accepted, where(:state => "next_accepted")
   scope :rejected, where(:state => "rejected")
 
+  delegate :claims, :cards, :users, :to => :board, :prefix => true
+  delegate :current_user, :completed_tricks_count, :to => :board_cards
+
   before_validation lambda { |claim| claim.claiming_user = claim.user }, :if => :new_record?
   before_validation lambda { |claim| claim.state_event = :propose }, :if => :new_record?
   after_save { |claim| claim.board.claimed }
   after_create :reject_active_claims
+
+  attr_accessor :user
 
   state_machine do
     event :propose do

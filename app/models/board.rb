@@ -11,6 +11,10 @@ class Board < ActiveRecord::Base
   validates :dealer, :presence => true, :inclusion => Bridge::DIRECTIONS
   validates :vulnerable, :presence => true, :inclusion => Bridge::VULNERABILITIES
 
+  scope :auction, where(:state => "auction")
+  scope :playing, where(:state => "playing")
+  scope :completed, where(:state => "completed")
+
   delegate :n, :e, :s, :w, :owner, :to => :deal, :prefix => true, :allow_nil => true
   delegate :create_board!, :to => :table, :prefix => true, :allow_nil => true
 
@@ -62,7 +66,7 @@ class Board < ActiveRecord::Base
       taken[direction] += 1
       taken
     end
-    (side.nil?) ? hash : side.to_s.upcase.split("").inject(0) { |sum, direction| sum += hash[direction] }
+    side.nil? ? hash : side.to_s.upcase.split("").inject(0) { |sum, direction| sum += hash[direction] }
   end
 
   def trick_winner(trick)
@@ -82,7 +86,7 @@ class Board < ActiveRecord::Base
   end
 
   def tricks_ew
-    13 - tricks_ns
+    tricks_ns.present? ? 13 - tricks_ns : nil
   end
 
   def visible_hands_for(player_or_direction)
@@ -98,10 +102,6 @@ class Board < ActiveRecord::Base
       (Bridge::DIRECTIONS - visible_directions).each { |d| left[d].fill("") }
     end
   end
-
-  scope :auction, where(:state => "auction")
-  scope :playing, where(:state => "playing")
-  scope :completed, where(:state => "completed")
 
   state_machine :initial => :auction do
     event :bid_made do

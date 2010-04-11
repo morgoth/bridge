@@ -7,7 +7,7 @@ class Card < ActiveRecord::Base
   validate :identicalness_of_suit, :unless => :current_lead?
 
   delegate :claims, :deal, :card_played, :users, :cards, :cards_left, :deal, :playing?, :to => :board, :prefix => true
-  delegate :suit, :value, :to => :card, :allow_nil => true
+  delegate :suit, :value, :to_s, :to => :card, :allow_nil => true
   delegate :current_trick_suit, :current_lead?, :current_user, :to => :board_cards
 
   after_create :board_card_played
@@ -30,10 +30,6 @@ class Card < ActiveRecord::Base
 
   def user
     @user || board_users.owner(card)
-  end
-
-  def to_s
-    card.to_s
   end
 
   private

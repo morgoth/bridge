@@ -1,14 +1,14 @@
 --- 
-hash: 31d5fae98d3d8e9c453fb1cd9f7c1600c1f79bb9
+hash: 8cdde40ccd7a35daa1693ae1d672f583896af669
 sources: 
 - Git: 
     git: git://github.com/plataformatec/devise.git
     uri: git://github.com/plataformatec/devise.git
-    ref: a96fdcf0bd56e07b8088c086b34f028603f0afb8
+    ref: d2ebaa43ec48b8fa71e101a4f5d1abd5a9fbd592
 - Git: 
     git: git://github.com/rails/rails.git
+    ref: 7353fc15957aa3b32eae8cf495701a7163cf8dbc
     uri: git://github.com/rails/rails.git
-    ref: 5f808b865cc0bbb10af7733cc0c4da3add572a95
 - Rubygems: 
     uri: http://rubygems.org
 specs: 
@@ -69,7 +69,7 @@ specs:
 - bridge: 
     version: 0.0.23
 - bundler: 
-    version: 0.9.17
+    version: 0.9.18
 - culerity: 
     version: 0.2.9
 - nokogiri: 
@@ -81,7 +81,7 @@ specs:
 - selenium-webdriver: 
     version: 0.0.17
 - capybara: 
-    version: 0.3.6
+    version: 0.3.7
 - haml: 
     version: 2.2.22
 - compass: 
@@ -123,7 +123,7 @@ dependencies:
     group: 
     - :default
   bundler: 
-    version: ">= 0.9.16"
+    version: ">= 0.9.18"
     group: 
     - :default
   acts_as_list: 

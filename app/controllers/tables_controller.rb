@@ -11,6 +11,6 @@ class TablesController < ApplicationController
 
   def create
     @table = Table.create
-    redirect_to table_path(@table)
+    redirect_to @table
   end
 end
