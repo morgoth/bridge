@@ -1,14 +1,14 @@
 --- 
-hash: 8cdde40ccd7a35daa1693ae1d672f583896af669
+hash: 402f2085b694b842ae0367914eb9fc3f17bee51a
 sources: 
 - Git: 
     git: git://github.com/plataformatec/devise.git
     uri: git://github.com/plataformatec/devise.git
-    ref: d2ebaa43ec48b8fa71e101a4f5d1abd5a9fbd592
+    ref: bafc859f75c131e0f90c07b62db1e0ef0655c94e
 - Git: 
     git: git://github.com/rails/rails.git
-    ref: 7353fc15957aa3b32eae8cf495701a7163cf8dbc
     uri: git://github.com/rails/rails.git
+    ref: 86defed5ad6c1ec95b2f07a93982a514e2347749
 - Rubygems: 
     uri: http://rubygems.org
 specs: 
@@ -48,7 +48,7 @@ specs:
 - treetop: 
     version: 1.4.5
 - mail: 
-    version: 2.1.5.3
+    version: 2.2.0
 - text-hyphen: 
     version: 1.0.0
 - text-format: 
@@ -83,7 +83,7 @@ specs:
 - capybara: 
     version: 0.3.7
 - haml: 
-    version: 2.2.22
+    version: 2.2.23
 - compass: 
     version: 0.8.17
 - database_cleaner: 
@@ -110,7 +110,7 @@ specs:
     version: 3.0.0.beta3
     source: 1
 - rails3-generators: 
-    version: 0.5.4
+    version: 0.6.0
 - sqlite3: 
     version: 0.0.8
 - state_machine: 
@@ -135,7 +135,7 @@ dependencies:
     group: 
     - :default
   haml: 
-    version: ">= 2.2.22"
+    version: ">= 2.2.23"
     group: 
     - :default
   state_machine: 
