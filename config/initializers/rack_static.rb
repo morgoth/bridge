@@ -1,1 +1,1 @@
-Rails::Application.middleware.use Rack::Static, :root => "tmp/public", :urls => ["/stylesheets"]
+# Rails::Application.middleware.use Rack::Static, :root => "tmp/public", :urls => ["/stylesheets"]
