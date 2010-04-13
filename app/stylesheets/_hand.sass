@@ -4,39 +4,39 @@
 .yui3-hand
   position: relative
   top: 50%
-  margin-top= -!card_height / 2
+  margin-top: -$card_height / 2
 
 .yui3-hand-content
-  height= !card_height
+  height: $card_height
   overflow: hidden
   text-align: center
 
 .yui3-hand-bar
   -moz-border-radius: 5px
   -webkit-border-radius: 5px
-  background-color= !gray_color
+  background-color: $gray_color
   border: 1px solid white
   overflow: hidden
 
 .yui3-hand-bar-active
-  background-color= !yellow_color
+  background-color: $yellow_color
 
 .yui3-hand-direction
   +float-left
   -moz-border-radius: 5px
   -webkit-border-radius: 5px
   border: 1px solid white
-  background-color= !blue_color
+  background-color: $blue_color
   color: white
-  line-height= !card_height / 3 - 2px
-  width= !card_height / 3 - 2px
+  line-height: $card_height / 3 - 2px
+  width: $card_height / 3 - 2px
   font-size: 18px
   margin: -1px
 
 .yui3-hand-name
   +float-left
-  line-height= !card_height / 3 - 2px
-  height= !card_height / 3 - 2px
+  line-height: $card_height / 3 - 2px
+  height: $card_height / 3 - 2px
   overflow: hidden
   font-size: 18px
   padding: 0 5px
@@ -44,7 +44,7 @@
 
 .yui3-hand-buttons
   +float-right
-  line-height= !card_height / 3 - 2px
+  line-height: $card_height / 3 - 2px
 
 .yui3-hand-join, .yui3-hand-quit
   +reset-box-model
@@ -52,7 +52,7 @@
   -moz-border-radius: 5px
   -webkit-border-radius: 5px
   border: 1px solid white
-  background= !blue_color
+  background: $blue_color
   margin: 5px
   color: white
   cursor: pointer
@@ -68,8 +68,8 @@
   +inline-list
   display: block
   overflow: hidden
-  height= !card_height * 0.66
+  height: $card_height * 0.66
 
 .yui3-hand-card > *
-  margin-right= -!card_overlap / 2
-  margin-left= -!card_overlap / 2
+  margin-right: -$card_overlap / 2
+  margin-left: -$card_overlap / 2

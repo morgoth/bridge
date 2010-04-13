@@ -1,14 +1,18 @@
 @import blueprint
 @import compass/reset, compass/utilities
 
-!green_color = #006d00
-!light_blue_color = #99cccc
-!blue_color = #336799
-!red_color = #cb0000
-!gray_color = #cbcbcb
-!yellow_color = #ffce00
+$green_color: #006d00
+$light_blue_color: #99cccc
+$blue_color: #336799
+$red_color: #cb0000
+$gray_color: #cbcbcb
+$yellow_color: #ffce00
 
-@import cards, hand, biddingbox, auction, trick
+@import cards
+@import hand
+@import biddingbox
+@import auction
+@import trick
 
 +blueprint-typography
 +blueprint-debug
@@ -16,19 +20,19 @@
 body
   #table
     min-height: 500px
-    background= !green_color
+    background: $green_color
 
 #container
   +container
 
 .bridge-table-row-1 > *
-  height= 155px
+  height: 155px
 
 .bridge-table-row-2 > *
   height: 200px
 
 .bridge-table-row-3 > *
-  height= 120px
+  height: 120px
 
 .bridge-table-col-1
   +column(8)
@@ -43,4 +47,4 @@ body
   color: black
 
 .yui3-bridge-suit-d, .yui3-bridge-suit-h
-  color= !red_color
+  color: $red_color

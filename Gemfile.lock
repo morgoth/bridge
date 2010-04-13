@@ -1,5 +1,5 @@
 --- 
-hash: 402f2085b694b842ae0367914eb9fc3f17bee51a
+hash: 3d59801d8f640e33c37c4e620f63e809446d2dbf
 sources: 
 - Git: 
     git: git://github.com/plataformatec/devise.git
@@ -8,7 +8,7 @@ sources:
 - Git: 
     git: git://github.com/rails/rails.git
     uri: git://github.com/rails/rails.git
-    ref: 86defed5ad6c1ec95b2f07a93982a514e2347749
+    ref: dceef0828a23e8298dd9a9aab1a33c49e84f17d6
 - Rubygems: 
     uri: http://rubygems.org
 specs: 
@@ -69,7 +69,7 @@ specs:
 - bridge: 
     version: 0.0.23
 - bundler: 
-    version: 0.9.18
+    version: 0.9.19
 - culerity: 
     version: 0.2.9
 - nokogiri: 
@@ -83,11 +83,11 @@ specs:
 - capybara: 
     version: 0.3.7
 - haml: 
-    version: 2.2.23
+    version: 3.0.0.beta.2
 - compass: 
-    version: 0.8.17
+    version: 0.10.0.rc3
 - database_cleaner: 
-    version: 0.5.0
+    version: 0.5.1
 - warden: 
     version: 0.10.3
 - devise: 
@@ -114,7 +114,7 @@ specs:
 - sqlite3: 
     version: 0.0.8
 - state_machine: 
-    version: 0.8.1
+    version: 0.9.0
 - test-unit: 
     version: 2.0.7
 dependencies: 
@@ -123,7 +123,7 @@ dependencies:
     group: 
     - :default
   bundler: 
-    version: ">= 0.9.18"
+    version: ">= 0.9.19"
     group: 
     - :default
   acts_as_list: 
@@ -135,7 +135,7 @@ dependencies:
     group: 
     - :default
   haml: 
-    version: ">= 2.2.23"
+    version: = 3.0.0.beta.2
     group: 
     - :default
   state_machine: 
@@ -143,7 +143,7 @@ dependencies:
     group: 
     - :default
   compass: 
-    version: ">= 0"
+    version: = 0.10.0.rc3
     group: 
     - :default
   proxies: 

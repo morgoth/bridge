@@ -1,14 +1,14 @@
-!auction_bid_width = 70px
-!auction_bid_height = 30px
-!auction_scroll_width = 20px
+$auction_bid_width: 70px
+$auction_bid_height: 30px
+$auction_scroll_width: 20px
 
 .yui3-auction
   -moz-border-radius: 5px
   -webkit-border-radius: 5px
   margin: auto
-  height= 5 * !auction_bid_height
-  width= 4 * !auction_bid_width + !auction_scroll_width
-  background= !light_blue_color
+  height: 5 * $auction_bid_height
+  width: 4 * $auction_bid_width + $auction_scroll_width
+  background: $light_blue_color
   border: 1px solid white
 
 .yui3-auction-hidden
@@ -22,40 +22,40 @@
   +float-left
   text-align: center
   font-size: 18px
-  width= !auction_bid_width
-  height= !auction_bid_height
-  line-height= !auction_bid_height
+  width: $auction_bid_width
+  height: $auction_bid_height
+  line-height: $auction_bid_height
 
 .yui3-auction-header-n, .yui3-auction-header-s
   background-color: white
   color: black
 
 .yui3-auction-header-e, .yui3-auction-header-w
-  background-color= !red_color
+  background-color: $red_color
   color: white
 
 .yui3-auction-header-w
-  padding-right= !auction_scroll_width
+  padding-right: $auction_scroll_width
 
 .yui3-auction-bids
   +inline-list
   +no-bullets
   +float-left
   overflow-y: scroll
-  height= 4 * !auction_bid_height
-  width= 4 * !auction_bid_width + !auction_scroll_width
+  height: 4 * $auction_bid_height
+  width: 4 * $auction_bid_width + $auction_scroll_width
 
 .yui3-auction-bids > *
   +float-left
-  width= !auction_bid_width
-  height= !auction_bid_height
+  width: $auction_bid_width
+  height: $auction_bid_height
 
 .yui3-auction-bid
   +reset-box-model
   +reset-font
   +float-left
-  width= !auction_bid_width
-  height= !auction_bid_height
+  width: $auction_bid_width
+  height: $auction_bid_height
   border: none
   background: none
   font-size: 18px
