@@ -1,11 +1,11 @@
 source "http://rubygems.org"
 
-gem "rails", :git => "git://github.com/rails/rails.git"
+gem "rails", :git => "git://github.com/rails/rails.git", :ref => "ab808a9d7128af31e5fb92a2af27be6f5f2e0ae4"
 
 gem "bundler", ">=0.9.19"
 gem "acts_as_list"
 gem "bridge", ">=0.0.23"
-gem "haml", "3.0.0.beta.2"
+gem "haml", "3.0.0.beta.3"
 gem "state_machine", ">=0.8.1"
 gem "compass", "0.10.0.rc3"
 gem "proxies"
