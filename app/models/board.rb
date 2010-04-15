@@ -7,7 +7,7 @@ class Board < ActiveRecord::Base
   has_many :bids, :order => "bids.position", :extend => BidsBoardExtension
   has_many :cards, :order => "cards.position", :extend => CardsBoardExtension
   has_many :claims
-  belongs_to :table
+  belongs_to :table, :touch => true
 
   validates :deal_id, :presence => true
   validates :dealer, :presence => true, :inclusion => Bridge::DIRECTIONS

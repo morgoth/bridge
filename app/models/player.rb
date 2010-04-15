@@ -1,6 +1,6 @@
 class Player < ActiveRecord::Base
   belongs_to :user
-  belongs_to :table
+  belongs_to :table, :touch => true
 
   validates :user, :presence => true
   validates :user_id, :uniqueness => { :scope => :table_id }

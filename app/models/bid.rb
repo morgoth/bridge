@@ -1,6 +1,6 @@
 class Bid < ActiveRecord::Base
   acts_as_list :scope => :board
-  belongs_to :board
+  belongs_to :board, :touch => true
 
   validates :bid, :presence => true
   validates :board, :presence => true

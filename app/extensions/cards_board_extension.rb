@@ -20,7 +20,6 @@ module CardsBoardExtension
   def current_position
     count + 1
   end
-  memoize :current_position
 
   def current_lead_position
     current_position - (current_position - 1) % 4

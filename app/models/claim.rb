@@ -1,5 +1,5 @@
 class Claim < ActiveRecord::Base
-  belongs_to :board
+  belongs_to :board, :touch => true
   belongs_to :claiming_user, :class_name => "User", :extend => ClaimingUserClaimExtension
 
   validates :board, :presence => true
