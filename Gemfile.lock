@@ -1,5 +1,5 @@
 --- 
-hash: 1ce02ab1a8be3fe477c4d08847b05680ee8dab6d
+hash: 66d849320850c51c68c6a484bc9bd0156a905828
 sources: 
 - Git: 
     git: git://github.com/plataformatec/devise.git
@@ -7,8 +7,8 @@ sources:
     ref: ca6248cfd3aaecf126ab5502469bba52b5dc1216
 - Git: 
     git: git://github.com/rails/rails.git
-    ref: ab808a9d7128af31e5fb92a2af27be6f5f2e0ae4
     uri: git://github.com/rails/rails.git
+    ref: 4bce5ba600596b5e7afec9b097866ac259c5940a
 - Rubygems: 
     uri: http://rubygems.org
 specs: 
