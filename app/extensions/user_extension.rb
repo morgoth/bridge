@@ -38,10 +38,10 @@ module UserExtension
   end
 
   def has_cards_in_suit?(suit)
-    board.cards_left(direction).any? { |c| Bridge::Card.new(c).suit == suit }
+    board.cards_left[direction].any? { |c| Bridge::Card.new(c).suit == suit }
   end
 
   def cards_left
-    board.cards_left(direction)
+    board.cards_left[direction]
   end
 end

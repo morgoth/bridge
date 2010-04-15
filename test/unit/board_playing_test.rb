@@ -40,7 +40,7 @@ class BoardPlayingTest < ActiveSupport::TestCase
     cards = @board.deal.to_hash
     cards["E"].delete("HA")
     @board.cards.create!(:card => "HA", :user => @user_e)
-    assert_equal cards["E"], @board.cards_left("E")
+    assert_equal cards["E"], @board.cards_left["E"]
   end
 
   test "completed tricks count returns 0" do
@@ -73,7 +73,7 @@ class BoardPlayingTest < ActiveSupport::TestCase
 
   test "return visible hands for N if no card played" do
     hands = @board.visible_hands_for(@user_n)
-    assert_equal @board.cards_left("N"), hands["N"]
+    assert_equal @board.cards_left["N"], hands["N"]
     assert_equal ["", "", "", "", "", "", "", "", "", "", "", "", ""], hands["E"]
     assert_equal ["", "", "", "", "", "", "", "", "", "", "", "", ""], hands["S"]
     assert_equal ["", "", "", "", "", "", "", "", "", "", "", "", ""], hands["W"]
@@ -82,9 +82,9 @@ class BoardPlayingTest < ActiveSupport::TestCase
   test "return visible hands for N if card played (self and dummy)" do
     @board.cards.create!(:card => "HA", :user => @user_e)
     hands = @board.visible_hands_for(@user_n)
-    assert_equal @board.cards_left("N"), hands["N"]
+    assert_equal @board.cards_left["N"], hands["N"]
     assert_equal ["", "", "", "", "", "", "", "", "", "", "", ""], hands["E"]
-    assert_equal @board.cards_left("S"), hands["S"]
+    assert_equal @board.cards_left["S"], hands["S"]
     assert_equal ["", "", "", "", "", "", "", "", "", "", "", "", ""], hands["W"]
   end
 
@@ -92,9 +92,9 @@ class BoardPlayingTest < ActiveSupport::TestCase
     @board.cards.create!(:card => "HA", :user => @user_e)
     Factory(:claim, :board => @board, :user => @user_e)
     hands = @board.visible_hands_for(@user_n)
-    assert_equal @board.cards_left("N"), hands["N"]
-    assert_equal @board.cards_left("E"), hands["E"]
-    assert_equal @board.cards_left("S"), hands["S"]
+    assert_equal @board.cards_left["N"], hands["N"]
+    assert_equal @board.cards_left["E"], hands["E"]
+    assert_equal @board.cards_left["S"], hands["S"]
     assert_equal ["", "", "", "", "", "", "", "", "", "", "", "", ""], hands["W"]
   end
 

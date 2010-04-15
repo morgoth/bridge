@@ -39,12 +39,12 @@ class Board < ActiveRecord::Base
     contract && Bridge::Bid.new(contract.gsub("X", ""))
   end
 
-  def cards_left(direction = nil)
-    users_cards = cards.inject(deal.sort_by_color!(contract_trump).to_hash) do |current_cards, card|
-      current_cards[card.user.direction].delete(card.to_s)
-      current_cards
+  def cards_left
+    played_cards = cards.map(&:to_s)
+
+    {}.tap do |h|
+      deal.sort_by_color!(contract_trump).to_hash.each { |direction, cards| h[direction] = cards - played_cards }
     end
-    direction.nil? ? users_cards : users_cards[direction]
   end
 
   def current_user
@@ -90,14 +90,13 @@ class Board < ActiveRecord::Base
   end
 
   def visible_hands_for(player_or_direction)
-    if player_or_direction
-      visible_directions = player_or_direction.respond_to?(:direction) ? [player_or_direction.direction] : [player_or_direction]
-      visible_directions << users.dummy.direction if cards.count > 0
-      visible_directions << claims.active.last.claiming_user.direction if claims.active.present?
-      visible_directions.uniq!
-    else
-      visible_directions = []
-    end
+    direction = player_or_direction.respond_to?(:direction) ? player_or_direction.direction : player_or_direction
+
+    visible_directions = [direction]
+    visible_directions << users.dummy.direction if cards.count > 0
+    visible_directions << claims.active.last.claiming_user.direction if claims.active.present?
+    visible_directions.uniq!
+
     cards_left.tap do |left|
       (Bridge::DIRECTIONS - visible_directions).each { |d| left[d].fill("") }
     end
