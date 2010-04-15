@@ -12,7 +12,7 @@ module AjaxHelper
         serialize_bidding_box!(result["biddingBox"]) if @board.auction?
         serialize_auction!(result["auction"])
         serialize_trick!(result["trick"]) if @board.playing?
-        serialize_tricks!(result["tricks"]) if @board.playing?
+        # serialize_tricks!(result["tricks"]) if @board.playing?
       end
     end
   end
@@ -124,14 +124,8 @@ module AjaxHelper
     @table.players[direction].present? and current_user.present? and @table.players[direction] == @table.user_player(current_user)
   end
 
-  # TODO: do some refactoring
   def cards_enabled?(direction)
-    if @board.playing?
-      (quit_enabled?(direction) and current_user_turn? and @board.users.dummy != current_user) ||
-      (current_user.present? and @board.current_user.dummy? and @board.users[direction] == @board.users.dummy and @board.users.declarer == current_user)
-    else
-      false
-    end
+    @board.playing? and @board.playing_user == current_user and @board.cards.playing_user.direction == direction
   end
 
   def current_user_turn?

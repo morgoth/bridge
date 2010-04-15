@@ -1,4 +1,6 @@
 class Table < ActiveRecord::Base
+  extend ActiveSupport::Memoizable
+
   has_many :players, :extend => PlayersTableExtension
   has_many :boards, :extend => BoardsTableExtension
 
@@ -17,6 +19,7 @@ class Table < ActiveRecord::Base
   def user_player(user)
     user && players.where(:user_id => user.id).first
   end
+  memoize :user_player
 
   def create_board!
     attributes = %w(n e s w).inject({}) do |hash, direction|

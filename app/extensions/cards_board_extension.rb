@@ -1,4 +1,6 @@
 module CardsBoardExtension
+  extend ActiveSupport::Memoizable
+
   def trick(n)
     where(:position => ((n - 1) * 4 + 1)..(n * 4)).all
   end
@@ -18,6 +20,7 @@ module CardsBoardExtension
   def current_position
     count + 1
   end
+  memoize :current_position
 
   def current_lead_position
     current_position - (current_position - 1) % 4
@@ -68,8 +71,10 @@ module CardsBoardExtension
       proxy_owner.users.owner(last.card).next
     end
   end
+  memoize :current_user
 
   def playing_user
     (current_user.dummy?) ? current_user.partner : current_user
   end
+  memoize :playing_user
 end

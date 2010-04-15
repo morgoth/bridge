@@ -24,6 +24,7 @@ class Board < ActiveRecord::Base
     Bridge::Deal.from_id(deal_id.to_i)
   rescue ArgumentError
   end
+  memoize :deal
 
   def dealer_number
     Bridge::DIRECTIONS.index(dealer)
@@ -48,10 +49,16 @@ class Board < ActiveRecord::Base
       deal.sort_by_color!(contract_trump).to_hash.each { |direction, cards| h[direction] = cards - played_cards }
     end
   end
+  memoize :cards_left
 
   def current_user
     return bids.current_user if auction?
     return cards.current_user if playing?
+  end
+
+  def playing_user
+    return bids.current_user if auction?
+    return cards.playing_user if playing?
   end
 
   def users
