@@ -4,6 +4,7 @@ class Ajax::TablesController < Ajax::BaseController
 
   def show
     @table = Table.find(params[:id])
+    @board = @table.boards.current
     respond_with(@table)
   end
 
