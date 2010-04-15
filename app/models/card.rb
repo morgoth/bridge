@@ -8,7 +8,7 @@ class Card < ActiveRecord::Base
 
   delegate :claims, :deal, :card_played, :users, :cards, :cards_left, :deal, :playing?, :to => :board, :prefix => true
   delegate :suit, :value, :to_s, :to => :card, :allow_nil => true
-  delegate :current_trick_suit, :current_lead?, :current_user, :to => :board_cards
+  delegate :current_trick_suit, :current_lead?, :current_user, :playing_user, :to => :board_cards
 
   after_create :board_card_played
   after_create { |card| card.board.claims.active.each { |claim| claim.user = card.user; claim.reject! } }
@@ -54,7 +54,7 @@ class Card < ActiveRecord::Base
   end
 
   def correct_user
-    if (!current_user.dummy? && @user != current_user) || (current_user.dummy? && @user != current_user.partner)
+    if @user != playing_user
       errors.add(:user, "can not play card at the moment")
     end
   end

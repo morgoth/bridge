@@ -30,7 +30,7 @@ module UsersBoardExtension
   end
 
   def dummy
-    first_lead.next
+    declarer.partner
   end
 
   def owner(card)

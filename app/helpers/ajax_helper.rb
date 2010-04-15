@@ -1,34 +1,34 @@
 module AjaxHelper
   def serialize_table
     table_structure.tap do |result|
-      # result["id"] = @table.id
-      # result["state"] = @table.state
-      # result["player"] = @table.user_player(current_user).direction if @table.user_player(current_user)
+      result["id"] = @table.id
+      result["state"] = @table.state
+      result["player"] = @table.user_player(current_user).direction if @table.user_player(current_user)
       Bridge::DIRECTIONS.each_with_index do |direction, i|
         serialize_hand!(result["hands"][i], direction)
       end
-      # if @board
-      #   result["boardState"] = @board.state
-      #   serialize_bidding_box!(result["biddingBox"]) if @board.auction?
-      #   serialize_auction!(result["auction"])
-      #   serialize_trick!(result["trick"]) if @board.playing?
-      #   # serialize_tricks!(result["tricks"]) if @board.playing?
-      # end
+      if @board
+        result["boardState"] = @board.state
+        serialize_bidding_box!(result["biddingBox"]) if @board.auction?
+        serialize_auction!(result["auction"])
+        serialize_trick!(result["trick"]) if @board.playing?
+        serialize_tricks!(result["tricks"]) if @board.playing?
+      end
     end
   end
 
   def serialize_hand!(result, direction)
     result.tap do |hash|
-      # hash["joinEnabled"] = join_enabled?(direction)
-      # hash["quitEnabled"] = quit_enabled?(direction)
-      # if @table.players[direction]
-      #   hash["name"] = @table.players[direction].name
-      # end
+      hash["joinEnabled"] = join_enabled?(direction)
+      hash["quitEnabled"] = quit_enabled?(direction)
+      if @table.players[direction]
+        hash["name"] = @table.players[direction].name
+      end
       if @board
-        # hash["active"] = (@board.current_user.direction == direction)
+        hash["active"] = (@board.current_user.direction == direction)
         hash["cards"] = @board.visible_hands_for(@table.user_player(current_user))[direction]
-        # hash["cardsEnabled"] = cards_enabled?(direction)
-        # hash["suit"] = @board.cards.current_trick_suit
+        hash["cardsEnabled"] = cards_enabled?(direction)
+        hash["suit"] = @board.cards.current_trick_suit
       end
     end
   end

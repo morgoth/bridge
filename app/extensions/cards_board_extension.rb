@@ -68,4 +68,8 @@ module CardsBoardExtension
       proxy_owner.users.owner(last.card).next
     end
   end
+
+  def playing_user
+    (current_user.dummy?) ? current_user.partner : current_user
+  end
 end
