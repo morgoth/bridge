@@ -8,7 +8,7 @@ module AjaxHelper
         serialize_hand!(result["hands"][i], direction)
       end
       if @board
-        result["@boardState"] = @board.state # if @board.auction? and @table.user_player(current_user)
+        result["boardState"] = @board.state # if @board.auction? and @table.user_player(current_user)
         serialize_bidding_box!(result["biddingBox"]) if @board.auction?
         serialize_auction!(result["auction"])
         serialize_trick!(result["trick"]) if @board.playing?
