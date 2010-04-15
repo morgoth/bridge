@@ -125,7 +125,7 @@ module AjaxHelper
   end
 
   def cards_enabled?(direction)
-    @board.playing? and @board.playing_user == current_user and @board.cards.playing_user.direction == direction
+    @board.playing? and @board.playing_user == current_user and @board.cards.current_user.direction == direction
   end
 
   def current_user_turn?
