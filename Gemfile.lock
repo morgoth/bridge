@@ -8,7 +8,7 @@ sources:
 - Git: 
     git: git://github.com/rails/rails.git
     uri: git://github.com/rails/rails.git
-    ref: 5aa58cc03fa96d290a902e8fd2e6d013bc5d6147
+    ref: 779723a0b4d9cd42bf6a494c0906723a5e3c5fec
 - Rubygems: 
     uri: http://rubygems.org
 specs: 
@@ -69,7 +69,7 @@ specs:
 - bridge: 
     version: 0.0.23
 - bundler: 
-    version: 0.9.19
+    version: 0.9.20
 - culerity: 
     version: 0.2.9
 - nokogiri: 
@@ -87,7 +87,7 @@ specs:
 - compass: 
     version: 0.10.0.rc3
 - database_cleaner: 
-    version: 0.5.1
+    version: 0.5.2
 - warden: 
     version: 0.10.3
 - devise: 
