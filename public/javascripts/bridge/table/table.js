@@ -44,9 +44,16 @@ YUI.add("table", function(Y) {
         },
 
         _onBiddingBoxBid: function(event) {
-            var bid = event[0];
+            var bid = event[0],
+                alert = event[1];
 
-            this._io(this._tableBidsPath(), { method: "POST", data: "bid[bid]=" + bid });
+            this._io(this._tableBidsPath(), {
+                method: "POST",
+                data: ""
+                    + "bid[bid]=" + bid
+                    + "&"
+                    + "bid[alert]=" + encodeURIComponent(alert)
+            });
         },
 
         _onHandCard: function(event) {
@@ -83,7 +90,9 @@ YUI.add("table", function(Y) {
             this.poll.stop();
             // actually stops polling (previous stop can kill active
             // transaction only) - weird behaviour
-            Y.later(0, this, this.poll.stop);
+            Y.later(0, this, function() {
+                this.poll.stop();
+            });
             Y.io(uri, configuration);
         },
 

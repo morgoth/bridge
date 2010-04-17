@@ -28,9 +28,9 @@ YUI.add("biddingbox", function(Y) {
             this.after("redoubleEnabledChange", this._afterRedoubleEnabledChange);
 
             contentBox.delegate("click", Y.bind(this._onButtonClick, this), "button[data-event]");
-            this.on("pass", Y.bind(this.fire, this, "bid", ["PASS"]));
-            this.on("x", Y.bind(this.fire, this, "bid", ["X"]));
-            this.on("xx", Y.bind(this.fire, this, "bid", ["XX"]));
+            this.on("pass", Y.bind(this._fireBidEvent, this, "PASS"));
+            this.on("x", Y.bind(this._fireBidEvent, this, "X"));
+            this.on("xx", Y.bind(this._fireBidEvent, this, "XX"));
             this.on("level", this._onLevel);
             this.on("suit", this._onSuit);
         },
@@ -40,6 +40,29 @@ YUI.add("biddingbox", function(Y) {
             this._uiSetLevel(this.get("level"));
             this._uiSetDoubleEnabled(this.get("doubleEnabled"));
             this._uiSetRedoubleEnabled(this.get("redoubleEnabled"));
+        },
+
+        _fireBidEvent: function(bid) {
+            var alert = this._getAlert();
+            this.fire("bid", [bid, alert]);
+        },
+
+        _getAlert: function() {
+            var alertNode,
+                alertCN = this.getClassName("alert"),
+                contentBox = this.get("contentBox");
+            alertNode = contentBox.one("." + alertCN);
+
+            return alertNode.get("value");
+        },
+
+        _resetAlert: function() {
+            var alertNode,
+                alertCN = this.getClassName("alert"),
+                contentBox = this.get("contentBox");
+            alertNode = contentBox.one("." + alertCN);
+
+            alertNode.set("value", "");
         },
 
         _onButtonClick: function(event) {
@@ -57,7 +80,7 @@ YUI.add("biddingbox", function(Y) {
             var level = this.get("level"),
                 suit = event[0];
 
-            this.fire("bid", [level + suit]);
+            this._fireBidEvent(level + suit);
         },
 
         _renderBiddingBox: function() {
@@ -92,6 +115,9 @@ YUI.add("biddingbox", function(Y) {
                 modifiersCN: this.getClassName("modifiers"),
                 levelsCN: this.getClassName("levels"),
                 suitsCN: this.getClassName("suits"),
+                alertsCN: this.getClassName("alerts"),
+                alertCN: this.getClassName("alert"),
+                alertLabelCN: this.getClassName("alert", "label"),
                 modifiers: modifiers,
                 levels: levels,
                 suits: suits
@@ -276,6 +302,12 @@ YUI.add("biddingbox", function(Y) {
             +       '</button>'
             +     '</li>'
             +   '{{/suits}}'
+            + '</ul>'
+            + '<ul class="{{alertsCN}}">'
+            +   '<li>'
+            +     '<label for="alert" class="{{alertLabelCN}}">Alert</label>'
+            +     '<input id="alert" name="alert" type="text" class="{{alertCN}}" />'
+            +   '</li>'
             + '</ul>'
 
     });
