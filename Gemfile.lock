@@ -1,10 +1,14 @@
 --- 
-hash: 66d849320850c51c68c6a484bc9bd0156a905828
+hash: 6a7135209602f74606e9730a41d419d631fa1657
 sources: 
 - Git: 
     git: git://github.com/plataformatec/devise.git
     uri: git://github.com/plataformatec/devise.git
     ref: 31354879317ffa4ad12b5013a854df720a76cfb5
+- Git: 
+    git: git://github.com/pluginaweek/state_machine.git
+    uri: git://github.com/pluginaweek/state_machine.git
+    ref: 903975e0932ae2addd2b88adb9005559b12619e3
 - Git: 
     git: git://github.com/rails/rails.git
     uri: git://github.com/rails/rails.git
@@ -19,17 +23,17 @@ specs:
 - builder: 
     version: 2.1.2
 - i18n: 
-    version: 0.3.6
+    version: 0.3.7
 - memcache-client: 
     version: 1.8.2
 - tzinfo: 
     version: 0.3.19
 - activesupport: 
     version: 3.0.0.beta3
-    source: 1
+    source: 2
 - activemodel: 
     version: 3.0.0.beta3
-    source: 1
+    source: 2
 - erubis: 
     version: 2.6.5
 - rack: 
@@ -40,7 +44,7 @@ specs:
     version: 0.5.3
 - actionpack: 
     version: 3.0.0.beta3
-    source: 1
+    source: 2
 - mime-types: 
     version: "1.16"
 - polyglot: 
@@ -55,15 +59,15 @@ specs:
     version: 1.0.0
 - actionmailer: 
     version: 3.0.0.beta3
-    source: 1
+    source: 2
 - arel: 
     version: 0.3.3
 - activerecord: 
     version: 3.0.0.beta3
-    source: 1
+    source: 2
 - activeresource: 
     version: 3.0.0.beta3
-    source: 1
+    source: 2
 - acts_as_list: 
     version: 0.1.2
 - bridge: 
@@ -105,16 +109,17 @@ specs:
     version: 0.13.4
 - railties: 
     version: 3.0.0.beta3
-    source: 1
+    source: 2
 - rails: 
     version: 3.0.0.beta3
-    source: 1
+    source: 2
 - rails3-generators: 
     version: 0.6.0
 - sqlite3: 
     version: 0.0.8
 - state_machine: 
     version: 0.9.0
+    source: 1
 - test-unit: 
     version: 2.0.7
 dependencies: 
@@ -139,7 +144,7 @@ dependencies:
     group: 
     - :default
   state_machine: 
-    version: ">= 0.8.1"
+    version: ">= 0"
     group: 
     - :default
   compass: 
