@@ -57,11 +57,13 @@ YUI.add("auction", function(Y) {
             bidsNode = contentBox.one("." + this.getClassName("bids"));
             dealerPosition = Y.Array.indexOf(Y.Bridge.DIRECTIONS, dealer);
             bids = Y.Array.map(bids, function(bid, i) {
-                var player = Y.Bridge.DIRECTIONS[(i + dealerPosition) % 4];
+                var player = Y.Bridge.DIRECTIONS[(i + dealerPosition) % 4],
+                    alertedCN = bid.alert ? this.getClassName("bid", "alerted") : "";
 
                 return {
                     name: Y.Bridge.renderBid(bid.bid),
-                    className: this.getClassName("bid", bid.bid.toLowerCase()),
+                    bidCN: this.getClassName("bid", bid.bid.toLowerCase()),
+                    alertedCN: alertedCN,
                     alert: bid.alert,
                     player: player
                 };
@@ -131,7 +133,7 @@ YUI.add("auction", function(Y) {
             + '{{#bids}}'
             +   '<li>'
             +     '{{#name}}'
-            +       '<button type="button" class="yui3-auction-bid {{className}}" data-player="{{player}}" title="{{alert}}">'
+            +       '<button type="button" class="yui3-auction-bid {{bidCN}} {{alertedCN}}" data-player="{{player}}" title="{{alert}}">'
             +         '{{{name}}}'
             +       '</button>'
             +     '{{/name}}'

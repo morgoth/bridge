@@ -49,7 +49,10 @@ module AjaxHelper
     result.tap do |hash|
       hash["names"] = @board.users.map(&:name)
       hash["dealer"] = @board.dealer
-      hash["bids"] = @board.bids.map { |b| { "bid" => b.bid.to_s, "alert" => b.alert } }
+      hash["bids"] = @board.bids.map do |bid|
+        { "bid" => bid.bid.to_s,
+          "alert" => bid.user.partner == current_user ? nil : bid.alert }
+      end
     end
   end
 
