@@ -56,6 +56,7 @@ YUI.add("auction", function(Y) {
                 contentBox = this.get("contentBox");
             bidsNode = contentBox.one("." + this.getClassName("bids"));
             dealerPosition = Y.Array.indexOf(Y.Bridge.DIRECTIONS, dealer);
+
             bids = Y.Array.map(bids, function(bid, i) {
                 var player = Y.Bridge.DIRECTIONS[(i + dealerPosition) % 4];
 
