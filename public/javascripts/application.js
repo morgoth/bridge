@@ -14,19 +14,23 @@ YUI({
         },
         auction: {
             path: "../bridge/auction/auction.js",
-            requires: ["widget"]
+            requires: ["widget", "mustache"]
         },
         hand: {
             path: "../bridge/hand/hand.js",
-            requires: ["widget", "mustache", "collection"]
+            requires: ["widget", "mustache", "collection", "helpers"]
         },
         trick: {
             path: "../bridge/trick/trick.js",
-            requires: ["widget"]
+            requires: ["widget", "mustache"]
+        },
+        tricks: {
+            path: "../bridge/tricks/tricks.js",
+            requires: ["widget", "mustache", "helpers"]
         },
         table: {
             path: "../bridge/table/table.js",
-            requires: ["base-base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox", "auction", "helpers", "trick"]
+            requires: ["base-base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox", "auction", "helpers", "trick", "tricks"]
         },
         "gallery-io-poller": {
             path: "../yui3-gallery/gallery-io-poller/gallery-io-poller.js",

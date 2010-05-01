@@ -12,7 +12,7 @@ module AjaxHelper
         serialize_bidding_box!(result["biddingBox"]) if @board.auction?
         serialize_auction!(result["auction"])
         serialize_trick!(result["trick"]) if @board.playing?
-        # serialize_tricks!(result["tricks"]) if @board.playing?
+        serialize_tricks!(result["tricks"]) if @board.playing?
       end
     end
   end
@@ -58,6 +58,7 @@ module AjaxHelper
 
   def serialize_trick!(result)
     result.tap do |hash|
+      hash["visible"] = true
       if @board.cards.current_trick.present?
         hash["lead"] = @board.deal_owner(@board.cards.current_lead.try(:card))
         hash["cards"] = @board.cards.current_trick.map { |c| c.card.to_s }
@@ -70,6 +71,7 @@ module AjaxHelper
 
   def serialize_tricks!(result)
     result.tap do |hash|
+      hash["visible"] = true
       hash["contract"] = @board.contract
       hash["declarer"] = @board.declarer
       hash["resultNS"] = @board.tricks_taken("NS")
@@ -107,14 +109,16 @@ module AjaxHelper
                    },
       "trick" => {
                   "lead" => nil,
-                  "cards" => nil
+                  "cards" => nil,
+                  "visible" => false
                  },
       "tricks" => {
                    "contract" => "",
                    "declarer" => "",
                    "resultNS" => 0,
                    "resultEW" => 0,
-                   "tricks" => []
+                   "tricks" => [],
+                   "visible" => false
                   }
     }
   end

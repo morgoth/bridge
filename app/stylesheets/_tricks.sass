@@ -1,0 +1,55 @@
+.yui3-tricks-hidden
+  display: none
+
+.yui3-tricks-bar
+  -moz-border-radius: 5px
+  -webkit-border-radius: 5px
+  background: $light_blue_color
+  border: 1px solid white
+  overflow: hidden
+  font-size: 18px
+  color: black
+  line-height: $card_height / 3
+
+.yui3-tricks-contract
+  +float-left
+  margin: 0 5px
+
+.yui3-tricks-declarer
+  +float-left
+  margin: 0 5px
+
+.yui3-tricks-result-ns
+  +float-right
+  margin: 0 5px
+
+.yui3-tricks-result-ew
+  +float-right
+  margin: 0 5px
+
+.yui3-tricks-tricks
+  +no-bullets
+  +inline-list
+  display: block
+  overflow: hidden
+  height: $card_height * 0.66
+  text-align: center
+  li
+    margin-right: -$card_overlap / 2
+    margin-left: -$card_overlap / 2
+
+.yui3-tricks-trick
+  +reset-box-model
+  border: none
+
+.yui3-tricks-trick-won
+  height: $card_height
+  width: $card_width
+  +replace-text(unquote("cards/won.png"), 0, 0)
+  background-color: transparent
+
+.yui3-tricks-trick-lost
+  height: $card_height
+  width: $card_height
+  +replace-text(unquote("cards/lost.png"), 0, $card_height - $card_width)
+  background-color: transparent

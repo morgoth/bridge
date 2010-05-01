@@ -21,6 +21,7 @@ YUI.add("table", function(Y) {
             this._renderBiddingBox();
             this._renderAuction();
             this._renderTrick();
+            this._renderTricks();
         },
 
         _bindUI: function() {
@@ -182,6 +183,18 @@ YUI.add("table", function(Y) {
             }).render();
         },
 
+        _renderTricks: function() {
+            var tricksNode,
+                container = this.get("container");
+            tricksNode = container.one(".bridge-tricks");
+
+            this.tricks = new Y.Bridge.Tricks({
+                host: this,
+                boundingBox: tricksNode,
+                visible: false
+            }).render();
+        },
+
         _uiSyncTable: function(tableData) {
             this.set("player", tableData.player);
             this.set("boardState", tableData.boardState);
@@ -189,6 +202,7 @@ YUI.add("table", function(Y) {
             this.biddingBox.setAttrs(tableData.biddingBox);
             this.auction.setAttrs(tableData.auction);
             this.trick.setAttrs(tableData.trick);
+            this.tricks.setAttrs(tableData.tricks);
         },
 
         _uiSetPlayer: function(player) {
@@ -209,6 +223,8 @@ YUI.add("table", function(Y) {
             ];
 
             this.trick.set("player", player);
+            this.tricks.set("player", player);
+
             Y.each(slotNodes, function(slotNode, i) {
                 slotNode.append(handNodes[(i + position + 2) % 4]);
             }, this);
@@ -223,8 +239,6 @@ YUI.add("table", function(Y) {
                 container.one(".bridge-table-row-2 .bridge-table-col-2")
             ];
 
-            this.trick.hide();
-
             switch(boardState) {
             case "preparing":
                 auctionSlotNodes[0].append(auctionNode);
@@ -233,7 +247,6 @@ YUI.add("table", function(Y) {
                 auctionSlotNodes[1].append(auctionNode);
                 break;
             case "playing":
-                this.trick.show();
                 auctionSlotNodes[0].append(auctionNode);
                 break;
             }
@@ -299,9 +312,11 @@ YUI.add("table", function(Y) {
             },
 
             tableData: {
+
             },
 
             boardState: {
+
             },
 
             container: {
@@ -359,6 +374,7 @@ YUI.add("table", function(Y) {
             +     '</div>'
             +     '<div class="bridge-table-col-3">'
             +       '<div class="bridge-biddingbox"></div>'
+            +       '<div class="bridge-tricks"></div>'
             +     '</div>'
             +   '</div>'
             + '</div>'
@@ -367,4 +383,4 @@ YUI.add("table", function(Y) {
 
     Y.Bridge.Table = Table;
 
-}, "0", { requires: ["base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox", "auction", "trick"] });
+}, "0", { requires: ["base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox", "auction", "trick", "tricks"] });

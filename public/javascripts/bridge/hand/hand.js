@@ -279,4 +279,4 @@ YUI.add("hand", function(Y) {
 
     Y.Bridge.Hand = Hand;
 
-}, "0", { requires: ["widget", "collection", "mustache"] });
+}, "0", { requires: ["widget", "collection", "mustache", "helpers"] });

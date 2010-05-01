@@ -89,6 +89,17 @@ YUI.add("helpers", function(Y) {
         return '<span class="' + className + '">' + content + '</span>';
     };
 
+    Y.Bridge.renderContract = function(contract) {
+        var content, level, suit, modifiers,
+            className = Y.ClassNameManager.getClassName("bridge", "bid", contract.toLowerCase());
+        level = parseInt(contract);
+        suit = Y.Bridge.parseSuit(contract);
+        modifiers = Y.Bridge.parseModifiers(contract);
+        content = level.toString() + Y.Bridge.renderSuit(suit) + modifiers;
+
+        return '<span class="' + className + '">' + content + '</span>';
+    };
+
     Y.Bridge.renderSuit = function(suit) {
         var content,
             className = Y.ClassNameManager.getClassName("bridge", "suit", suit.toLowerCase());
@@ -162,6 +173,16 @@ YUI.add("helpers", function(Y) {
         var matchData = contract.match(new RegExp(Y.Bridge.SUITS.join("|")));
 
         return matchData && matchData[0];
+    };
+
+    Y.Bridge.parseModifiers = function(contract) {
+        var matchData = contract.match(/X+/);
+
+        return (matchData && matchData[0]) || "";
+    };
+
+    Y.Bridge.isSameSide = function(firstDirection, secondDirection) {
+        return Y.Bridge.dealerPosition(firstDirection) % 2 === Y.Bridge.dealerPosition(secondDirection) % 2;
     };
 
 }, "0", { requires: ["collection", "oop", "classnamemanager"] });
