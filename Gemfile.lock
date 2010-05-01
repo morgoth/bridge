@@ -4,7 +4,7 @@ sources:
 - Git: 
     git: git://github.com/plataformatec/devise.git
     uri: git://github.com/plataformatec/devise.git
-    ref: 61fbec858e1bdc9b403ac75a47f4776f1148099f
+    ref: fb0f8fcd0df66c5c4f08a855ba673e81de360594
 - Git: 
     git: git://github.com/pluginaweek/state_machine.git
     uri: git://github.com/pluginaweek/state_machine.git
@@ -12,7 +12,7 @@ sources:
 - Git: 
     git: git://github.com/rails/rails.git
     uri: git://github.com/rails/rails.git
-    ref: 176fbfd66fe500ddfd04ffeb08ed014e705a82f9
+    ref: efba1d4227514a6ce4880910a6531b0a6c3c75aa
 - Rubygems: 
     uri: http://rubygems.org
 specs: 
@@ -23,9 +23,9 @@ specs:
 - builder: 
     version: 2.1.2
 - i18n: 
-    version: 0.3.7
+    version: 0.4.0.beta
 - memcache-client: 
-    version: 1.8.2
+    version: 1.8.3
 - tzinfo: 
     version: 0.3.20
 - activesupport: 
@@ -75,13 +75,13 @@ specs:
 - bundler: 
     version: 0.9.24
 - culerity: 
-    version: 0.2.9
+    version: 0.2.10
 - nokogiri: 
     version: 1.4.1
 - ffi: 
     version: 0.6.3
 - json_pure: 
-    version: 1.4.1
+    version: 1.4.2
 - selenium-webdriver: 
     version: 0.0.18
 - capybara: 
@@ -106,7 +106,7 @@ specs:
 - proxies: 
     version: 0.1.1
 - thor: 
-    version: 0.13.4
+    version: 0.13.6
 - railties: 
     version: 3.0.0.beta3
     source: 2
