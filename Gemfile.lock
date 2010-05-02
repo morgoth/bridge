@@ -1,5 +1,5 @@
 --- 
-hash: aa71880b1e6cbefdd515369495d67f4090d1be46
+hash: 34f29131a9ff055561bbee180bc613d7b812f776
 sources: 
 - Git: 
     git: git://github.com/plataformatec/devise.git
@@ -10,9 +10,13 @@ sources:
     uri: git://github.com/pluginaweek/state_machine.git
     ref: e9f8f0e4a22c9adae86e57734cad4574f6487bb6
 - Git: 
+    git: git://github.com/nex3/haml.git
+    uri: git://github.com/nex3/haml.git
+    ref: c413672192813de50bc9fd79e0cbd4d38881af87
+- Git: 
     git: git://github.com/rails/rails.git
     uri: git://github.com/rails/rails.git
-    ref: efba1d4227514a6ce4880910a6531b0a6c3c75aa
+    ref: ceaa100e59c7953ce5c0e978ddd6d5bc046c9fd9
 - Rubygems: 
     uri: http://rubygems.org
 specs: 
@@ -30,10 +34,10 @@ specs:
     version: 0.3.20
 - activesupport: 
     version: 3.0.0.beta3
-    source: 2
+    source: 3
 - activemodel: 
     version: 3.0.0.beta3
-    source: 2
+    source: 3
 - erubis: 
     version: 2.6.5
 - rack: 
@@ -44,7 +48,7 @@ specs:
     version: 0.5.3
 - actionpack: 
     version: 3.0.0.beta3
-    source: 2
+    source: 3
 - mime-types: 
     version: "1.16"
 - polyglot: 
@@ -59,15 +63,15 @@ specs:
     version: 1.0.0
 - actionmailer: 
     version: 3.0.0.beta3
-    source: 2
+    source: 3
 - arel: 
     version: 0.3.3
 - activerecord: 
     version: 3.0.0.beta3
-    source: 2
+    source: 3
 - activeresource: 
     version: 3.0.0.beta3
-    source: 2
+    source: 3
 - acts_as_list: 
     version: 0.1.2
 - bridge: 
@@ -87,9 +91,10 @@ specs:
 - capybara: 
     version: 0.3.7
 - haml: 
-    version: 3.0.0.rc.1
+    version: 3.0.0.rc.3
+    source: 2
 - compass: 
-    version: 0.10.0.rc3
+    version: 0.10.0.rc4
 - database_cleaner: 
     version: 0.5.2
 - warden: 
@@ -109,14 +114,14 @@ specs:
     version: 0.13.6
 - railties: 
     version: 3.0.0.beta3
-    source: 2
+    source: 3
 - rails: 
     version: 3.0.0.beta3
-    source: 2
+    source: 3
 - rails3-generators: 
-    version: 0.6.0
+    version: 0.7.0
 - sqlite3: 
-    version: 0.0.8
+    version: 0.1.0
 - state_machine: 
     version: 0.9.0
     source: 1
@@ -140,7 +145,7 @@ dependencies:
     group: 
     - :default
   haml: 
-    version: = 3.0.0.rc.1
+    version: ">= 0"
     group: 
     - :default
   state_machine: 
@@ -148,7 +153,7 @@ dependencies:
     group: 
     - :default
   compass: 
-    version: = 0.10.0.rc3
+    version: = 0.10.0.rc4
     group: 
     - :default
   proxies: 
