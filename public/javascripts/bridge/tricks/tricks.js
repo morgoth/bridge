@@ -70,7 +70,11 @@ YUI.add("tricks", function(Y) {
                 contentBox = this.get("contentBox");
             contractNode = contentBox.one("." + contractCN);
 
-            contractNode.set("innerHTML", Y.Bridge.renderContract(contract));
+            contractNode.set("innerHTML", "");
+
+            if(contract) {
+                contractNode.set("innerHTML", Y.Bridge.renderContract(contract));
+            }
         },
 
         _uiSetDeclarer: function(declarer) {
@@ -79,7 +83,11 @@ YUI.add("tricks", function(Y) {
                 contentBox = this.get("contentBox");
             declarerNode = contentBox.one("." + declarerCN);
 
-            declarerNode.set("innerHTML", declarer);
+            declarerNode.set("innerHTML", "");
+
+            if(declarer) {
+                declarerNode.set("innerHTML", declarer);
+            }
         },
 
         _uiSetResultNS: function(resultNS) {
@@ -136,12 +144,15 @@ YUI.add("tricks", function(Y) {
             },
 
             contract: {
-                // FIXME: the contract contains modifiers (e.g. 5DXX)
-                // validator: Y.Bridge.isContract
+                setter: function(contract) {
+                    return Y.Bridge.isContract(contract) ? contract : undefined;
+                }
             },
 
             declarer: {
-                validator: Y.Bridge.isDirection
+                setter: function(declarer) {
+                    return Y.Bridge.isDirection(declarer) ? declarer : undefined;
+                }
             },
 
             resultNS: {

@@ -56,7 +56,7 @@ YUI.add("helpers", function(Y) {
     };
 
     Y.Bridge.isContract = function(contract) {
-        return Y.Array.indexOf(Y.Bridge.CONTRACTS, contract) !== -1;
+        return new RegExp("^(" + Y.Bridge.CONTRACTS.join("|") + ")(X{1,2})?$").test(contract);
     };
 
     Y.Bridge.isLevel = function(level) {
