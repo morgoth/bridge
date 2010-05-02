@@ -1,13 +1,8 @@
 YUI.add("mustache", function(Y) {
 /*
-  Shameless port of http://github.com/defunkt/mustache
-  by Jan Lehnardt <jan@apache.org>,
-     Alexander Lang <alex@upstream-berlin.com>,
-     Sebastian Cohnen <sebastian.cohnen@googlemail.com>
+  mustache.js — Logic-less templates in JavaScript
 
-  Thanks @defunkt for the awesome code.
-
-  See http://github.com/defunkt/mustache for more info.
+  See http://mustache.github.com/ for more info.
 */
 
 var Mustache = function() {
@@ -18,14 +13,13 @@ var Mustache = function() {
     ctag: "}}",
     pragmas: {},
     buffer: [],
-    pragmas_parsed: false,
     pragmas_implemented: {
       "IMPLICIT-ITERATOR": true
     },
 
     render: function(template, context, partials, in_recursion) {
       // fail fast
-      if(template.indexOf(this.otag) == -1) {
+      if(!this.includes("", template)) {
         if(in_recursion) {
           return template;
         } else {
@@ -38,9 +32,7 @@ var Mustache = function() {
         this.buffer = [];
       }
 
-      if(!this.pragmas_parsed) {
-        template = this.render_pragmas(template);
-      }
+      template = this.render_pragmas(template);
       var html = this.render_section(template, context, partials);
       if(in_recursion) {
         return this.render_tags(html, context, partials, in_recursion);
@@ -62,9 +54,8 @@ var Mustache = function() {
       Looks for %PRAGMAS
     */
     render_pragmas: function(template) {
-      this.pragmas_parsed = true;
       // no pragmas
-      if(template.indexOf(this.otag + "%") == -1) {
+      if(!this.includes("%", template)) {
         return template;
       }
 
@@ -90,39 +81,58 @@ var Mustache = function() {
       Tries to find a partial in the global scope and render it
     */
     render_partial: function(name, context, partials) {
-      if(typeof(context[name]) != "object") {
-        throw({message: "subcontext for '" + name + "' is not an object"});
-      }
       if(!partials || !partials[name]) {
         throw({message: "unknown_partial '" + name + "'"});
+      }
+      if(typeof(context[name]) != "object") {
+        return partials[name];
       }
       return this.render(partials[name], context[name], partials, true);
     },
 
     /*
-      Renders boolean and enumerable sections
+      Renders inverted (^) and normal (#) sections
     */
     render_section: function(template, context, partials) {
-      if(template.indexOf(this.otag + "#") == -1) {
+      if(!this.includes("#", template) && !this.includes("^", template)) {
         return template;
       }
+
       var that = this;
       // CSW - Added "+?" so it finds the tighest bound, not the widest
-      var regex = new RegExp(this.otag + "\\#(.+)" + this.ctag +
-              "\\s*([\\s\\S]+?)" + this.otag + "\\/\\1" + this.ctag + "\\s*", "mg");
+      var regex = new RegExp(this.otag + "(\\^|\\#)(.+)" + this.ctag +
+              "\\s*([\\s\\S]+?)" + this.otag + "\\/\\2" + this.ctag +
+              "\\s*", "mg");
 
       // for each {{#foo}}{{/foo}} section do...
-      return template.replace(regex, function(match, name, content) {
+      return template.replace(regex, function(match, type, name, content) {
         var value = that.find(name, context);
-        if(that.is_array(value)) { // Enumerable, Let's loop!
-          return that.map(value, function(row) {
-            return that.render(content, that.merge(context,
-                    that.create_context(row)), partials, true);
-          }).join("");
-        } else if(value) { // boolean section
-          return that.render(content, context, partials, true);
-        } else {
-          return "";
+        if(type == "^") { // inverted section
+          if(!value || that.is_array(value) && value.length == 0) {
+            // false or empty list, render it
+            return that.render(content, context, partials, true);
+          } else {
+            return "";
+          }
+        } else if(type == "#") { // normal section
+          if(that.is_array(value)) { // Enumerable, Let's loop!
+            return that.map(value, function(row) {
+              return that.render(content, that.merge(context,
+                      that.create_context(row)), partials, true);
+            }).join("");
+          } else if(that.is_object(value)) { // Object, Use it as subcontext!
+            return that.render(content,
+              that.merge(context, that.create_context(value)), partials, true);
+          } else if(typeof value === "function") {
+            // higher order section
+            return value.call(context, content, function(text) {
+              return that.render(text, context, partials, true);
+            })
+          } else if(value) { // boolean section
+            return that.render(content, context, partials, true);
+          } else {
+            return "";
+          }
         }
       });
     },
@@ -135,7 +145,7 @@ var Mustache = function() {
       var that = this;
 
       var new_regex = function() {
-        return new RegExp(that.otag + "(=|!|>|\\{|%)?([^\/#]+?)\\1?" +
+        return new RegExp(that.otag + "(=|!|>|\\{|%)?([^\/#\^]+?)\\1?" +
           that.ctag + "+", "g");
       };
 
@@ -206,11 +216,16 @@ var Mustache = function() {
 
     // Utility methods
 
+    /* includes tag */
+    includes: function(needle, haystack) {
+      return haystack.indexOf(this.otag + needle) != -1;
+    },
+
     /*
       Does away with nasty characters
     */
     escape: function(s) {
-      return ((s == null) ? "" : s).toString().replace(/[&"<>\\]/g, function(s) {
+      return ((s == null) ? "" : s).toString().replace(/&(?!\w+;)|["<>\\]/g, function(s) {
         switch(s) {
           case "&": return "&amp;";
           case "\\": return "\\\\";;
@@ -287,7 +302,7 @@ var Mustache = function() {
 
   return({
     name: "mustache.js",
-    version: "0.2.3-dev",
+    version: "0.3.0-dev",
 
     /*
       Turns a template and view into HTML

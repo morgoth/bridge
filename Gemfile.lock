@@ -8,7 +8,7 @@ sources:
 - Git: 
     git: git://github.com/pluginaweek/state_machine.git
     uri: git://github.com/pluginaweek/state_machine.git
-    ref: e9f8f0e4a22c9adae86e57734cad4574f6487bb6
+    ref: fb2bdc78bc373d1dc7c3fd4e8f895d421554f58f
 - Git: 
     git: git://github.com/nex3/haml.git
     uri: git://github.com/nex3/haml.git
@@ -123,7 +123,7 @@ specs:
 - sqlite3: 
     version: 0.1.0
 - state_machine: 
-    version: 0.9.0
+    version: 0.9.1
     source: 1
 - test-unit: 
     version: 2.0.7

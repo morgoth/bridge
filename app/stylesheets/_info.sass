@@ -1,0 +1,47 @@
+$info_height = 60px
+$info_width = 80px
+$info_direction_size = 25px
+
+.yui3-info-hidden
+  display: none
+
+.yui3-info-content
+  margin: auto
+  width: 2 * $info_direction_size + $info_width
+  font-size: 18px
+  color: black
+
+.yui3-info-col-1, .yui3-info-col-2, .yui3-info-col-3
+  +reset-box-model
+
+.yui3-info-direction-1, .yui3-info-direction-3
+  -moz-border-radius: 5px
+  -webkit-border-radius: 5px
+  background: white
+  width: $info_width
+  height: $info_direction_size - 4px
+  line-height: $info_direction_size
+  text-align: center
+  margin: 2px 0
+
+.yui3-info-direction-2, .yui3-info-direction-4
+  -moz-border-radius: 5px
+  -webkit-border-radius: 5px
+  background: white
+  width: $info_direction_size - 4px
+  height: $info_height
+  line-height: $info_height
+  text-align: center
+  margin: 0 2px
+
+.yui3-info-info
+  background: $light_blue_color
+  width: $info_width - 2px
+  height: $info_height - 2px
+  border: 1px solid white
+  line-height: $info_height - 2px
+  text-align: center
+
+.yui3-info-vulnerable
+  background: $red_color
+  color: white

@@ -12,6 +12,8 @@ YUI.add("helpers", function(Y) {
 
     Y.Bridge.VALUES = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"];
 
+    Y.Bridge.VULNERABILITIES = ["NONE", "NS", "EW", "BOTH"];
+
     Y.Bridge.CONTRACTS = Y.Array.reduce(Y.Bridge.LEVELS, [], function(result, level) {
         return result.concat(Y.Array.map(Y.Bridge.SUITS, function(suit) {
             return level + suit;
@@ -183,6 +185,10 @@ YUI.add("helpers", function(Y) {
 
     Y.Bridge.isSameSide = function(firstDirection, secondDirection) {
         return Y.Bridge.dealerPosition(firstDirection) % 2 === Y.Bridge.dealerPosition(secondDirection) % 2;
+    };
+
+    Y.Bridge.isVulnerability = function(vulnerability) {
+        return Y.Array.indexOf(Y.Bridge.VULNERABILITIES, vulnerability) !== -1;
     };
 
 }, "0", { requires: ["collection", "oop", "classnamemanager"] });

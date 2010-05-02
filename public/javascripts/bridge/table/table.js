@@ -22,6 +22,7 @@ YUI.add("table", function(Y) {
             this._renderAuction();
             this._renderTrick();
             this._renderTricks();
+            this._renderInfo();
         },
 
         _bindUI: function() {
@@ -195,6 +196,18 @@ YUI.add("table", function(Y) {
             }).render();
         },
 
+        _renderInfo: function() {
+            var infoNode,
+                container = this.get("container");
+            infoNode = container.one(".bridge-info");
+
+            this.info = new Y.Bridge.Info({
+                host: this,
+                boundingBox: infoNode,
+                visible: false
+            }).render();
+        },
+
         _uiSyncTable: function(tableData) {
             this.set("player", tableData.player);
             this.set("boardState", tableData.boardState);
@@ -203,6 +216,7 @@ YUI.add("table", function(Y) {
             this.auction.setAttrs(tableData.auction);
             this.trick.setAttrs(tableData.trick);
             this.tricks.setAttrs(tableData.tricks);
+            this.info.setAttrs(tableData.info);
         },
 
         _uiSetPlayer: function(player) {
@@ -224,6 +238,7 @@ YUI.add("table", function(Y) {
 
             this.trick.set("player", player);
             this.tricks.set("player", player);
+            this.info.set("player", player);
 
             Y.each(slotNodes, function(slotNode, i) {
                 slotNode.append(handNodes[(i + position + 2) % 4]);
@@ -341,11 +356,11 @@ YUI.add("table", function(Y) {
 
         TABLE_CARDS_PATH: "/ajax/tables/{{id}}/cards",
 
-        MAIN_TEMPLATE: ''
+        MAIN_TEMPLATE: '{{mustacheBug}}'
             + '<div class="bridge-table">'
             +   '<div class="bridge-table-row-1">'
             +     '<div class="bridge-table-col-1">'
-            +       '<div>&nbsp;</div>'
+            +       '<div class="bridge-info"></div>'
             +     '</div>'
             +     '<div class="bridge-table-col-2">'
             +       '<div class="bridge-hand-n"></div>'
@@ -383,4 +398,4 @@ YUI.add("table", function(Y) {
 
     Y.Bridge.Table = Table;
 
-}, "0", { requires: ["base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox", "auction", "trick", "tricks"] });
+}, "0", { requires: ["base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox", "auction", "trick", "tricks", "info"] });

@@ -12,6 +12,10 @@ YUI({
             path: "../bridge/biddingbox/biddingbox.js",
             requires: ["widget", "mustache", "collection", "helpers"]
         },
+        info: {
+            path: "../bridge/info/info.js",
+            requires: ["widget", "mustache", "helpers"]
+        },
         auction: {
             path: "../bridge/auction/auction.js",
             requires: ["widget", "mustache"]
@@ -30,7 +34,7 @@ YUI({
         },
         table: {
             path: "../bridge/table/table.js",
-            requires: ["base-base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox", "auction", "helpers", "trick", "tricks"]
+            requires: ["base-base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox", "auction", "helpers", "trick", "tricks", "info"]
         },
         "gallery-io-poller": {
             path: "../yui3-gallery/gallery-io-poller/gallery-io-poller.js",

@@ -4,6 +4,7 @@ module AjaxHelper
       result["id"] = @table.id
       result["state"] = @table.state
       result["player"] = @table.user_player(current_user).direction if @table.user_player(current_user)
+      serialize_info!(result["info"])
       Bridge::DIRECTIONS.each_with_index do |direction, i|
         serialize_hand!(result["hands"][i], direction)
       end
@@ -13,6 +14,16 @@ module AjaxHelper
         serialize_auction!(result["auction"])
         serialize_trick!(result["trick"]) if @board.playing?
         serialize_tricks!(result["tricks"]) if @board.playing?
+      end
+    end
+  end
+
+  def serialize_info!(result)
+    result.tap do |hash|
+      hash["tableId"] = @table.id
+      if @board
+        hash["dealer"] = @board.dealer
+        hash["vulnerable"] = @board.vulnerable
       end
     end
   end
@@ -119,7 +130,13 @@ module AjaxHelper
                    "resultEW" => 0,
                    "tricks" => [],
                    "visible" => false
-                  }
+                  },
+      "info" => {
+                 "tableId" => 0,
+                 "vulnerable" => "NONE",
+                 "dealer" => "N",
+                 "visible" => true
+                }
     }
   end
 
