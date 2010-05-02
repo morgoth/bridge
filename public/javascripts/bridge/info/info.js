@@ -73,13 +73,14 @@ YUI.add("info", function(Y) {
                 contentBox.one("." + this.getClassName("direction", "3")),
                 contentBox.one("." + this.getClassName("direction", "4"))
             ];
-            distance = Y.Bridge.directionDistance(player, dealer);
-
             Y.each(directionNodes, function(directionNode) {
                 directionNode.set("innerHTML", "");
             }, this);
 
-            directionNodes[(distance + 2) % 4].set("innerHTML", "D");
+            if(dealer) {
+                distance = Y.Bridge.directionDistance(player, dealer);
+                directionNodes[(distance + 2) % 4].set("innerHTML", "D");
+            }
         },
 
         _uiSetVulnerable: function(vulnerable) {
@@ -151,11 +152,16 @@ YUI.add("info", function(Y) {
             },
 
             dealer: {
-                validator: Y.Bridge.isDirection
+                setter: function(dealer) {
+                    return Y.Bridge.isDirection(dealer) ? dealer : undefined;
+                }
             },
 
             vulnerable: {
-                validator: Y.Bridge.isVulnerability
+                setter: function(vulnerable) {
+                    return Y.Bridge.isVulnerability(vulnerable) ? vulnerable : "NONE";
+                },
+                value: "NONE"
             },
 
             tableId: {
