@@ -20,29 +20,20 @@ YUI.add("helpers", function(Y) {
         }));
     });
 
-    Y.Bridge.suitPosition = function(suit) {
-        return Y.Array.indexOf(Y.Bridge.SUITS, suit);
-    };
-
-    Y.Bridge.dealerPosition = function(dealer) {
-        return Y.Array.indexOf(Y.Bridge.DIRECTIONS, dealer);
-    };
-
-    Y.Bridge.directionDistance = function(firstDirection, secondDirection) {
-        var difference,
-            firstPosition = Y.Bridge.dealerPosition(firstDirection),
-            secondPosition = Y.Bridge.dealerPosition(secondDirection);
-        difference = secondPosition - firstPosition;
-
-        if(difference < 0) {
-            difference += 4;
-        }
-
-        return difference % 4;
-    };
+    // SUITS
 
     Y.Bridge.isSuit = function(suit) {
-        return Y.Array.indexOf(Y.Bridge.SUITS, suit);
+        return Y.Array.indexOf(Y.Bridge.SUITS, suit) !== -1;
+    };
+
+    Y.Bridge.suitPosition = function(suit) {
+        return Y.Bridge.isSuit(suit) ? Y.Array.indexOf(Y.Bridge.SUITS, suit) : undefined;
+    };
+
+    Y.Bridge.parseSuit = function(contract) {
+        var matchData = contract.match(new RegExp(Y.Bridge.SUITS.join("|")));
+
+        return matchData ? matchData[0] : undefined;
     };
 
     Y.Bridge.hasSuit = function(suit, cards) {
@@ -50,6 +41,44 @@ YUI.add("helpers", function(Y) {
             return Y.Bridge.parseSuit(card) === suit;
         }) !== null;
     };
+
+    // DIRECTIONS
+
+    Y.Bridge.directionPosition = function(direction) {
+        return Y.Bridge.isDirection(direction) ? Y.Array.indexOf(Y.Bridge.DIRECTIONS, direction) : undefined;
+    };
+    Y.Bridge.dealerPosition = Y.Bridge.directionPosition; // TODO: remove calls - DEPRECATED
+
+    Y.Bridge.isDirection = function(direction) {
+        return Y.Array.indexOf(Y.Bridge.DIRECTIONS, direction) !== -1;
+    };
+
+    Y.Bridge.areSameSide = function(firstDirection, secondDirection) {
+        return Y.Bridge.isDirection(firstDirection)
+            && Y.Bridge.isDirection(secondDirection)
+            && Y.Bridge.directionPosition(firstDirection) % 2 === Y.Bridge.directionPosition(secondDirection) % 2;
+    };
+    Y.Bridge.isSameSide = Y.Bridge.areSameSide; // TODO: remove calls - DEPRECATED
+
+    Y.Bridge.directionDistance = function(firstDirection, secondDirection) {
+        var difference,
+            firstPosition = Y.Bridge.directionPosition(firstDirection),
+            secondPosition = Y.Bridge.directionPosition(secondDirection);
+
+        if(Y.Bridge.isDirection(firstDirection) && Y.Bridge.isDirection(secondDirection)) {
+            difference = secondPosition - firstPosition;
+
+            if(difference < 0) {
+                difference += 4;
+            }
+
+            return difference % 4;
+        } else {
+            return undefined;
+        }
+    };
+
+    // MODIFIERS
 
     Y.Bridge.isModifier = function(modifier) {
         return Y.Array.indexOf(Y.Bridge.MODIFIERS, modifier) !== -1;
@@ -60,11 +89,7 @@ YUI.add("helpers", function(Y) {
     };
 
     Y.Bridge.isLevel = function(level) {
-        return Y.Array.indexOf(Y.Bridge.LEVELS, parseInt(level)) !== -1;
-    };
-
-    Y.Bridge.isDirection = function(direction) {
-        return Y.Array.indexOf(Y.Bridge.DIRECTIONS, direction) !== -1;
+        return /^\d+$/.test(level) && Y.Array.indexOf(Y.Bridge.LEVELS, parseInt(level)) !== -1;
     };
 
     Y.Bridge.renderBid = function(bid) {
@@ -168,23 +193,13 @@ YUI.add("helpers", function(Y) {
     Y.Bridge.parseValue = function(card) {
         var matchData = card.match(new RegExp(Y.Bridge.VALUES.join("|")));
 
-        return matchData && matchData[0];
-    };
-
-    Y.Bridge.parseSuit = function(contract) {
-        var matchData = contract.match(new RegExp(Y.Bridge.SUITS.join("|")));
-
-        return matchData && matchData[0];
+        return matchData ? matchData[0] : undefined;
     };
 
     Y.Bridge.parseModifiers = function(contract) {
         var matchData = contract.match(/X+/);
 
         return (matchData && matchData[0]) || "";
-    };
-
-    Y.Bridge.isSameSide = function(firstDirection, secondDirection) {
-        return Y.Bridge.dealerPosition(firstDirection) % 2 === Y.Bridge.dealerPosition(secondDirection) % 2;
     };
 
     Y.Bridge.isVulnerability = function(vulnerability) {
