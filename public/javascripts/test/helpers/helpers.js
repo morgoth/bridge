@@ -161,9 +161,6 @@ YUI().use("classnamemanager", "oop", "collection", "test", "console", "helpers",
 
             isUndefined(Y.Bridge.parseValue(""));
             isUndefined(Y.Bridge.parseValue("1C"));
-            isUndefined(Y.Bridge.parseValue("1C"));
-            isUndefined(Y.Bridge.parseValue("5NT"));
-            isUndefined(Y.Bridge.parseValue("X4"));
         },
 
         testParseModifiers: function() {
@@ -171,9 +168,8 @@ YUI().use("classnamemanager", "oop", "collection", "test", "console", "helpers",
             areSame("X", Y.Bridge.parseModifiers("4NTX"));
             areSame("XX", Y.Bridge.parseModifiers("7SXX"));
 
-            isUndefined(Y.Bridge.parseModifiers("7NTXXX"));
-            isUndefined(Y.Bridge.parseModifiers("X"));
-            isUndefined(Y.Bridge.parseModifiers(""));
+            areSame("XX", Y.Bridge.parseModifiers("7NTXXX"));
+            areSame("", Y.Bridge.parseModifiers(""));
         },
 
         testIsVulnerability: function() {
@@ -185,9 +181,15 @@ YUI().use("classnamemanager", "oop", "collection", "test", "console", "helpers",
             isFalse(Y.Bridge.isVulnerability("SN"));
             isFalse(Y.Bridge.isVulnerability("WE"));
             isFalse(Y.Bridge.isVulnerability(""));
-        }
+        },
 
-        // TODO: render tests
+        testRenderSuit: function() {
+            areSame('<span class="yui3-bridge-suit-c">&clubs;</span>',  Y.Bridge.renderSuit("C"));
+            areSame('<span class="yui3-bridge-suit-d">&diams;</span>',  Y.Bridge.renderSuit("D"));
+            areSame('<span class="yui3-bridge-suit-h">&hearts;</span>', Y.Bridge.renderSuit("H"));
+            areSame('<span class="yui3-bridge-suit-s">&spades;</span>', Y.Bridge.renderSuit("S"));
+            areSame('<span class="yui3-bridge-suit-nt">NT</span>',      Y.Bridge.renderSuit("NT"));
+        }
 
     });
 

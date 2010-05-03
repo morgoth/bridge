@@ -197,9 +197,9 @@ YUI.add("helpers", function(Y) {
     };
 
     Y.Bridge.parseModifiers = function(contract) {
-        var matchData = contract.match(/X+/);
+        var matchData = contract.match(/X{1,2}/);
 
-        return (matchData && matchData[0]) || "";
+        return matchData ? matchData[0] : "";
     };
 
     Y.Bridge.isVulnerability = function(vulnerability) {
