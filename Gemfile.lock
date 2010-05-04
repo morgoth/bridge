@@ -1,22 +1,14 @@
 --- 
-hash: 34f29131a9ff055561bbee180bc613d7b812f776
+hash: fb1c20b8e03ca4c776f108858a4c44ddfa14040a
 sources: 
 - Git: 
     git: git://github.com/plataformatec/devise.git
     uri: git://github.com/plataformatec/devise.git
-    ref: fb0f8fcd0df66c5c4f08a855ba673e81de360594
-- Git: 
-    git: git://github.com/pluginaweek/state_machine.git
-    uri: git://github.com/pluginaweek/state_machine.git
-    ref: fb2bdc78bc373d1dc7c3fd4e8f895d421554f58f
-- Git: 
-    git: git://github.com/nex3/haml.git
-    uri: git://github.com/nex3/haml.git
-    ref: c413672192813de50bc9fd79e0cbd4d38881af87
+    ref: 9bdc7113244ea23769b613a9cf72252d8ae96903
 - Git: 
     git: git://github.com/rails/rails.git
     uri: git://github.com/rails/rails.git
-    ref: ceaa100e59c7953ce5c0e978ddd6d5bc046c9fd9
+    ref: 6704d8c994d9d20d0cc9d71b72521e141c7dc05d
 - Rubygems: 
     uri: http://rubygems.org
 specs: 
@@ -27,17 +19,17 @@ specs:
 - builder: 
     version: 2.1.2
 - i18n: 
-    version: 0.4.0.beta
+    version: 0.4.0.beta1
 - memcache-client: 
     version: 1.8.3
 - tzinfo: 
     version: 0.3.20
 - activesupport: 
     version: 3.0.0.beta3
-    source: 3
+    source: 1
 - activemodel: 
     version: 3.0.0.beta3
-    source: 3
+    source: 1
 - erubis: 
     version: 2.6.5
 - rack: 
@@ -48,7 +40,7 @@ specs:
     version: 0.5.3
 - actionpack: 
     version: 3.0.0.beta3
-    source: 3
+    source: 1
 - mime-types: 
     version: "1.16"
 - polyglot: 
@@ -63,21 +55,21 @@ specs:
     version: 1.0.0
 - actionmailer: 
     version: 3.0.0.beta3
-    source: 3
+    source: 1
 - arel: 
     version: 0.3.3
 - activerecord: 
     version: 3.0.0.beta3
-    source: 3
+    source: 1
 - activeresource: 
     version: 3.0.0.beta3
-    source: 3
+    source: 1
 - acts_as_list: 
     version: 0.1.2
 - bridge: 
     version: 0.0.23
 - bundler: 
-    version: 0.9.24
+    version: 0.9.25
 - culerity: 
     version: 0.2.10
 - nokogiri: 
@@ -91,10 +83,9 @@ specs:
 - capybara: 
     version: 0.3.7
 - haml: 
-    version: 3.0.0.rc.3
-    source: 2
+    version: 3.0.0.rc.4
 - compass: 
-    version: 0.10.0.rc4
+    version: 0.10.0.rc5
 - database_cleaner: 
     version: 0.5.2
 - warden: 
@@ -114,17 +105,16 @@ specs:
     version: 0.13.6
 - railties: 
     version: 3.0.0.beta3
-    source: 3
+    source: 1
 - rails: 
     version: 3.0.0.beta3
-    source: 3
+    source: 1
 - rails3-generators: 
     version: 0.7.0
 - sqlite3: 
     version: 0.1.0
 - state_machine: 
     version: 0.9.1
-    source: 1
 - test-unit: 
     version: 2.0.7
 dependencies: 
@@ -145,15 +135,15 @@ dependencies:
     group: 
     - :default
   haml: 
-    version: ">= 0"
+    version: = 3.0.0.rc.4
     group: 
     - :default
   state_machine: 
-    version: ">= 0"
+    version: ">= 0.9.1"
     group: 
     - :default
   compass: 
-    version: = 0.10.0.rc4
+    version: = 0.10.0.rc5
     group: 
     - :default
   proxies: 
