@@ -11,8 +11,10 @@ YUI.add("biddingbox", function(Y) {
         initializer: function() {
             var host = this.get("host");
 
-            this.publish("bid");
-            this.addTarget(host);
+            if(host) {
+                this.publish("bid");
+                this.addTarget(host);
+            }
         },
 
         renderUI: function() {

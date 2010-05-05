@@ -6,6 +6,7 @@ YUI().use("classnamemanager", "oop", "collection", "test", "console", "helpers",
         areSame = Y.Assert.areSame;
 
     HelpersTestCase = new Y.Test.Case({
+
         name: "Helpers Tests",
 
         testIsSuit: function() {
