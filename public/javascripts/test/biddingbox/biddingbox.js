@@ -1,4 +1,4 @@
-YUI().use("test", "console", "widget", "mustache", "collection", "helpers", "biddingbox", function(Y) {
+YUI().use("test", "console", "node-event-simulate", "widget", "mustache", "collection", "helpers", "biddingbox", function(Y) {
     var BiddingBoxTestCase,
         isTrue = Y.Assert.isTrue,
         isFalse = Y.Assert.isFalse,
@@ -9,8 +9,26 @@ YUI().use("test", "console", "widget", "mustache", "collection", "helpers", "bid
 
         name: "Bidding Box Tests",
 
-        testRender: function() {
-            new Y.Bridge.BiddingBox().render();
+        setUp: function() {
+            this.biddingBox = new Y.Bridge.BiddingBox();
+            this.biddingBox.render();
+        },
+
+        tearDown: function() {
+            this.biddingBox.destroy();
+            delete this.biddingBox;
+        },
+
+        testPass: function() {
+            this.biddingBox.on("bid", function(event) {
+                this.resume(function() {
+                    areSame("PASS", event[0]);
+                });
+            }, this);
+
+            Y.one(".yui3-biddingbox-modifier-pass").simulate("click");
+
+            this.wait();
         }
 
     });
