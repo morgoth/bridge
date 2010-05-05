@@ -189,6 +189,54 @@ YUI().use("classnamemanager", "oop", "collection", "test", "console", "helpers",
             areSame('<span class="yui3-bridge-suit-h">&hearts;</span>', Y.Bridge.renderSuit("H"));
             areSame('<span class="yui3-bridge-suit-s">&spades;</span>', Y.Bridge.renderSuit("S"));
             areSame('<span class="yui3-bridge-suit-nt">NT</span>',      Y.Bridge.renderSuit("NT"));
+        },
+
+        testRenderValue: function() {
+            areSame('<span class="yui3-bridge-value-2">2</span>',  Y.Bridge.renderValue("2"));
+            areSame('<span class="yui3-bridge-value-3">3</span>',  Y.Bridge.renderValue("3"));
+            areSame('<span class="yui3-bridge-value-4">4</span>',  Y.Bridge.renderValue("4"));
+            areSame('<span class="yui3-bridge-value-5">5</span>',  Y.Bridge.renderValue("5"));
+            areSame('<span class="yui3-bridge-value-6">6</span>',  Y.Bridge.renderValue("6"));
+            areSame('<span class="yui3-bridge-value-7">7</span>',  Y.Bridge.renderValue("7"));
+            areSame('<span class="yui3-bridge-value-8">8</span>',  Y.Bridge.renderValue("8"));
+            areSame('<span class="yui3-bridge-value-9">9</span>',  Y.Bridge.renderValue("9"));
+            areSame('<span class="yui3-bridge-value-t">10</span>', Y.Bridge.renderValue("T"));
+            areSame('<span class="yui3-bridge-value-j">J</span>',  Y.Bridge.renderValue("J"));
+            areSame('<span class="yui3-bridge-value-q">Q</span>',  Y.Bridge.renderValue("Q"));
+            areSame('<span class="yui3-bridge-value-k">K</span>',  Y.Bridge.renderValue("K"));
+            areSame('<span class="yui3-bridge-value-a">A</span>',  Y.Bridge.renderValue("A"));
+        },
+
+        testRenderBid: function() {
+            areSame('<span class="yui3-bridge-bid-pass">Pass</span>',                                            Y.Bridge.renderBid("PASS"));
+            areSame('<span class="yui3-bridge-bid-x">Dbl</span>',                                                Y.Bridge.renderBid("X"));
+            areSame('<span class="yui3-bridge-bid-xx">Rdbl</span>',                                              Y.Bridge.renderBid("XX"));
+            areSame('<span class="yui3-bridge-bid-5s">5<span class="yui3-bridge-suit-s">&spades;</span></span>', Y.Bridge.renderBid("5S"));
+        },
+
+        testRenderContract: function() {
+            areSame('<span class="yui3-bridge-contract-1d">1<span class="yui3-bridge-suit-d">&diams;</span></span>',    Y.Bridge.renderContract("1D"));
+            areSame('<span class="yui3-bridge-contract-1sx">1<span class="yui3-bridge-suit-s">&spades;</span>X</span>', Y.Bridge.renderContract("1SX"));
+            areSame('<span class="yui3-bridge-contract-5ntxx">5<span class="yui3-bridge-suit-nt">NT</span>XX</span>',   Y.Bridge.renderContract("5NTXX"));
+        },
+
+        testRenderCard: function() {
+            areSame('<button class="yui3-bridge-card yui3-bridge-card-unknown" disabled="disabled" data-event="card" data-event-argument=""></button>',
+                    Y.Bridge.renderCard(""));
+
+            areSame(''
+                    + '<button class="yui3-bridge-card yui3-bridge-card-sa yui3-bridge-card-s" disabled="disabled" data-event="card" data-event-argument="SA">'
+                    +   '<span class="yui3-bridge-suit-s">&spades;</span>'
+                    +   '<span class="yui3-bridge-value-a">A</span>'
+                    + '</button>',
+                    Y.Bridge.renderCard("SA"));
+
+            areSame(''
+                    + '<button class="yui3-bridge-card yui3-bridge-card-ht yui3-bridge-card-h" disabled="disabled" data-event="card" data-event-argument="HT">'
+                    +   '<span class="yui3-bridge-suit-h">&hearts;</span>'
+                    +   '<span class="yui3-bridge-value-t">10</span>'
+                    + '</button>',
+                    Y.Bridge.renderCard("HT"));
         }
 
     });

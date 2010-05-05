@@ -118,7 +118,7 @@ YUI.add("helpers", function(Y) {
 
     Y.Bridge.renderContract = function(contract) {
         var content, level, suit, modifiers,
-            className = Y.ClassNameManager.getClassName("bridge", "bid", contract.toLowerCase());
+            className = Y.ClassNameManager.getClassName("bridge", "contract", contract.toLowerCase());
         level = parseInt(contract);
         suit = Y.Bridge.parseSuit(contract);
         modifiers = Y.Bridge.parseModifiers(contract);
@@ -183,7 +183,7 @@ YUI.add("helpers", function(Y) {
             + '<button '
             +   'class="' + classNames.join(" ") + '" '
             +   'disabled="disabled" '
-            +   'data-event="card"'
+            +   'data-event="card" '
             +   'data-event-argument="' + card + '"'
             + '>'
             + content
