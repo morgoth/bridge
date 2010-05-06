@@ -4,11 +4,11 @@ sources:
 - Git: 
     git: git://github.com/plataformatec/devise.git
     uri: git://github.com/plataformatec/devise.git
-    ref: 9bdc7113244ea23769b613a9cf72252d8ae96903
+    ref: bb39243da2be6ae8171ed5884e85174a69f02100
 - Git: 
     git: git://github.com/rails/rails.git
     uri: git://github.com/rails/rails.git
-    ref: 6704d8c994d9d20d0cc9d71b72521e141c7dc05d
+    ref: 6d7f2790cdb6cb23285067ed2bd91fd5122adbbc
 - Rubygems: 
     uri: http://rubygems.org
 specs: 
@@ -77,7 +77,7 @@ specs:
 - ffi: 
     version: 0.6.3
 - json_pure: 
-    version: 1.4.2
+    version: 1.4.3
 - selenium-webdriver: 
     version: 0.0.18
 - capybara: 
@@ -110,7 +110,7 @@ specs:
     version: 3.0.0.beta3
     source: 1
 - rails3-generators: 
-    version: 0.7.0
+    version: 0.7.1
 - sqlite3: 
     version: 0.1.0
 - state_machine: 
