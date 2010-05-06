@@ -12,6 +12,10 @@ YUI({
             path: "../bridge/biddingbox/biddingbox.js",
             requires: ["widget", "mustache", "collection", "helpers"]
         },
+        claim: {
+            path: "../bridge/claim/claim.js",
+            requires: ["widget", "mustache"]
+        },
         info: {
             path: "../bridge/info/info.js",
             requires: ["widget", "mustache", "helpers"]
