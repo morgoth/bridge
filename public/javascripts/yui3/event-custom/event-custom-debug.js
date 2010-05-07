@@ -1,3 +1,10 @@
+/*
+Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+Code licensed under the BSD License:
+http://developer.yahoo.com/yui/license.html
+version: 3.1.1
+build: 47
+*/
 YUI.add('event-custom-base', function(Y) {
 
 /**
@@ -332,6 +339,7 @@ var AFTER = 'after',
         'details',
         'emitFacade',
         'fireOnce',
+        'async',
         'host',
         'preventable',
         'preventedFn',
@@ -511,6 +519,15 @@ Y.CustomEvent = function(type, o) {
      * @default false;
      */
     // this.fireOnce = false;
+    
+    /**
+     * fireOnce listeners will fire syncronously unless async
+     * is set to true
+     * @property async
+     * @type boolean
+     * @default false
+     */
+    //this.async = false;
 
     /**
      * Flag for stopPropagation that is modified during fire()
@@ -685,8 +702,11 @@ Y.CustomEvent.prototype = {
         var s = new Y.Subscriber(fn, context, args, when);
 
         if (this.fireOnce && this.fired) {
-            // Y.later(0, this, Y.bind(this._notify, this, s, this.firedWith));
-            setTimeout(Y.bind(this._notify, this, s, this.firedWith), 0);
+            if (this.async) {
+                setTimeout(Y.bind(this._notify, this, s, this.firedWith), 0);
+            } else {
+                this._notify(s, this.firedWith);
+            }
         }
 
         if (when == AFTER) {
@@ -1928,7 +1948,7 @@ Y.Global = YUI.Env.globalEvents;
  */
 
 
-}, '@VERSION@' ,{requires:['oop']});
+}, '3.1.1' ,{requires:['oop']});
 YUI.add('event-custom-complex', function(Y) {
 
 
@@ -2424,8 +2444,8 @@ FACADE_KEYS = Y.Object.keys(FACADE);
 })();
 
 
-}, '@VERSION@' ,{requires:['event-custom-base']});
+}, '3.1.1' ,{requires:['event-custom-base']});
 
 
-YUI.add('event-custom', function(Y){}, '@VERSION@' ,{use:['event-custom-base', 'event-custom-complex']});
+YUI.add('event-custom', function(Y){}, '3.1.1' ,{use:['event-custom-base', 'event-custom-complex']});
 

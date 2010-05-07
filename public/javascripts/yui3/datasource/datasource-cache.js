@@ -1,3 +1,10 @@
+/*
+Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+Code licensed under the BSD License:
+http://developer.yahoo.com/yui/license.html
+version: 3.1.1
+build: 47
+*/
 YUI.add('datasource-cache', function(Y) {
 
 /**
@@ -125,4 +132,4 @@ Y.extend(DataSourceCache, Y.Cache, {
 Y.namespace('Plugin').DataSourceCache = DataSourceCache;
 
 
-}, '@VERSION@' ,{requires:['datasource-local', 'cache']});
+}, '3.1.1' ,{requires:['datasource-local', 'cache']});

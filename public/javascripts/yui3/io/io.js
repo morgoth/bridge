@@ -1,3 +1,10 @@
+/*
+Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+Code licensed under the BSD License:
+http://developer.yahoo.com/yui/license.html
+version: 3.1.1
+build: 47
+*/
 YUI.add('io-base', function(Y) {
 
    /**
@@ -188,7 +195,7 @@ YUI.add('io-base', function(Y) {
     * @return object
     */
     function _io(uri, c, i) {
-        var f, o, d, m, r, s, oD,
+        var f, o, d, m, r, s, oD, a, j,
             u = uri;
             c = Y.Object(c);
             o = _create(c.xdr || c.form, i);
@@ -256,11 +263,15 @@ YUI.add('io-base', function(Y) {
             o.c.send(c.data || '');
             if (s) {
                 d = o.c;
+                a  = ['status', 'statusText', 'responseText', 'responseXML'];
                 r = c.arguments ? { id: o.id, arguments: c.arguments } : { id: o.id };
-                r = Y.mix(r, d, false, ['status', 'statusText', 'responseText', 'responseXML']);
+
+                for (j = 0; j < 4; j++) {
+                    r[a[j]] = o.c[a[j]];
+                }
+
                 r.getAllResponseHeaders = function() { return d.getAllResponseHeaders(); };
                 r.getResponseHeader = function(h) { return d.getResponseHeader(h); };
-
                 _ioComplete(o, c);
                 _handleResponse(o, c);
 
@@ -780,7 +791,7 @@ YUI.add('io-base', function(Y) {
 
 
 
-}, '@VERSION@' ,{requires:['event-custom-base'], optional:['querystring-stringify-simple']});
+}, '3.1.1' ,{requires:['event-custom-base'], optional:['querystring-stringify-simple']});
 
 YUI.add('io-form', function(Y) {
 
@@ -875,7 +886,7 @@ YUI.add('io-form', function(Y) {
 
 
 
-}, '@VERSION@' ,{requires:['io-base','node-base']});
+}, '3.1.1' ,{requires:['io-base','node-base']});
 
 YUI.add('io-xdr', function(Y) {
 
@@ -1175,7 +1186,7 @@ YUI.add('io-xdr', function(Y) {
 
 
 
-}, '@VERSION@' ,{requires:['io-base','datatype-xml']});
+}, '3.1.1' ,{requires:['io-base','datatype-xml']});
 
 YUI.add('io-upload-iframe', function(Y) {
 
@@ -1452,7 +1463,7 @@ YUI.add('io-upload-iframe', function(Y) {
 
 
 
-}, '@VERSION@' ,{requires:['io-base','node-base']});
+}, '3.1.1' ,{requires:['io-base','node-base']});
 
 YUI.add('io-queue', function(Y) {
 
@@ -1668,9 +1679,9 @@ YUI.add('io-queue', function(Y) {
 
 
 
-}, '@VERSION@' ,{requires:['io-base','queue-promote']});
+}, '3.1.1' ,{requires:['io-base','queue-promote']});
 
 
 
-YUI.add('io', function(Y){}, '@VERSION@' ,{use:['io-base', 'io-form', 'io-xdr', 'io-upload-iframe', 'io-queue']});
+YUI.add('io', function(Y){}, '3.1.1' ,{use:['io-base', 'io-form', 'io-xdr', 'io-upload-iframe', 'io-queue']});
 

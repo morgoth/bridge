@@ -1,4 +1,11 @@
 /*
+Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+Code licensed under the BSD License:
+http://developer.yahoo.com/yui/license.html
+version: 3.1.1
+build: 47
+*/
+/*
  * DOM event listener abstraction layer
  * @module event
  * @submodule event-base
@@ -98,7 +105,8 @@ var GLOBAL_ENV = YUI.Env,
  * @for YUI
  */
 Y.publish('domready', {
-    fireOnce: true
+    fireOnce: true,
+    async: true
 });
 
 if (GLOBAL_ENV.DOMReady) {
@@ -1387,7 +1395,7 @@ Y.Env.evt.plugins.contentready = {
 };
 
 
-}, '@VERSION@' ,{requires:['event-custom-base']});
+}, '3.1.1' ,{requires:['event-custom-base']});
 YUI.add('event-delegate', function(Y) {
 
 /**
@@ -1703,7 +1711,7 @@ Event.delegate = function (type, fn, el, spec) {
 Y.delegate = Event.delegate;
 
 
-}, '@VERSION@' ,{requires:['node-base']});
+}, '3.1.1' ,{requires:['node-base']});
 YUI.add('event-mousewheel', function(Y) {
 
 /**
@@ -1753,7 +1761,7 @@ Y.Env.evt.plugins.mousewheel = {
 };
 
 
-}, '@VERSION@' ,{requires:['node-base']});
+}, '3.1.1' ,{requires:['node-base']});
 YUI.add('event-mouseenter', function(Y) {
 
 /**
@@ -1939,7 +1947,7 @@ plugins.mouseenter = eventConfig;
 plugins.mouseleave = eventConfig;
 
 
-}, '@VERSION@' ,{requires:['node-base']});
+}, '3.1.1' ,{requires:['node-base']});
 YUI.add('event-key', function(Y) {
 
 /**
@@ -2043,7 +2051,7 @@ Y.log('Illegal key spec, creating a regular keypress listener instead.', 'info',
 };
 
 
-}, '@VERSION@' ,{requires:['node-base']});
+}, '3.1.1' ,{requires:['node-base']});
 YUI.add('event-focus', function(Y) {
 
 /**
@@ -2139,7 +2147,7 @@ plugins.blur = eventAdapter;
 })();
 
 
-}, '@VERSION@' ,{requires:['node-base']});
+}, '3.1.1' ,{requires:['node-base']});
 YUI.add('event-resize', function(Y) {
 
 /**
@@ -2203,8 +2211,8 @@ Y.Env.evt.plugins.windowresize = {
 })();
 
 
-}, '@VERSION@' ,{requires:['node-base']});
+}, '3.1.1' ,{requires:['node-base']});
 
 
-YUI.add('event', function(Y){}, '@VERSION@' ,{use:['event-base', 'event-delegate', 'event-mousewheel', 'event-mouseenter', 'event-key', 'event-focus', 'event-resize']});
+YUI.add('event', function(Y){}, '3.1.1' ,{use:['event-base', 'event-delegate', 'event-mousewheel', 'event-mouseenter', 'event-key', 'event-focus', 'event-resize']});
 

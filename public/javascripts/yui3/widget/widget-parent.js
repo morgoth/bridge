@@ -1,3 +1,10 @@
+/*
+Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+Code licensed under the BSD License:
+http://developer.yahoo.com/yui/license.html
+version: 3.1.1
+build: 47
+*/
 YUI.add('widget-parent', function(Y) {
 
 /**
@@ -31,7 +38,7 @@ function Parent(config) {
     * after a child is added.
     * </p>
     *
-    * @event childAdded
+    * @event addChild
     * @preventable _defAddChildFn
     * @param {EventFacade} e The Event Facade
     */
@@ -54,7 +61,7 @@ function Parent(config) {
     * after a child is removed.
     * </p>
     *
-    * @event childRemoved
+    * @event removeChild
     * @preventable _defRemoveChildFn
     * @param {EventFacade} e The Event Facade
     */
@@ -448,9 +455,8 @@ Parent.prototype = {
         
     },
 
-
     /**
-     * Default childAdded handler
+     * Default addChild handler
      *
      * @method _defAddChildFn
      * @protected
@@ -490,7 +496,7 @@ Parent.prototype = {
 
 
     /**
-     * Default childRemoved handler
+     * Default removeChild handler
      *
      * @method _defRemoveChildFn
      * @protected
@@ -833,4 +839,4 @@ Y.augment(Parent, Y.ArrayList);
 Y.WidgetParent = Parent;
 
 
-}, '@VERSION@' ,{requires:['widget', 'arraylist']});
+}, '3.1.1' ,{requires:['widget', 'arraylist']});

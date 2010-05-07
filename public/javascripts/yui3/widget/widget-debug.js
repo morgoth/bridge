@@ -1,3 +1,10 @@
+/*
+Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+Code licensed under the BSD License:
+http://developer.yahoo.com/yui/license.html
+version: 3.1.1
+build: 47
+*/
 YUI.add('widget-base', function(Y) {
 
 /**
@@ -1289,16 +1296,14 @@ Y.extend(Widget, Y.Base, {
             queue = this._uiEvtsInitQueue || {};
 
         if (sType && !queue[sType]) {
-
             Y.log("Deferring creation of " + type + " delegate until render.", "info", "widget");
+
+            this._uiEvtsInitQueue = queue[sType] = 1;
 
             this.after(RENDER, function() { 
                 this._createUIEvent(sType);
                 delete this._uiEvtsInitQueue[sType];
             });
-            
-            this._uiEvtsInitQueue = queue[sType] = 1;
-
         }
     },
 
@@ -1337,7 +1342,7 @@ Y.extend(Widget, Y.Base, {
 Y.Widget = Widget;
 
 
-}, '@VERSION@' ,{requires:['attribute', 'event-focus', 'base', 'node', 'classnamemanager', 'intl']});
+}, '3.1.1' ,{requires:['attribute', 'event-focus', 'base', 'node', 'classnamemanager', 'intl']});
 YUI.add('widget-htmlparser', function(Y) {
 
 /**
@@ -1429,7 +1434,7 @@ Y.mix(Widget.prototype, {
      * @return {Object} The merged configuration literal
      */
     _applyParsedConfig : function(node, cfg, parsedCfg) {
-        return (parsedCfg) ? Y.aggregate(cfg, parsedCfg, false) : cfg;
+        return (parsedCfg) ? Y.mix(cfg, parsedCfg, false) : cfg;
     },
 
     /**
@@ -1497,8 +1502,8 @@ Y.mix(Widget.prototype, {
 });
 
 
-}, '@VERSION@' ,{requires:['widget-base']});
+}, '3.1.1' ,{requires:['widget-base']});
 
 
-YUI.add('widget', function(Y){}, '@VERSION@' ,{use:['widget-base', 'widget-htmlparser' ]});
+YUI.add('widget', function(Y){}, '3.1.1' ,{use:['widget-base', 'widget-htmlparser' ]});
 

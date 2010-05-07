@@ -1,3 +1,10 @@
+/*
+Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+Code licensed under the BSD License:
+http://developer.yahoo.com/yui/license.html
+version: 3.1.1
+build: 47
+*/
 YUI.add('get', function(Y) {
 
 (function() {
@@ -382,11 +389,11 @@ Y.Get = function() {
                       (type === "script") ? true : false;
 
         q.attributes = q.attributes || {};
-        // q.attributes.charset = opts.charset || q.attributes.charset || 'utf-8';
-        var charset = opts.charset || q.attributes.charset;
-        if (charset) {
-            q.attributes.charset = charset;
-        }
+        q.attributes.charset = opts.charset || q.attributes.charset || 'utf-8';
+        // var charset = opts.charset || q.attributes.charset;
+        // if (charset) {
+        //     q.attributes.charset = charset;
+        // }
 
         setTimeout(function() {
             _next(id);
@@ -737,4 +744,4 @@ Y.Get = function() {
 })();
 
 
-}, '@VERSION@' );
+}, '3.1.1' );

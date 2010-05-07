@@ -1,3 +1,10 @@
+/*
+Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+Code licensed under the BSD License:
+http://developer.yahoo.com/yui/license.html
+version: 3.1.1
+build: 47
+*/
 YUI.add('widget-htmlparser', function(Y) {
 
 /**
@@ -89,7 +96,7 @@ Y.mix(Widget.prototype, {
      * @return {Object} The merged configuration literal
      */
     _applyParsedConfig : function(node, cfg, parsedCfg) {
-        return (parsedCfg) ? Y.aggregate(cfg, parsedCfg, false) : cfg;
+        return (parsedCfg) ? Y.mix(cfg, parsedCfg, false) : cfg;
     },
 
     /**
@@ -157,4 +164,4 @@ Y.mix(Widget.prototype, {
 });
 
 
-}, '@VERSION@' ,{requires:['widget-base']});
+}, '3.1.1' ,{requires:['widget-base']});

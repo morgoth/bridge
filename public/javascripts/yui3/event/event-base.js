@@ -1,4 +1,11 @@
 /*
+Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+Code licensed under the BSD License:
+http://developer.yahoo.com/yui/license.html
+version: 3.1.1
+build: 47
+*/
+/*
  * DOM event listener abstraction layer
  * @module event
  * @submodule event-base
@@ -98,7 +105,8 @@ var GLOBAL_ENV = YUI.Env,
  * @for YUI
  */
 Y.publish('domready', {
-    fireOnce: true
+    fireOnce: true,
+    async: true
 });
 
 if (GLOBAL_ENV.DOMReady) {
@@ -1377,4 +1385,4 @@ Y.Env.evt.plugins.contentready = {
 };
 
 
-}, '@VERSION@' ,{requires:['event-custom-base']});
+}, '3.1.1' ,{requires:['event-custom-base']});

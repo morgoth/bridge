@@ -1,3 +1,10 @@
+/*
+Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+Code licensed under the BSD License:
+http://developer.yahoo.com/yui/license.html
+version: 3.1.1
+build: 47
+*/
 YUI.add('test', function(Y) {
 
     /**
@@ -2985,6 +2992,12 @@ YUI.add('test', function(Y) {
     Y.Mock.Value.String     = Y.Mock.Value(Y.Assert.isString);
     Y.Mock.Value.Object     = Y.Mock.Value(Y.Assert.isObject);
     Y.Mock.Value.Function   = Y.Mock.Value(Y.Assert.isFunction);
+/*Stub for future compatibility*/
+YUITest = {
+    TestRunner: Y.Test.Runner,
+    ResultsFormat: Y.Test.Format,
+    CoverageFormat: Y.Coverage.Format
+};
 
 
-}, '@VERSION@' ,{requires:['substitute','event-base']});
+}, '3.1.1' ,{requires:['substitute','event-base']});

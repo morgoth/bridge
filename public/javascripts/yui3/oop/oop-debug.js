@@ -1,3 +1,10 @@
+/*
+Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+Code licensed under the BSD License:
+http://developer.yahoo.com/yui/license.html
+version: 3.1.1
+build: 47
+*/
 YUI.add('oop', function(Y) {
 
 /**
@@ -246,7 +253,13 @@ YUI.add('oop', function(Y) {
             return o;
         }
 
-        var o2, marked = cloned || {}, stamp;
+        // @TODO cloning YUI instances doesn't currently work
+        if (o instanceof YUI) {
+            return o;
+        }
+
+        var o2, marked = cloned || {}, stamp,
+            each = Y.each || Y.Object.each;
 
         switch (L.type(o)) {
             case 'date':
@@ -255,8 +268,9 @@ YUI.add('oop', function(Y) {
                 // return new RegExp(o.source); // if we do this we need to set the flags too
                 return o;
             case 'function':
-                o2 = Y.bind(o, owner);
-                break;
+                // o2 = Y.bind(o, owner);
+                // break;
+                return o;
             case 'array':
                 o2 = [];
                 break;
@@ -277,11 +291,13 @@ YUI.add('oop', function(Y) {
 
         // #2528250 don't try to clone element properties
         if (!o.addEventListener && !o.attachEvent) {
-            Y.Object.each(o, function(v, k) {
+            each(o, function(v, k) {
                 if (!f || (f.call(c || this, v, k, this, o) !== false)) {
                     if (k !== CLONE_MARKER) {
-                        if (o[k] === o) {
-                            this[k] = this;
+                        if (k == 'prototype') {
+                            // skip the prototype
+                        // } else if (o[k] === o) {
+                        //     this[k] = this;
                         } else {
                             this[k] = Y.clone(v, safe, f, c, owner || o, marked);
                         }
@@ -349,4 +365,4 @@ YUI.add('oop', function(Y) {
 
 
 
-}, '@VERSION@' );
+}, '3.1.1' );

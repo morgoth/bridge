@@ -1,3 +1,10 @@
+/*
+Copyright (c) 2010, Yahoo! Inc. All rights reserved.
+Code licensed under the BSD License:
+http://developer.yahoo.com/yui/license.html
+version: 3.1.1
+build: 47
+*/
 YUI.add('slider-base', function(Y) {
 
 /**
@@ -556,7 +563,7 @@ Y.SliderBase = Y.extend( SliderBase, Y.Widget, {
 });
 
 
-}, '@VERSION@' ,{requires:['widget', 'substitute', 'dd-constrain']});
+}, '3.1.1' ,{requires:['widget', 'substitute', 'dd-constrain']});
 YUI.add('slider-value-range', function(Y) {
 
 /**
@@ -951,7 +958,7 @@ Y.SliderValueRange = Y.mix( SliderValueRange, {
 }, true );
 
 
-}, '@VERSION@' ,{requires:['slider-base']});
+}, '3.1.1' ,{requires:['slider-base']});
 YUI.add('clickable-rail', function(Y) {
 
 /**
@@ -1147,7 +1154,7 @@ Y.ClickableRail = Y.mix( ClickableRail, {
 }, true );
 
 
-}, '@VERSION@' ,{requires:['slider-base']});
+}, '3.1.1' ,{requires:['slider-base']});
 YUI.add('range-slider', function(Y) {
 
 /**
@@ -1174,8 +1181,8 @@ Y.Slider = Y.Base.build( 'slider', Y.SliderBase,
     [ Y.SliderValueRange, Y.ClickableRail ] );
 
 
-}, '@VERSION@' ,{requires:['slider-base', 'clickable-rail', 'slider-value-range']});
+}, '3.1.1' ,{requires:['slider-base', 'clickable-rail', 'slider-value-range']});
 
 
-YUI.add('slider', function(Y){}, '@VERSION@' ,{use:['slider-base', 'slider-value-range', 'clickable-rail', 'range-slider']});
+YUI.add('slider', function(Y){}, '3.1.1' ,{use:['slider-base', 'slider-value-range', 'clickable-rail', 'range-slider']});
 
