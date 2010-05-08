@@ -140,7 +140,7 @@ class Board < ActiveRecord::Base
   end
 
   def end_of_auction?
-    bids.count > 3 && bids.order("position DESC").limit(3).all?(&:pass?)
+    bids.count > 3 && bids.last(3).all?(&:pass?)
   end
 
   def end_of_play?
