@@ -7,7 +7,7 @@ YUI({ filter: "raw" }).use("test", "console", "node-event-simulate", "widget", "
 
     ClaimTestCase = new Y.Test.Case({
 
-        name: "Bidding Box Tests",
+        name: "Claim Tests",
 
         setUp: function() {
             this.claim = new Y.Bridge.Claim();
