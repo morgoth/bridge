@@ -167,12 +167,12 @@ YUI.add("claim", function(Y) {
             },
 
             tricks: {
-                validator: this._validateTricks,
+                validator: "_validateTricks",
                 value: 13
             },
 
             maxTricks: {
-                validator: this._validateMaxTricks,
+                validator: "_validateMaxTricks",
                 value: 13
             }
 
