@@ -8,7 +8,7 @@ sources:
 - Git: 
     git: git://github.com/rails/rails.git
     uri: git://github.com/rails/rails.git
-    ref: 9aaef5935660ba13531512fb7def4b8bdf14511d
+    ref: ce5827ea4791e8b8143919ecceb0231e36e8932e
 - Rubygems: 
     uri: http://rubygems.org
 specs: 
@@ -112,7 +112,7 @@ specs:
 - rails3-generators: 
     version: 0.7.1
 - sqlite3: 
-    version: 0.1.0
+    version: 0.1.1
 - state_machine: 
     version: 0.9.1
 - test-unit: 
