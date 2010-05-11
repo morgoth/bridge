@@ -34,9 +34,6 @@
   overflow: hidden
   height: $card_height * 0.66
   text-align: center
-  li
-    margin-right: -$card_overlap / 2
-    margin-left: -$card_overlap / 2
 
 .yui3-tricks-trick
   +reset-box-model
@@ -47,9 +44,14 @@
   width: $card_width
   +replace-text(unquote("cards/won.png"), 0, 0)
   background-color: transparent
+  margin-right: -$card_overlap / 2
+  margin-left: -$card_overlap / 2
 
 .yui3-tricks-trick-lost
-  height: $card_height
+  height: $card_width
   width: $card_height
-  +replace-text(unquote("cards/lost.png"), 0, $card_height - $card_width)
+  +replace-text(unquote("cards/lost.png"), 0, 0)
   background-color: transparent
+  vertical-align: bottom
+  margin-right: -52px
+  margin-left: -30px
