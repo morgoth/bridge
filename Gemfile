@@ -1,13 +1,13 @@
 source "http://rubygems.org"
 
-gem "rails", :git => "git://github.com/rails/rails.git"
+gem "rails", :git => "git://github.com/rails/rails.git", :ref => "1ff3d951e620ddeeb97e"
 
 gem "bundler", ">=0.9.19"
 gem "acts_as_list"
 gem "bridge", ">=0.0.23"
-gem "haml", "3.0.0.rc.4"
+gem "haml", ">=3.0.0"
 gem "state_machine", ">=0.9.1"
-gem "compass", "0.10.0.rc5"
+gem "compass", ">= 0.10.0"
 gem "proxies"
 gem "devise", :git => "git://github.com/plataformatec/devise.git"
 gem "sqlite3", :group => [:development, :test]
