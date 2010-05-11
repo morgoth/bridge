@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem "rails", :git => "git://github.com/rails/rails.git", :ref => "1ff3d951e620ddeeb97e"
+gem "rails", :git => "git://github.com/rails/rails.git"
 
 gem "bundler", ">=0.9.19"
 gem "acts_as_list"
