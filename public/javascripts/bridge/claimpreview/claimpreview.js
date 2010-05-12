@@ -1,5 +1,8 @@
 YUI.add("claimpreview", function(Y) {
 
+    var getClassName = Y.ClassNameManager.getClassName,
+        DOT   = ".";
+
     Y.namespace("Bridge");
 
     function ClaimPreview() {
@@ -26,18 +29,7 @@ YUI.add("claimpreview", function(Y) {
             var html,
                 contentBox = this.get("contentBox");
 
-            html = Y.mustache(ClaimPreview.CLAIM_PREVIEW_TEMPLATE, {
-                labelsCN:      this.getClassName("labels"),
-                nameCN:        this.getClassName("name"),
-                tricksCN:      this.getClassName("tricks"),
-                totalCN:       this.getClassName("total"),
-                explanationCN: this.getClassName("explanation"),
-                buttonsCN:     this.getClassName("buttons"),
-                acceptCN:      this.getClassName("accept"),
-                rejectCN:      this.getClassName("reject"),
-                cancelCN:      this.getClassName("cancel")
-            });
-
+            html = Y.mustache(ClaimPreview.CLAIM_PREVIEW_TEMPLATE, ClaimPreview);
             contentBox.set("innerHTML", html);
         },
 
@@ -56,31 +48,31 @@ YUI.add("claimpreview", function(Y) {
         },
 
         _afterNameChange: function(event) {
-            this._uiSetText("." + this.getClassName("name"), event.newVal);
+            this._uiSetName(event.newVal);
         },
 
         _afterTricksChange: function(event) {
-            this._uiSetText("." + this.getClassName("tricks"), event.newVal);
+            this._uiSetTricks(event.newVal);
         },
 
         _afterTotalChange: function(event) {
-            this._uiSetText("." + this.getClassName("total"), event.newVal);
+            this._uiSetTotal(event.newVal);
         },
 
         _afterExplanationChange: function(event) {
-            this._uiSetText("." + this.getClassName("explanation"), event.newVal);
+            this._uiSetExplanation(event.newVal);
         },
 
         _afterAcceptEnabledChange: function(event) {
-            this.uiToggleButton("accept", event.newVal);
+            this._uiToggleButton(DOT + ClaimPreview.C_ACCEPT, event.newVal);
         },
 
         _afterRejectEnabledChange: function(event) {
-            this.uiToggleButton("reject", event.newVal);
+            this._uiToggleButton(DOT + ClaimPreview.C_REJECT, event.newVal);
         },
 
         _afterCancelEnabledChange: function(event) {
-            this.uiToggleButton("cancel", event.newVal);
+            this._uiToggleButton(DOT + ClaimPreview.C_CANCEL, event.newVal);
         },
 
         _onButtonClick: function(event) {
@@ -94,29 +86,49 @@ YUI.add("claimpreview", function(Y) {
 
         },
 
+        _uiSetName: function(name) {
+            this._uiSetText(DOT + ClaimPreview.C_NAME, name + ":");
+        },
+
+        _uiSetTricks: function(tricks) {
+            this._uiSetText(DOT + ClaimPreview.C_TRICKS, "I claim " + tricks.toString() + " more tricks.");
+        },
+
+        _uiSetTotal: function(total) {
+            this._uiSetText(DOT + ClaimPreview.C_TOTAL, total.toString() + " total tricks for declarer.");
+        },
+
+        _uiSetExplanation: function(explanation) {
+            this._uiSetText(DOT + ClaimPreview.C_EXPLANATION, explanation);
+        },
+
         _uiSetText: function(node, value) {
-            var textNode, textTemplate, html,
-                replacements = {},
-                strings = this.get("strings"),
+            var textNode,
                 contentBox = this.get("contentBox");
             textNode = contentBox.one(node);
-            textTemplate = strings[text + "Template"] || ("{" + text + "}");
-            replacements[text] = value;
 
-            html = Y.substitute(textTemplate, replacements);
-            textNode.set("innerHTML", html);
+            textNode.set("innerHTML", value);
         },
 
-        _enableButton: function(node) {
-            var className = this.getClassName("button", "disabled");
+        _uiToggleButton: function(node, enabled) {
+            var buttonNode,
+                contentBox = this.get("contentBox"),
+                className = this.getClassName("button", "disabled");
+            buttonNode = contentBox.one(node);
 
-            node.removeAttribute("disabled").removeClass(className);
+            if(enabled) {
+                buttonNode.removeAttribute("disabled").removeClass(className);
+            } else {
+                buttonNode.setAttribute("disabled", "disabled").addClass(className);
+            }
         },
 
-        _disableButton: function(node) {
-            var className = this.getClassName("button", "disabled");
+        _validateTricks: function(tricks) {
+            return Y.Lang.isNumber(tricks) && tricks >= 0 && tricks <= 13;
+        },
 
-            node.setAttribute("disabled", "disabled").addClass(className);
+        _validateTotal: function(total) {
+            return Y.Lang.isNumber(total) && total >= 0 && total <= 13;
         }
 
     }, {
@@ -130,19 +142,19 @@ YUI.add("claimpreview", function(Y) {
             },
 
             name: {
-
+                validator: Y.Lang.isString
             },
 
             tricks: {
-
+                validator: "_validateTricks"
             },
 
             total: {
-
+                validator: "_validateTotal"
             },
 
             explanation: {
-
+                validator: Y.Lang.isString
             },
 
             acceptEnabled: {
@@ -159,18 +171,28 @@ YUI.add("claimpreview", function(Y) {
 
         },
 
+        C_LABELS:      getClassName("claimpreview", "labels"),
+        C_NAME:        getClassName("claimpreview", "name"),
+        C_TRICKS:      getClassName("claimpreview", "tricks"),
+        C_TOTAL:       getClassName("claimpreview", "total"),
+        C_EXPLANATION: getClassName("claimpreview", "explanation"),
+        C_BUTTONS:     getClassName("claimpreview", "buttons"),
+        C_ACCEPT:      getClassName("claimpreview", "accept"),
+        C_REJECT:      getClassName("claimpreview", "reject"),
+        C_CANCEL:      getClassName("claimpreview", "cancel"),
+
         CLAIM_PREVIEW_TEMPLATE: ''
             + '<ul>'
-            +   '<li class="{{labelsCN}}">'
-            +     '<span class="{{nameCN}}"></span>'
-            +     '<span class="{{tricksCN}}"></span>'
-            +     '<span class="{{totalCN}}"></span>'
-            +     '<span class="{{explanationCN}}"></span>'
+            +   '<li class="{{C_LABELS}}">'
+            +     '<span class="{{C_NAME}}"></span>'
+            +     '<span class="{{C_TRICKS}}"></span>'
+            +     '<span class="{{C_TOTAL}}"></span>'
+            +     '<span class="{{C_EXPLANATION}}"></span>'
             +   '</li>'
-            +   '<li class="{{buttonsCN}}">'
-            +     '<button type="button" class="{{acceptCN}}" data-event="accept">Accept</button>'
-            +     '<button type="button" class="{{rejectCN}}" data-event="reject">Reject</button>'
-            +     '<button type="button" class="{{cancelCN}}" data-event="reject">Cancel</button>'
+            +   '<li class="{{C_BUTTONS}}">'
+            +     '<button type="button" class="{{C_ACCEPT}}" data-event="accept">Accept</button>'
+            +     '<button type="button" class="{{C_REJECT}}" data-event="reject">Reject</button>'
+            +     '<button type="button" class="{{C_CANCEL}}" data-event="reject">Cancel</button>'
             +   '</li>'
             + '</ul>'
 

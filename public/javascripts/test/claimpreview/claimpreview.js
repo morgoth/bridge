@@ -12,16 +12,18 @@ YUI({ filter: "raw" }).use("test", "console", "node-event-simulate", "widget", "
         setUp: function() {
             this.claimPreview = new Y.Bridge.ClaimPreview();
             this.claimPreview.render();
+            this.claimPreview.set("acceptEnabled", false);
+            this.claimPreview.set("rejectEnabled", false);
         },
 
         tearDown: function() {
-            this.claimPreview.destroy();
-            delete this.claimPreview;
+            // this.claimPreview.destroy();
+            // delete this.claimPreview;
         },
 
         testTest: function() {
 
-            this.wait();
+            // this.wait();
         }
 
     });
