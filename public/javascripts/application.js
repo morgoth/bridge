@@ -16,6 +16,10 @@ YUI({
             path: "../bridge/claim/claim.js",
             requires: ["widget", "mustache"]
         },
+        claimpreview: {
+            path: "../bridge/claimpreview/claimpreview.js",
+            requires: ["widget", "mustache"]
+        },
         info: {
             path: "../bridge/info/info.js",
             requires: ["widget", "mustache", "helpers"]
@@ -38,7 +42,7 @@ YUI({
         },
         table: {
             path: "../bridge/table/table.js",
-            requires: ["base-base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox", "auction", "helpers", "trick", "tricks", "info"]
+            requires: ["base-base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox", "auction", "helpers", "trick", "tricks", "info", "claim", "claimpreview"]
         },
         "gallery-io-poller": {
             path: "../yui3-gallery/gallery-io-poller/gallery-io-poller.js",

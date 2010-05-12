@@ -23,6 +23,8 @@ YUI.add("table", function(Y) {
             this._renderTrick();
             this._renderTricks();
             this._renderInfo();
+            this._renderClaim();
+            this._renderClaimPreview();
         },
 
         _bindUI: function() {
@@ -30,6 +32,11 @@ YUI.add("table", function(Y) {
             this.on("hand:quit", this._onHandQuit);
             this.on("hand:card", this._onHandCard);
             this.on("biddingbox:bid", this._onBiddingBoxBid);
+            this.on("claim:claim", this._onClaimClaim);
+            // temporarily disabled
+            // this.on("claim:cancel", this._onClaimCancel);
+            this.on("claimpreview:accept", this._onClaimPreviewAccept);
+            this.on("claimpreview:reject", this._onClaimPreviewReject);
             this.after("tableDataChange", this._afterTableDataChange);
             this.after("playerChange", this._afterPlayerChange);
             this.after("boardStateChange", this._afterBoardStateChange);
@@ -51,10 +58,7 @@ YUI.add("table", function(Y) {
 
             this._io(this._tableBidsPath(), {
                 method: "POST",
-                data: ""
-                    + "bid[bid]=" + bid
-                    + "&"
-                    + "bid[alert]=" + encodeURIComponent(alert)
+                data: "bid[bid]=" + bid + "&" + "bid[alert]=" + encodeURIComponent(alert)
             });
         },
 
@@ -64,22 +68,54 @@ YUI.add("table", function(Y) {
             this._io(this._tableCardsPath(), { method: "POST", data: "card[card]=" + card });
         },
 
-        _tablePlayerPath: function() {
-            return Y.mustache(Table.TABLE_PLAYER_PATH, {
-                id: this.get("id")
+        _onClaimClaim: function(event) {
+            var tricks = event[0],
+                explanation = event[1];
+
+            this._io(this._tableClaimsPath(), {
+                method: "POST",
+                data: "claim[tricks]=" + tricks + "&" + "claim[explanation]=" + encodeURIComponent(explanation)
             });
+        },
+
+
+
+        _onClaimPreviewAccept: function(event) {
+            var id = event[0];
+
+            Y.log("claimpreview:accept");
+
+            this._io(this._tableAcceptClaimPath(id), { method: "POST", data: "_method=PUT" });
+        },
+
+        _onClaimPreviewReject: function(event) {
+            var id = event[0];
+
+            this._io(this._tableRejectClaimPath(id), { method: "POST", data: "_method=PUT" });
+        },
+
+        _tablePlayerPath: function() {
+            return Y.mustache(Table.TABLE_PLAYER_PATH, { id: this.get("id") });
         },
 
         _tableBidsPath: function() {
-            return Y.mustache(Table.TABLE_BIDS_PATH, {
-                id: this.get("id")
-            });
+            return Y.mustache(Table.TABLE_BIDS_PATH, { id: this.get("id") });
         },
 
         _tableCardsPath: function() {
-            return Y.mustache(Table.TABLE_CARDS_PATH, {
-                id: this.get("id")
-            });
+            return Y.mustache(Table.TABLE_CARDS_PATH, { id: this.get("id") });
+        },
+
+        _tableClaimsPath: function() {
+            return Y.mustache(Table.TABLE_CLAIMS_PATH, { id: this.get("id") });
+        },
+
+        _tableAcceptClaimPath: function(claimId) {
+            return Y.mustache(Table.TABLE_ACCEPT_CLAIM_PATH, { id: this.get("id"), claimId: claimId });
+        },
+
+        _tableRejectClaimPath: function(claimId) {
+            return Y.mustache(Table.TABLE_REJECT_CLAIM_PATH, { id: this.get("id"), claimId: claimId });
         },
 
         _io: function(uri, configuration) {
@@ -208,6 +244,30 @@ YUI.add("table", function(Y) {
             }).render();
         },
 
+        _renderClaim: function() {
+            var claimNode,
+                container = this.get("container");
+            claimNode = container.one(".bridge-claim");
+
+            this.claim = new Y.Bridge.Claim({
+                host: this,
+                boundingBox: claimNode,
+                visible: false
+            }).render();
+        },
+
+        _renderClaimPreview: function() {
+            var claimPreviewNode,
+                container = this.get("container");
+            claimPreviewNode = container.one(".bridge-claimpreview");
+
+            this.claimPreview = new Y.Bridge.ClaimPreview({
+                host: this,
+                boundingBox: claimPreviewNode,
+                visible: false
+            }).render();
+        },
+
         _uiSyncTable: function(tableData) {
             this.set("player", tableData.player);
             this.set("boardState", tableData.boardState);
@@ -217,6 +277,8 @@ YUI.add("table", function(Y) {
             this.trick.setAttrs(tableData.trick);
             this.tricks.setAttrs(tableData.tricks);
             this.info.setAttrs(tableData.info);
+            this.claim.setAttrs(tableData.claim);
+            this.claimPreview.setAttrs(tableData.claimPreview);
         },
 
         _uiSetPlayer: function(player) {
@@ -349,12 +411,12 @@ YUI.add("table", function(Y) {
         },
 
         TABLE_PATH: "/ajax/tables/{{id}}.json",
-
         TABLE_PLAYER_PATH: "/ajax/tables/{{id}}/player",
-
         TABLE_BIDS_PATH: "/ajax/tables/{{id}}/bids",
-
         TABLE_CARDS_PATH: "/ajax/tables/{{id}}/cards",
+        TABLE_CLAIMS_PATH: "/ajax/tables/{{id}}/claims",
+        TABLE_ACCEPT_CLAIM_PATH: "/ajax/tables/{{id}}/claims/{{claimId}}/accept",
+        TABLE_REJECT_CLAIM_PATH: "/ajax/tables/{{id}}/claims/{{claimId}}/reject",
 
         MAIN_TEMPLATE: '{{mustacheBug}}'
             + '<div class="bridge-table">'
@@ -382,7 +444,8 @@ YUI.add("table", function(Y) {
             +   '</div>'
             +   '<div class="bridge-table-row-3">'
             +     '<div class="bridge-table-col-1">'
-            +       '<div>&nbsp;</div>'
+            +       '<div class="bridge-claim"></div>'
+            +       '<div class="bridge-claimpreview"></div>'
             +     '</div>'
             +     '<div class="bridge-table-col-2">'
             +       '<div class="bridge-hand-s"></div>'
@@ -398,4 +461,4 @@ YUI.add("table", function(Y) {
 
     Y.Bridge.Table = Table;
 
-}, "0", { requires: ["base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox", "auction", "trick", "tricks", "info"] });
+}, "0", { requires: ["base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox", "auction", "trick", "tricks", "info", "claim", "claimpreview"] });

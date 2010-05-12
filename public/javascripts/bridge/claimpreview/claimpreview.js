@@ -45,6 +45,10 @@ YUI.add("claimpreview", function(Y) {
             this.after("cancelEnabledChange", this._afterCancelEnabledChange);
 
             contentBox.delegate("click", Y.bind(this._onButtonClick, this), "button[data-event]");
+
+            this.after("acceptclick", this._afterAcceptClick);
+            this.after("rejectclick", this._afterRejectClick);
+            this.after("cancelclick", this._afterCancelClick);
         },
 
         _afterNameChange: function(event) {
@@ -80,6 +84,24 @@ YUI.add("claimpreview", function(Y) {
                 eventArgument = event.target.getAttribute("data-event-argument");
 
             this.fire(eventName, [eventArgument]);
+        },
+
+        _afterAcceptClick: function(event) {
+            var id = this.get("id");
+
+            this.fire("accept", [id]);
+        },
+
+        _afterRejectClick: function(event) {
+            var id = this.get("id");
+
+            this.fire("reject", [id]);
+        },
+
+        _afterCancelClick: function(event) {
+            var id = this.get("id");
+
+            this.fire("reject", [id]);
         },
 
         syncUI: function() {
@@ -141,6 +163,10 @@ YUI.add("claimpreview", function(Y) {
 
             },
 
+            id: {
+                validator: Y.Lang.isNumber
+            },
+
             name: {
                 validator: Y.Lang.isString
             },
@@ -190,9 +216,9 @@ YUI.add("claimpreview", function(Y) {
             +     '<span class="{{C_EXPLANATION}}"></span>'
             +   '</li>'
             +   '<li class="{{C_BUTTONS}}">'
-            +     '<button type="button" class="{{C_ACCEPT}}" data-event="accept">Accept</button>'
-            +     '<button type="button" class="{{C_REJECT}}" data-event="reject">Reject</button>'
-            +     '<button type="button" class="{{C_CANCEL}}" data-event="reject">Cancel</button>'
+            +     '<button type="button" class="{{C_ACCEPT}}" data-event="acceptclick">Accept</button>'
+            +     '<button type="button" class="{{C_REJECT}}" data-event="rejectclick">Reject</button>'
+            +     '<button type="button" class="{{C_CANCEL}}" data-event="cancelclick">Cancel</button>'
             +   '</li>'
             + '</ul>'
 
