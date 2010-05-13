@@ -418,7 +418,7 @@ YUI.add("table", function(Y) {
         TABLE_ACCEPT_CLAIM_PATH: "/ajax/tables/{{id}}/claims/{{claimId}}/accept",
         TABLE_REJECT_CLAIM_PATH: "/ajax/tables/{{id}}/claims/{{claimId}}/reject",
 
-        MAIN_TEMPLATE: '{{mustacheBug}}'
+        MAIN_TEMPLATE: ''
             + '<div class="bridge-table">'
             +   '<div class="bridge-table-row-1">'
             +     '<div class="bridge-table-col-1">'
