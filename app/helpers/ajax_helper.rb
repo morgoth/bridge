@@ -14,6 +14,8 @@ module AjaxHelper
         serialize_auction!(result["auction"])
         serialize_trick!(result["trick"]) if @board.playing?
         serialize_tricks!(result["tricks"]) if @board.playing?
+        serialize_claim!(result["claim"]) if @board.playing?
+        serialize_claim_preview!(result["claimPreview"]) if @board.playing? and @board.claims.active.present?
       end
     end
   end
@@ -93,11 +95,34 @@ module AjaxHelper
     end
   end
 
+  def serialize_claim!(result)
+    result.tap do |hash|
+      hash["visible"] = (@board.playing_user == current_user and @board.claims.active.empty?)
+      hash["maxTricks"] = 13 - @board.cards.completed_tricks_count
+    end
+  end
+
+  def serialize_claim_preview!(result)
+    claim = @board.claims.active.first
+    result.tap do |hash|
+      hash["id"] = claim.id
+      hash["name"] = claim.claiming_user.name
+      hash["explanation"] = claim.explanation
+      hash["tricks"] = claim.tricks
+      hash["total"] = claim.tricks + 0 # TODO: change later if total will be necessary
+      # TODO: simplify
+      hash["acceptEnabled"] = (user_signed_in? and claim.claiming_user != current_user and claim.claiming_user.partner != current_user and @board.users.dummy != current_user)
+      hash["rejectEnabled"] = hash["acceptEnabled"]
+      hash["cancelEnabled"] = claim.claiming_user == current_user
+      hash["visible"] = true
+    end
+  end
+
   # to have always default values
   def table_structure
     { "id" => "",
       "state" => "",
-      "@boardState" => "",
+      "boardState" => "",
       "player" => "",
       "hands" => [
                   { "direction" => "N", "name" => "", "joinEnabled" => false, "quitEnabled" => false, "cards" => [], "cardsEnabled" => false, "suit" => nil, "visible" => true },
@@ -136,7 +161,22 @@ module AjaxHelper
                  "vulnerable" => "NONE",
                  "dealer" => "N",
                  "visible" => true
-                }
+                },
+      "claim" => {
+                  "maxTricks" => 13,
+                  "visible" => false
+                 },
+      "claimPreview" => {
+                         "id" => 0,
+                         "name" => "",
+                         "tricks" => 0,
+                         "total" => 0,
+                         "explanation" => "",
+                         "acceptEnabled" => false,
+                         "rejectEnabled" => false,
+                         "cancelEnabled" => false,
+                         "visible" => false
+                        }
     }
   end
 
