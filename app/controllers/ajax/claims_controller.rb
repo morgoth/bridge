@@ -1,6 +1,8 @@
 class Ajax::ClaimsController < Ajax::BaseController
   def create
-    @claim = @board.claims.create(params[:claim])
+    @claim = @board.claims.build(params[:claim])
+    @claim.user = current_user
+    @claim.save
     respond_with(@table, @board, @claim)
   end
 
