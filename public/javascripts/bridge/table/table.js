@@ -83,8 +83,6 @@ YUI.add("table", function(Y) {
         _onClaimPreviewAccept: function(event) {
             var id = event[0];
 
-            Y.log("claimpreview:accept");
-
             this._io(this._tableAcceptClaimPath(id), { method: "POST", data: "_method=PUT" });
         },
 

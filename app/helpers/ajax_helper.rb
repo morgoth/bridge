@@ -105,7 +105,7 @@ module AjaxHelper
   def serialize_claim_preview!(result)
     claim = @board.claims.active.first
     result.tap do |hash|
-      hash["id"] = claim.id
+      hash["claimId"] = claim.id
       hash["name"] = claim.claiming_user.name
       hash["explanation"] = claim.explanation
       hash["tricks"] = claim.tricks

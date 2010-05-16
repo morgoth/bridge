@@ -87,19 +87,19 @@ YUI.add("claimpreview", function(Y) {
         },
 
         _afterAcceptClick: function(event) {
-            var id = this.get("id");
+            var id = this.get("claimId");
 
             this.fire("accept", [id]);
         },
 
         _afterRejectClick: function(event) {
-            var id = this.get("id");
+            var id = this.get("claimId");
 
             this.fire("reject", [id]);
         },
 
         _afterCancelClick: function(event) {
-            var id = this.get("id");
+            var id = this.get("claimId");
 
             this.fire("reject", [id]);
         },
@@ -163,8 +163,8 @@ YUI.add("claimpreview", function(Y) {
 
             },
 
-            id: {
-                validator: Y.Lang.isNumber
+            claimId: {
+                setter: parseInt
             },
 
             name: {
