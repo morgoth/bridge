@@ -109,11 +109,11 @@ module AjaxHelper
       hash["name"] = claim.claiming_user.name
       hash["explanation"] = claim.explanation
       hash["tricks"] = claim.tricks
+      # FIXME: total should indicate total number of tricks to take by declarer
       hash["total"] = claim.tricks + 0 # TODO: change later if total will be necessary
-      # TODO: simplify
-      hash["acceptEnabled"] = (user_signed_in? and claim.claiming_user != current_user and claim.claiming_user.partner != current_user and @board.users.dummy != current_user)
-      hash["rejectEnabled"] = hash["acceptEnabled"]
-      hash["cancelEnabled"] = claim.claiming_user == current_user
+      hash["acceptEnabled"] = claim.accept_users.include?(current_user)
+      hash["rejectEnabled"] = claim.reject_users.include?(current_user)
+      hash["cancelEnabled"] = (claim.claiming_user == current_user)
       hash["visible"] = true
     end
   end

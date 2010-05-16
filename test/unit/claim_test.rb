@@ -142,7 +142,25 @@ class ClaimTest < ActiveSupport::TestCase
     assert_false @claim.concerned_users.include?(@dummy)
   end
 
-  test "concerned users skips dummy and next player when declarer claims and next player accepted" do
+  test "accept_users skips dummy and claiming_user when declarer claims" do
+    @claim.user = @declarer
+    @claim.save!
+    assert_false @claim.accept_users.include?(@declarer)
+    assert       @claim.accept_users.include?(@first_lead)
+    assert       @claim.accept_users.include?(@first_lead_partner)
+    assert_false @claim.accept_users.include?(@dummy)
+  end
+
+  test "reject_users skips dummy and claiming_user when declarer claims" do
+    @claim.user = @declarer
+    @claim.save!
+    assert_false @claim.reject_users.include?(@declarer)
+    assert       @claim.reject_users.include?(@first_lead)
+    assert       @claim.reject_users.include?(@first_lead_partner)
+    assert_false @claim.reject_users.include?(@dummy)
+  end
+
+  test "concerned_users skips dummy and next player when declarer claims and next player accepted" do
     @claim.user = @declarer
     @claim.save!
     @claim.user = @claim.claiming_user.next

@@ -49,6 +49,11 @@ class Claim < ActiveRecord::Base
     end
   end
 
+  def accept_users
+    concerned_users.tap { |users| users.delete(claiming_user) }
+  end
+  alias_method :reject_users, :accept_users
+
   private
 
   def user_declarer?
