@@ -1,4 +1,12 @@
-YUI({ filter: "raw" }).use("test", "console", "node-event-simulate", "widget", "mustache", "chat", function(Y) {
+YUI({
+    filter: "raw",
+    modules: {
+        "gallery-io-poller": {
+            path: "../yui3-gallery/gallery-io-poller/gallery-io-poller.js",
+            requires: ["io-base", "base-base"]
+        }
+    }
+}).use("test", "console", "node-event-simulate", "widget", "mustache", "gallery-io-poller", "chat", function(Y) {
     var ChatTestCase,
         isTrue = Y.Assert.isTrue,
         isFalse = Y.Assert.isFalse,
@@ -10,10 +18,8 @@ YUI({ filter: "raw" }).use("test", "console", "node-event-simulate", "widget", "
         name: "Claim Preview Tests",
 
         setUp: function() {
-            this.chat = new Y.Bridge.Chat();
+            this.chat = new Y.Bridge.Chat({ channelId: 1 });
             this.chat.render();
-            this.chat.set("acceptEnabled", false);
-            this.chat.set("rejectEnabled", false);
         },
 
         tearDown: function() {
@@ -22,7 +28,6 @@ YUI({ filter: "raw" }).use("test", "console", "node-event-simulate", "widget", "
         },
 
         testTest: function() {
-
             // this.wait();
         }
 

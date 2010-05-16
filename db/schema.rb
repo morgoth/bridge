@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100512195927) do
+ActiveRecord::Schema.define(:version => 20100516205521) do
 
   create_table "bids", :force => true do |t|
     t.integer  "board_id"
@@ -47,6 +47,11 @@ ActiveRecord::Schema.define(:version => 20100512195927) do
     t.datetime "updated_at"
   end
 
+  create_table "channels", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "claims", :force => true do |t|
     t.integer  "tricks"
     t.string   "state"
@@ -55,6 +60,15 @@ ActiveRecord::Schema.define(:version => 20100512195927) do
     t.datetime "updated_at"
     t.integer  "claiming_user_id"
     t.string   "explanation"
+  end
+
+  create_table "messages", :force => true do |t|
+    t.string   "body"
+    t.integer  "user_id"
+    t.integer  "channel_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "position"
   end
 
   create_table "players", :force => true do |t|
