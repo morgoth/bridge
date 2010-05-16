@@ -11,10 +11,6 @@ YUI.add("chat", function(Y) {
 
     Y.extend(Chat, Y.Widget, {
 
-        initializer: function() {
-
-        },
-
         renderUI: function() {
             this._renderChat();
         },
@@ -29,6 +25,12 @@ YUI.add("chat", function(Y) {
 
         bindUI: function() {
             var contentBox = this.get("contentBox");
+
+            contentBox.one(DOT + Chat.C_FORM).on("submit", this._onFormSubmit, this);
+        },
+
+        _onFormSubmit: function(event) {
+            event.preventDefault();
         },
 
         syncUI: function() {
@@ -55,7 +57,7 @@ YUI.add("chat", function(Y) {
             + '</dl>'
             + '<form class="{{C_FORM}}">'
             +   '<input type="text" name="message" class="{{C_FORM_INPUT}}" />'
-            +   '<input type="submit" name="Send message" class="{{C_FORM_SUBMIT}}" />'
+            +   '<input type="submit" value="Send message" class="{{C_FORM_SUBMIT}}" />'
             + '</form>',
 
         MESSAGE_TEMPLATE: ''
