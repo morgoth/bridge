@@ -41,6 +41,14 @@ class Claim < ActiveRecord::Base
     end
   end
 
+  def concerned_users
+    board_users.tap do |users|
+      users.delete(claiming_user.partner)
+      users.delete(claiming_user.next)     if next_accepted?
+      users.delete(claiming_user.previous) if previous_accepted?
+    end
+  end
+
   private
 
   def user_declarer?

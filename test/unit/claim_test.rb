@@ -132,4 +132,53 @@ class ClaimTest < ActiveSupport::TestCase
     assert @claim.reject
     assert_equal "rejected", @claim.state
   end
+
+  test "concerned_users skips dummy when declarer claims" do
+    @claim.user = @declarer
+    @claim.save!
+    assert       @claim.concerned_users.include?(@declarer)
+    assert       @claim.concerned_users.include?(@first_lead)
+    assert       @claim.concerned_users.include?(@first_lead_partner)
+    assert_false @claim.concerned_users.include?(@dummy)
+  end
+
+  test "concerned users skips dummy and next player when declarer claims and next player accepted" do
+    @claim.user = @declarer
+    @claim.save!
+    @claim.user = @claim.claiming_user.next
+    @claim.accept!
+    assert       @claim.concerned_users.include?(@declarer)
+    assert_false @claim.concerned_users.include?(@first_lead)
+    assert       @claim.concerned_users.include?(@first_lead_partner)
+    assert_false @claim.concerned_users.include?(@dummy)
+  end
+
+  test "concerned_users skips dummy and previous player when declarer claims and previous player accepted" do
+    @claim.user = @declarer
+    @claim.save!
+    @claim.user = @claim.claiming_user.previous
+    @claim.accept!
+    assert       @claim.concerned_users.include?(@declarer)
+    assert       @claim.concerned_users.include?(@first_lead)
+    assert_false @claim.concerned_users.include?(@first_lead_partner)
+    assert_false @claim.concerned_users.include?(@dummy)
+  end
+
+  test "concerned_users returns declarer and claiming user only if first_lead player claims" do
+    @claim.user = @first_lead
+    @claim.save!
+    assert       @claim.concerned_users.include?(@declarer)
+    assert       @claim.concerned_users.include?(@first_lead)
+    assert_false @claim.concerned_users.include?(@first_lead_partner)
+    assert_false @claim.concerned_users.include?(@dummy)
+  end
+
+  test "concerned_users returns declarer and claiming user only if first_lead_partner player claims" do
+    @claim.user = @first_lead_partner
+    @claim.save!
+    assert       @claim.concerned_users.include?(@declarer)
+    assert_false @claim.concerned_users.include?(@first_lead)
+    assert       @claim.concerned_users.include?(@first_lead_partner)
+    assert_false @claim.concerned_users.include?(@dummy)
+  end
 end
