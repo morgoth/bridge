@@ -32,7 +32,11 @@ $auction_scroll_width: 20px
   background-color: $red_color
   color: white
 
-.yui3-auction-header-w
+.yui3-auction-headers li:first-child
+  +border-top-left-radius
+
+.yui3-auction-headers li:last-child
+  +border-top-right-radius
   width: $auction_bid_width
   padding-right: $auction_scroll_width
   border: none
