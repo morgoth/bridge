@@ -14,6 +14,7 @@ YUI.add("auction", function(Y) {
         bindUI: function() {
             this.after("bidsChange", this._afterBidsChange);
             this.after("dealerChange", this._afterDealerChange);
+            this.after("vulnerableChange", this._afterVulnerableChange);
         },
 
         syncUI: function() {
@@ -28,6 +29,10 @@ YUI.add("auction", function(Y) {
             this._uiSetDealer(event.newVal);
         },
 
+        _afterVulnerableChange: function(event) {
+            this._uiSetVulnerable(event.newVal);
+        },
+
         _uiSetDealer: function(dealer) {
             this._uiSetBids(this.get("bids"));
         },
@@ -35,21 +40,11 @@ YUI.add("auction", function(Y) {
         _renderAuction: function() {
             var html, headers,
                 dealer = this.get("dealer"),
-                vulnerable = this.get("vulnerable"),
                 contentBox = this.get("contentBox");
             headers = Y.Array.map(Y.Bridge.DIRECTIONS, function(direction) {
-                var classNames = [this.getClassName("header", direction.toLowerCase())];
-                if (vulnerable === "BOTH") {
-                    classNames[classNames.length] = this.getClassName("header", "vulnerable");
-                } else if (["NS", "EW"].indexOf(vulnerable) !== -1) {
-                    if (vulnerable.indexOf(direction) !== -1) {
-                        classNames[classNames.length] = this.getClassName("header", "vulnerable");
-                    }
-                }
-
                 return {
                     name: direction,
-                    classNames: classNames.join(" ")
+                    classNames: this.getClassName("header", direction.toLowerCase())
                 };
             }, this);
             html = Y.mustache(Auction.AUCTION_TEMPLATE, {
@@ -99,6 +94,37 @@ YUI.add("auction", function(Y) {
 
                 bidsNode.set("scrollTop", scrollHeight - offsetHeight);
             });
+        },
+
+        _uiSetVulnerable: function(vulnerable) {
+            var headerNodeN, headerNodeE, headerNodeS, headerNodeW,
+                contentBox = this.get("contentBox"),
+                vulnerableCN = this.getClassName("header", "vulnerable");
+
+            headerNodeN = contentBox.one("." + this.getClassName("header", "n")).removeClass(vulnerableCN);
+            headerNodeE = contentBox.one("." + this.getClassName("header", "e")).removeClass(vulnerableCN);
+            headerNodeS = contentBox.one("." + this.getClassName("header", "s")).removeClass(vulnerableCN);
+            headerNodeW = contentBox.one("." + this.getClassName("header", "w")).removeClass(vulnerableCN);
+
+            switch(vulnerable) {
+            case "NONE":
+                // DO NOTHING
+                break;
+            case "NS":
+                headerNodeN.addClass(vulnerableCN);
+                headerNodeS.addClass(vulnerableCN);
+                break;
+            case "EW":
+                headerNodeE.addClass(vulnerableCN);
+                headerNodeW.addClass(vulnerableCN);
+                break;
+            case "BOTH":
+                headerNodeN.addClass(vulnerableCN);
+                headerNodeE.addClass(vulnerableCN);
+                headerNodeS.addClass(vulnerableCN);
+                headerNodeW.addClass(vulnerableCN);
+                break;
+            }
         }
 
     }, {
