@@ -62,6 +62,7 @@ module AjaxHelper
     result.tap do |hash|
       hash["names"] = @board.users.map(&:name)
       hash["dealer"] = @board.dealer
+      hash["vulnerable"] = @board.vulnerable
       hash["bids"] = @board.bids.map do |bid|
         { "bid" => bid.bid.to_s,
           "alert" => bid.user.partner == current_user ? nil : bid.alert }
@@ -141,6 +142,7 @@ module AjaxHelper
                     "names" => [],
                     "dealer" => "",
                     "bids" => [],
+                    "vulnerable" => "NONE",
                     "visible" => true
                    },
       "trick" => {

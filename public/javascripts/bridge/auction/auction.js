@@ -35,11 +35,21 @@ YUI.add("auction", function(Y) {
         _renderAuction: function() {
             var html, headers,
                 dealer = this.get("dealer"),
+                vulnerable = this.get("vulnerable"),
                 contentBox = this.get("contentBox");
             headers = Y.Array.map(Y.Bridge.DIRECTIONS, function(direction) {
+                var classNames = [this.getClassName("header", direction.toLowerCase())];
+                if (vulnerable === "BOTH") {
+                    classNames[classNames.length] = this.getClassName("header", "vulnerable");
+                } else if (["NS", "EW"].indexOf(vulnerable) !== -1) {
+                    if (vulnerable.indexOf(direction) !== -1) {
+                        classNames[classNames.length] = this.getClassName("header", "vulnerable");
+                    }
+                }
+
                 return {
                     name: direction,
-                    className: this.getClassName("header", direction.toLowerCase())
+                    classNames: classNames.join(" ")
                 };
             }, this);
             html = Y.mustache(Auction.AUCTION_TEMPLATE, {
@@ -101,6 +111,10 @@ YUI.add("auction", function(Y) {
                 value: "N"
             },
 
+            vulnerable: {
+                value: "NONE"
+            },
+
             bids: {
                 value: []
             },
@@ -126,7 +140,7 @@ YUI.add("auction", function(Y) {
         AUCTION_TEMPLATE: ''
             + '<ol class="{{headersCN}}">'
             +   '{{#headers}}'
-            +     '<li class="yui3-auction-header {{className}}">{{name}}</li>'
+            +     '<li class="yui3-auction-header {{classNames}}">{{name}}</li>'
             +   '{{/headers}}'
             + '</ol>'
             + '<ol class="yui3-auction-bids"></ol>'

@@ -21,20 +21,21 @@ $auction_scroll_width: 20px
   +float-left
   text-align: center
   font-size: 18px
-  width: $auction_bid_width
+  border-right: 1px solid black
+  width: $auction_bid_width - 1px
   height: $auction_bid_height
   line-height: $auction_bid_height
-
-.yui3-auction-header-n, .yui3-auction-header-s
   background-color: white
   color: black
 
-.yui3-auction-header-e, .yui3-auction-header-w
+.yui3-auction-header-vulnerable
   background-color: $red_color
   color: white
 
 .yui3-auction-header-w
+  width: $auction_bid_width
   padding-right: $auction_scroll_width
+  border: none
 
 .yui3-auction-bids
   +inline-list
