@@ -4,11 +4,11 @@ sources:
 - Git: 
     git: git://github.com/plataformatec/devise.git
     uri: git://github.com/plataformatec/devise.git
-    ref: e9057626111bcc185da0f1d8d8ca93c32fe5a996
+    ref: bff64a6291a3144047c6a642e76d15a53d402702
 - Git: 
     git: git://github.com/rails/rails.git
     uri: git://github.com/rails/rails.git
-    ref: 1a2d556de7935588e04c541e6c0804b5533db6b5
+    ref: 8c5e1652c7d1343a4b4acbc10bbcb59e202bf37d
 - Rubygems: 
     uri: http://rubygems.org
 specs: 
