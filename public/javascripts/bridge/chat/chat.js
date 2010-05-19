@@ -33,16 +33,11 @@ YUI.add("chat", function(Y) {
 
             contentBox.one(DOT + Chat.C_FORM).on("submit", this._onFormSubmit, this);
             this.after("nameChange", this._afterNameChange);
-            this.after("positionChange", this._afterPositionChange);
             this.after("disabledChange", this._afterDisabledChange);
         },
 
         _afterNameChange: function(event) {
             this._uiSyncName(event.newVal);
-        },
-
-        _afterPositionChange: function(event) {
-            this._setPosition(event.newVal);
         },
 
         _afterDisabledChange: function(event) {
@@ -164,8 +159,7 @@ YUI.add("chat", function(Y) {
         },
 
         _initializePoll: function() {
-            var position = this.get("position"),
-                timeout = this.get("pollTimeout"),
+            var timeout = this.get("pollTimeout"),
                 channelMessagesPath = Y.mustache(Chat.CHANNEL_MESSAGES_PATH, {
                     channelId: this.get("channelId")
                 });
@@ -181,7 +175,8 @@ YUI.add("chat", function(Y) {
         },
 
         _onPollModified: function(id, o) {
-            var name = this.get("name"),
+            var position,
+                name = this.get("name"),
                 messages = Y.JSON.parse(o.responseText);
 
             Y.each(messages, function(message) {
@@ -190,12 +185,14 @@ YUI.add("chat", function(Y) {
                 }
             }, this);
 
-            this.set("position", o.getResponseHeader("Current-Position"));
-            this.isFirstPoll = false;
-        },
+            position = o.getResponseHeader("Current-Position");
 
-        _setPosition: function(position) {
-            this.poll.get("ioConfig").headers["After-Position"] = position;
+            if(position) {
+                this.poll.get("ioConfig").headers["Last-Position"] = position;
+                Y.log(position);
+            }
+
+            this.isFirstPoll = false;
         },
 
         _enableButton: function(node) {
@@ -218,10 +215,6 @@ YUI.add("chat", function(Y) {
 
             name: {
 
-            },
-
-            position: {
-                setter: parseInt
             },
 
             channelId: {
@@ -255,7 +248,7 @@ YUI.add("chat", function(Y) {
 
         MESSAGE_TEMPLATE: ''
             + '<dt class="{{C_MESSAGES_NAME}}">'
-            +   '{{name}}: '
+            +   '{{name}}:'
             + '</dt>'
             + '<dd class="{{C_MESSAGES_BODY}}">'
             +   '{{body}}'

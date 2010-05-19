@@ -4,8 +4,9 @@ class Ajax::MessagesController < Ajax::BaseController
 
   def index
     position = request.headers["Last-Position"]
+    logger.warn "requested position: #{position}"
     @messages = position ? @channel.messages.after_position(position) : @channel.messages.last(5)
-    response["Current-Position"] = @messages.last.position.to_s unless @messages.empty?
+    response["Current-Position"] = @messages.last.position.to_s if @messages.present?
   end
 
   def create
