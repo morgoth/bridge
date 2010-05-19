@@ -189,7 +189,6 @@ YUI.add("chat", function(Y) {
 
             if(position) {
                 this.poll.get("ioConfig").headers["Last-Position"] = position;
-                Y.log(position);
             }
 
             this.isFirstPoll = false;
