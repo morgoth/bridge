@@ -6,6 +6,7 @@
     = csrf_meta_tag
     - if current_user
       %meta{ :name => "bridge-user-id", :content => current_user.id }
+      %meta{ :name => "bridge-user-name", :content => current_user.name }
   %body
     #container
       #libre-notice= notice

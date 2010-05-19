@@ -32,23 +32,42 @@ YUI.add("chat", function(Y) {
             var contentBox = this.get("contentBox");
 
             contentBox.one(DOT + Chat.C_FORM).on("submit", this._onFormSubmit, this);
+            this.after("nameChange", this._afterNameChange);
+            this.after("positionChange", this._afterPositionChange);
+            this.after("disabledChange", this._afterDisabledChange);
+        },
+
+        _afterNameChange: function(event) {
+            this._uiSyncName(event.newVal);
+        },
+
+        _afterPositionChange: function(event) {
+            this._setPosition(event.newVal);
+        },
+
+        _afterDisabledChange: function(event) {
+            this._uiSyncDisabled(event.newVal);
         },
 
         _onFormSubmit: function(event) {
-            var message = this._uiGetMessage(),
+            var disabled = this.get("disabled"),
+                name = this.get("name"),
+                message = this._uiGetMessage(),
                 channelMessagesPath = Y.mustache(Chat.CHANNEL_MESSAGES_PATH, {
                     channelId: this.get("channelId")
                 });
 
             event.preventDefault();
 
-            if(message.length > 0) {
+            if(!disabled && (message.length > 0)) {
                 this.poll.stop();
-                // actually stops polling (previous stop can kill active
-                // transaction only) - weird behaviour
+                // actually stops polling (previous stop can kill
+                // active transaction only) - weird behaviour
                 Y.later(0, this, function() {
                     this.poll.stop();
                 });
+
+                this.disable();
 
                 Y.io(channelMessagesPath, {
                     data: "message[body]=" + encodeURIComponent(message),
@@ -59,23 +78,25 @@ YUI.add("chat", function(Y) {
                     }
                 });
 
-                // this._uiAddMessage("qoobaa", message);
-                // this._uiClearMessage();
+                this._uiAddMessage(name, message);
+                this._uiClearMessage();
             }
         },
 
         _onRequestSuccess: function() {
             this.poll.start();
+            this.enable();
         },
 
         _onRequestFailure: function(id, response) {
             Y.log(response);
             alert("Error: communication problem occured, page reload might be required.");
             this.poll.start();
+            this.enable();
         },
 
         syncUI: function() {
-
+            this._uiSyncName(this.get("name"));
         },
 
         _uiGetMessage: function() {
@@ -107,33 +128,86 @@ YUI.add("chat", function(Y) {
             });
 
             messagesNode.append(html);
+
+            Y.later(0, this, function() {
+                var scrollHeight = messagesNode.get("scrollHeight"),
+                    offsetHeight = messagesNode.get("offsetHeight");
+
+                messagesNode.set("scrollTop", scrollHeight - offsetHeight);
+            });
+        },
+
+        _uiSyncName: function(name) {
+            var formNode,
+                contentBox = this.get("contentBox");
+            formNode = contentBox.one(DOT + Chat.C_FORM);
+
+            if(Y.Lang.isString(name)) {
+                formNode.removeClass(Chat.C_FORM_DISABLED);
+                this.enable();
+            } else {
+                formNode.addClass(Chat.C_FORM_DISABLED);
+                this.disable();
+            }
+        },
+
+        _uiSyncDisabled: function(disabled) {
+            var formSubmitNode,
+                contentBox = this.get("contentBox");
+            formSubmitNode = contentBox.one(DOT + Chat.C_FORM_SUBMIT);
+
+            if(disabled) {
+                this._disableButton(formSubmitNode);
+            } else {
+                this._enableButton(formSubmitNode);
+            }
         },
 
         _initializePoll: function() {
-            var timeout = this.get("pollTimeout"),
+            var position = this.get("position"),
+                timeout = this.get("pollTimeout"),
                 channelMessagesPath = Y.mustache(Chat.CHANNEL_MESSAGES_PATH, {
                     channelId: this.get("channelId")
                 });
 
+            this.isFirstPoll = true;
             this.poll = Y.io.poll(timeout, channelMessagesPath, {
                 method: "GET",
+                headers: {},
                 on: {
-                    modified: Y.bind(this._onPollModified, this),
-                    failure: Y.bind(this._onPollFailure, this)
+                    modified: Y.bind(this._onPollModified, this)
                 }
             });
         },
 
         _onPollModified: function(id, o) {
-            var messages = Y.JSON.parse(o.responseText);
+            var name = this.get("name"),
+                messages = Y.JSON.parse(o.responseText);
 
             Y.each(messages, function(message) {
-                this._uiAddMessage(message.name, message.body);
+                if(this.isFirstPoll || (name !== message.name)) {
+                    this._uiAddMessage(message.name, message.body);
+                }
             }, this);
+
+            this.set("position", o.getResponseHeader("Current-Position"));
+            this.isFirstPoll = false;
         },
 
-        _onPollFailure: function(id, o) {
-            Y.log(o);
+        _setPosition: function(position) {
+            this.poll.get("ioConfig").headers["After-Position"] = position;
+        },
+
+        _enableButton: function(node) {
+            var className = this.getClassName("button", "disabled");
+
+            node.removeAttribute("disabled").removeClass(className);
+        },
+
+        _disableButton: function(node) {
+            var className = this.getClassName("button", "disabled");
+
+            node.setAttribute("disabled", "disabled").addClass(className);
         }
 
     }, {
@@ -141,6 +215,14 @@ YUI.add("chat", function(Y) {
         NAME: "chat",
 
         ATTRS: {
+
+            name: {
+
+            },
+
+            position: {
+                setter: parseInt
+            },
 
             channelId: {
                 setter: parseInt
@@ -157,6 +239,7 @@ YUI.add("chat", function(Y) {
         C_MESSAGES_NAME: getClassName("chat", "messages", "name"),
         C_MESSAGES_BODY: getClassName("chat", "messages", "body"),
         C_FORM:          getClassName("chat", "form"),
+        C_FORM_DISABLED: getClassName("chat", "form", "disabled"),
         C_FORM_INPUT:    getClassName("chat", "form", "input"),
         C_FORM_SUBMIT:   getClassName("chat", "form", "submit"),
 
@@ -172,7 +255,7 @@ YUI.add("chat", function(Y) {
 
         MESSAGE_TEMPLATE: ''
             + '<dt class="{{C_MESSAGES_NAME}}">'
-            +   '{{name}}:'
+            +   '{{name}}: '
             + '</dt>'
             + '<dd class="{{C_MESSAGES_BODY}}">'
             +   '{{body}}'
@@ -182,4 +265,4 @@ YUI.add("chat", function(Y) {
 
     Y.Bridge.Chat = Chat;
 
-}, "0", { requires: ["widget", "mustache", "gallery-io-poller"] });
+}, "0", { requires: ["widget", "mustache", "gallery-io-poller", "json"] });

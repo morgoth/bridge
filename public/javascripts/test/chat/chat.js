@@ -18,7 +18,7 @@ YUI({
         name: "Claim Preview Tests",
 
         setUp: function() {
-            this.chat = new Y.Bridge.Chat({ channelId: 1 });
+            this.chat = new Y.Bridge.Chat({ channelId: 1, name: "user3@example.com" });
             this.chat.render();
         },
 

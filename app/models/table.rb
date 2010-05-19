@@ -3,6 +3,9 @@ class Table < ActiveRecord::Base
 
   has_many :players, :extend => PlayersTableExtension
   has_many :boards, :extend => BoardsTableExtension
+  belongs_to :channel
+
+  before_create :create_channel
 
   state_machine :initial => :preparing do
     event :start do

@@ -44,20 +44,32 @@ YUI({
             path: "../bridge/table/table.js",
             requires: ["base-base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox", "auction", "helpers", "trick", "tricks", "info", "claim", "claimpreview"]
         },
+        chat: {
+            path: "../bridge/chat/chat.js",
+            requires: ["widget", "mustache", "gallery-io-poller", "json"]
+        },
         "gallery-io-poller": {
             path: "../yui3-gallery/gallery-io-poller/gallery-io-poller.js",
             requires: ["io-base", "base-base"]
         }
     }
-}).use("node", "table", function(Y) {
-    var userId, tableId,
-        userNode = Y.Node.one('meta[name="bridge-user-id"]'),
+}).use("node", "table", "chat", function(Y) {
+    var userId, userName, tableId, channelId,
+        userIdNode = Y.Node.one('meta[name="bridge-user-id"]'),
+        userNameNode = Y.Node.one('meta[name="bridge-user-name"]'),
+        chatNode = Y.Node.one("#chat"),
         tableNode = Y.Node.one("#table");
 
-    userId = userNode && userNode.getAttribute("content");
+    userId = userIdNode && userIdNode.getAttribute("content");
+    userName = userNameNode && userNameNode.getAttribute("content");
+    channelId = chatNode && chatNode.getAttribute("data-channel-id");
     tableId = tableNode && tableNode.getAttribute("data-table-id");
 
     if(tableId) {
         new Y.Bridge.Table({ container: tableNode, userId: userId, id: tableId, pollTimeout: 5000 });
+    }
+
+    if(channelId) {
+        new Y.Bridge.Chat({ contentBox: chatNode, channelId: channelId, name: userName, pollTimeout: 5000 }).render();
     }
 });
