@@ -3,8 +3,12 @@ class Ajax::MessagesController < Ajax::BaseController
   before_filter :fetch_channel
 
   def index
-    fresh_when :etag => [current_user, @channel]
-    @messages = @channel.messages.after_position(params[:position])
+    # HACK: AVOID ETAG MD5 HASHING - we need to know position
+    def response.etag=(etag); @etag = self["ETag"] = etag end
+    # KCAH
+    fresh_when :etag => (@channel.messages.last.try(:position).to_s || "0")
+    @position = request.headers["If-None-Match"] || "0"
+    @messages = @channel.messages.after_position(@position)
   end
 
   def create

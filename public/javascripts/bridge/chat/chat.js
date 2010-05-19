@@ -112,8 +112,7 @@ YUI.add("chat", function(Y) {
         _initializePoll: function() {
             var timeout = this.get("pollTimeout"),
                 channelMessagesPath = Y.mustache(Chat.CHANNEL_MESSAGES_PATH, {
-                    channelId: this.get("channelId"),
-                    position: this.get("position")
+                    channelId: this.get("channelId")
                 });
 
             this.poll = Y.io.poll(timeout, channelMessagesPath, {
@@ -130,12 +129,7 @@ YUI.add("chat", function(Y) {
 
             Y.each(messages, function(message) {
                 this._uiAddMessage(message.name, message.body);
-                this.set("position", message.position);
             }, this);
-
-            // this.poll.stop();
-            // this._initializePoll();
-            // this.poll.start();
         },
 
         _onPollFailure: function(id, o) {
@@ -152,11 +146,6 @@ YUI.add("chat", function(Y) {
                 setter: parseInt
             },
 
-            position: {
-                setter: parseInt,
-                value: 1
-            },
-
             pollTimeout: {
                 value: 5000,
                 validator: Y.Lang.isNumber
@@ -171,7 +160,7 @@ YUI.add("chat", function(Y) {
         C_FORM_INPUT:    getClassName("chat", "form", "input"),
         C_FORM_SUBMIT:   getClassName("chat", "form", "submit"),
 
-        CHANNEL_MESSAGES_PATH: '/ajax/channels/{{channelId}}/messages.json{{#position}}?position={{position}}{{/position}}',
+        CHANNEL_MESSAGES_PATH: '/ajax/channels/{{channelId}}/messages.json',
 
         CHAT_TEMPLATE: ''
             + '<dl class="{{C_MESSAGES}}">'
