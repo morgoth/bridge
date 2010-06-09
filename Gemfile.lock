@@ -4,11 +4,11 @@ sources:
 - Git: 
     git: git://github.com/plataformatec/devise.git
     uri: git://github.com/plataformatec/devise.git
-    ref: c8ec42a41cdd7ac67ac2b57b98049be0bce7fbe9
+    ref: 5f2a19d7844abf341ab355bfd7de21ae861c1aae
 - Git: 
     git: git://github.com/rails/rails.git
     uri: git://github.com/rails/rails.git
-    ref: bdb2871df7fb0a1eeceadb31aaba4d160df508aa
+    ref: 983815632cc1d316c7c803a47be28f1abe6698fb
 - Rubygems: 
     uri: http://rubygems.org
 specs: 
@@ -16,19 +16,15 @@ specs:
     version: 0.8.7
 - abstract: 
     version: 1.0.0
+- activesupport: 
+    version: 3.0.0.beta4
+    source: 1
 - builder: 
     version: 2.1.2
 - i18n: 
-    version: 0.4.0.beta1
-- memcache-client: 
-    version: 1.8.3
-- tzinfo: 
-    version: 0.3.20
-- activesupport: 
-    version: 3.0.0.beta3
-    source: 1
+    version: 0.4.1
 - activemodel: 
-    version: 3.0.0.beta3
+    version: 3.0.0.beta4
     source: 1
 - erubis: 
     version: 2.6.5
@@ -37,59 +33,57 @@ specs:
 - rack-mount: 
     version: 0.6.3
 - rack-test: 
-    version: 0.5.3
+    version: 0.5.4
+- tzinfo: 
+    version: 0.3.22
 - actionpack: 
-    version: 3.0.0.beta3
+    version: 3.0.0.beta4
     source: 1
 - mime-types: 
     version: "1.16"
 - polyglot: 
     version: 0.3.1
 - treetop: 
-    version: 1.4.5
+    version: 1.4.8
 - mail: 
-    version: 2.2.1
-- text-hyphen: 
-    version: 1.0.0
-- text-format: 
-    version: 1.0.0
+    version: 2.2.3
 - actionmailer: 
-    version: 3.0.0.beta3
+    version: 3.0.0.beta4
     source: 1
 - arel: 
-    version: 0.3.3
+    version: 0.4.0
 - activerecord: 
-    version: 3.0.0.beta3
+    version: 3.0.0.beta4
     source: 1
 - activeresource: 
-    version: 3.0.0.beta3
+    version: 3.0.0.beta4
     source: 1
 - acts_as_list: 
     version: 0.1.2
 - bridge: 
     version: 0.0.23
 - bundler: 
-    version: 0.9.25
+    version: 0.9.26
 - culerity: 
     version: 0.2.10
 - nokogiri: 
-    version: 1.4.1
+    version: 1.4.2
 - ffi: 
     version: 0.6.3
 - json_pure: 
     version: 1.4.3
 - selenium-webdriver: 
-    version: 0.0.18
+    version: 0.0.20
 - capybara: 
     version: 0.3.8
 - haml: 
-    version: 3.0.4
+    version: 3.0.10
 - compass: 
-    version: 0.10.1
+    version: 0.10.2
 - database_cleaner: 
     version: 0.5.2
 - warden: 
-    version: 0.10.4
+    version: 0.10.7
 - devise: 
     version: 1.1.rc1
     source: 0
@@ -104,19 +98,19 @@ specs:
 - thor: 
     version: 0.13.6
 - railties: 
-    version: 3.0.0.beta3
+    version: 3.0.0.beta4
     source: 1
 - rails: 
-    version: 3.0.0.beta3
+    version: 3.0.0.beta4
     source: 1
 - rails3-generators: 
     version: 0.8.1
 - sqlite3: 
     version: 0.1.1
 - state_machine: 
-    version: 0.9.1
+    version: 0.9.2
 - test-unit: 
-    version: 2.0.7
+    version: 2.0.9
 dependencies: 
   rails: 
     version: ">= 0"
