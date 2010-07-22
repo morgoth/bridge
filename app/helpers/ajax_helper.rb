@@ -1,110 +1,114 @@
 module AjaxHelper
-  def serialize_table
+  def serialize_table(table, user)
     table_structure.tap do |result|
-      result["id"] = @table.id
-      result["state"] = @table.state
-      result["player"] = @table.players.for(current_user).direction if @table.players.for(current_user)
-      serialize_info!(result["info"])
+      result["tableId"] = table.id
+      result["state"] = table.state
+      result["player"] = table.user_player(user).direction if table.user_player(user)
+      # result["webSocketUri"] = root_url(:protocol => "ws", :port => 8001)
+      # result["webSocketUri"] = "ws://localhost:8001/"
+      # result["webSocketUri"] += "tables/#{table.id}"
+      # result["webSocketUri"] += "/#{table.user_player(user).direction}" if table.user_player(user)
+      serialize_info!(table, user, result["info"])
       Bridge::DIRECTIONS.each_with_index do |direction, i|
-        serialize_hand!(result["hands"][i], direction)
+        serialize_hand!(table, user, result["hands"][i], direction)
       end
-      if @board
-        result["boardState"] = @board.state
-        serialize_bidding_box!(result["biddingBox"]) if @board.auction?
-        serialize_auction!(result["auction"])
-        serialize_trick!(result["trick"]) if @board.playing?
-        serialize_tricks!(result["tricks"]) if @board.playing?
-        serialize_claim!(result["claim"]) if @board.playing?
-        serialize_claim_preview!(result["claimPreview"]) if @board.playing? and @board.claims.active.present?
-      end
-    end
-  end
-
-  def serialize_info!(result)
-    result.tap do |hash|
-      hash["tableId"] = @table.id
-      if @board
-        hash["dealer"] = @board.dealer
-        hash["vulnerable"] = @board.vulnerable
+      if table.boards.current
+        result["boardState"] = table.boards.current.state
+        serialize_bidding_box!(table, user, result["biddingBox"]) if table.boards.current.auction?
+        serialize_auction!(table, user, result["auction"])
+        serialize_trick!(table, user, result["trick"]) if table.boards.current.playing?
+        serialize_tricks!(table, user, result["tricks"]) if table.boards.current.playing?
+        serialize_claim!(table, user, result["claim"]) if table.boards.current.playing?
+        serialize_claim_preview!(table, user, result["claimPreview"]) if table.boards.current.playing? and table.boards.current.claims.active.present?
       end
     end
   end
 
-  def serialize_hand!(result, direction)
+  def serialize_info!(table, user, result)
     result.tap do |hash|
-      hash["joinEnabled"] = join_enabled?(direction)
-      hash["quitEnabled"] = quit_enabled?(direction)
-      if @table.players[direction]
-        hash["name"] = @table.players[direction].name
-      end
-      if @board
-        hash["active"] = (@board.current_user.direction == direction)
-        hash["cards"] = @board.visible_hands_for(@table.players.for(current_user))[direction]
-        hash["cardsEnabled"] = cards_enabled?(direction)
-        hash["suit"] = @board.cards.current_trick_suit
+      hash["tableId"] = table.id
+      if table.boards.current
+        hash["dealer"] = table.boards.current.dealer
+        hash["vulnerable"] = table.boards.current.vulnerable
       end
     end
   end
 
-  def serialize_bidding_box!(result)
+  def serialize_hand!(table, user, result, direction)
     result.tap do |hash|
-      hash["contract"] = (@board.bids.active.contracts.first and @board.bids.active.contracts.first.bid.to_s)
-      if current_user_turn?
+      hash["joinEnabled"] = join_enabled?(table, user, direction)
+      hash["quitEnabled"] = quit_enabled?(table, user, direction)
+      if table.players[direction]
+        hash["name"] = table.players[direction].name
+      end
+      if table.boards.current
+        hash["active"] = (table.boards.current.current_user.direction == direction)
+        hash["cards"] = table.boards.current.visible_hands_for(table.user_player(user).try(:direction))[direction]
+        hash["cardsEnabled"] = cards_enabled?(table, user, direction)
+        hash["suit"] = table.boards.current.cards.current_trick_suit
+      end
+    end
+  end
+
+  def serialize_bidding_box!(table, user, result)
+    result.tap do |hash|
+      hash["contract"] = (table.boards.current.bids.active.contracts.first and table.boards.current.bids.active.contracts.first.bid.to_s)
+      if current_user_turn?(table, user)
         hash["disabled"] = false
         hash["visible"] = true
-        hash["doubleEnabled"] = @board.bids.double_allowed?
-        hash["redoubleEnabled"] = @board.bids.redouble_allowed?
+        hash["doubleEnabled"] = table.boards.current.bids.double_allowed?
+        hash["redoubleEnabled"] = table.boards.current.bids.redouble_allowed?
       end
     end
   end
 
-  def serialize_auction!(result)
+  def serialize_auction!(table, user, result)
     result.tap do |hash|
-      hash["names"] = @board.users.map(&:name)
-      hash["dealer"] = @board.dealer
-      hash["vulnerable"] = @board.vulnerable
-      hash["bids"] = @board.bids.map do |bid|
+      hash["names"] = table.boards.current.users.map(&:name)
+      hash["dealer"] = table.boards.current.dealer
+      hash["vulnerable"] = table.boards.current.vulnerable
+      hash["bids"] = table.boards.current.bids.map do |bid|
         { "bid" => bid.bid.to_s,
-          "alert" => bid.user.partner == current_user ? nil : bid.alert }
+          "alert" => bid.user.partner == user ? nil : bid.alert }
       end
     end
   end
 
-  def serialize_trick!(result)
+  def serialize_trick!(table, user, result)
     result.tap do |hash|
       hash["visible"] = true
-      if @board.cards.current_trick.present?
-        hash["lead"] = @board.deal_owner(@board.cards.current_lead.try(:card))
-        hash["cards"] = @board.cards.current_trick.map { |c| c.card.to_s }
-      elsif @board.cards.previous_trick.present?
-        hash["lead"] = @board.deal_owner(@board.cards.previous_lead.try(:card))
-        hash["cards"] = @board.cards.previous_trick.map { |c| c.card.to_s }
+      if table.boards.current.cards.current_trick.present?
+        hash["lead"] = table.boards.current.deal_owner(table.boards.current.cards.current_lead.try(:card))
+        hash["cards"] = table.boards.current.cards.current_trick.map { |c| c.card.to_s }
+      elsif table.boards.current.cards.previous_trick.present?
+        hash["lead"] = table.boards.current.deal_owner(table.boards.current.cards.previous_lead.try(:card))
+        hash["cards"] = table.boards.current.cards.previous_trick.map { |c| c.card.to_s }
       end
     end
   end
 
-  def serialize_tricks!(result)
+  def serialize_tricks!(table, user, result)
     result.tap do |hash|
       hash["visible"] = true
-      hash["contract"] = @board.contract
-      hash["declarer"] = @board.declarer
-      hash["resultNS"] = @board.tricks_taken("NS")
-      hash["resultEW"] = @board.tricks_taken("EW")
-      @board.cards.completed_tricks.each do |trick|
-        hash["tricks"] << { "cards" => trick.map { |t| t.card.to_s }, "lead" => @board.deal_owner(trick.first.card.to_s), "winner" => @board.trick_winner(trick) }
+      hash["contract"] = table.boards.current.contract
+      hash["declarer"] = table.boards.current.declarer
+      hash["resultNS"] = table.boards.current.tricks_taken("NS")
+      hash["resultEW"] = table.boards.current.tricks_taken("EW")
+      table.boards.current.cards.completed_tricks.each do |trick|
+        hash["tricks"] << { "cards" => trick.map { |t| t.card.to_s }, "lead" => table.boards.current.deal_owner(trick.first.card.to_s), "winner" => table.boards.current.trick_winner(trick) }
       end
     end
   end
 
-  def serialize_claim!(result)
+  def serialize_claim!(table, user, result)
     result.tap do |hash|
-      hash["visible"] = (@board.playing_user == current_user and @board.claims.active.empty?)
-      hash["maxTricks"] = 13 - @board.cards.completed_tricks_count
+      hash["visible"] = (table.boards.current.playing_user == user and table.boards.current.claims.active.empty?)
+      hash["maxTricks"] = 13 - table.boards.current.cards.completed_tricks_count
     end
   end
 
-  def serialize_claim_preview!(result)
-    claim = @board.claims.active.first
+  def serialize_claim_preview!(table, user, result)
+    claim = table.boards.current.claims.active.first
     result.tap do |hash|
       hash["claimId"] = claim.id
       hash["name"] = claim.claiming_user.name
@@ -112,9 +116,9 @@ module AjaxHelper
       hash["tricks"] = claim.tricks
       # FIXME: total should indicate total number of tricks to take by declarer
       hash["total"] = claim.tricks + 0 # TODO: change later if total will be necessary
-      hash["acceptEnabled"] = claim.accept_users.include?(current_user)
-      hash["rejectEnabled"] = claim.reject_users.include?(current_user)
-      hash["cancelEnabled"] = (claim.claiming_user == current_user)
+      hash["acceptEnabled"] = claim.accept_users.include?(user)
+      hash["rejectEnabled"] = claim.reject_users.include?(user)
+      hash["cancelEnabled"] = (claim.claiming_user == user)
       hash["visible"] = true
     end
   end
@@ -182,19 +186,19 @@ module AjaxHelper
     }
   end
 
-  def join_enabled?(direction)
-    current_user.present? and @table.players[direction].blank? and @table.players.for(current_user).nil?
+  def join_enabled?(table, user, direction)
+    user.present? and table.players[direction].blank? and table.user_player(user).nil?
   end
 
-  def quit_enabled?(direction)
-    @table.players[direction].present? and current_user.present? and @table.players[direction] == @table.players.for(current_user)
+  def quit_enabled?(table, user, direction)
+    table.players[direction].present? and user.present? and table.players[direction] == table.user_player(user)
   end
 
-  def cards_enabled?(direction)
-    @board.playing? and @board.playing_user == current_user and @board.cards.current_user.direction == direction
+  def cards_enabled?(table, user, direction)
+    table.boards.current.playing? and table.boards.current.playing_user == user and table.boards.current.cards.current_user.direction == direction
   end
 
-  def current_user_turn?
-    @board and @board.current_user == current_user
+  def current_user_turn?(table, user)
+    table.boards.current and table.boards.current.current_user == user
   end
 end

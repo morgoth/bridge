@@ -78,8 +78,6 @@ YUI.add("table", function(Y) {
             });
         },
 
-
-
         _onClaimPreviewAccept: function(event) {
             var id = event[0];
 

@@ -1,3 +1,6 @@
+// WebSocket.__swfLocation = "/flash/WebSocketMain.swf";
+// var socket = new Pusher("YOUR_API_KEY", "channel_name");
+
 YUI({
     filter: "raw",
     modules: {

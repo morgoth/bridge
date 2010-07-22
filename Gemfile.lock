@@ -69,6 +69,7 @@ GEM
       selenium-webdriver (>= 0.0.3)
     compass (0.10.3)
       haml (>= 3.0.4)
+    crack (0.1.8)
     culerity (0.2.10)
     database_cleaner (0.5.2)
     erubis (2.6.6)
@@ -81,6 +82,7 @@ GEM
       rake (>= 0.8.7)
     haml (3.0.15)
     i18n (0.4.1)
+    json (1.4.3)
     json_pure (1.4.3)
     mail (2.2.5)
       activesupport (>= 2.3.6)
@@ -93,6 +95,11 @@ GEM
     pg (0.9.0)
     polyglot (0.3.1)
     proxies (0.1.1)
+    pusher (0.5.3)
+      crack
+      json
+      ruby-hmac
+      signature
     rack (1.2.1)
     rack-mount (0.6.9)
       rack (>= 1.0.0)
@@ -100,11 +107,14 @@ GEM
       rack (>= 1.0)
     rails3-generators (0.12.0)
     rake (0.8.7)
+    ruby-hmac (0.4.0)
     rubyzip (0.9.4)
     selenium-webdriver (0.0.27)
       ffi (>= 0.6.1)
       json_pure
       rubyzip
+    signature (0.1.1)
+      ruby-hmac
     sqlite3-ruby (1.3.1)
     state_machine (0.9.4)
     test-unit (2.1.1)
@@ -130,6 +140,7 @@ DEPENDENCIES
   mocha
   pg
   proxies
+  pusher
   rails!
   rails3-generators
   sqlite3-ruby
