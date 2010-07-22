@@ -1,9 +1,5 @@
-require 'capybara'
-require 'capybara/dsl'
+require "capybara"
+require "capybara/dsl"
 
-Capybara.app = Rack::Builder.new do
-  run Libre::Application
-end
-
-Capybara.asset_root = Rails.root.join('public')
-
+Capybara.app = Rack::Builder.new { run Libre::Application }
+Capybara.asset_root = Rails.root.join("public")
