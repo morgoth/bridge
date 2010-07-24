@@ -14,7 +14,7 @@ YUI.add("table", function(Y) {
             this._renderUI();
             this._bindUI();
             this._parseChannelName();
-            // this._io(this._tablePath());
+            this._io(this._tablePath());
         },
 
         _parseTableId: function() {
@@ -161,9 +161,7 @@ YUI.add("table", function(Y) {
         },
 
         _onChannelNameChange: function(event) {
-            if(event.prevVal !== event.newVal) {
-                this._reconnect(event.prevVal, event.newVal);
-            }
+            this._reconnect(event.prevVal, event.newVal);
         },
 
         _onRequestStart: function() {
@@ -171,12 +169,8 @@ YUI.add("table", function(Y) {
         },
 
         _onRequestSuccess: function(id, response) {
-            // if(/^application\/json/.test(response.getResponseHeader("Content-Type"))) {
-            //     // this.set("tableData", Y.JSON.parse(response.responseText));
-            //     this._uiSyncTable(Y.JSON.parse(response.responseText));
-            // }
-            if(Y.Lang.isString(response.responseText) && response.responseText !== "") {
-                this._uiSyncTable(Y.JSON.parse(response.responseText));
+            if(/^application\/json/.test(response.getResponseHeader("Content-Type"))) {
+                this.set("tableData", Y.JSON.parse(response.responseText));
             }
         },
 
@@ -294,21 +288,17 @@ YUI.add("table", function(Y) {
         },
 
         _uiSyncTable: function(tableData) {
-            if(this.get("tableVersion") < tableData.tableVersion) {
-                Y.log("table: syncing to version " + tableData.tableVersion);
-                this.set("player", tableData.player);
-                this.set("boardState", tableData.boardState);
-                this.set("channelName", tableData.channelName);
-                this.set("tableVersion", tableData.tableVersion);
-                this._uiSyncHands(tableData.hands);
-                this.biddingBox.setAttrs(tableData.biddingBox);
-                this.auction.setAttrs(tableData.auction);
-                this.trick.setAttrs(tableData.trick);
-                this.tricks.setAttrs(tableData.tricks);
-                this.info.setAttrs(tableData.info);
-                this.claim.setAttrs(tableData.claim);
-                this.claimPreview.setAttrs(tableData.claimPreview);
-            }
+            this.set("player", tableData.player);
+            this.set("boardState", tableData.boardState);
+            this.set("channelName", tableData.channelName);
+            this._uiSyncHands(tableData.hands);
+            this.biddingBox.setAttrs(tableData.biddingBox);
+            this.auction.setAttrs(tableData.auction);
+            this.trick.setAttrs(tableData.trick);
+            this.tricks.setAttrs(tableData.tricks);
+            this.info.setAttrs(tableData.info);
+            this.claim.setAttrs(tableData.claim);
+            this.claimPreview.setAttrs(tableData.claimPreview);
         },
 
         _uiSetPlayer: function(player) {
@@ -366,26 +356,19 @@ YUI.add("table", function(Y) {
         },
 
         _reconnect: function(oldChannelName, newChannelName) {
-            var that = this;
-
             if(this.pusher === undefined) {
                 this.pusher = new Pusher(this.get("pusherApiKey"));
-
-                this.pusher.bind("connection_established", function() {
-                    that._io(that._tablePath());
-                });
             }
 
+            Y.log("unsubscribing: " + oldChannelName);
             if(Y.Lang.isString(oldChannelName)) {
-                Y.log("reconnect: unsubscribing from " + oldChannelName);
-                that.pusher.unsubscribe(oldChannelName);
+                this.pusher.unsubscribe(oldChannelName);
             }
 
+            Y.log("subscribing: " + newChannelName);
             this.pusher.subscribe(newChannelName).bind("update-table-data", function(data) {
-                that._uiSyncTable(data);
-            });
 
-            Y.log("reconnect: subscribing to " + newChannelName);
+            });
         }
 
     }, {
@@ -396,11 +379,6 @@ YUI.add("table", function(Y) {
 
             tableId: {
                 setter: parseInt
-            },
-
-            tableVersion: {
-                setter: parseInt,
-                value: -1
             },
 
             channelName: {
