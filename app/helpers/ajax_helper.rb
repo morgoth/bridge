@@ -1,13 +1,14 @@
 module AjaxHelper
+  def channel_name(table, user)
+    "table-#{table.id}".tap { |name| name.replace("private-#{name}-user-#{user.id}") if user && table.user_player(user) }
+  end
+
   def serialize_table(table, user)
     table_structure.tap do |result|
       result["tableId"] = table.id
       result["state"] = table.state
       result["player"] = table.user_player(user).direction if table.user_player(user)
-      # result["webSocketUri"] = root_url(:protocol => "ws", :port => 8001)
-      # result["webSocketUri"] = "ws://localhost:8001/"
-      # result["webSocketUri"] += "tables/#{table.id}"
-      # result["webSocketUri"] += "/#{table.user_player(user).direction}" if table.user_player(user)
+      result["channelName"] = channel_name(table, user)
       serialize_info!(table, user, result["info"])
       Bridge::DIRECTIONS.each_with_index do |direction, i|
         serialize_hand!(table, user, result["hands"][i], direction)

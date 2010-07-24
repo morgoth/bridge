@@ -9,10 +9,30 @@ YUI.add("table", function(Y) {
     Y.extend(Table, Y.Base, {
 
         initializer: function() {
+            this._parseTableId();
+            this._parsePusherApiKey();
             this._renderUI();
             this._bindUI();
-            this._initializePoll();
-            this.poll.start();
+            this._parseChannelName();
+            this._io(this._tablePath());
+        },
+
+        _parseTableId: function() {
+            var container = this.get("container");
+
+            this.set("tableId", container.getAttribute("data-table-id"));
+        },
+
+        _parsePusherApiKey: function() {
+            var container = this.get("container");
+
+            this.set("pusherApiKey", container.getAttribute("data-pusher-api-key"));
+        },
+
+        _parseChannelName: function() {
+            var container = this.get("container");
+
+            this.set("channelName", container.getAttribute("data-channel-name"));
         },
 
         _renderUI: function() {
@@ -37,6 +57,7 @@ YUI.add("table", function(Y) {
             // this.on("claim:cancel", this._onClaimCancel);
             this.on("claimpreview:accept", this._onClaimPreviewAccept);
             this.on("claimpreview:reject", this._onClaimPreviewReject);
+            this.on("channelNameChange", this._onChannelNameChange);
             this.after("tableDataChange", this._afterTableDataChange);
             this.after("playerChange", this._afterPlayerChange);
             this.after("boardStateChange", this._afterBoardStateChange);
@@ -90,28 +111,32 @@ YUI.add("table", function(Y) {
             this._io(this._tableRejectClaimPath(id), { method: "POST", data: "_method=PUT" });
         },
 
+        _tablePath: function() {
+            return Y.mustache(Table.TABLE_PATH, { tableId: this.get("tableId") });
+        },
+
         _tablePlayerPath: function() {
-            return Y.mustache(Table.TABLE_PLAYER_PATH, { id: this.get("id") });
+            return Y.mustache(Table.TABLE_PLAYER_PATH, { tableId: this.get("tableId") });
         },
 
         _tableBidsPath: function() {
-            return Y.mustache(Table.TABLE_BIDS_PATH, { id: this.get("id") });
+            return Y.mustache(Table.TABLE_BIDS_PATH, { tableId: this.get("tableId") });
         },
 
         _tableCardsPath: function() {
-            return Y.mustache(Table.TABLE_CARDS_PATH, { id: this.get("id") });
+            return Y.mustache(Table.TABLE_CARDS_PATH, { tableId: this.get("tableId") });
         },
 
         _tableClaimsPath: function() {
-            return Y.mustache(Table.TABLE_CLAIMS_PATH, { id: this.get("id") });
+            return Y.mustache(Table.TABLE_CLAIMS_PATH, { tableId: this.get("tableId") });
         },
 
         _tableAcceptClaimPath: function(claimId) {
-            return Y.mustache(Table.TABLE_ACCEPT_CLAIM_PATH, { id: this.get("id"), claimId: claimId });
+            return Y.mustache(Table.TABLE_ACCEPT_CLAIM_PATH, { tableId: this.get("tableId"), claimId: claimId });
         },
 
         _tableRejectClaimPath: function(claimId) {
-            return Y.mustache(Table.TABLE_REJECT_CLAIM_PATH, { id: this.get("id"), claimId: claimId });
+            return Y.mustache(Table.TABLE_REJECT_CLAIM_PATH, { tableId: this.get("tableId"), claimId: claimId });
         },
 
         _io: function(uri, configuration) {
@@ -120,13 +145,6 @@ YUI.add("table", function(Y) {
             configuration.on.start = Y.bind(this._onRequestStart, this);
             configuration.on.success = Y.bind(this._onRequestSuccess, this);
             configuration.on.failure = Y.bind(this._onRequestFailure, this);
-
-            this.poll.stop();
-            // actually stops polling (previous stop can kill active
-            // transaction only) - weird behaviour
-            Y.later(0, this, function() {
-                this.poll.stop();
-            });
             Y.io(uri, configuration);
         },
 
@@ -142,18 +160,23 @@ YUI.add("table", function(Y) {
             this._uiSetBoardState(event.newVal);
         },
 
+        _onChannelNameChange: function(event) {
+            this._reconnect(event.prevVal, event.newVal);
+        },
+
         _onRequestStart: function() {
             window.READY = false;
         },
 
-        _onRequestSuccess: function() {
-            this.poll.start();
+        _onRequestSuccess: function(id, response) {
+            if(/^application\/json/.test(response.getResponseHeader("Content-Type"))) {
+                this.set("tableData", Y.JSON.parse(response.responseText));
+            }
         },
 
         _onRequestFailure: function(id, response) {
             Y.log(response);
             alert("Error: communication problem occured, page reload might be required.");
-            this.poll.start();
         },
 
         _renderTable: function() {
@@ -267,6 +290,7 @@ YUI.add("table", function(Y) {
         _uiSyncTable: function(tableData) {
             this.set("player", tableData.player);
             this.set("boardState", tableData.boardState);
+            this.set("channelName", tableData.channelName);
             this._uiSyncHands(tableData.hands);
             this.biddingBox.setAttrs(tableData.biddingBox);
             this.auction.setAttrs(tableData.auction);
@@ -331,37 +355,20 @@ YUI.add("table", function(Y) {
             }, this);
         },
 
-        _initializePoll: function() {
-            var timeout = this.get("pollTimeout"),
-                tablePath = Y.mustache(Table.TABLE_PATH, {
-                    id: this.get("id")
-                });
+        _reconnect: function(oldChannelName, newChannelName) {
+            if(this.pusher === undefined) {
+                this.pusher = new Pusher(this.get("pusherApiKey"));
+            }
 
-            this.poll = Y.io.poll(timeout, tablePath, {
-                on: {
-                    start: Y.bind(this._onPollStart, this),
-                    modified: Y.bind(this._onPollModified, this),
-                    failure: Y.bind(this._onPollFailure, this),
-                    complete: Y.bind(this._onPollComplete, this)
-                }
+            Y.log("unsubscribing: " + oldChannelName);
+            if(Y.Lang.isString(oldChannelName)) {
+                this.pusher.unsubscribe(oldChannelName);
+            }
+
+            Y.log("subscribing: " + newChannelName);
+            this.pusher.subscribe(newChannelName).bind("update-table-data", function(data) {
+
             });
-        },
-
-        _onPollStart: function(id, o) {
-            window.READY = false;
-        },
-
-        _onPollModified: function(id, o) {
-            var tableData = Y.JSON.parse(o.responseText);
-
-            this.set("tableData", tableData);
-        },
-
-        _onPollFailure: function(id, o) {
-        },
-
-        _onPollComplete: function() {
-            window.READY = true;
         }
 
     }, {
@@ -370,12 +377,16 @@ YUI.add("table", function(Y) {
 
         ATTRS: {
 
-            id: {
+            tableId: {
                 setter: parseInt
             },
 
-            userId: {
-                setter: parseInt
+            channelName: {
+
+            },
+
+            pusherApiKey: {
+
             },
 
             player: {
@@ -397,22 +408,17 @@ YUI.add("table", function(Y) {
                 setter: function(selector) {
                     return Y.one(selector);
                 }
-            },
-
-            pollTimeout: {
-                value: 5000,
-                validator: Y.Lang.isNumber
             }
 
         },
 
-        TABLE_PATH: "/ajax/tables/{{id}}.json",
-        TABLE_PLAYER_PATH: "/ajax/tables/{{id}}/player",
-        TABLE_BIDS_PATH: "/ajax/tables/{{id}}/bids",
-        TABLE_CARDS_PATH: "/ajax/tables/{{id}}/cards",
-        TABLE_CLAIMS_PATH: "/ajax/tables/{{id}}/claims",
-        TABLE_ACCEPT_CLAIM_PATH: "/ajax/tables/{{id}}/claims/{{claimId}}/accept",
-        TABLE_REJECT_CLAIM_PATH: "/ajax/tables/{{id}}/claims/{{claimId}}/reject",
+        TABLE_PATH: "/ajax/tables/{{tableId}}.json",
+        TABLE_PLAYER_PATH: "/ajax/tables/{{tableId}}/player",
+        TABLE_BIDS_PATH: "/ajax/tables/{{tableId}}/bids",
+        TABLE_CARDS_PATH: "/ajax/tables/{{tableId}}/cards",
+        TABLE_CLAIMS_PATH: "/ajax/tables/{{tableId}}/claims",
+        TABLE_ACCEPT_CLAIM_PATH: "/ajax/tables/{{tableId}}/claims/{{claimId}}/accept",
+        TABLE_REJECT_CLAIM_PATH: "/ajax/tables/{{tableId}}/claims/{{claimId}}/reject",
 
         MAIN_TEMPLATE: ''
             + '<div class="bridge-table">'
@@ -457,4 +463,4 @@ YUI.add("table", function(Y) {
 
     Y.Bridge.Table = Table;
 
-}, "0", { requires: ["base", "node", "gallery-io-poller", "json", "mustache", "hand", "biddingbox", "auction", "trick", "tricks", "info", "claim", "claimpreview"] });
+}, "0", { requires: ["base", "node", "json", "mustache", "hand", "biddingbox", "auction", "trick", "tricks", "info", "claim", "claimpreview"] });

@@ -9,12 +9,13 @@ class AjaxResponder < ActionController::Responder
 
       Pusher["table-#{table.id}"].trigger("update-table-data", controller.render_to_string(:template => "ajax/tables/show", :locals => { :table => table, :user => nil }))
 
-      [table.players.n, table.players.e, table.players.s, table.players.w].compact.each do |player|
+      [table.players.n, table.players.e, table.players.s, table.players.w].each do |player|
+        next if player.nil? or player.user == controller.current_user
+
         Pusher["private-table-#{table.id}-#{player.direction}"].trigger("update-table-data", controller.render_to_string(:template => "ajax/tables/show", :locals => { :table => table, :user => player.user }))
       end
 
-      # push stuff
-      head :ok
+      render :template => "ajax/tables/show", :locals => { :table => table, :user => controller.current_user }
     end
   end
 end

@@ -5,6 +5,10 @@ Libre::Application.routes.draw do
 
   resources :tables, :only => [:index, :show, :create]
 
+  # pusher
+
+  match "pusher/auth" => "pusher#auth"
+
   # ajax api
 
   namespace :ajax do
