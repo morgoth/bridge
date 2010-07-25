@@ -14,7 +14,7 @@ YUI.add("table", function(Y) {
             this._renderUI();
             this._bindUI();
             this._parseChannelName();
-            this._io(this._tablePath());
+            // this._io(this._tablePath());
         },
 
         _parseTableId: function() {
@@ -161,7 +161,9 @@ YUI.add("table", function(Y) {
         },
 
         _onChannelNameChange: function(event) {
-            this._reconnect(event.prevVal, event.newVal);
+            if(event.prevVal !== event.newVal) {
+                this._reconnect(event.prevVal, event.newVal);
+            }
         },
 
         _onRequestStart: function() {
@@ -169,9 +171,10 @@ YUI.add("table", function(Y) {
         },
 
         _onRequestSuccess: function(id, response) {
-            if(/^application\/json/.test(response.getResponseHeader("Content-Type"))) {
-                this.set("tableData", Y.JSON.parse(response.responseText));
-            }
+            // if(/^application\/json/.test(response.getResponseHeader("Content-Type"))) {
+            //     // this.set("tableData", Y.JSON.parse(response.responseText));
+            //     this._uiSyncTable(Y.JSON.parse(response.responseText));
+            // }
         },
 
         _onRequestFailure: function(id, response) {
@@ -356,19 +359,31 @@ YUI.add("table", function(Y) {
         },
 
         _reconnect: function(oldChannelName, newChannelName) {
+            var that = this;
+
             if(this.pusher === undefined) {
+                Pusher.log = function(string, payload) {
+                    Y.log(string + payload);
+                };
                 this.pusher = new Pusher(this.get("pusherApiKey"));
+
+                this.pusher.bind("connection_established", function(data) {
+                    // alert(data);
+                    // that._io("/pusher/refresh", { method: "POST", data: "channel_name=" + newChannelName });
+                    Y.log("aaa");
+                });
+
+                this.pusher.subscribe(newChannelName).bind("update-table-data", function(data) {
+                    // that._uiSyncTable(data);
+                });
+
+                // if(Y.Lang.isString(oldChannelName)) {
+                //     Y.log("reconnect: unsubscribing from " + oldChannelName);
+                //     that.pusher.unsubscribe(oldChannelName);
+                // }
+
+                // Y.log("reconnect: subscribing to " + newChannelName);
             }
-
-            Y.log("unsubscribing: " + oldChannelName);
-            if(Y.Lang.isString(oldChannelName)) {
-                this.pusher.unsubscribe(oldChannelName);
-            }
-
-            Y.log("subscribing: " + newChannelName);
-            this.pusher.subscribe(newChannelName).bind("update-table-data", function(data) {
-
-            });
         }
 
     }, {
