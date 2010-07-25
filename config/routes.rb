@@ -8,6 +8,7 @@ Libre::Application.routes.draw do
   # pusher
 
   match "pusher/auth" => "pusher#auth"
+  match "pusher/refresh" => "pusher#refresh"
 
   # ajax api
 

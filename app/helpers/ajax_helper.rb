@@ -1,8 +1,4 @@
 module AjaxHelper
-  def channel_name(table, user)
-    "table-#{table.id}".tap { |name| name.replace("private-#{name}-user-#{user.id}") if user && table.user_player(user) }
-  end
-
   def serialize_table(table, user)
     table_structure.tap do |result|
       result["tableId"] = table.id
