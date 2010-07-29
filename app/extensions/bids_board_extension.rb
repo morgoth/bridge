@@ -41,10 +41,10 @@ module BidsBoardExtension
   end
 
   def double_allowed?
-    current_contract && !partners_bid?(current_contract) && !current_modifier
+    !!(current_contract && !partners_bid?(current_contract) && !current_modifier)
   end
 
   def redouble_allowed?
-    current_double && !partners_bid?(current_double) && !current_redouble
+    !!(current_double && !partners_bid?(current_double) && !current_redouble)
   end
 end

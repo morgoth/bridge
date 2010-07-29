@@ -1,1 +1,1 @@
-<%= raw serialize_table(defined?(table) ? table : @table, defined?(user) ? user : @user).to_json %>
+<%= raw @serializer.config(current_user).to_json %>

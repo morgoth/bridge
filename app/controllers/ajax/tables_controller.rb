@@ -3,7 +3,7 @@ class Ajax::TablesController < Ajax::BaseController
 
   def show
     @table = Table.find(params[:id], :include => :players)
-    @board = @table.boards.current
+    @serializer = Serializer.new(@table)
     fresh_when :etag => [current_user, @table]
   end
 end
