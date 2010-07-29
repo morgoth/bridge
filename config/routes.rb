@@ -1,4 +1,4 @@
-Libre::Application.routes.draw do |map|
+Libre::Application.routes.draw do
   devise_for :users
 
   # bridge
