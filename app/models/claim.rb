@@ -1,4 +1,6 @@
 class Claim < ActiveRecord::Base
+  include OldTouch
+
   belongs_to :board, :touch => true
   belongs_to :claiming_user, :class_name => "User", :extend => ClaimingUserClaimExtension
 

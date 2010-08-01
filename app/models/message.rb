@@ -1,4 +1,6 @@
 class Message < ActiveRecord::Base
+  include OldTouch
+
   belongs_to :user
   belongs_to :channel, :touch => true
   acts_as_list :scope => :channel

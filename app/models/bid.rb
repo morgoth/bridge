@@ -1,4 +1,6 @@
 class Bid < ActiveRecord::Base
+  include OldTouch
+
   acts_as_list :scope => :board
   belongs_to :board, :touch => true
 

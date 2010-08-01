@@ -1,4 +1,6 @@
 class Player < ActiveRecord::Base
+  include OldTouch
+
   belongs_to :user
   belongs_to :table, :touch => true
 
