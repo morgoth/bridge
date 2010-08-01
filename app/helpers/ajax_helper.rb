@@ -2,6 +2,7 @@ module AjaxHelper
   def serialize_table(table, user)
     table_structure.tap do |result|
       result["tableId"] = table.id
+      result["tableVersion"] = table.version
       result["state"] = table.state
       result["player"] = table.user_player(user).direction if table.user_player(user)
       result["channelName"] = channel_name(table, user)
