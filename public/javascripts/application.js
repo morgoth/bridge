@@ -52,5 +52,7 @@ YUI({
         }
     }
 }).use("node", "table", "chat", function(Y) {
-    new Y.Bridge.Table({ container: "#table" });
+    if(Y.one("#table")) {
+        new Y.Bridge.Table({ container: "#table" });
+    }
 });

@@ -9,15 +9,4 @@ class PusherController < ApplicationController
       render :text => "401 Unauthorized", :status => :unauthorized
     end
   end
-
-  def refresh
-    match = params[:channel_name].match(/\A(?:private-)?table-(\d+)(?:-user-(\d+))?\Z/)
-    if match
-      table = Table.find(match[1])
-      Pusher[channel_name(table, current_user)].trigger("update-table-data", render_to_string(:template => "ajax/tables/show.json", :locals => { :table => table, :user => current_user }))
-      head :ok
-    else
-      head :not_found
-    end
-  end
 end
