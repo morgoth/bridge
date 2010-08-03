@@ -187,7 +187,7 @@ module AjaxHelper
   end
 
   def quit_enabled?(direction)
-    @table.players[direction].present? and current_user.present? and @table.players[direction] == @table.player.for(current_user)
+    @table.players[direction].present? and current_user.present? and @table.players[direction] == @table.players.for(current_user)
   end
 
   def cards_enabled?(direction)

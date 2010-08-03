@@ -6,7 +6,7 @@ module PlayersTableExtension
   end
 
   def for(user)
-    user && players.where(:user_id => user.id).first
+    user && where(:user_id => user.id).first
   end
 
   def [](direction)

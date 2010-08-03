@@ -27,4 +27,18 @@ class TableTest < ActiveSupport::TestCase
     %w(N E S W).each { |direction| Factory(:player, :table => @table, :direction => direction) }
     assert @table.reload.boards.current
   end
+
+  test "touch increases version number by one" do
+    @table.save!
+    old_version = @table.reload.version
+    @table.touch
+    assert_equal old_version + 1, @table.reload.version
+  end
+
+  test "save increases version number by one" do
+    @table.save!
+    old_version = @table.reload.version
+    @table.save!
+    assert_equal old_version + 1, @table.reload.version
+  end
 end
