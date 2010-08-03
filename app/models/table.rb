@@ -1,12 +1,13 @@
 class Table < ActiveRecord::Base
   extend ActiveSupport::Memoizable
 
-  set_locking_column :version
+  after_touch :increment_version!
 
   has_many :players, :extend => PlayersTableExtension
   has_many :boards, :extend => BoardsTableExtension
   belongs_to :channel
 
+  before_save :increment_version
   before_create :create_channel
 
   state_machine :initial => :preparing do
@@ -35,6 +36,15 @@ class Table < ActiveRecord::Base
     attributes[:vulnerable] = Bridge.vulnerable_in_deal(boards.count + 1)
 
     boards.create!(attributes)
+  end
+
+  def increment_version
+    self.version = (version || 0) + 1 unless version_changed?
+  end
+
+  def increment_version!
+    increment_version
+    save!
   end
 
   private
