@@ -1,4 +1,4 @@
-class AddLockVersionToTable < ActiveRecord::Migration
+class AddVersionToTable < ActiveRecord::Migration
   def self.up
     add_column :tables, :version, :integer, :default => 0
   end
