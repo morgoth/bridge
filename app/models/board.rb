@@ -1,6 +1,5 @@
 class Board < ActiveRecord::Base
   extend ActiveSupport::Memoizable
-  include OldTouch
 
   acts_as_list :scope => :table
 

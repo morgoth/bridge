@@ -1,15 +1,15 @@
 source :rubygems
 
-gem "rails", "3.0.0.rc"
+gem "rails", :git => "http://github.com/rails/rails.git"
 
 gem "acts_as_list"
 gem "bridge"
-gem "haml"
-gem "state_machine", :git => "git://github.com/pluginaweek/state_machine.git"
 gem "compass"
+gem "devise", :git => "http://github.com/plataformatec/devise.git"
+gem "haml"
 gem "proxies"
-gem "devise", "1.1.0"
 gem "sqlite3-ruby", :group => [:development, :test]
+gem "state_machine", :git => "git://github.com/pluginaweek/state_machine.git"
 
 group :development do
   gem "rails3-generators"

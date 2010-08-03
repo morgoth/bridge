@@ -1,6 +1,5 @@
 class Table < ActiveRecord::Base
   extend ActiveSupport::Memoizable
-  include OldTouch
 
   set_locking_column :version
 
