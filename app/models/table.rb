@@ -1,12 +1,11 @@
 class Table < ActiveRecord::Base
   extend ActiveSupport::Memoizable
 
-  after_touch :increment_version!
-
   has_many :players, :extend => PlayersTableExtension
   has_many :boards, :extend => BoardsTableExtension
   belongs_to :channel
 
+  after_touch :increment_version!
   before_save :increment_version
   before_create :create_channel
 
@@ -21,11 +20,6 @@ class Table < ActiveRecord::Base
 
     after_transition :on => :start, :do => :create_board!
   end
-
-  def user_player(user)
-    user && players.where(:user_id => user.id).first
-  end
-  memoize :user_player
 
   def create_board!
     attributes = %w(n e s w).inject({}) do |hash, direction|

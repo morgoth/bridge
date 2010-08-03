@@ -5,6 +5,10 @@ module PlayersTableExtension
     end
   end
 
+  def for(user)
+    user && players.where(:user_id => user.id).first
+  end
+
   def [](direction)
     send(direction.to_s.downcase)
   end
