@@ -1,6 +1,4 @@
 class Table < ActiveRecord::Base
-  extend ActiveSupport::Memoizable
-
   has_many :players, :extend => PlayersTableExtension
   has_many :boards, :extend => BoardsTableExtension
   belongs_to :channel

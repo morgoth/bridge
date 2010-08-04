@@ -1,6 +1,4 @@
 class Board < ActiveRecord::Base
-  extend ActiveSupport::Memoizable
-
   acts_as_list :scope => :table
 
   %w(n e s w).each { |d| belongs_to "user_#{d}", :class_name => "User", :extend => UserBoardExtension }
@@ -24,7 +22,6 @@ class Board < ActiveRecord::Base
     Bridge::Deal.from_id(deal_id.to_i)
   rescue ArgumentError
   end
-  memoize :deal
 
   def dealer_number
     Bridge::DIRECTIONS.index(dealer)
@@ -49,7 +46,6 @@ class Board < ActiveRecord::Base
       deal.sort_by_color!(contract_trump).to_hash.each { |direction, cards| h[direction] = cards - played_cards }
     end
   end
-  memoize :cards_left
 
   def current_user
     return bids.current_user if auction?
@@ -110,7 +106,6 @@ class Board < ActiveRecord::Base
       (Bridge::DIRECTIONS - visible_directions).each { |d| left[d].fill("") }
     end
   end
-  memoize :visible_hands_for
 
   state_machine :initial => :auction do
     event :bid_made do
