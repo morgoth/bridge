@@ -294,7 +294,7 @@ YUI.add("table", function(Y) {
         },
 
         _uiSyncTable: function(tableData) {
-            if(this.get("tableVersion") < tableData.tableVersion) {
+            if(this.get("tableVersion") <= tableData.tableVersion) {
                 Y.log("table: syncing to version " + tableData.tableVersion);
                 this.set("player", tableData.player);
                 this.set("boardState", tableData.boardState);
