@@ -2,9 +2,10 @@ class Serializer
   attr_reader :table, :board
 
   def config(user)
-    {:id => table.id, :state => table.state, :boardState => ""}.tap do |config|
+    {:id => table.id, :state => table.state, :tableVersion => table.version, :boardState => ""}.tap do |config|
       config[:player] = table.players.for(user).try(:direction)
       config[:boardState] = board.state if board?
+      config[:channelName] = channel_name(user)
       config[:info] = info
       config[:auction] = auction(user)
       config[:bidding_box] = bidding_box(user)
@@ -165,5 +166,10 @@ class Serializer
 
   def cards_enabled?(user, direction)
     playing? and board.playing_user == user and board.cards.current_user.direction == direction
+  end
+
+  # FIXME: do not duplicate code (same in application controller)
+  def channel_name(user)
+    "table-#{table.id}".tap { |name| name.replace("private-#{name}-user-#{user.id}") if user && table.players.for(user) }
   end
 end
