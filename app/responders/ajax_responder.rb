@@ -7,12 +7,12 @@ class AjaxResponder < ActionController::Responder
     else
       table = resources.first.reload
 
-      Pusher["table-#{table.id}"].trigger("update-table-data", controller.render_to_string(:template => "ajax/tables/show", :locals => { :table => table, :user => nil }))
+      Pusher[controller.channel_name(table, nil)].trigger("update-table-data", controller.render_to_string(:template => "ajax/tables/show", :locals => { :table => table, :user => nil }))
 
       [table.players.n, table.players.e, table.players.s, table.players.w].each do |player|
-        next if player.nil? or player == table.user_player(controller.current_user)
+        next if player.nil? or player == table.players.for(controller.current_user)
 
-        Pusher["private-table-#{table.id}-user-#{player.user.id}"].trigger("update-table-data", controller.render_to_string(:template => "ajax/tables/show", :locals => { :table => table, :user => player.user }))
+        Pusher[controller.channel_name(table, player.user)].trigger("update-table-data", controller.render_to_string(:template => "ajax/tables/show", :locals => { :table => table, :user => player.user }))
       end
 
       render :template => "ajax/tables/show", :locals => { :table => table, :user => controller.current_user }

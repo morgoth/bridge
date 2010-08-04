@@ -10,7 +10,7 @@ gem "haml"
 gem "proxies"
 gem "pusher"
 gem "sqlite3-ruby", :group => [:development, :test]
-gem "state_machine", :git => "git://github.com/pluginaweek/state_machine.git"
+gem "state_machine"
 
 group :development do
   gem "rails3-generators"

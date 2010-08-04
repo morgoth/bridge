@@ -4,7 +4,7 @@ module AjaxHelper
       result["tableId"] = table.id
       result["tableVersion"] = table.version
       result["state"] = table.state
-      result["player"] = table.user_player(user).direction if table.user_player(user)
+      result["player"] = table.players.for(user).direction if table.players.for(user)
       result["channelName"] = channel_name(table, user)
       serialize_info!(table, user, result["info"])
       Bridge::DIRECTIONS.each_with_index do |direction, i|
@@ -41,7 +41,7 @@ module AjaxHelper
       end
       if table.boards.current
         hash["active"] = (table.boards.current.current_user.direction == direction)
-        hash["cards"] = table.boards.current.visible_hands_for(table.user_player(user).try(:direction))[direction]
+        hash["cards"] = table.boards.current.visible_hands_for(table.players.for(user).try(:direction))[direction]
         hash["cardsEnabled"] = cards_enabled?(table, user, direction)
         hash["suit"] = table.boards.current.cards.current_trick_suit
       end
@@ -185,11 +185,11 @@ module AjaxHelper
   end
 
   def join_enabled?(table, user, direction)
-    user.present? and table.players[direction].blank? and table.user_player(user).nil?
+    user.present? and table.players[direction].blank? and table.players.for(user).nil?
   end
 
   def quit_enabled?(table, user, direction)
-    table.players[direction].present? and user.present? and table.players[direction] == table.user_player(user)
+    table.players[direction].present? and user.present? and table.players[direction] == table.players.for(user)
   end
 
   def cards_enabled?(table, user, direction)

@@ -4,6 +4,6 @@ class ApplicationController < ActionController::Base
   helper_method :channel_name
 
   def channel_name(table, user)
-    "table-#{table.id}".tap { |name| name.replace("private-#{name}-user-#{user.id}") if user && table.user_player(user) }
+    "table-#{table.id}".tap { |name| name.replace("private-#{name}-user-#{user.id}") if user && table.players.for(user) }
   end
 end
