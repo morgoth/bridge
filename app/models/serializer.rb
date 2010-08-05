@@ -1,4 +1,5 @@
 class Serializer
+  include ChannelHelper
   extend ActiveSupport::Memoizable
 
   attr_reader :table, :board
@@ -12,7 +13,7 @@ class Serializer
     {:id => table.id, :state => table.state, :tableVersion => table.version, :boardState => ""}.tap do |config|
       config[:player] = table.players.for(user).try(:direction)
       config[:boardState] = board.state if board?
-      config[:channelName] = channel_name(user)
+      config[:channelName] = channel_name(table, user)
       config[:info] = info
       config[:auction] = auction(user)
       config[:biddingBox] = bidding_box(user)
@@ -186,10 +187,4 @@ class Serializer
     playing? and board.playing_user == user and board.cards.current_user.direction == direction
   end
   memoize :cards_enabled?
-
-  # FIXME: do not duplicate code (same in application controller)
-  def channel_name(user)
-    "table-#{table.id}".tap { |name| name.replace("private-#{name}-user-#{user.id}") if user && table.players.for(user) }
-  end
-  memoize :channel_name
 end
