@@ -16,7 +16,7 @@ class AjaxResponder < ActionController::Responder
       puts "RENDERING TIME"
       Benchmark.bm do |x|
         x.report do
-          serialized_table["PUBLIC"] = controller.render_to_string(:template => "ajax/tables/show", :locals => {:serializer => serializer, :user => nil})
+          serialized_table[nil] = controller.render_to_string(:template => "ajax/tables/show", :locals => {:serializer => serializer, :user => nil})
           serialized_table["N"] = controller.render_to_string(:template => "ajax/tables/show", :locals => {:serializer => serializer, :user => table.players.n.user}) if table.players.n
           serialized_table["E"] = controller.render_to_string(:template => "ajax/tables/show", :locals => {:serializer => serializer, :user => table.players.e.user}) if table.players.e
           serialized_table["S"] = controller.render_to_string(:template => "ajax/tables/show", :locals => {:serializer => serializer, :user => table.players.s.user}) if table.players.s
@@ -27,7 +27,7 @@ class AjaxResponder < ActionController::Responder
       puts "PUSHER TIME"
       Benchmark.bm do |x|
         x.report do
-          Pusher[controller.channel_name(table, nil)].trigger("update-table-data", serialized_table["PUBLIC"])
+          Pusher[controller.channel_name(table, nil)].trigger("update-table-data", serialized_table[nil])
 
           (%w[N E S W] - [current_player.try(:direction)]).compact.each do |direction|
             Pusher[controller.channel_name(table, table.players[direction].try(:user))].trigger("update-table-data", serialized_table[direction]) if serialized_table[direction]
@@ -35,7 +35,7 @@ class AjaxResponder < ActionController::Responder
         end
       end
 
-      render :text => serialized_table[current_player.try(:direction) || "PUBLIC"]
+      render :text => serialized_table[current_player.try(:direction)]
     end
   end
 end
