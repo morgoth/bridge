@@ -15,7 +15,7 @@ class Serializer
       config[:channelName] = channel_name(user)
       config[:info] = info
       config[:auction] = auction(user)
-      config[:bidding_box] = bidding_box(user)
+      config[:biddingBox] = bidding_box(user)
       config[:trick] = trick
       config[:tricks] = tricks
       config[:claim] = claim(user)
