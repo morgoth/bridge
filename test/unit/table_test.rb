@@ -30,15 +30,11 @@ class TableTest < ActiveSupport::TestCase
 
   test "touch increases version number by one" do
     @table.save!
-    old_version = @table.reload.version
-    @table.touch
-    assert_equal old_version + 1, @table.reload.version
+    assert_difference("@table.version") { @table.touch }
   end
 
   test "save increases version number by one" do
     @table.save!
-    old_version = @table.reload.version
-    @table.save!
-    assert_equal old_version + 1, @table.reload.version
+    assert_difference("@table.version") { @table.save! }
   end
 end

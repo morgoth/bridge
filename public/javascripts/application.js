@@ -44,14 +44,14 @@ YUI({
         },
         table: {
             path: "../bridge/table/table.js",
-            requires: ["base-base", "node", "json", "mustache", "hand", "biddingbox", "auction", "helpers", "trick", "tricks", "info", "claim", "claimpreview"]
+            requires: ["base-base", "node", "json", "mustache", "hand", "biddingbox", "auction", "helpers", "trick", "tricks", "info", "claim", "claimpreview", "io"]
         },
         chat: {
             path: "../bridge/chat/chat.js",
             requires: ["widget", "mustache", "gallery-io-poller", "json"]
         }
     }
-}).use("node", "table", "chat", function(Y) {
+}).use("node", "table", function(Y) {
     if(Y.one("#table")) {
         new Y.Bridge.Table({ container: "#table" });
     }

@@ -3,8 +3,8 @@ class Table < ActiveRecord::Base
   has_many :boards, :extend => BoardsTableExtension
   belongs_to :channel
 
-  after_touch :increment_version!
-  before_save :increment_version
+  after_touch :increment_version
+  after_save :increment_version
   before_create :create_channel
 
   state_machine :initial => :preparing do
@@ -30,16 +30,11 @@ class Table < ActiveRecord::Base
     boards.create!(attributes)
   end
 
-  def increment_version
-    self.version = (version || 0) + 1 unless version_changed?
-  end
-
-  def increment_version!
-    increment_version
-    save!
-  end
-
   private
+
+  def increment_version
+    update_attribute("version", version.to_i + 1)
+  end
 
   def four_players?
     players.count == 4

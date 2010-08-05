@@ -15,7 +15,6 @@ YUI.add("table", function(Y) {
             this._renderUI();
             this._bindUI();
             this._parseChannelName();
-            // this._io(this._tablePath());
         },
 
         _parseTableId: function() {
@@ -178,12 +177,8 @@ YUI.add("table", function(Y) {
         },
 
         _onRequestSuccess: function(id, response) {
-            // if(/^application\/json/.test(response.getResponseHeader("Content-Type"))) {
-            //     // this.set("tableData", Y.JSON.parse(response.responseText));
-            //     this._uiSyncTable(Y.JSON.parse(response.responseText));
-            // }
             if(Y.Lang.isString(response.responseText) && response.responseText !== "") {
-                this._uiSyncTable(Y.JSON.parse(response.responseText));
+                this._uiSyncTable(Y.JSON.parse(response.responseText), true);
             }
         },
 
@@ -302,9 +297,11 @@ YUI.add("table", function(Y) {
             }).render();
         },
 
-        _uiSyncTable: function(tableData) {
-            if(this.get("tableVersion") <= tableData.tableVersion) {
-                Y.log("table: syncing to version " + tableData.tableVersion);
+        _uiSyncTable: function(tableData, ajax) {
+            var tableVersion = this.get("tableVersion");
+
+            if(ajax || (tableVersion < tableData.tableVersion)) {
+                Y.log("table: syncing to version " + tableData.tableVersion + ", ajax: " + !!ajax);
                 this.set("player", tableData.player);
                 this.set("boardState", tableData.boardState);
                 this.set("channelName", tableData.channelName);
@@ -498,4 +495,4 @@ YUI.add("table", function(Y) {
 
     Y.Bridge.Table = Table;
 
-}, "0", { requires: ["base", "node", "json", "mustache", "hand", "biddingbox", "auction", "trick", "tricks", "info", "claim", "claimpreview"] });
+}, "0", { requires: ["base", "node", "json", "mustache", "hand", "biddingbox", "auction", "trick", "tricks", "info", "claim", "claimpreview", "io"] });
