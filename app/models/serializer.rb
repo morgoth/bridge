@@ -1,5 +1,5 @@
 class Serializer
-  extend ActiveSupport::Memoizable
+  # extend ActiveSupport::Memoizable
 
   attr_reader :table, :board
 
@@ -25,7 +25,7 @@ class Serializer
       end
     end
   end
-  memoize :config
+  # memoize :config
 
   def info
     {:tableId => table.id, :dealer => "", :vulnerable => "", :visible => true}.tap do |info|
@@ -35,7 +35,7 @@ class Serializer
       end
     end
   end
-  memoize :info
+  # memoize :info
 
   def auction(user)
     {:names => [], :dealer => "", :vulnerable => "", :visible => true, :bids => []}.tap do |auction|
@@ -50,7 +50,7 @@ class Serializer
       end
     end
   end
-  memoize :auction
+  # memoize :auction
 
   def bidding_box(user)
     {:contract => "", :disabled => true, :visible => false, :doubleEnabled => false, :redoubleEnabled => false}.tap do |bidding_box|
@@ -65,7 +65,7 @@ class Serializer
       end
     end
   end
-  memoize :bidding_box
+  # memoize :bidding_box
 
   def trick
     {:lead => nil, :cards => nil, :visible => false}.tap do |trick|
@@ -81,7 +81,7 @@ class Serializer
       end
     end
   end
-  memoize :trick
+  # memoize :trick
 
   def tricks
     {:contract => "", :declarer => "", :resultNS => 0, :resultEW => 0, :tricks => [], :visible => false}.tap do |tricks|
@@ -97,7 +97,7 @@ class Serializer
       end
     end
   end
-  memoize :tricks
+  # memoize :tricks
 
   def claim(user)
     {:maxTricks => 13, :visible => false}.tap do |claim|
@@ -107,7 +107,7 @@ class Serializer
       end
     end
   end
-  memoize :claim
+  # memoize :claim
 
   def claim_preview(user)
     {:claimId => 0, :name => "", :tricks => 0, :total => 0, :explanation => "", :acceptEnabled => false, :rejectEnabled => false, :cancelEnabled => false, :visible => false}.tap do |claim_preview|
@@ -126,7 +126,7 @@ class Serializer
       end
     end
   end
-  memoize :claim_preview
+  # memoize :claim_preview
 
   def hand(user, direction)
     {:direction => direction, :name => "", :joinEnabled => false, :quitEnabled => false, :cards => [], :cardsEnabled => false, :suit => nil, :visible => true, :active => false, :suit => "", :cardsEnabled => false}.tap do |hand|
@@ -143,53 +143,53 @@ class Serializer
       end
     end
   end
-  memoize :hand
+  # memoize :hand
 
   private
 
   def user_turn?(user)
     board? and board.current_user == user
   end
-  memoize :user_turn?
+  # memoize :user_turn?
 
   def board?
     board.present?
   end
-  memoize :board?
+  # memoize :board?
 
   def auction?
     board? and board.auction?
   end
-  memoize :auction?
+  # memoize :auction?
 
   def playing?
     board? and board.playing?
   end
-  memoize :playing?
+  # memoize :playing?
 
   def claim?
     playing? and board.claims.active.present?
   end
-  memoize :claim?
+  # memoize :claim?
 
   def join_enabled?(user, direction)
     table.players[direction].blank? and table.players.for(user).nil?
   end
-  memoize :join_enabled?
+  # memoize :join_enabled?
 
   def quit_enabled?(user, direction)
     table.players[direction].present? and user.present? and table.players[direction] == table.players.for(user)
   end
-  memoize :quit_enabled?
+  # memoize :quit_enabled?
 
   def cards_enabled?(user, direction)
     playing? and board.playing_user == user and board.cards.current_user.direction == direction
   end
-  memoize :cards_enabled?
+  # memoize :cards_enabled?
 
   # FIXME: do not duplicate code (same in application controller)
   def channel_name(user)
     "table-#{table.id}".tap { |name| name.replace("private-#{name}-user-#{user.id}") if user && table.players.for(user) }
   end
-  memoize :channel_name
+  # memoize :channel_name
 end
