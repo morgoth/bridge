@@ -219,6 +219,10 @@ YUI.add("hand", function(Y) {
                 validator: Y.Bridge.isDirection
             },
 
+            userId: {
+
+            },
+
             suit: {
                 setter: function(suit) {
                     return (Y.Lang.isValue(suit) && Y.Bridge.isSuit(suit)) ? suit : undefined;
@@ -242,7 +246,10 @@ YUI.add("hand", function(Y) {
 
             joinEnabled: {
                 value: false,
-                validator: Y.Lang.isBoolean
+                validator: Y.Lang.isBoolean,
+                setter: function(value) {
+                    return Y.Lang.isNumber(this.get("userId")) && value;
+                }
             },
 
             quitEnabled: {

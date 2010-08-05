@@ -10,6 +10,7 @@ YUI.add("table", function(Y) {
 
         initializer: function() {
             this._parseTableId();
+            this._parseUserId();
             this._parsePusherApiKey();
             this._renderUI();
             this._bindUI();
@@ -21,6 +22,12 @@ YUI.add("table", function(Y) {
             var container = this.get("container");
 
             this.set("tableId", container.getAttribute("data-table-id"));
+        },
+
+        _parseUserId: function() {
+            var container = this.get("container");
+
+            this.set("userId", container.getAttribute("data-user-id"));
         },
 
         _parsePusherApiKey: function() {
@@ -193,7 +200,8 @@ YUI.add("table", function(Y) {
         },
 
         _renderHands: function() {
-            var container = this.get("container");
+            var userId = this.get("userId"),
+                container = this.get("container");
 
             this.hands = Y.Array.map(Y.Bridge.DIRECTIONS, function(direction, i) {
                 var handNode = container.one(".bridge-hand-" + direction.toLowerCase());
@@ -201,6 +209,7 @@ YUI.add("table", function(Y) {
                 return new Y.Bridge.Hand({
                     host: this,
                     direction: direction,
+                    userId: userId,
                     boundingBox: handNode,
                     visible: false
                 }).render();
@@ -395,6 +404,10 @@ YUI.add("table", function(Y) {
         ATTRS: {
 
             tableId: {
+                setter: parseInt
+            },
+
+            userId: {
                 setter: parseInt
             },
 
