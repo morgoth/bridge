@@ -1,0 +1,92 @@
+gem 'rdoc', '>= 2.5.9'
+require 'rdoc'
+require 'rake'
+require 'rake/testtask'
+require 'rdoc/task'
+require 'rake/packagetask'
+require 'rake/gempackagetask'
+
+desc "Default Task"
+task :default => :test
+
+# Run the unit tests
+
+desc "Run all unit tests"
+task :test => [:test_action_pack, :test_active_record_integration]
+
+Rake::TestTask.new(:test_action_pack) do |t|
+  t.libs << 'test'
+
+  # make sure we include the tests in alphabetical order as on some systems
+  # this will not happen automatically and the tests (as a whole) will error
+  t.test_files = Dir.glob('test/{abstract,controller,dispatch,template}/**/*_test.rb').sort
+
+  # t.warning = true
+end
+
+namespace :test do
+  Rake::TestTask.new(:isolated) do |t|
+    t.pattern = 'test/ts_isolated.rb'
+  end
+end
+
+desc 'ActiveRecord Integration Tests'
+Rake::TestTask.new(:test_active_record_integration) do |t|
+  t.libs << 'test'
+  t.test_files = Dir.glob("test/activerecord/*_test.rb")
+end
+
+# Genereate the RDoc documentation
+
+RDoc::Task.new { |rdoc|
+  rdoc.rdoc_dir = 'doc'
+  rdoc.title    = "Action Pack -- On rails from request to response"
+  rdoc.options << '--charset' << 'utf-8'
+  rdoc.options << '-f' << 'horo'
+  rdoc.options << '--main' << 'README.rdoc'
+  if ENV['DOC_FILES']
+    rdoc.rdoc_files.include(ENV['DOC_FILES'].split(/,\s*/))
+  else
+    rdoc.rdoc_files.include('README.rdoc', 'RUNNING_UNIT_TESTS', 'CHANGELOG')
+    rdoc.rdoc_files.include(Dir['lib/**/*.rb'] -
+                            Dir['lib/*/vendor/**/*.rb'])
+    rdoc.rdoc_files.exclude('lib/actionpack.rb')
+  end
+}
+
+spec = eval(File.read('actionpack.gemspec'))
+
+Rake::GemPackageTask.new(spec) do |p|
+  p.gem_spec = spec
+end
+
+desc "Release to gemcutter"
+task :release => :package do
+  require 'rake/gemcutter'
+  Rake::Gemcutter::Tasks.new(spec).define
+  Rake::Task['gem:push'].invoke
+end
+
+task :lines do
+  lines, codelines, total_lines, total_codelines = 0, 0, 0, 0
+
+  for file_name in FileList["lib/**/*.rb"]
+    next if file_name =~ /vendor/
+    f = File.open(file_name)
+
+    while line = f.gets
+      lines += 1
+      next if line =~ /^\s*$/
+      next if line =~ /^\s*#/
+      codelines += 1
+    end
+    puts "L: #{sprintf("%4d", lines)}, LOC #{sprintf("%4d", codelines)} | #{file_name}"
+
+    total_lines     += lines
+    total_codelines += codelines
+
+    lines, codelines = 0, 0
+  end
+
+  puts "Total: Lines #{total_lines}, LOC #{total_codelines}"
+end

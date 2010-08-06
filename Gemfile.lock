@@ -1,14 +1,12 @@
-GIT
-  remote: http://github.com/plataformatec/devise.git
-  revision: 01c272c
+PATH
+  remote: vendor/gems/devise
   specs:
     devise (1.2.0)
       bcrypt-ruby (~> 2.1.2)
       warden (~> 0.10.7)
 
-GIT
-  remote: http://github.com/rails/rails.git
-  revision: 1ca18a6
+PATH
+  remote: vendor/gems/rails
   specs:
     actionmailer (3.0.0.rc)
       actionpack (= 3.0.0.rc)
