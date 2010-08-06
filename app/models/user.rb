@@ -13,6 +13,6 @@ class User < ActiveRecord::Base
 
   # Devise method for finding user
   def self.find_for_authentication(conditions)
-    where(["email = :auth OR display_name = :auth", :auth => conditions[:email]]).first
+    where(["email = :auth OR display_name = :auth", {:auth => conditions[:email]}]).first
   end
 end
