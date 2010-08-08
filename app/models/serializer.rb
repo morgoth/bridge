@@ -118,7 +118,7 @@ class Serializer
     {:claimId => 0, :name => "", :tricks => 0, :total => 0, :explanation => "", :acceptEnabled => false, :rejectEnabled => false, :cancelEnabled => false, :visible => false}.tap do |claim_preview|
       if claim?
         claim = board.claims.active.first
-pp        claim_preview[:claimId] = claim.id
+        claim_preview[:claimId] = claim.id
         claim_preview[:name] = claim.claiming_user.name
         claim_preview[:explanation] = claim.explanation
         claim_preview[:tricks] = claim.tricks
