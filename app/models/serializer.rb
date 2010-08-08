@@ -26,32 +26,34 @@ class Serializer
       end
     end
   end
-  memoize :config
 
   def info
-    {:tableId => table.id, :dealer => "", :vulnerable => "", :visible => true}.tap do |info|
-      if board?
-        info[:dealer] = board.dealer
-        info[:vulnerable] = board.vulnerable
+    Rails.cache.fetch("serializer/info/table-#{table_id}/board-#{board_id}") do
+      {:tableId => table.id, :dealer => "", :vulnerable => "", :visible => true}.tap do |info|
+        if board?
+          info[:dealer] = board.dealer
+          info[:vulnerable] = board.vulnerable
+        end
       end
     end
   end
   memoize :info
 
   def auction(user)
-    {:names => [], :dealer => "", :vulnerable => "", :visible => true, :bids => []}.tap do |auction|
-      if board?
-        auction[:names] = board.users.map(&:name)
-        auction[:dealer] = board.dealer
-        auction[:vulnerable] = board.vulnerable
-        auction[:bids] = board.bids.map do |bid|
-          {:bid => bid.bid.to_s,
-           :alert => bid.user.partner == user ? nil : bid.alert}
+    Rails.cache.fetch("serializer/auction/table-#{table_id}/board-#{board_id}/bids-#{board_bids_count}") do
+      {:names => [], :dealer => "", :vulnerable => "", :visible => true, :bids => []}.tap do |auction|
+        if board?
+          auction[:names] = board.users.map(&:name)
+          auction[:dealer] = board.dealer
+          auction[:vulnerable] = board.vulnerable
+          auction[:bids] = board.bids.map do |bid|
+            {:bid => bid.bid.to_s,
+              :alert => bid.user.partner == user ? nil : bid.alert}
+          end
         end
       end
     end
   end
-  memoize :auction
 
   def bidding_box(user)
     {:contract => "", :disabled => true, :visible => false, :doubleEnabled => false, :redoubleEnabled => false}.tap do |bidding_box|
@@ -66,18 +68,19 @@ class Serializer
       end
     end
   end
-  memoize :bidding_box
 
   def trick
-    {:lead => nil, :cards => nil, :visible => false}.tap do |trick|
-      if playing?
-        trick[:visible] = true
-        if board.cards.current_trick.present?
-          trick[:lead] = board.deal_owner(board.cards.current_lead.try(:card))
-          trick[:cards] = board.cards.current_trick.map { |c| c.card.to_s }
-        elsif board.cards.previous_trick.present?
-          trick[:lead] = board.deal_owner(board.cards.previous_lead.try(:card))
-          trick[:cards] = board.cards.previous_trick.map { |c| c.card.to_s }
+    Rails.cache.fetch("serializer/trick/table-#{table_id}/board-#{board_id}/cards-#{board_cards_count}") do
+      {:lead => nil, :cards => nil, :visible => false}.tap do |trick|
+        if playing?
+          trick[:visible] = true
+          if board.cards.current_trick.present?
+            trick[:lead] = board.deal_owner(board.cards.current_lead.try(:card))
+            trick[:cards] = board.cards.current_trick.map { |c| c.card.to_s }
+          elsif board.cards.previous_trick.present?
+            trick[:lead] = board.deal_owner(board.cards.previous_lead.try(:card))
+            trick[:cards] = board.cards.previous_trick.map { |c| c.card.to_s }
+          end
         end
       end
     end
@@ -85,15 +88,17 @@ class Serializer
   memoize :trick
 
   def tricks
-    {:contract => "", :declarer => "", :resultNS => 0, :resultEW => 0, :tricks => [], :visible => false}.tap do |tricks|
-      if playing?
-        tricks[:visible] = true
-        tricks[:contract] = board.contract
-        tricks[:declarer] = board.declarer
-        tricks[:resultNS] = board.tricks_taken("NS")
-        tricks[:resultEW] = board.tricks_taken("EW")
-        board.cards.completed_tricks.each do |trick|
-          tricks[:tricks] << {:cards => trick.map { |t| t.card.to_s }, :lead => board.deal_owner(trick.first.card.to_s), :winner => board.trick_winner(trick)}
+    Rails.cache.fetch("serializer/tricks/table-#{table_id}/board-#{board_id}/tricks-#{board_tricks_count}") do
+      {:contract => "", :declarer => "", :resultNS => 0, :resultEW => 0, :tricks => [], :visible => false}.tap do |tricks|
+        if playing?
+          tricks[:visible] = true
+          tricks[:contract] = board.contract
+          tricks[:declarer] = board.declarer
+          tricks[:resultNS] = board.tricks_taken("NS")
+          tricks[:resultEW] = board.tricks_taken("EW")
+          board.cards.completed_tricks.each do |trick|
+            tricks[:tricks] << {:cards => trick.map { |t| t.card.to_s }, :lead => board.deal_owner(trick.first.card.to_s), :winner => board.trick_winner(trick)}
+          end
         end
       end
     end
@@ -108,13 +113,12 @@ class Serializer
       end
     end
   end
-  memoize :claim
 
   def claim_preview(user)
     {:claimId => 0, :name => "", :tricks => 0, :total => 0, :explanation => "", :acceptEnabled => false, :rejectEnabled => false, :cancelEnabled => false, :visible => false}.tap do |claim_preview|
       if claim?
         claim = board.claims.active.first
-        claim_preview[:claimId] = claim.id
+pp        claim_preview[:claimId] = claim.id
         claim_preview[:name] = claim.claiming_user.name
         claim_preview[:explanation] = claim.explanation
         claim_preview[:tricks] = claim.tricks
@@ -127,7 +131,6 @@ class Serializer
       end
     end
   end
-  memoize :claim_preview
 
   def hand(user, direction)
     {:direction => direction, :name => "", :joinEnabled => false, :quitEnabled => false, :cards => [], :cardsEnabled => false, :suit => nil, :visible => true, :active => false, :suit => "", :cardsEnabled => false}.tap do |hand|
@@ -144,7 +147,6 @@ class Serializer
       end
     end
   end
-  memoize :hand
 
   private
 
@@ -187,4 +189,27 @@ class Serializer
     playing? and board.playing_user == user and board.cards.current_user.direction == direction
   end
   memoize :cards_enabled?
+
+  def table_id
+    table.id
+  end
+  memoize :table_id
+
+  def board_id
+    board.try(:id)
+  end
+  memoize :board_id
+
+  def board_bids_count
+    board.try(:bids).try(:count)
+  end
+  memoize :board_bids_count
+
+  def board_cards_count
+    board.try(:cards).try(:count)
+  end
+
+  def board_tricks_count
+    board_cards_count && board_cards_count.div(4)
+  end
 end
