@@ -26,5 +26,5 @@ end
 
 group :production do
   gem "pg"
-  gem "memcached-northscale", :require => "memcached"
+  gem "memcache-client", :require => "memcache"
 end
