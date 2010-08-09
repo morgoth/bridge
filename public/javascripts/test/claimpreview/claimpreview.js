@@ -1,9 +1,12 @@
-YUI({ filter: "raw" }).use("test", "console", "node-event-simulate", "widget", "mustache", "claimpreview", function(Y) {
+YUI.add("claimpreview-testcase", function(Y) {
+
     var ClaimPreviewTestCase,
         isTrue = Y.Assert.isTrue,
         isFalse = Y.Assert.isFalse,
         isUndefined = Y.Assert.isUndefined,
         areSame = Y.Assert.areSame;
+
+    Y.namespace("Bridge");
 
     ClaimPreviewTestCase = new Y.Test.Case({
 
@@ -28,8 +31,6 @@ YUI({ filter: "raw" }).use("test", "console", "node-event-simulate", "widget", "
 
     });
 
-    new Y.Console({ newestOnTop: false, width: 500, height: 500 }).render();
+    Y.Bridge.ClaimPreviewTestCase = ClaimPreviewTestCase;
 
-    Y.Test.Runner.add(ClaimPreviewTestCase);
-    Y.Test.Runner.run();
-});
+}, "", { requires: ["test", "console", "node-event-simulate", "widget", "mustache", "claimpreview"] });

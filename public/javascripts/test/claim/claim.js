@@ -1,9 +1,12 @@
-YUI({ filter: "raw" }).use("test", "console", "node-event-simulate", "widget", "mustache", "claim", function(Y) {
+YUI.add("claim-testcase", function(Y) {
+
     var ClaimTestCase,
         isTrue = Y.Assert.isTrue,
         isFalse = Y.Assert.isFalse,
         isUndefined = Y.Assert.isUndefined,
         areSame = Y.Assert.areSame;
+
+    Y.namespace("Bridge");
 
     ClaimTestCase = new Y.Test.Case({
 
@@ -92,8 +95,6 @@ YUI({ filter: "raw" }).use("test", "console", "node-event-simulate", "widget", "
         }
     });
 
-    new Y.Console({ newestOnTop: false, width: 500, height: 500 }).render();
+    Y.Bridge.ClaimTestCase = ClaimTestCase;
 
-    Y.Test.Runner.add(ClaimTestCase);
-    Y.Test.Runner.run();
-});
+}, "", { requires: ["test", "console", "node-event-simulate", "widget", "mustache", "claim"] });

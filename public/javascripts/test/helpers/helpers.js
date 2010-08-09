@@ -1,9 +1,12 @@
-YUI().use("classnamemanager", "oop", "collection", "test", "console", "helpers", function(Y) {
+YUI.add("helpers-testcase", function(Y) {
+
     var HelpersTestCase,
         isTrue = Y.Assert.isTrue,
         isFalse = Y.Assert.isFalse,
         isUndefined = Y.Assert.isUndefined,
         areSame = Y.Assert.areSame;
+
+    Y.namespace("Bridge");
 
     HelpersTestCase = new Y.Test.Case({
 
@@ -242,8 +245,6 @@ YUI().use("classnamemanager", "oop", "collection", "test", "console", "helpers",
 
     });
 
-    new Y.Console({ newestOnTop: false, width: 500, height: 500 }).render();
+    Y.Bridge.HelpersTestCase = HelpersTestCase;
 
-    Y.Test.Runner.add(HelpersTestCase);
-    Y.Test.Runner.run();
-});
+}, "", { requires: ["classnamemanager", "oop", "collection", "test", "console", "helpers"] });

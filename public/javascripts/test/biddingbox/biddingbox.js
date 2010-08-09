@@ -1,9 +1,12 @@
-YUI().use("test", "console", "node-event-simulate", "widget", "mustache", "collection", "helpers", "biddingbox", function(Y) {
+YUI.add("biddingbox-testcase", function(Y) {
+
     var BiddingBoxTestCase,
         isTrue = Y.Assert.isTrue,
         isFalse = Y.Assert.isFalse,
         isUndefined = Y.Assert.isUndefined,
         areSame = Y.Assert.areSame;
+
+    Y.namespace("Bridge");
 
     BiddingBoxTestCase = new Y.Test.Case({
 
@@ -33,8 +36,6 @@ YUI().use("test", "console", "node-event-simulate", "widget", "mustache", "colle
 
     });
 
-    new Y.Console({ newestOnTop: false, width: 500, height: 500 }).render();
+    Y.Bridge.BiddingBoxTestCase = BiddingBoxTestCase;
 
-    Y.Test.Runner.add(BiddingBoxTestCase);
-    Y.Test.Runner.run();
-});
+}, "", { requires: ["test", "console", "node-event-simulate", "widget", "mustache", "collection", "helpers", "biddingbox"] });
