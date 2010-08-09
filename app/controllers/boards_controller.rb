@@ -1,13 +1,13 @@
 class BoardsController < ApplicationController
-  before_filter :authenticate_user!, :fetch_user
+  before_filter :authenticate_user!
 
   def index
-    @boards = @user.boards
+    @boards = user.boards
   end
 
   private
 
-  def fetch_user
+  def user
     @user = User.find(params[:user_id])
   end
 end
