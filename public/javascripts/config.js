@@ -62,7 +62,7 @@ window.YUICONFIG = {
             requires: ["test", "console", "node-event-simulate", "widget", "mustache", "claim"]
         },
         "claimpreview-testcase": {
-            path: "../test/claim/claim.js",
+            path: "../test/claimpreview/claimpreview.js",
             requires: ["test", "console", "node-event-simulate", "widget", "mustache", "claimpreview"]
         }
     }
