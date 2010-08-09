@@ -1,0 +1,21 @@
+%h2= "#{@user} boards"
+
+%table
+  %tr
+    %th Contract
+    %th Declarer
+    %th(colspan=4) Players (N E S W)
+    %th Tricks NS
+    %th Points NS
+    %th State
+  - @boards.each do |board|
+    %tr
+      %td= board.contract
+      %td= board.declarer
+      %td= link_to board.user_n, user_boards_path(board.user_n)
+      %td= link_to board.user_e, user_boards_path(board.user_e)
+      %td= link_to board.user_s, user_boards_path(board.user_s)
+      %td= link_to board.user_w, user_boards_path(board.user_w)
+      %td= board.tricks_ns
+      %td= board.points_ns
+      %td= board.state

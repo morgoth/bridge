@@ -65,7 +65,7 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       selenium-webdriver (>= 0.0.3)
-    compass (0.10.3)
+    compass (0.10.4)
       haml (>= 3.0.4)
     crack (0.1.8)
     culerity (0.2.10)
@@ -78,14 +78,15 @@ GEM
       rails (>= 3.0.0.beta4)
     ffi (0.6.3)
       rake (>= 0.8.7)
-    haml (3.0.15)
+    haml (3.0.16)
     i18n (0.4.1)
-    json (1.4.3)
-    json_pure (1.4.3)
+    json (1.4.6)
+    json_pure (1.4.6)
     mail (2.2.5)
       activesupport (>= 2.3.6)
       mime-types
       treetop (>= 1.4.5)
+    memcache-client (1.8.5)
     mime-types (1.16)
     mocha (0.9.8)
       rake
@@ -135,6 +136,7 @@ DEPENDENCIES
   devise!
   factory_girl_rails
   haml
+  memcache-client
   mocha
   pg
   proxies

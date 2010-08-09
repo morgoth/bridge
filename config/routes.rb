@@ -4,6 +4,9 @@ Libre::Application.routes.draw do
   # bridge
 
   resources :tables, :only => [:index, :show, :create]
+  resources :users, :only => [] do
+    resources :boards, :only => [:index]
+  end
 
   # pusher
 
