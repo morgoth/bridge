@@ -1,5 +1,8 @@
 YUI.add("claim", function(Y) {
 
+    var getClassName = Y.ClassNameManager.getClassName,
+        DOT   = ".";
+
     Y.namespace("Bridge");
 
     function Claim() {
@@ -26,20 +29,7 @@ YUI.add("claim", function(Y) {
             var html,
                 contentBox = this.get("contentBox");
 
-            html = Y.mustache(Claim.CLAIM_TEMPLATE, {
-                lessCN:             this.getClassName("less"),
-                lessLabelCN:        this.getClassName("less", "label"),
-                lessButtonCN:       this.getClassName("less", "button"),
-                moreCN:             this.getClassName("more"),
-                moreLabelCN:        this.getClassName("more", "label"),
-                moreButtonCN:       this.getClassName("more", "button"),
-                explanationCN:      this.getClassName("explanation"),
-                explanationInputCN: this.getClassName("explanation", "input"),
-                buttonsCN:          this.getClassName("buttons"),
-                buttonsClaimCN:     this.getClassName("buttons", "claim"),
-                buttonsCancelCN:    this.getClassName("buttons", "cancel")
-            });
-
+            html = Y.mustache(Claim.CLAIM_TEMPLATE, Claim);
             contentBox.set("innerHTML", html);
         },
 
@@ -91,36 +81,20 @@ YUI.add("claim", function(Y) {
         },
 
         _uiSetTricks: function(tricks) {
-            var lessLabel, lessButton, moreLabel, moreButton, claimButton,
-                maxTricks = this.get("maxTricks"),
-                contentBox = this.get("contentBox");
-            lessLabel = contentBox.one("." + this.getClassName("less", "label"));
-            lessButton = contentBox.one("." + this.getClassName("less", "button"));
-            moreLabel = contentBox.one("." + this.getClassName("more", "label"));
-            moreButton = contentBox.one("." + this.getClassName("more", "button"));
-            claimButton = contentBox.one("." + this.getClassName("buttons", "claim"));
+            var maxTricks = this.get("maxTricks");
 
-            if(tricks === 0) {
-                this._disableButton(lessButton);
-            } else {
-                this._enableButton(lessButton);
-            }
+            this._uiToggleButton(DOT + Claim.C_LESS_BUTTON, tricks !== 0);
+            this._uiToggleButton(DOT + Claim.C_MORE_BUTTON, tricks !== maxTricks);
 
-            if(tricks === maxTricks) {
-                this._disableButton(moreButton);
-            } else {
-                this._enableButton(moreButton);
-            }
-
-            lessLabel.set("innerHTML", "We get " + (tricks) + " more tricks");
-            moreLabel.set("innerHTML", "You get " + (maxTricks - tricks) + " more tricks");
+            this._uiSetText(DOT + Claim.C_LESS_LABEL, "We get " + (tricks) + " more tricks");
+            this._uiSetText(DOT + Claim.C_MORE_LABEL, "You get " + (maxTricks - tricks) + " more tricks");
         },
 
         _uiGetExplanation: function() {
             var explanationInput,
                 contentBox = this.get("contentBox");
 
-            explanationInput = contentBox.one("." + this.getClassName("explanation", "input"));
+            explanationInput = contentBox.one(DOT + Claim.C_EXPLANATION_INPUT);
 
             return explanationInput.get("value");
         },
@@ -129,7 +103,7 @@ YUI.add("claim", function(Y) {
             var explanationInput,
                 contentBox = this.get("contentBox");
 
-            explanationInput = contentBox.one("." + this.getClassName("explanation", "input"));
+            explanationInput = contentBox.one(DOT + Claim.C_EXPLANATION_INPUT);
 
             explanationInput.set("value", value || "");
         },
@@ -144,16 +118,25 @@ YUI.add("claim", function(Y) {
             return Y.Lang.isNumber(maxTricks) && maxTricks >= 0 && maxTricks <= 13;
         },
 
-        _enableButton: function(node) {
-            var className = this.getClassName("button", "disabled");
+        _uiSetText: function(node, value) {
+            var textNode,
+                contentBox = this.get("contentBox");
+            textNode = contentBox.one(node);
 
-            node.removeAttribute("disabled").removeClass(className);
+            textNode.set("innerHTML", value);
         },
 
-        _disableButton: function(node) {
-            var className = this.getClassName("button", "disabled");
+        _uiToggleButton: function(node, enabled) {
+            var buttonNode,
+                contentBox = this.get("contentBox"),
+                className = this.getClassName("button", "disabled");
+            buttonNode = contentBox.one(node);
 
-            node.setAttribute("disabled", "disabled").addClass(className);
+            if(enabled) {
+                buttonNode.removeAttribute("disabled").removeClass(className);
+            } else {
+                buttonNode.setAttribute("disabled", "disabled").addClass(className);
+            }
         }
 
     }, {
@@ -178,23 +161,35 @@ YUI.add("claim", function(Y) {
 
         },
 
+        C_LESS:              getClassName("claim", "less"),
+        C_LESS_LABEL:        getClassName("claim", "less", "label"),
+        C_LESS_BUTTON:       getClassName("claim", "less", "button"),
+        C_MORE:              getClassName("claim", "more"),
+        C_MORE_LABEL:        getClassName("claim", "more", "label"),
+        C_MORE_BUTTON:       getClassName("claim", "more", "button"),
+        C_EXPLANATION:       getClassName("claim", "explanation"),
+        C_EXPLANATION_INPUT: getClassName("claim", "explanation", "input"),
+        C_BUTTONS:           getClassName("claim", "buttons"),
+        C_BUTTONS_CLAIM:     getClassName("claim", "buttons", "claim"),
+        C_BUTTONS_CANCEL:    getClassName("claim", "buttons", "cancel"),
+
         CLAIM_TEMPLATE: ''
             + '<ul>'
-            +   '<li class="{{lessCN}}">'
-            +     '<span class="{{lessLabelCN}}"></span>'
-            +     '<button type="button" class="{{lessButtonCN}}" disabled="disabled" data-event="less">Less</button>'
+            +   '<li class="{{C_LESS}}">'
+            +     '<span class="{{C_LESS_LABEL}}"></span>'
+            +     '<button type="button" class="{{C_LESS_BUTTON}}" disabled="disabled" data-event="less">Less</button>'
             +   '</li>'
-            +   '<li class="{{moreCN}}">'
-            +     '<span class="{{moreLabelCN}}"></span>'
-            +     '<button type="button" class="{{moreButtonCN}}" disabled="disabled" data-event="more">Less</button>'
+            +   '<li class="{{C_MORE}}">'
+            +     '<span class="{{C_MORE_LABEL}}"></span>'
+            +     '<button type="button" class="{{C_MORE_BUTTON}}" disabled="disabled" data-event="more">Less</button>'
             +   '</li>'
-            +   '<li class="{{explanationCN}}">'
+            +   '<li class="{{C_EXPLANATION}}">'
             +     '<label for="explanation">Explain: </label>'
-            +     '<input id="explanation" name="explanation" type="text" class="{{explanationInputCN}}" />'
+            +     '<input id="explanation" name="explanation" type="text" class="{{C_EXPLANATION_INPUT}}" />'
             +   '</li>'
-            +   '<li class="{{buttonsCN}}">'
-            +     '<button type="button" class="{{buttonsClaimCN}}" data-event="ok">Claim</button>'
-            +     '<button type="button" class="{{buttonsCancelCN}}" data-event="cancel">Cancel</button>'
+            +   '<li class="{{C_BUTTONS}}">'
+            +     '<button type="button" class="{{C_BUTTONS_CLAIM}}" data-event="ok">Claim</button>'
+            +     '<button type="button" class="{{C_BUTTONS_CANCEL}}" data-event="cancel">Cancel</button>'
             +   '</li>'
             + '</ul>'
 
