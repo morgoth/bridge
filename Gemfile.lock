@@ -1,12 +1,14 @@
-PATH
-  remote: vendor/gems/devise
+GIT
+  remote: git://github.com/plataformatec/devise.git
+  revision: 81c49c6
   specs:
     devise (1.2.0)
       bcrypt-ruby (~> 2.1.2)
       warden (~> 0.10.7)
 
-PATH
-  remote: vendor/gems/rails
+GIT
+  remote: git://github.com/rails/rails.git
+  revision: c49144b
   specs:
     actionmailer (3.0.0.rc)
       actionpack (= 3.0.0.rc)
@@ -94,7 +96,7 @@ GEM
     pg (0.9.0)
     polyglot (0.3.1)
     proxies (0.1.1)
-    pusher (0.5.3)
+    pusher (0.6.0)
       crack
       json
       ruby-hmac

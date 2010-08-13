@@ -1,11 +1,11 @@
 source :rubygems
 
-gem "rails", :path => File.join(File.dirname(__FILE__), '/vendor/gems/rails') #:git => "git://github.com/rails/rails.git"
+gem "rails", :git => "git://github.com/rails/rails.git"
 
 gem "acts_as_list"
 gem "bridge"
 gem "compass"
-gem "devise", :path => File.join(File.dirname(__FILE__), '/vendor/gems/devise') #:git => "git://github.com/plataformatec/devise.git"
+gem "devise", :git => "git://github.com/plataformatec/devise.git"
 gem "haml"
 gem "proxies"
 gem "pusher"
