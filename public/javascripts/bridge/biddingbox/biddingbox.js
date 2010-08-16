@@ -334,7 +334,7 @@ YUI.add("biddingbox", function(Y) {
             +     '</li>'
             +   '{{/modifiers}}'
             + '</ul>'
-            + '<ul class="{{C_LABELS}}">'
+            + '<ul class="{{C_LEVELS}}">'
             +   '{{#levels}}'
             +     '<li>'
             +       '<button type="button" class="yui3-biddingbox-level {{className}}" data-event="level" data-event-argument="{{name}}">'
