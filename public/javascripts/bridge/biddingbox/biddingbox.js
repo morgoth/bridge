@@ -200,6 +200,10 @@ YUI.add("biddingbox", function(Y) {
                 this._uiToggleButton(button, true);
             }, this);
 
+            Y.each(levels, function(button) {
+                Y.one(button).removeClass(BiddingBox.C_LEVEL_SELECTED);
+            }, this);
+
             if(level) {
                 Y.one(levels[parseInt(level) - 1]).addClass(BiddingBox.C_LEVEL_SELECTED);
 
