@@ -46,6 +46,8 @@ YUI.add("biddingbox", function(Y) {
 
         _fireBidEvent: function(bid) {
             var alert = this._getAlert();
+
+            this._resetAlert();
             this.fire("bid", [bid, alert]);
         },
 
@@ -129,6 +131,7 @@ YUI.add("biddingbox", function(Y) {
         },
 
         _afterContractChange: function(event) {
+            this.set("level", undefined);
             this._uiSetContract(event.newVal);
         },
 

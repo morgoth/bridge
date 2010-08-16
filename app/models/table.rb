@@ -33,7 +33,7 @@ class Table < ActiveRecord::Base
   private
 
   def increment_version
-    update_attribute("version", version.to_i + 1)
+    self.class.update_all(["version = ?", version.to_i + 1], :id => id)
   end
 
   def four_players?
