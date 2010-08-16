@@ -180,7 +180,7 @@ YUI.add("biddingbox-testcase", function(Y) {
                 });
             }, this);
 
-            Y.one(".yui3-biddingbox-alert").set("value", "trapping pass");
+            Y.one(".yui3-biddingbox-alert-input").set("value", "trapping pass");
             Y.one(".yui3-biddingbox-modifier-pass").simulate("click");
 
             this.wait();
@@ -189,11 +189,11 @@ YUI.add("biddingbox-testcase", function(Y) {
         testAlertResetsAfterBid: function() {
             this.biddingBox.on("bid", function(event) {
                 this.resume(function() {
-                    areSame("", Y.one(".yui3-biddingbox-alert").get("value"));
+                    areSame("", Y.one(".yui3-biddingbox-alert-input").get("value"));
                 });
             }, this);
 
-            Y.one(".yui3-biddingbox-alert").set("value", "trapping pass");
+            Y.one(".yui3-biddingbox-alert-input").set("value", "trapping pass");
             Y.one(".yui3-biddingbox-modifier-pass").simulate("click");
         }
 

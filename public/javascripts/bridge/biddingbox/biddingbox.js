@@ -1,5 +1,8 @@
 YUI.add("biddingbox", function(Y) {
 
+    var getClassName = Y.ClassNameManager.getClassName,
+        DOT   = ".";
+
     Y.namespace("Bridge");
 
     function BiddingBox() {
@@ -52,21 +55,11 @@ YUI.add("biddingbox", function(Y) {
         },
 
         _getAlert: function() {
-            var alertNode,
-                alertCN = this.getClassName("alert"),
-                contentBox = this.get("contentBox");
-            alertNode = contentBox.one("." + alertCN);
-
-            return alertNode.get("value");
+            return this._uiGetValue(DOT + BiddingBox.C_ALERT_INPUT);
         },
 
         _resetAlert: function() {
-            var alertNode,
-                alertCN = this.getClassName("alert"),
-                contentBox = this.get("contentBox");
-            alertNode = contentBox.one("." + alertCN);
-
-            alertNode.set("value", "");
+            return this._uiSetValue(DOT + BiddingBox.C_ALERT_INPUT, "");
         },
 
         _onButtonClick: function(event) {
@@ -88,46 +81,41 @@ YUI.add("biddingbox", function(Y) {
         },
 
         _renderBiddingBox: function() {
-            var html, modifiers, levels, suits,
-                contentBox = this.get("contentBox");
-
-            modifiers = Y.Array.map(BiddingBox.MODIFIERS, function(modifier, i) {
-                return {
-                    name: Y.Bridge.renderBid(modifier),
-                    className: this.getClassName("modifier", modifier.toLowerCase()),
-                    eventName: modifier.toLowerCase()
-                };
-            }, this);
-
-            levels = Y.Array.map(Y.Bridge.LEVELS, function(level) {
-                return {
-                    name: level,
-                    className: this.getClassName("level", level)
-                };
-            }, this);
-
-            suits = Y.Array.map(Y.Bridge.SUITS, function(suit) {
-                return {
-                    name: Y.Bridge.renderSuit(suit),
-                    eventArgument: suit,
-                    className: this.getClassName("suit", suit.toLowerCase()),
-                    suitCN: Y.ClassNameManager.getClassName("bridge", "suit", suit.toLowerCase())
-                };
-            }, this);
+            var html,
+                contentBox = this.get("contentBox"),
+                modifiers = [
+                    { className: BiddingBox.C_MODIFIER_PASS, eventName: "pass", name: Y.Bridge.renderBid("PASS") },
+                    { className: BiddingBox.C_MODIFIER_X, eventName: "x", name: Y.Bridge.renderBid("X") },
+                    { className: BiddingBox.C_MODIFIER_XX, eventName: "xx", name: Y.Bridge.renderBid("XX") }
+                ], levels = [
+                    { name: "1", className: BiddingBox.C_LEVEL_1 },
+                    { name: "2", className: BiddingBox.C_LEVEL_2 },
+                    { name: "3", className: BiddingBox.C_LEVEL_3 },
+                    { name: "4", className: BiddingBox.C_LEVEL_4 },
+                    { name: "5", className: BiddingBox.C_LEVEL_5 },
+                    { name: "6", className: BiddingBox.C_LEVEL_6 },
+                    { name: "7", className: BiddingBox.C_LEVEL_7 }
+                ], suits = [
+                    { name: Y.Bridge.renderSuit("C"), eventArgument: "C", className: BiddingBox.C_SUIT_C },
+                    { name: Y.Bridge.renderSuit("D"), eventArgument: "D", className: BiddingBox.C_SUIT_D },
+                    { name: Y.Bridge.renderSuit("H"), eventArgument: "H", className: BiddingBox.C_SUIT_H },
+                    { name: Y.Bridge.renderSuit("S"), eventArgument: "S", className: BiddingBox.C_SUIT_S },
+                    { name: Y.Bridge.renderSuit("NT"), eventArgument: "NT", className: BiddingBox.C_SUIT_NT }
+                ];
 
             html = Y.mustache(BiddingBox.BIDDING_BOX_TEMPLATE, {
-                modifiersCN: this.getClassName("modifiers"),
-                levelsCN: this.getClassName("levels"),
-                suitsCN: this.getClassName("suits"),
-                alertsCN: this.getClassName("alerts"),
-                alertCN: this.getClassName("alert"),
-                alertLabelCN: this.getClassName("alert", "label"),
+                C_MODIFIERS: BiddingBox.C_MODIFIERS,
+                C_LEVELS: BiddingBox.C_LEVELS,
+                C_SUITS: BiddingBox.C_SUITS,
+                C_ALERTS: BiddingBox.C_ALERTS,
+                C_ALERT_LABEL: BiddingBox.C_ALERT_LABEL,
+                C_ALERT_INPUT: BiddingBox.C_ALERT_INPUT,
                 modifiers: modifiers,
                 levels: levels,
                 suits: suits
             });
 
-            contentBox.set("innerHTML", html);
+            contentBox.setContent(html);
         },
 
         _afterContractChange: function(event) {
@@ -148,97 +136,129 @@ YUI.add("biddingbox", function(Y) {
         },
 
         _uiSetDoubleEnabled: function(doubleEnabled) {
-            var doubleNode,
-                contentBox = this.get("contentBox");
-
-            doubleNode = contentBox.one("." + this.getClassName("modifier", "x"));
+            this._uiToggleButton(DOT + BiddingBox.C_MODIFIER_X, doubleEnabled);
 
             if(doubleEnabled) {
-                this._enableButton.apply(this, [doubleNode]);
                 this.set("redoubleEnabled", false);
-            } else {
-                this._disableButton.apply(this, [doubleNode]);
             }
         },
 
         _uiSetRedoubleEnabled: function(redoubleEnabled) {
-            var redoubleNode,
-                contentBox = this.get("contentBox");
-            redoubleNode = contentBox.one("." + this.getClassName("modifier", "xx"));
+            this._uiToggleButton(DOT + BiddingBox.C_MODIFIER_XX, redoubleEnabled);
 
             if(redoubleEnabled) {
-                this._enableButton.apply(this, [redoubleNode]);
                 this.set("doubleEnabled", false);
-            } else {
-                this._disableButton.apply(this, [redoubleNode]);
             }
         },
 
         _uiSetContract: function(contract) {
-            var levelNodes,
-                contentBox = this.get("contentBox");
-            levelNodes = contentBox.all("." + this.getClassName("level"));
+            var levels = [
+                    DOT + BiddingBox.C_LEVEL_1,
+                    DOT + BiddingBox.C_LEVEL_2,
+                    DOT + BiddingBox.C_LEVEL_3,
+                    DOT + BiddingBox.C_LEVEL_4,
+                    DOT + BiddingBox.C_LEVEL_5,
+                    DOT + BiddingBox.C_LEVEL_6,
+                    DOT + BiddingBox.C_LEVEL_7
+                ];
+
+            Y.each(levels, function(button) {
+                this._uiToggleButton(button, true);
+            }, this);
 
             if(contract) {
                 var contractLevel = parseInt(contract),
                     contractSuit = Y.Bridge.parseSuit(contract);
 
-                levelNodes.each(function(node, i) {
+                Y.each(levels, function(button, i) {
                     var level = i + 1;
 
-                    if((contractLevel > level) || (contractLevel == level && contractSuit == "NT")) {
-                        this._disableButton.apply(this, [node]);
-                    } else {
-                        this._enableButton.apply(this, [node]);
-                    }
+                    this._uiToggleButton(button, (contractLevel <= level) && (contractLevel !== level || contractSuit !== "NT"));
                 }, this);
-            } else {
-                levelNodes.each(Y.bind(this._enableButton, this));
             }
         },
 
         _uiSetLevel: function(level) {
-            var suitNodes, levelNodes, levelNode,
-                levelSelectedCN = this.getClassName("level", "selected"),
-                contract = this.get("contract"),
-                contentBox = this.get("contentBox");
-            levelNode = contentBox.one("." + this.getClassName("level", level));
-            levelNodes = contentBox.all("." + this.getClassName("level"));
-            suitNodes = contentBox.all("." + this.getClassName("suit"));
+            var contract = this.get("contract"),
+                levels = [
+                    DOT + BiddingBox.C_LEVEL_1,
+                    DOT + BiddingBox.C_LEVEL_2,
+                    DOT + BiddingBox.C_LEVEL_3,
+                    DOT + BiddingBox.C_LEVEL_4,
+                    DOT + BiddingBox.C_LEVEL_5,
+                    DOT + BiddingBox.C_LEVEL_6,
+                    DOT + BiddingBox.C_LEVEL_7
+                ], suits = [
+                    DOT + BiddingBox.C_SUIT_C,
+                    DOT + BiddingBox.C_SUIT_D,
+                    DOT + BiddingBox.C_SUIT_H,
+                    DOT + BiddingBox.C_SUIT_S,
+                    DOT + BiddingBox.C_SUIT_NT
+                ];
 
-            levelNodes.removeClass(levelSelectedCN);
-            suitNodes.each(Y.bind(this._enableButton, this));
+            Y.each(suits, function(button) {
+                this._uiToggleButton(button, true);
+            }, this);
 
             if(level) {
-                levelNode.addClass(levelSelectedCN);
+                Y.one(levels[parseInt(level) - 1]).addClass(BiddingBox.C_LEVEL_SELECTED);
 
                 if(contract) {
                     var contractLevel = parseInt(contract),
                         contractSuit = Y.Bridge.parseSuit(contract);
 
                     if(contractLevel === parseInt(level)) {
-                        suitNodes.each(function(node, i) {
+                        Y.each(suits, function(button, i) {
                             var contractSuitIndex = Y.Bridge.suitPosition(contractSuit);
 
                             if(i <= contractSuitIndex) {
-                                this._disableButton.apply(this, [node]);
+                                this._uiToggleButton(button, false);
                             }
                         }, this);
                     }
                 }
             } else {
-                suitNodes.each(Y.bind(this._disableButton, this));
+                Y.each(suits, function(button) {
+                    this._uiToggleButton(button, false);
+                }, this);
             }
         },
 
-        _enableButton: function(node) {
-            var className = this.getClassName("button", "disabled");
-            node.removeAttribute("disabled").removeClass(className);
+        _uiSetText: function(node, value) {
+            var textNode,
+                contentBox = this.get("contentBox");
+            textNode = contentBox.one(node);
+
+            textNode.setContent(value);
         },
 
-        _disableButton: function(node) {
-            var className = this.getClassName("button", "disabled");
-            node.setAttribute("disabled", "disabled").addClass(className);
+        _uiSetValue: function(node, value) {
+            var textNode,
+                contentBox = this.get("contentBox");
+            textNode = contentBox.one(node);
+
+            textNode.set("value", value);
+        },
+
+        _uiGetValue: function(node) {
+            var textNode,
+                contentBox = this.get("contentBox");
+            textNode = contentBox.one(node);
+
+            return textNode.get("value");
+        },
+
+        _uiToggleButton: function(node, enabled) {
+            var buttonNode,
+                contentBox = this.get("contentBox"),
+                className = this.getClassName("button", "disabled");
+            buttonNode = contentBox.one(node);
+
+            if(enabled) {
+                buttonNode.removeAttribute("disabled").removeClass(className);
+            } else {
+                buttonNode.setAttribute("disabled", "disabled").addClass(className);
+            }
         }
 
     }, {
@@ -278,10 +298,34 @@ YUI.add("biddingbox", function(Y) {
 
         },
 
-        MODIFIERS: ["PASS", "X", "XX"],
+        C_MODIFIER_PASS: getClassName("biddingbox", "modifier", "pass"),
+        C_MODIFIER_X: getClassName("biddingbox", "modifier", "x"),
+        C_MODIFIER_XX: getClassName("biddingbox", "modifier", "xx"),
+
+        C_LEVEL_1: getClassName("biddingbox", "level", "1"),
+        C_LEVEL_2: getClassName("biddingbox", "level", "2"),
+        C_LEVEL_3: getClassName("biddingbox", "level", "3"),
+        C_LEVEL_4: getClassName("biddingbox", "level", "4"),
+        C_LEVEL_5: getClassName("biddingbox", "level", "5"),
+        C_LEVEL_6: getClassName("biddingbox", "level", "6"),
+        C_LEVEL_7: getClassName("biddingbox", "level", "7"),
+        C_LEVEL_SELECTED: getClassName("biddingbox", "level", "selected"),
+
+        C_SUIT_C: getClassName("biddingbox", "suit", "c"),
+        C_SUIT_D: getClassName("biddingbox", "suit", "d"),
+        C_SUIT_H: getClassName("biddingbox", "suit", "h"),
+        C_SUIT_S: getClassName("biddingbox", "suit", "s"),
+        C_SUIT_NT: getClassName("biddingbox", "suit", "nt"),
+
+        C_MODIFIERS: getClassName("biddingbox", "modifiers"),
+        C_LEVELS: getClassName("biddingbox", "levels"),
+        C_SUITS: getClassName("biddingbox", "suits"),
+        C_ALERTS: getClassName("biddingbox", "alerts"),
+        C_ALERT_INPUT: getClassName("biddingbox", "alert", "input"),
+        C_ALERT_LABEL: getClassName("biddingbox", "alert", "label"),
 
         BIDDING_BOX_TEMPLATE: ''
-            + '<ul class="{{modifiersCN}}">'
+            + '<ul class="{{C_MODIFIERS}}">'
             +   '{{#modifiers}}'
             +     '<li>'
             +       '<button type="button" class="yui3-biddingbox-modifier {{className}}" data-event="{{eventName}}">'
@@ -290,7 +334,7 @@ YUI.add("biddingbox", function(Y) {
             +     '</li>'
             +   '{{/modifiers}}'
             + '</ul>'
-            + '<ul class="{{levelsCN}}">'
+            + '<ul class="{{C_LABELS}}">'
             +   '{{#levels}}'
             +     '<li>'
             +       '<button type="button" class="yui3-biddingbox-level {{className}}" data-event="level" data-event-argument="{{name}}">'
@@ -299,19 +343,19 @@ YUI.add("biddingbox", function(Y) {
             +     '</li>'
             +   '{{/levels}}'
             + '</ul>'
-            + '<ul class="{{suitsCN}}">'
+            + '<ul class="{{C_SUITS}}">'
             +   '{{#suits}}'
             +     '<li>'
             +       '<button type="button" class="yui3-biddingbox-suit {{className}}" data-event="suit" data-event-argument="{{eventArgument}}">'
-            +         '<span class="{{suitCN}}">{{{name}}}</span>'
+            +         '{{{name}}}'
             +       '</button>'
             +     '</li>'
             +   '{{/suits}}'
             + '</ul>'
-            + '<ul class="{{alertsCN}}">'
+            + '<ul class="{{C_ALERTS}}">'
             +   '<li>'
-            +     '<label for="alert" class="{{alertLabelCN}}">Alert</label>'
-            +     '<input id="alert" name="alert" type="text" class="{{alertCN}}" />'
+            +     '<label for="alert" class="{{C_ALERT_LABEL}}">Alert</label>'
+            +     '<input id="alert" name="alert" type="text" class="{{C_ALERT_INPUT}}" />'
             +   '</li>'
             + '</ul>'
 
