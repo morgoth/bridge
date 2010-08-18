@@ -14,13 +14,18 @@ $brown_color: #e1e1ba
 +blueprint-typography
 +blueprint-debug
 
-body
-  #table
-    min-height: 500px
-    background: $green_color
+#table
+  min-height: 500px
+  background: $green_color
 
 #container
   +container
+
+.loading
+  height: 500px
+  line-height: 500px
+  width: 100%
+  text-align: center
 
 .bridge-table-row-1 > *
   height: 155px
@@ -41,7 +46,9 @@ body
   +column(8, true)
 
 .yui3-bridge-suit-c, .yui3-bridge-suit-s
+  font-size: 125%
   color: black
 
 .yui3-bridge-suit-d, .yui3-bridge-suit-h
+  font-size: 125%
   color: $red_color
