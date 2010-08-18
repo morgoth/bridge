@@ -51,9 +51,11 @@ YUI.add("table", function(Y) {
             this._renderInfo();
             this._renderClaim();
             this._renderClaimPreview();
+            this._renderChat();
         },
 
         _bindUI: function() {
+            this.on("chat:message", this._onChatMessage);
             this.on("hand:join", this._onHandJoin);
             this.on("hand:quit", this._onHandQuit);
             this.on("hand:card", this._onHandCard);
@@ -67,6 +69,7 @@ YUI.add("table", function(Y) {
             this.after("tableDataChange", this._afterTableDataChange);
             this.after("playerChange", this._afterPlayerChange);
             this.after("boardStateChange", this._afterBoardStateChange);
+            this.after("connectedChange", this._afterConnectedChange);
         },
 
         _onHandJoin: function(event) {
@@ -103,6 +106,18 @@ YUI.add("table", function(Y) {
                 method: "POST",
                 data: "claim[tricks]=" + tricks + "&" + "claim[explanation]=" + encodeURIComponent(explanation)
             });
+        },
+
+        _onChatMessage: function(event) {
+            var body = event[0];
+
+            if(!this.get("ioLock")) {
+                this._io(this._tableMessagesPath(), {
+                    method: "POST",
+                    data: "message[body]=" + encodeURIComponent(body)
+                });
+                this.set("ioLock", true);
+            }
         },
 
         _onClaimPreviewAccept: function(event) {
@@ -145,12 +160,19 @@ YUI.add("table", function(Y) {
             return Y.mustache(Table.TABLE_REJECT_CLAIM_PATH, { tableId: this.get("tableId"), claimId: claimId });
         },
 
+        _tableMessagesPath: function() {
+            return Y.mustache(Table.TABLE_MESSAGES_PATH, { tableId: this.get("tableId") });
+        },
+
         _io: function(uri, configuration) {
+            var userId = this.get("userId");
+
             configuration = configuration || {};
             configuration.on = configuration.on || {};
             configuration.on.start = Y.bind(this._onRequestStart, this);
             configuration.on.success = Y.bind(this._onRequestSuccess, this);
             configuration.on.failure = Y.bind(this._onRequestFailure, this);
+
             Y.io(uri, configuration);
         },
 
@@ -166,6 +188,10 @@ YUI.add("table", function(Y) {
             this._uiSetBoardState(event.newVal);
         },
 
+        _afterConnectedChange: function(event) {
+            this.chat.addMessage("bridge", "successfully connected");
+        },
+
         _onChannelNameChange: function(event) {
             if(event.prevVal !== event.newVal) {
                 this._reconnect(event.prevVal, event.newVal);
@@ -177,12 +203,14 @@ YUI.add("table", function(Y) {
         },
 
         _onRequestSuccess: function(id, response) {
-            if(Y.Lang.isString(response.responseText) && response.responseText !== "") {
+            this.set("ioLock", false);
+            if(Y.Lang.isString(response.responseText) && Y.Lang.trim(response.responseText) !== "") {
                 this._uiSyncTable(Y.JSON.parse(response.responseText), true);
             }
         },
 
         _onRequestFailure: function(id, response) {
+            this.set("ioLock", false);
             Y.log(response);
             alert("Error: communication problem occured, page reload might be required.");
         },
@@ -297,11 +325,27 @@ YUI.add("table", function(Y) {
             }).render();
         },
 
+        _renderChat: function() {
+            var chatNode,
+                userId = this.get("userId"),
+                container = this.get("container");
+            chatNode = container.one(".bridge-chat");
+
+            this.chat = new Y.Bridge.Chat({
+                host: this,
+                boundingBox: chatNode,
+                disabled: !Y.Lang.isValue(userId)
+            }).render();
+
+            this.chat.addMessage("bridge", "connecting...");
+        },
+
         _uiSyncTable: function(tableData, ajax) {
             var tableVersion = this.get("tableVersion");
 
             if(ajax || (tableVersion < tableData.tableVersion)) {
                 Y.log("table: syncing to version " + tableData.tableVersion + ", ajax: " + !!ajax);
+                this.set("connected", true);
                 this.set("player", tableData.player);
                 this.set("boardState", tableData.boardState);
                 this.set("channelName", tableData.channelName);
@@ -315,6 +359,10 @@ YUI.add("table", function(Y) {
                 this.claim.setAttrs(tableData.claim);
                 this.claimPreview.setAttrs(tableData.claimPreview);
             }
+        },
+
+        _addMessage: function(messageData) {
+            this.chat.addMessage(messageData.name, messageData.body);
         },
 
         _uiSetPlayer: function(player) {
@@ -372,13 +420,18 @@ YUI.add("table", function(Y) {
         },
 
         _reconnect: function(oldChannelName, newChannelName) {
-            var that = this;
+            var tableId = this.get("tableId"),
+                that = this;
 
             if(this.pusher === undefined) {
                 this.pusher = new Pusher(this.get("pusherApiKey"));
 
                 this.pusher.bind("connection_established", function() {
                     that._io(that._tablePath());
+                });
+
+                this.pusher.subscribe("table-" + tableId + "-chat").bind("add-message", function(data) {
+                    that._addMessage(data);
                 });
             }
 
@@ -435,6 +488,14 @@ YUI.add("table", function(Y) {
 
             },
 
+            ioLock: {
+
+            },
+
+            connected: {
+
+            },
+
             container: {
                 value: "body",
                 setter: function(selector) {
@@ -448,6 +509,7 @@ YUI.add("table", function(Y) {
         TABLE_PLAYER_PATH: "/ajax/tables/{{tableId}}/player",
         TABLE_BIDS_PATH: "/ajax/tables/{{tableId}}/bids",
         TABLE_CARDS_PATH: "/ajax/tables/{{tableId}}/cards",
+        TABLE_MESSAGES_PATH: "/ajax/tables/{{tableId}}/messages",
         TABLE_CLAIMS_PATH: "/ajax/tables/{{tableId}}/claims",
         TABLE_ACCEPT_CLAIM_PATH: "/ajax/tables/{{tableId}}/claims/{{claimId}}/accept",
         TABLE_REJECT_CLAIM_PATH: "/ajax/tables/{{tableId}}/claims/{{claimId}}/reject",
@@ -489,10 +551,11 @@ YUI.add("table", function(Y) {
             +       '<div class="bridge-tricks"></div>'
             +     '</div>'
             +   '</div>'
+            +   '<div class="bridge-chat"></div>'
             + '</div>'
 
     });
 
     Y.Bridge.Table = Table;
 
-}, "0", { requires: ["base", "node", "json", "mustache", "hand", "biddingbox", "auction", "trick", "tricks", "info", "claim", "claimpreview", "io"] });
+}, "0", { requires: ["base", "node", "json", "mustache", "hand", "biddingbox", "auction", "trick", "tricks", "info", "claim", "claimpreview", "io", "chat"] });

@@ -15,10 +15,8 @@ Libre::Application.routes.draw do
   # ajax api
 
   namespace :ajax do
-    resources :channels, :only => [] do
-      resources :messages, :only => [:index, :create]
-    end
     resources :tables, :only => [:show] do
+      resources :messages, :only => [:create]
       resources :bids, :only => [:create]
       resources :cards, :only => [:create]
       resources :claims, :only => [:create] do

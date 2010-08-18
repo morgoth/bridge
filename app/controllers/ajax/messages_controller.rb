@@ -1,24 +1,11 @@
 class Ajax::MessagesController < Ajax::BaseController
-  skip_before_filter :fetch_table, :fetch_board
-  before_filter :fetch_channel
-
-  def index
-    position = request.headers["Last-Position"]
-    logger.warn "requested position: #{position}"
-    @messages = position ? @channel.messages.after_position(position) : @channel.messages.last(5)
-    response["Current-Position"] = @messages.last.position.to_s if @messages.present?
-  end
+  skip_before_filter :fetch_board
 
   def create
-    @message = @channel.messages.build(params[:message])
+    @message = @table.channel.messages.build(params[:message])
     @message.user = current_user
-    @message.save
-    respond_with(@channel, @message)
-  end
-
-  private
-
-  def fetch_channel
-    @channel = Channel.find(params[:channel_id])
+    @message.save!
+    head :created
+    Pusher["table-#{@table.id}-chat"].trigger("add-message", {:name => @message.user_name, :body => @message.body})
   end
 end

@@ -42,11 +42,11 @@ window.YUICONFIG = {
         },
         table: {
             path: "../bridge/table/table.js",
-            requires: ["base-base", "node", "json", "mustache", "hand", "biddingbox", "auction", "helpers", "trick", "tricks", "info", "claim", "claimpreview", "io"]
+            requires: ["base-base", "node", "json", "mustache", "hand", "biddingbox", "auction", "helpers", "trick", "tricks", "info", "claim", "claimpreview", "io", "chat"]
         },
         chat: {
             path: "../bridge/chat/chat.js",
-            requires: ["widget", "mustache", "gallery-io-poller", "json"]
+            requires: ["widget", "mustache"]
         },
         // TEST CASES
         "helpers-testcase": {
