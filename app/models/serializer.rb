@@ -40,7 +40,7 @@ class Serializer
   memoize :info
 
   def auction(user)
-    Rails.cache.fetch("serializer/auction/table-#{table_id}/board-#{board_id}/bids-#{board_bids_count}") do
+    Rails.cache.fetch("serializer/auction/table-#{table_id}/board-#{board_id}/bids-#{board_bids_count}/user-#{user.try(:id)}") do
       {:names => [], :dealer => "", :vulnerable => "", :visible => true, :bids => []}.tap do |auction|
         if board?
           auction[:names] = board.users.map(&:name)
