@@ -21,7 +21,7 @@ YUI.add("uihelper", function(Y) {
                 contentBox = this.get("contentBox");
             textNode = contentBox.one(node);
 
-            testNode && textNode.set("value", value);
+            textNode && textNode.set("value", value);
         },
 
         _uiGetValue: function(node) {
