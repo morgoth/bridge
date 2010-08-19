@@ -14,6 +14,7 @@
         #libre-user
           Signed in as
           = current_user.email
+          = link_to "Account", account_path
           = button_to "Sign out", destroy_user_session_path, :method => :get
       - else
         #libre-signup

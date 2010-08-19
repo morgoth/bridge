@@ -11,6 +11,7 @@ gem "proxies"
 gem "pusher"
 gem "sqlite3-ruby", :group => [:development, :test]
 gem "state_machine"
+gem "simple_form"
 
 group :development do
   gem "rails3-generators"
