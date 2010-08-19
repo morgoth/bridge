@@ -195,7 +195,7 @@ YUI.add("hand", function(Y) {
             var disabledCN = this.getClassName("button", "disabled"),
                 enabledCN = this.getClassName("button", "enabled");
 
-            node.removeAttribute("disabled").replaceClass(disabledCN, enabledCN);
+            node.replaceClass(disabledCN, enabledCN).removeAttribute("disabled");
         },
 
         _disableButton: function(node) {

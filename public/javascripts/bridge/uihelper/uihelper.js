@@ -7,6 +7,7 @@ YUI.add("uihelper", function(Y) {
     };
 
     UiHelper.prototype = {
+
         _uiSetContent: function(node, value) {
             var textNode,
                 contentBox = this.get("contentBox");
@@ -38,11 +39,12 @@ YUI.add("uihelper", function(Y) {
             buttonNode = contentBox.one(node);
 
             if(enabled) {
-                buttonNode && buttonNode.removeAttribute("disabled").removeClass(className);
+                buttonNode && buttonNode.removeClass(className).removeAttribute("disabled");
             } else {
-                buttonNode && buttonNode.setAttribute("disabled", "disabled").addClass(className);
+                buttonNode && buttonNode.addClass(className).setAttribute("disabled", "disabled");
             }
         }
+
     };
 
     Y.Bridge.UiHelper = UiHelper;
