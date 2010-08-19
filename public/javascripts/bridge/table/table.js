@@ -70,6 +70,7 @@ YUI.add("table", function(Y) {
             this.after("playerChange", this._afterPlayerChange);
             this.after("boardStateChange", this._afterBoardStateChange);
             this.after("connectedChange", this._afterConnectedChange);
+            this.after("ioLockChange", this._afterIoLockChange);
         },
 
         _onHandJoin: function(event) {
@@ -111,13 +112,10 @@ YUI.add("table", function(Y) {
         _onChatMessage: function(event) {
             var body = event[0];
 
-            if(!this.get("ioLock")) {
-                this._io(this._tableMessagesPath(), {
-                    method: "POST",
-                    data: "message[body]=" + encodeURIComponent(body)
-                });
-                this.set("ioLock", true);
-            }
+            this._io(this._tableMessagesPath(), {
+                method: "POST",
+                data: "message[body]=" + encodeURIComponent(body)
+            });
         },
 
         _onClaimPreviewAccept: function(event) {
@@ -173,7 +171,10 @@ YUI.add("table", function(Y) {
             configuration.on.success = Y.bind(this._onRequestSuccess, this);
             configuration.on.failure = Y.bind(this._onRequestFailure, this);
 
-            Y.io(uri, configuration);
+            if(!this.get("ioLock")) {
+                Y.io(uri, configuration);
+                this.set("ioLock", true);
+            }
         },
 
         _afterTableDataChange: function(event) {
@@ -190,6 +191,10 @@ YUI.add("table", function(Y) {
 
         _afterConnectedChange: function(event) {
             this.chat.addMessage("bridge", "successfully connected");
+        },
+
+        _afterIoLockChange: function(event) {
+            this.chat.set("disabled", event.newVal || !Y.Lang.isValue(this.get("userId")));
         },
 
         _onChannelNameChange: function(event) {
@@ -334,7 +339,7 @@ YUI.add("table", function(Y) {
             this.chat = new Y.Bridge.Chat({
                 host: this,
                 boundingBox: chatNode,
-                disabled: !Y.Lang.isValue(userId)
+                disabled: true
             }).render();
 
             this.chat.addMessage("bridge", "connecting...");

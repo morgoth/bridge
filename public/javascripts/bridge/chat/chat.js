@@ -39,6 +39,10 @@ YUI.add("chat", function(Y) {
             this.after("disabledChange", this._afterDisabledChange);
         },
 
+        syncUI: function() {
+            this._uiSyncDisabled(this.get("disabled"));
+        },
+
         _onFormSubmit: function(event) {
             var disabled = this.get("disabled"),
                 message = this._uiGetMessage(),
@@ -102,14 +106,17 @@ YUI.add("chat", function(Y) {
         },
 
         _uiSyncDisabled: function(disabled) {
-            var formSubmitNode,
+            var formInputNode, formSubmitNode,
                 contentBox = this.get("contentBox");
             formSubmitNode = contentBox.one(DOT + Chat.C_FORM_SUBMIT);
+            formInputNode = contentBox.one(DOT + Chat.C_FORM_INPUT);
 
             if(disabled) {
                 this._disableButton(formSubmitNode);
+                this._disableButton(formInputNode);
             } else {
                 this._enableButton(formSubmitNode);
+                this._enableButton(formInputNode);
             }
         },
 
