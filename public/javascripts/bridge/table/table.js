@@ -170,10 +170,10 @@ YUI.add("table", function(Y) {
             configuration.on.start = Y.bind(this._onRequestStart, this);
             configuration.on.success = Y.bind(this._onRequestSuccess, this);
             configuration.on.failure = Y.bind(this._onRequestFailure, this);
+            configuration.on.end = Y.bind(this._onRequestEnd, this);
 
             if(!this.get("ioLock")) {
                 Y.io(uri, configuration);
-                this.set("ioLock", true);
             }
         },
 
@@ -195,6 +195,7 @@ YUI.add("table", function(Y) {
 
         _afterIoLockChange: function(event) {
             this.chat.set("disabled", event.newVal || !Y.Lang.isValue(this.get("userId")));
+            window.READY = !event.newVal;
         },
 
         _onChannelNameChange: function(event) {
@@ -204,20 +205,22 @@ YUI.add("table", function(Y) {
         },
 
         _onRequestStart: function() {
-            window.READY = false;
+            this.set("ioLock", true);
         },
 
         _onRequestSuccess: function(id, response) {
-            this.set("ioLock", false);
             if(Y.Lang.isString(response.responseText) && Y.Lang.trim(response.responseText) !== "") {
                 this._uiSyncTable(Y.JSON.parse(response.responseText), true);
             }
         },
 
         _onRequestFailure: function(id, response) {
-            this.set("ioLock", false);
             Y.log(response);
             alert("Error: communication problem occured, page reload might be required.");
+        },
+
+        _onRequestEnd: function() {
+            this.set("ioLock", false);
         },
 
         _renderTable: function() {
