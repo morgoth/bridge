@@ -10,15 +10,15 @@ window.YUICONFIG = {
         },
         biddingbox: {
             path: "../bridge/biddingbox/biddingbox.js",
-            requires: ["widget", "mustache", "collection", "helpers"]
+            requires: ["widget", "mustache", "collection", "helpers", "uihelper"]
         },
         claim: {
             path: "../bridge/claim/claim.js",
-            requires: ["widget", "mustache"]
+            requires: ["widget", "mustache", "uihelper"]
         },
         claimpreview: {
             path: "../bridge/claimpreview/claimpreview.js",
-            requires: ["widget", "mustache"]
+            requires: ["widget", "mustache", "uihelper"]
         },
         info: {
             path: "../bridge/info/info.js",
@@ -46,6 +46,10 @@ window.YUICONFIG = {
         },
         chat: {
             path: "../bridge/chat/chat.js",
+            requires: ["widget", "mustache"]
+        },
+        uihelper: {
+            path: "../bridge/uihelper/uihelper.js",
             requires: ["widget", "mustache"]
         },
         // TEST CASES

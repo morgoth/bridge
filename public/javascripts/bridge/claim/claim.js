@@ -86,8 +86,8 @@ YUI.add("claim", function(Y) {
             this._uiToggleButton(DOT + Claim.C_LESS_BUTTON, tricks !== 0);
             this._uiToggleButton(DOT + Claim.C_MORE_BUTTON, tricks !== maxTricks);
 
-            this._uiSetText(DOT + Claim.C_LESS_LABEL, "We get " + (tricks) + " more tricks");
-            this._uiSetText(DOT + Claim.C_MORE_LABEL, "You get " + (maxTricks - tricks) + " more tricks");
+            this._uiSetContent(DOT + Claim.C_LESS_LABEL, "We get " + (tricks) + " more tricks");
+            this._uiSetContent(DOT + Claim.C_MORE_LABEL, "You get " + (maxTricks - tricks) + " more tricks");
         },
 
         _uiGetExplanation: function() {
@@ -116,27 +116,6 @@ YUI.add("claim", function(Y) {
 
         _validateMaxTricks: function(maxTricks) {
             return Y.Lang.isNumber(maxTricks) && maxTricks >= 0 && maxTricks <= 13;
-        },
-
-        _uiSetText: function(node, value) {
-            var textNode,
-                contentBox = this.get("contentBox");
-            textNode = contentBox.one(node);
-
-            textNode.set("innerHTML", value);
-        },
-
-        _uiToggleButton: function(node, enabled) {
-            var buttonNode,
-                contentBox = this.get("contentBox"),
-                className = this.getClassName("button", "disabled");
-            buttonNode = contentBox.one(node);
-
-            if(enabled) {
-                buttonNode.removeAttribute("disabled").removeClass(className);
-            } else {
-                buttonNode.setAttribute("disabled", "disabled").addClass(className);
-            }
         }
 
     }, {
@@ -195,6 +174,8 @@ YUI.add("claim", function(Y) {
 
     });
 
+    Y.augment(Claim, Y.Bridge.UiHelper);
+
     Y.Bridge.Claim = Claim;
 
-}, "0", { requires: ["widget", "mustache"] });
+}, "0", { requires: ["widget", "mustache", "uihelper"] });

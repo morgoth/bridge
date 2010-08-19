@@ -226,43 +226,6 @@ YUI.add("biddingbox", function(Y) {
                     this._uiToggleButton(button, false);
                 }, this);
             }
-        },
-
-        _uiSetText: function(node, value) {
-            var textNode,
-                contentBox = this.get("contentBox");
-            textNode = contentBox.one(node);
-
-            textNode.setContent(value);
-        },
-
-        _uiSetValue: function(node, value) {
-            var textNode,
-                contentBox = this.get("contentBox");
-            textNode = contentBox.one(node);
-
-            textNode.set("value", value);
-        },
-
-        _uiGetValue: function(node) {
-            var textNode,
-                contentBox = this.get("contentBox");
-            textNode = contentBox.one(node);
-
-            return textNode.get("value");
-        },
-
-        _uiToggleButton: function(node, enabled) {
-            var buttonNode,
-                contentBox = this.get("contentBox"),
-                className = this.getClassName("button", "disabled");
-            buttonNode = contentBox.one(node);
-
-            if(enabled) {
-                buttonNode.removeAttribute("disabled").removeClass(className);
-            } else {
-                buttonNode.setAttribute("disabled", "disabled").addClass(className);
-            }
         }
 
     }, {
@@ -365,6 +328,8 @@ YUI.add("biddingbox", function(Y) {
 
     });
 
+    Y.augment(BiddingBox, Y.Bridge.UiHelper);
+
     Y.Bridge.BiddingBox = BiddingBox;
 
-}, "0", { requires: ["widget", "mustache", "collection", "helpers"] });
+}, "0", { requires: ["widget", "mustache", "collection", "helpers", "uihelper"] });

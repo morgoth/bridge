@@ -109,40 +109,19 @@ YUI.add("claimpreview", function(Y) {
         },
 
         _uiSetName: function(name) {
-            this._uiSetText(DOT + ClaimPreview.C_NAME, name + ":");
+            this._uiSetContent(DOT + ClaimPreview.C_NAME, name + ":");
         },
 
         _uiSetTricks: function(tricks) {
-            this._uiSetText(DOT + ClaimPreview.C_TRICKS, "I claim " + tricks.toString() + " more tricks.");
+            this._uiSetContent(DOT + ClaimPreview.C_TRICKS, "I claim " + tricks.toString() + " more tricks.");
         },
 
         _uiSetTotal: function(total) {
-            this._uiSetText(DOT + ClaimPreview.C_TOTAL, total.toString() + " total tricks for declarer.");
+            this._uiSetContent(DOT + ClaimPreview.C_TOTAL, total.toString() + " total tricks for declarer.");
         },
 
         _uiSetExplanation: function(explanation) {
-            this._uiSetText(DOT + ClaimPreview.C_EXPLANATION, explanation);
-        },
-
-        _uiSetText: function(node, value) {
-            var textNode,
-                contentBox = this.get("contentBox");
-            textNode = contentBox.one(node);
-
-            textNode.set("innerHTML", value);
-        },
-
-        _uiToggleButton: function(node, enabled) {
-            var buttonNode,
-                contentBox = this.get("contentBox"),
-                className = this.getClassName("button", "disabled");
-            buttonNode = contentBox.one(node);
-
-            if(enabled) {
-                buttonNode.removeAttribute("disabled").removeClass(className);
-            } else {
-                buttonNode.setAttribute("disabled", "disabled").addClass(className);
-            }
+            this._uiSetContent(DOT + ClaimPreview.C_EXPLANATION, explanation);
         },
 
         _validateTricks: function(tricks) {
@@ -224,6 +203,8 @@ YUI.add("claimpreview", function(Y) {
 
     });
 
+    Y.augment(ClaimPreview, Y.Bridge.UiHelper);
+
     Y.Bridge.ClaimPreview = ClaimPreview;
 
-}, "0", { requires: ["widget", "mustache"] });
+}, "0", { requires: ["widget", "mustache", "uihelper"] });
