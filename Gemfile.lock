@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: git://github.com/rails/rails.git
-  revision: 072cd60
+  revision: 82e389e
   specs:
     actionmailer (3.0.0.rc)
       actionpack (= 3.0.0.rc)
@@ -20,9 +20,9 @@ GIT
       erubis (~> 2.6.6)
       i18n (~> 0.4.1)
       rack (~> 1.2.1)
-      rack-mount (~> 0.6.9)
+      rack-mount (~> 0.6.10)
       rack-test (~> 0.5.4)
-      tzinfo (~> 0.3.22)
+      tzinfo (~> 0.3.23)
     activemodel (3.0.0.rc)
       activesupport (= 3.0.0.rc)
       builder (~> 2.1.2)
@@ -31,7 +31,7 @@ GIT
       activemodel (= 3.0.0.rc)
       activesupport (= 3.0.0.rc)
       arel (~> 0.4.0)
-      tzinfo (~> 0.3.22)
+      tzinfo (~> 0.3.23)
     activeresource (3.0.0.rc)
       activemodel (= 3.0.0.rc)
       activesupport (= 3.0.0.rc)
@@ -58,7 +58,7 @@ GEM
     arel (0.4.0)
       activesupport (>= 3.0.0.beta)
     bcrypt-ruby (2.1.2)
-    bridge (0.0.23)
+    bridge (0.0.25)
     builder (2.1.2)
     capybara (0.3.9)
       culerity (>= 0.2.4)
@@ -70,7 +70,7 @@ GEM
     compass (0.10.4)
       haml (>= 3.0.4)
     crack (0.1.8)
-    culerity (0.2.10)
+    culerity (0.2.12)
     database_cleaner (0.5.2)
     erubis (2.6.6)
       abstract (>= 1.0.0)
@@ -102,7 +102,7 @@ GEM
       ruby-hmac
       signature
     rack (1.2.1)
-    rack-mount (0.6.9)
+    rack-mount (0.6.11)
       rack (>= 1.0.0)
     rack-test (0.5.4)
       rack (>= 1.0)
@@ -123,7 +123,7 @@ GEM
     thor (0.14.0)
     treetop (1.4.8)
       polyglot (>= 0.3.1)
-    tzinfo (0.3.22)
+    tzinfo (0.3.23)
     warden (0.10.7)
       rack (>= 1.0.0)
 

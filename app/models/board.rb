@@ -15,7 +15,7 @@ class Board < ActiveRecord::Base
   scope :playing, where(:state => "playing")
   scope :completed, where(:state => "completed")
 
-  delegate :n, :e, :s, :w, :owner, :to => :deal, :prefix => true, :allow_nil => true
+  delegate :n, :e, :s, :w, :owner, :cards_for, :to => :deal, :prefix => true, :allow_nil => true
   delegate :create_board!, :to => :table, :prefix => true, :allow_nil => true
 
   def deal

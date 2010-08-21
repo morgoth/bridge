@@ -6,7 +6,7 @@ Libre::Application.routes.draw do
   resource :account
   resources :tables, :only => [:index, :show, :create]
   resources :users, :only => [] do
-    resources :boards, :only => [:index]
+    resources :boards, :only => [:index, :show]
   end
 
   # pusher

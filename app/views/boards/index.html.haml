@@ -10,7 +10,7 @@
     %th State
   - @boards.each do |board|
     %tr
-      %td= board.contract
+      %td= link_to board.contract, user_board_path(@user, board)
       %td= board.declarer
       %td= link_to board.user_n, user_boards_path(board.user_n)
       %td= link_to board.user_e, user_boards_path(board.user_e)
