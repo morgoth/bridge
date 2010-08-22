@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: git://github.com/rails/rails.git
-  revision: 82e389e
+  revision: d79a010
   specs:
     actionmailer (3.0.0.rc)
       actionpack (= 3.0.0.rc)
@@ -58,7 +58,7 @@ GEM
     arel (0.4.0)
       activesupport (>= 3.0.0.beta)
     bcrypt-ruby (2.1.2)
-    bridge (0.0.25)
+    bridge (0.0.26)
     builder (2.1.2)
     capybara (0.3.9)
       culerity (>= 0.2.4)

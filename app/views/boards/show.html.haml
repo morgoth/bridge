@@ -64,18 +64,18 @@
           %span.cards= @board.deal_cards_for("S")["C"].map(&:value)
 
 %h5 Auction
-%dt Dealer
-%dd= @board.dealer
-%ul
-  - @board.bids.each do |bid|
-    %li= bid.to_s
+
+%table.auction-history
+  %tbody
+    %tr.sides
+      %td N
+      %td E
+      %td S
+      %td W
+    - group_bids(@board.bids.map(&:to_s), @board.dealer).each do |group|
+      %tr
+        - group.each do |bid|
+          %td= bid
 
 %h5 Score
-%dt Contract
-%dd= @board.contract
-%dt Declarer
-%dd= @board.declarer
-%dt Tricks NS
-%dd= @board.tricks_ns
-%dt Points NS
-%dd= @board.points_ns
+= score_string(@board)
