@@ -2,8 +2,8 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.1
-build: 47
+version: 3.1.2
+build: 56
 */
 YUI.add('widget-position-align', function(Y) {
 
@@ -406,4 +406,4 @@ YUI.add('widget-position-align', function(Y) {
         Y.WidgetPositionAlign = PositionAlign;
 
 
-}, '3.1.1' ,{requires:['widget', 'widget-position']});
+}, '3.1.2' ,{requires:['widget', 'widget-position']});

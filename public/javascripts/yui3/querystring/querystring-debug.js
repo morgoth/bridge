@@ -2,8 +2,8 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.1
-build: 47
+version: 3.1.2
+build: 56
 */
 YUI.add('querystring-parse', function(Y) {
 
@@ -137,7 +137,7 @@ function mergeObjects (params, addition) {
 };
 
 
-}, '3.1.1' ,{requires:['collection']});
+}, '3.1.2' ,{requires:['collection']});
 YUI.add('querystring-stringify', function(Y) {
 
 /**
@@ -237,8 +237,8 @@ function is (type, obj) {
 }
 
 
-}, '3.1.1' );
+}, '3.1.2' );
 
 
-YUI.add('querystring', function(Y){}, '3.1.1' ,{use:['querystring-parse', 'querystring-stringify']});
+YUI.add('querystring', function(Y){}, '3.1.2' ,{use:['querystring-parse', 'querystring-stringify']});
 
