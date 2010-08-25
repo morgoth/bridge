@@ -2,8 +2,8 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.1
-build: 47
+version: 3.1.2
+build: 56
 */
 YUI.add('node-menunav', function(Y) {
 
@@ -2188,4 +2188,4 @@ Y.namespace('Plugin');
 Y.Plugin.NodeMenuNav = NodeMenuNav;
 
 
-}, '3.1.1' ,{requires:['node', 'classnamemanager', 'node-focusmanager']});
+}, '3.1.2' ,{requires:['node', 'classnamemanager', 'node-focusmanager']});

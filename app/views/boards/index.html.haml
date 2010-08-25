@@ -2,6 +2,7 @@
 
 %table
   %tr
+    %th Id
     %th Contract
     %th Declarer
     %th(colspan=4) Players (N E S W)
@@ -10,6 +11,7 @@
     %th State
   - @boards.each do |board|
     %tr
+      %td= link_to board.id, user_board_path(@user, board)
       %td= board.contract
       %td= board.declarer
       %td= link_to board.user_n, user_boards_path(board.user_n)

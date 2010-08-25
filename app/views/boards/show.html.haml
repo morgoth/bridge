@@ -1,0 +1,81 @@
+%h3 Board history
+
+%h5 Cards
+%table.board-history
+  %tbody
+    %tr
+      %td(colspan=3){:class => "direction-n"}
+        .suit-s
+          S
+          %span.cards= @board.deal_cards_for("N")["S"].map(&:value)
+        .suit-h
+          H
+          %span.cards= @board.deal_cards_for("N")["H"].map(&:value)
+        .suit-d
+          D
+          %span.cards= @board.deal_cards_for("N")["D"].map(&:value)
+        .suit-c
+          C
+          %span.cards= @board.deal_cards_for("N")["C"].map(&:value)
+    %tr
+      %td.direction-w
+        .suit-s
+          S
+          %span.cards= @board.deal_cards_for("W")["S"].map(&:value)
+        .suit-h
+          H
+          %span.cards= @board.deal_cards_for("W")["H"].map(&:value)
+        .suit-d
+          D
+          %span.cards= @board.deal_cards_for("W")["D"].map(&:value)
+        .suit-c
+          C
+          %span.cards= @board.deal_cards_for("W")["C"].map(&:value)
+      %td.directions
+        %div N
+        %div W E
+        %div S
+      %td.direction-e
+        .suit-s
+          S
+          %span.cards= @board.deal_cards_for("E")["S"].map(&:value)
+        .suit-h
+          H
+          %span.cards= @board.deal_cards_for("E")["H"].map(&:value)
+        .suit-d
+          D
+          %span.cards= @board.deal_cards_for("E")["D"].map(&:value)
+        .suit-c
+          C
+          %span.cards= @board.deal_cards_for("E")["C"].map(&:value)
+    %tr
+      %td(colspan=3){:class => "direction-s"}
+        .suit-s
+          S
+          %span.cards= @board.deal_cards_for("S")["S"].map(&:value)
+        .suit-h
+          H
+          %span.cards= @board.deal_cards_for("S")["H"].map(&:value)
+        .suit-d
+          D
+          %span.cards= @board.deal_cards_for("S")["D"].map(&:value)
+        .suit-c
+          C
+          %span.cards= @board.deal_cards_for("S")["C"].map(&:value)
+
+%h5 Auction
+
+%table.auction-history
+  %tbody
+    %tr.sides
+      %td N
+      %td E
+      %td S
+      %td W
+    - group_bids(@board.bids.map(&:to_s), @board.dealer).each do |group|
+      %tr
+        - group.each do |bid|
+          %td= bid
+
+%h5 Score
+= score_string(@board)

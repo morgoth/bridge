@@ -2,8 +2,8 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.1
-build: 47
+version: 3.1.2
+build: 56
 */
 YUI.add('attribute-base', function(Y) {
 
@@ -1120,4 +1120,4 @@ YUI.add('attribute-base', function(Y) {
     Y.Attribute = Attribute;
 
 
-}, '3.1.1' ,{requires:['event-custom']});
+}, '3.1.2' ,{requires:['event-custom']});

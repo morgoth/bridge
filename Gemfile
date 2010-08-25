@@ -1,6 +1,6 @@
 source :rubygems
 
-gem "rails", :git => "git://github.com/rails/rails.git"
+gem "rails", "3.0.0.rc2"
 
 gem "acts_as_list"
 gem "bridge"
@@ -11,6 +11,7 @@ gem "proxies"
 gem "pusher"
 gem "sqlite3-ruby", :group => [:development, :test]
 gem "state_machine"
+gem "simple_form"
 
 group :development do
   gem "rails3-generators"

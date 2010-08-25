@@ -2,8 +2,8 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.1
-build: 47
+version: 3.1.2
+build: 56
 */
 YUI.add('node-style', function(Y) {
 
@@ -126,4 +126,4 @@ Y.mix(Y.Node.prototype, {
 });
 
 
-}, '3.1.1' ,{requires:['dom-style', 'node-base']});
+}, '3.1.2' ,{requires:['dom-style', 'node-base']});

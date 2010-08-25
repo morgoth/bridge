@@ -15,7 +15,7 @@ class Board < ActiveRecord::Base
   scope :playing, where(:state => "playing")
   scope :completed, where(:state => "completed")
 
-  delegate :n, :e, :s, :w, :owner, :to => :deal, :prefix => true, :allow_nil => true
+  delegate :n, :e, :s, :w, :owner, :cards_for, :to => :deal, :prefix => true, :allow_nil => true
   delegate :create_board!, :to => :table, :prefix => true, :allow_nil => true
 
   def deal
@@ -107,6 +107,12 @@ class Board < ActiveRecord::Base
     end
   end
 
+  def score
+    if completed? or (tricks_ns.present? and contract.present? and declarer.present?)
+      @score ||= Bridge::Score.new(:contract => contract, :vulnerable => declarer_vulnerable?, :tricks => send("tricks_#{Bridge.side_of(declarer).downcase}"))
+    end
+  end
+
   state_machine :initial => :auction do
     event :bid_made do
       transition :auction => :completed, :if => :four_passes?
@@ -168,7 +174,6 @@ class Board < ActiveRecord::Base
   end
 
   def set_points
-    score = Bridge::Score.new(:contract => contract, :vulnerable => declarer_vulnerable?, :tricks => send("tricks_#{Bridge.side_of(declarer).downcase}"))
     self.points_ns = ["N", "S"].include?(declarer) ? score.points : - score.points
   end
 end

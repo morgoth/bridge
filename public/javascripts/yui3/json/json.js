@@ -2,8 +2,8 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.1
-build: 47
+version: 3.1.2
+build: 56
 */
 YUI.add('json-parse', function(Y) {
 
@@ -227,7 +227,7 @@ if ( Native ) {
 Y.JSON.useNativeParse = useNative;
 
 
-}, '3.1.1' );
+}, '3.1.2' );
 YUI.add('json-stringify', function(Y) {
 
 /**
@@ -518,8 +518,8 @@ Y.mix(Y.namespace('JSON'),{
 });
 
 
-}, '3.1.1' );
+}, '3.1.2' );
 
 
-YUI.add('json', function(Y){}, '3.1.1' ,{use:['json-parse', 'json-stringify']});
+YUI.add('json', function(Y){}, '3.1.2' ,{use:['json-parse', 'json-stringify']});
 

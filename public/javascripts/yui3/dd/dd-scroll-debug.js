@@ -2,8 +2,8 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.1
-build: 47
+version: 3.1.2
+build: 56
 */
 YUI.add('dd-scroll', function(Y) {
 
@@ -431,4 +431,4 @@ YUI.add('dd-scroll', function(Y) {
 
 
 
-}, '3.1.1' ,{requires:['dd-drag'], optional:['dd-proxy'], skinnable:false});
+}, '3.1.2' ,{requires:['dd-drag'], optional:['dd-proxy'], skinnable:false});

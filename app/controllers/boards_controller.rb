@@ -5,6 +5,10 @@ class BoardsController < ApplicationController
     @boards = user.boards
   end
 
+  def show
+    @board = user.boards.find(params[:id])
+  end
+
   private
 
   def user

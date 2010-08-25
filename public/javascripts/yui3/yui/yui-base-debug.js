@@ -2,8 +2,8 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.1
-build: 47
+version: 3.1.2
+build: 56
 */
 /**
  * The YUI module contains the components required for building the YUI seed file.
@@ -62,7 +62,7 @@ if (typeof YUI === 'undefined') {
 
 (function() {
     var p, prop,
-        VERSION       = '3.1.1', 
+        VERSION       = '3.1.2', 
         BASE          = 'http://yui.yahooapis.com/',
         DOC_LABEL     = 'yui3-js-enabled',
         NOOP          = function() {},
@@ -2341,4 +2341,4 @@ Y.UA = function() {
 }();
 
 
-}, '3.1.1' );
+}, '3.1.2' );

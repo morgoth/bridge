@@ -123,13 +123,13 @@ YUI.add("chat", function(Y) {
         _enableButton: function(node) {
             var className = this.getClassName("button", "disabled");
 
-            node.removeAttribute("disabled").removeClass(className);
+            node.removeClass(className).removeAttribute("disabled");
         },
 
         _disableButton: function(node) {
             var className = this.getClassName("button", "disabled");
 
-            node.setAttribute("disabled", "disabled").addClass(className);
+            node.addClass(className).setAttribute("disabled", "disabled");
         }
 
     }, {

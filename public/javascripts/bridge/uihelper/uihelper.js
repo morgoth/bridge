@@ -7,12 +7,13 @@ YUI.add("uihelper", function(Y) {
     };
 
     UiHelper.prototype = {
+
         _uiSetContent: function(node, value) {
             var textNode,
                 contentBox = this.get("contentBox");
             textNode = contentBox.one(node);
 
-            textNode && textNode.setContent(value);
+            textNode.setContent(value);
         },
 
         _uiSetValue: function(node, value) {
@@ -20,7 +21,7 @@ YUI.add("uihelper", function(Y) {
                 contentBox = this.get("contentBox");
             textNode = contentBox.one(node);
 
-            testNode && textNode.set("value", value);
+            textNode.set("value", value);
         },
 
         _uiGetValue: function(node) {
@@ -28,7 +29,7 @@ YUI.add("uihelper", function(Y) {
                 contentBox = this.get("contentBox");
             textNode = contentBox.one(node);
 
-            return textNode && textNode.get("value");
+            return textNode.get("value");
         },
 
         _uiToggleButton: function(node, enabled) {
@@ -38,11 +39,12 @@ YUI.add("uihelper", function(Y) {
             buttonNode = contentBox.one(node);
 
             if(enabled) {
-                buttonNode && buttonNode.removeAttribute("disabled").removeClass(className);
+                buttonNode.removeClass(className).removeAttribute("disabled");
             } else {
-                buttonNode && buttonNode.setAttribute("disabled", "disabled").addClass(className);
+                buttonNode.addClass(className).setAttribute("disabled", "disabled");
             }
         }
+
     };
 
     Y.Bridge.UiHelper = UiHelper;
