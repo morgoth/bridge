@@ -14,10 +14,15 @@ YUI.add("trick", function(Y) {
 
         bindUI: function() {
             this.after("cardsChange", this._afterCardsChange);
+            this.after("leadChange", this._afterLeadChange);
             this.after("playerChange", this._afterPlayerChange);
         },
 
         syncUI: function() {
+            this._uiSetCards(this.get("cards"));
+        },
+
+        _afterLeadChange: function(event) {
             this._uiSetCards(this.get("cards"));
         },
 
