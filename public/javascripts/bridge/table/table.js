@@ -71,6 +71,7 @@ YUI.add("table", function(Y) {
             this.after("boardStateChange", this._afterBoardStateChange);
             this.after("connectedChange", this._afterConnectedChange);
             this.after("ioLockChange", this._afterIoLockChange);
+            this.after("messageReceived", this._afterMessageReceived);
         },
 
         _onHandJoin: function(event) {
@@ -178,7 +179,7 @@ YUI.add("table", function(Y) {
         },
 
         _afterTableDataChange: function(event) {
-            this._uiSyncTable(event.newVal);
+            this._uiSyncTable(event.newVal, event.force);
         },
 
         _afterPlayerChange: function(event) {
@@ -210,12 +211,14 @@ YUI.add("table", function(Y) {
 
         _onRequestSuccess: function(id, response) {
             if(Y.Lang.isString(response.responseText) && Y.Lang.trim(response.responseText) !== "") {
-                this._uiSyncTable(Y.JSON.parse(response.responseText), true);
+                this.set("tableData", Y.JSON.parse(response.responseText), { force: true });
             }
         },
 
         _onRequestFailure: function(id, response) {
             Y.log(response);
+            Y.log(this.get("tableData"));
+            this._uiSyncTable(this.get("tableData"), true);
             alert("Error: communication problem occured, page reload might be required.");
         },
 
@@ -348,11 +351,11 @@ YUI.add("table", function(Y) {
             this.chat.addMessage("bridge", "connecting...");
         },
 
-        _uiSyncTable: function(tableData, ajax) {
+        _uiSyncTable: function(tableData, force) {
             var tableVersion = this.get("tableVersion");
 
-            if(ajax || (tableVersion < tableData.tableVersion)) {
-                Y.log("table: syncing to version " + tableData.tableVersion + ", ajax: " + !!ajax);
+            if(force || (tableVersion < tableData.tableVersion)) {
+                Y.log("table: syncing to version " + tableData.tableVersion + ", forced: " + !!force);
                 this.set("connected", true);
                 this.set("player", tableData.player);
                 this.set("boardState", tableData.boardState);
@@ -369,8 +372,12 @@ YUI.add("table", function(Y) {
             }
         },
 
-        _addMessage: function(messageData) {
-            this.chat.addMessage(messageData.name, messageData.body);
+        _afterMessageReceived: function(event) {
+            Y.log(event);
+
+            var data = event[0];
+
+            this.chat.addMessage(data.name, data.body);
         },
 
         _uiSetPlayer: function(player) {
@@ -439,7 +446,7 @@ YUI.add("table", function(Y) {
                 });
 
                 this.pusher.subscribe("table-" + tableId + "-chat").bind("add-message", function(data) {
-                    that._addMessage(data);
+                    that.fire("messageReceived", [data]);
                 });
             }
 
@@ -449,7 +456,7 @@ YUI.add("table", function(Y) {
             }
 
             this.pusher.subscribe(newChannelName).bind("update-table-data", function(data) {
-                that._uiSyncTable(data);
+                that.set("tableData", data);
             });
 
             Y.log("reconnect: subscribing to " + newChannelName);

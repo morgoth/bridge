@@ -52,6 +52,10 @@ window.YUICONFIG = {
             path: "../bridge/uihelper/uihelper.js",
             requires: ["widget", "mustache"]
         },
+        instantaction: {
+            path: "../bridge/instantaction/instantaction.js",
+            requires: ["plugin", "oop"]
+        },
         // TEST CASES
         "helpers-testcase": {
             path: "../test/helpers/helpers.js",
