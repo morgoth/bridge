@@ -16,7 +16,7 @@
           = current_user.email
           = link_to "Account", account_path
           = link_to "Tables", tables_path
-          = button_to "Sign out", destroy_user_session_path, :method => :get
+          = link_to "Sign out", destroy_user_session_path
       - else
         #libre-signup
           Not signed in
