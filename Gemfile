@@ -1,11 +1,11 @@
 source :rubygems
 
-gem "rails", "3.0.0.rc2"
+gem "rails", "3.0.0"
 
 gem "acts_as_list"
 gem "bridge"
 gem "compass"
-gem "devise", :git => "git://github.com/plataformatec/devise.git"
+gem "devise"
 gem "haml"
 gem "proxies"
 gem "pusher"
