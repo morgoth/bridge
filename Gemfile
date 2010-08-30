@@ -27,5 +27,5 @@ end
 
 group :production do
   gem "pg"
-  gem "memcache-client", :require => "memcache"
+  gem "dalli"
 end
