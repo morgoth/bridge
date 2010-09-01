@@ -9,6 +9,7 @@ YUI.add("instantaction", function(Y) {
     Y.extend(InstantAction, Y.Plugin.Base, {
 
         initializer: function() {
+            this.afterHostEvent("tableDataChange", this._afterHostTableDataChange);
             this.afterHostEvent("biddingbox:bid", this._afterHostBiddingBoxBid);
             this.afterHostEvent("hand:card", this._afterHostHandCard);
             this.afterHostEvent("claim:claim", this._afterHostClaimClaim);
@@ -16,60 +17,86 @@ YUI.add("instantaction", function(Y) {
             this.afterHostEvent("claimpreview:reject", this._afterHostClaimPreviewReject);
         },
 
+        _afterHostTableDataChange: function(event) {
+            this.set("enabled", true);
+        },
+
         _afterHostBiddingBoxBid: function(event) {
             var bids,
+                enabled = this.get("enabled"),
                 host = this.get("host"),
                 bid = event[0];
 
-            bids = Y.clone(host.auction.get("bids"));
-            bids.push({ bid: bid, alert: null });
-            host.biddingBox.hide();
-            host.auction.set("bids", bids);
+            if(enabled) {
+                bids = Y.clone(host.auction.get("bids"));
+                bids.push({ bid: bid, alert: null });
+                host.biddingBox.hide();
+                host.auction.set("bids", bids);
+                host.auction.show();
+                this.set("enabled", false);
+            }
         },
 
         _afterHostHandCard: function(event) {
             var cards, lead,
+                enabled = this.get("enabled"),
                 host = this.get("host"),
                 hand = event.target,
                 card = event[0];
 
-            lead = host.trick.get("lead");
-            cards = Y.clone(host.trick.get("cards"));
+            if(enabled) {
+                lead = host.trick.get("lead");
+                cards = Y.clone(host.trick.get("cards"));
 
-            if(cards && cards.length < 4) {
-                cards.push(card);
-            } else {
-                cards = [card];
-                lead = hand.get("direction");
-                Y.log(hand.get("direction"));
+                if(cards && cards.length < 4) {
+                    cards.push(card);
+                } else {
+                    cards = [card];
+                    lead = hand.get("direction");
+                    Y.log(hand.get("direction"));
+                }
+
+                host.trick.set("lead", lead);
+                host.trick.set("cards", cards);
+                host.trick.show();
+
+                cards = Y.clone(hand.get("cards"));
+                cards = Y.Array.reject(cards, function(c) {
+                    return c === card;
+                });
+                hand.set("cards", cards);
+                this.set("enabled", false);
             }
-
-            host.trick.set("lead", lead);
-            host.trick.set("cards", cards);
-
-            cards = Y.clone(hand.get("cards"));
-            cards = Y.Array.reject(cards, function(c) {
-                return c === card;
-            });
-            hand.set("cards", cards);
         },
 
         _afterHostClaimClaim: function(event) {
-            var claim = event.target;
+            var claim = event.target,
+                enabled = this.get("enabled");
 
-            claim.hide();
+            if(enabled) {
+                claim.hide();
+                this.set("enabled", false);
+            }
         },
 
         _afterHostClaimPreviewAccept: function(event) {
-            var claimPreview = event.target;
+            var claimPreview = event.target,
+                enabled = this.get("enabled");
 
-            claimPreview.hide();
+            if(enabled) {
+                claimPreview.hide();
+                this.set("enabled", false);
+            }
         },
 
         _afterHostClaimPreviewReject: function(event) {
-            var claimPreview = event.target;
+            var claimPreview = event.target,
+                enabled = this.get("enabled");
 
-            claimPreview.hide();
+            if(enabled) {
+                claimPreview.hide();
+                this.set("enabled", false);
+            }
         }
 
     }, {
@@ -79,6 +106,10 @@ YUI.add("instantaction", function(Y) {
         NS: "instantaction",
 
         ATTRS: {
+
+            enabled: {
+                value: true
+            }
 
         }
 
