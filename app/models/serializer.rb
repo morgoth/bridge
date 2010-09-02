@@ -122,8 +122,7 @@ class Serializer
         claim_preview[:name] = claim.claiming_user.name
         claim_preview[:explanation] = claim.explanation
         claim_preview[:tricks] = claim.tricks
-        # FIXME: total should indicate total number of tricks to take by declarer
-        claim_preview[:total] = claim.tricks + 0
+        claim_preview[:total] = claim.declarer_total_tricks
         claim_preview[:acceptEnabled] = claim.accept_users.include?(user)
         claim_preview[:rejectEnabled] = claim.reject_users.include?(user)
         claim_preview[:cancelEnabled] = (claim.claiming_user == user)

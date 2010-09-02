@@ -199,4 +199,28 @@ class ClaimTest < ActiveSupport::TestCase
     assert       @claim.concerned_users.include?(@first_lead_partner)
     assert_false @claim.concerned_users.include?(@dummy)
   end
+
+  test "return declarer_total_tricks when declarer claims" do
+    # trcik taken by declarer
+    @claim.board.cards.create!(:card => "H2", :user => @claim.board.user_e)
+    @claim.board.cards.create!(:card => "D2", :user => @claim.board.user_n)
+    @claim.board.cards.create!(:card => "C2", :user => @claim.board.user_w)
+    @claim.board.cards.create!(:card => "S2", :user => @claim.board.user_n)
+
+    @claim.claiming_user = @declarer
+    @claim.tricks = 10
+    assert_equal @claim.declarer_total_tricks, 11
+  end
+
+  test "return declarer_total_tricks when first_lead claims" do
+    # trick taken by declarer
+    @claim.board.cards.create!(:card => "H2", :user => @claim.board.user_e)
+    @claim.board.cards.create!(:card => "D2", :user => @claim.board.user_n)
+    @claim.board.cards.create!(:card => "C2", :user => @claim.board.user_w)
+    @claim.board.cards.create!(:card => "S2", :user => @claim.board.user_n)
+
+    @claim.claiming_user = @first_lead
+    @claim.tricks = 10
+    assert_equal @claim.declarer_total_tricks, 3
+  end
 end

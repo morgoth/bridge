@@ -45,7 +45,7 @@ GEM
       haml (>= 3.0.4)
     crack (0.1.8)
     culerity (0.2.12)
-    dalli (0.9.2)
+    dalli (0.9.3)
     database_cleaner (0.5.2)
     devise (1.1.2)
       bcrypt-ruby (~> 2.1.2)

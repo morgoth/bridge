@@ -14,7 +14,7 @@ class Claim < ActiveRecord::Base
   scope :next_accepted, where(:state => "next_accepted")
   scope :rejected, where(:state => "rejected")
 
-  delegate :claims, :cards, :users, :to => :board, :prefix => true
+  delegate :claims, :cards, :users, :declarer, :to => :board, :prefix => true
   delegate :current_user, :completed_tricks_count, :to => :board_cards
 
   before_validation lambda { |claim| claim.claiming_user = claim.user }, :if => :new_record?
@@ -53,6 +53,11 @@ class Claim < ActiveRecord::Base
     concerned_users.tap { |users| users.delete(claiming_user) }
   end
   alias_method :reject_users, :accept_users
+
+  def declarer_total_tricks
+    total = tricks + board.tricks_taken(Bridge.side_of(claiming_user.direction))
+    user_declarer? ? total : 13 - total
+  end
 
   private
 
