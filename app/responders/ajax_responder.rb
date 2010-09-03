@@ -1,29 +1,58 @@
 class AjaxResponder < ActionController::Responder
-  def api_behavior(error)
-    if get?
-      render :action => default_action
-    elsif has_errors?
-      display(resource.errors, :status => :unprocessable_entity)
-    else
-      table = resources.first.reload
-      serializer = Serializer.new(table)
-      current_user = controller.current_user
-      current_player = table.players.for(current_user)
-      serialized_table = {}
+  extend ActiveSupport::Memoizable
 
-      serialized_table[nil] = controller.render_to_string(:template => "ajax/tables/show", :locals => {:serializer => serializer, :user => nil})
-      serialized_table["N"] = controller.render_to_string(:template => "ajax/tables/show", :locals => {:serializer => serializer, :user => table.players.n.user}) if table.players.n
-      serialized_table["E"] = controller.render_to_string(:template => "ajax/tables/show", :locals => {:serializer => serializer, :user => table.players.e.user}) if table.players.e
-      serialized_table["S"] = controller.render_to_string(:template => "ajax/tables/show", :locals => {:serializer => serializer, :user => table.players.s.user}) if table.players.s
-      serialized_table["W"] = controller.render_to_string(:template => "ajax/tables/show", :locals => {:serializer => serializer, :user => table.players.w.user}) if table.players.w
+  delegate :current_user, :render_to_string, :channel_name, :response, :to => :controller
 
-      Pusher[controller.channel_name(table, nil)].trigger("update-table-data", serialized_table[nil])
+  def table
+    resources.first.reload
+  end
+  memoize :table
 
-      (%w[N E S W] - [current_player.try(:direction)]).compact.each do |direction|
-        Pusher[controller.channel_name(table, table.players[direction].try(:user))].trigger("update-table-data", serialized_table[direction]) if serialized_table[direction]
+  def table_user(direction)
+    direction ? table.players[direction].try(:user) : nil
+  end
+  memoize :table_user
+
+  def serializer
+    @serializer ||= Serializer.new(table)
+  end
+  memoize :serializer
+
+  def current_player
+    table.players.for(current_user)
+  end
+  memoize :current_player
+
+  def current_player_direction
+    current_player.try(:direction)
+  end
+  memoize :current_player_direction
+
+  def serialized_table(direction)
+    user = direction ? table.players[direction].try(:user) : nil
+    render_to_string("ajax/tables/show", :locals => {:serializer => serializer, :user => table_user(direction)})
+  end
+  memoize :serialized_table
+
+  def set_cache_headers
+    response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
+  end
+
+  def to_format
+    set_cache_headers
+
+    return display(resource.errors, :status => :unprocessable_entity) if has_errors?
+
+    if not get?
+      Pusher[channel_name(table, nil)].trigger("update-table-data", serialized_table(nil))
+
+      (%w[N E S W] - [current_player_direction]).compact.each do |direction|
+        Pusher[channel_name(table, table_user(direction))].trigger("update-table-data", serialized_table(direction)) if table_user(direction)
       end
-
-      render :text => serialized_table[current_player.try(:direction)]
     end
+
+    render :text => serialized_table(current_player_direction)
   end
 end

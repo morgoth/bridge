@@ -7,3 +7,4 @@ javascripts_dir = "public/javascripts"
 output_style = :compact
 http_images_path = "/images"
 environment = Rails.env.to_sym
+asset_cache_buster { nil }
