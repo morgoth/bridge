@@ -30,7 +30,7 @@ window.YUICONFIG = {
         },
         hand: {
             path: "../bridge/hand/hand.js",
-            requires: ["widget", "mustache", "collection", "helpers"]
+            requires: ["widget", "mustache", "collection", "helpers", "uihelper"]
         },
         trick: {
             path: "../bridge/trick/trick.js",

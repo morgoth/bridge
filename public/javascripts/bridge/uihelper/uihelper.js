@@ -35,13 +35,14 @@ YUI.add("uihelper", function(Y) {
         _uiToggleButton: function(node, enabled) {
             var buttonNode,
                 contentBox = this.get("contentBox"),
-                className = this.getClassName("button", "disabled");
+                disabledClassName = this.getClassName("button", "disabled"),
+                enabledClassName = this.getClassName("button", "enabled");
             buttonNode = contentBox.one(node);
 
             if(enabled) {
-                buttonNode.removeClass(className).removeAttribute("disabled");
+                buttonNode.replaceClass(disabledClassName, enabledClassName).removeAttribute("disabled");
             } else {
-                buttonNode.addClass(className).setAttribute("disabled", "disabled");
+                buttonNode.replaceClass(enabledClassName, disabledClassName).setAttribute("disabled", "disabled");
             }
         }
 

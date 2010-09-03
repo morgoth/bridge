@@ -1,5 +1,8 @@
 YUI.add("hand", function(Y) {
 
+    var getClassName = Y.ClassNameManager.getClassName,
+        DOT   = ".";
+
     Y.namespace("Bridge");
 
     function Hand() {
@@ -25,19 +28,9 @@ YUI.add("hand", function(Y) {
             var html,
                 contentBox = this.get("contentBox");
 
-            html = Y.mustache(Hand.MAIN_TEMPLATE, {
-                direction: this.get("direction"),
-                directionCN: this.getClassName("direction"),
-                joinCN: this.getClassName("join"),
-                quitCN: this.getClassName("quit"),
-                buttonsCN: this.getClassName("buttons"),
-                name: this.get("name"),
-                nameCN: this.getClassName("name"),
-                cardsCN: this.getClassName("cards"),
-                barCN: this.getClassName("bar")
-            });
+            html = Y.mustache(Hand.MAIN_TEMPLATE, Hand);
 
-            contentBox.set("innerHTML", html);
+            contentBox.setContent(html);
         },
 
         bindUI: function() {
@@ -46,11 +39,13 @@ YUI.add("hand", function(Y) {
             this.after("cardsChange", this._afterCardsChange);
             this.after("suitChange", this._afterSuitChange);
             this.after("nameChange", this._afterNameChange);
+            this.after("directionChange", this._afterDirectionChange);
             this.after("disabledChange", this._afterDisabledChange);
             this.after("joinEnabledChange", this._afterJoinEnabledChange);
             this.after("quitEnabledChange", this._afterQuitEnabledChange);
             this.after("cardsEnabledChange", this._afterCardsEnabledChange);
             this.after("activeChange", this._afterActiveChange);
+
             contentBox.delegate("click", Y.bind(this._onButtonClick, this), "button[data-event]");
         },
 
@@ -78,8 +73,10 @@ YUI.add("hand", function(Y) {
         },
 
         syncUI: function() {
-            this._uiSyncJoin();
-            this._uiSyncQuit();
+            this._uiSyncJoin(this.get("joinEnabled"));
+            this._uiSyncQuit(this.get("quitEnabled"));
+            this._uiSetName(this.get("name"));
+            this._uiSetDirection(this.get("direction"));
         },
 
         _afterCardsChange: function(event) {
@@ -90,119 +87,75 @@ YUI.add("hand", function(Y) {
             this._uiSetSuit(event.newVal);
         },
 
+        _afterDirectionChange: function(event) {
+            this._uiSetDirection(event.newVal);
+        },
+
         _afterNameChange: function(event) {
             this._uiSetName(event.newVal);
         },
 
-        _uiSyncJoin: function() {
-            var joinNode,
-                contentBox = this.get("contentBox"),
-                joinEnabled = this.get("joinEnabled"),
-                name = this.get("name");
-            joinNode = contentBox.one("." + this.getClassName("join"));
-
-            this._disableButton.apply(this, [joinNode]);
-            if(!name && joinEnabled) {
-                this._enableButton.apply(this, [joinNode]);
-            }
+        _uiSyncJoin: function(joinEnabled) {
+            this._uiToggleButton(DOT + Hand.C_JOIN, joinEnabled);
         },
 
-        _uiSyncQuit: function() {
-            var quitNode,
-                contentBox = this.get("contentBox"),
-                quitEnabled = this.get("quitEnabled"),
-                name = this.get("name");
-            quitNode = contentBox.one("." + this.getClassName("quit"));
+        _uiSyncQuit: function(quitEnabled) {
+            this._uiToggleButton(DOT + Hand.C_QUIT, quitEnabled);
+        },
 
-            this._disableButton.apply(this, [quitNode]);
-            if(name && quitEnabled) {
-                this._enableButton.apply(this, [quitNode]);
-            }
+        _uiSetDirection: function(direction) {
+            this._uiSetContent(DOT + Hand.C_DIRECTION, direction);
         },
 
         _uiSetName: function(name) {
-            var nameNode,
-                contentBox = this.get("contentBox");
-
-            nameNode = contentBox.one("." + this.getClassName("name"));
-            nameNode.set("innerHTML", name);
-            this._uiSyncJoin();
-            this._uiSyncQuit();
+            this._uiSetContent(DOT + Hand.C_NAME, name);
         },
 
         _uiSetCards: function(cards) {
-            var cardsHtml, cardsData, cardsNode,
-                contentBox = this.get("contentBox");
-            cardsData = Y.Array.map(cards, function(card) {
-                var suit = Y.Bridge.parseSuit(card);
-
+            var cardsData = Y.Array.map(cards, function(card) {
                 return {
                     card: Y.Bridge.renderCard(card),
-                    classNames: this.getClassName("card")
+                    className: Hand.C_CARD
                 };
             }, this);
-            cardsNode = contentBox.one("." + this.getClassName("cards"));
 
-            cardsHtml = Y.mustache(Hand.CARDS_TEMPLATE, { cards: cardsData });
-            cardsNode.set("innerHTML", cardsHtml);
+            this._uiSetContent(DOT + Hand.C_CARDS, Y.mustache(Hand.CARDS_TEMPLATE, { cards: cardsData }));
             this._uiSetCardsEnabled(this.get("cardsEnabled"));
         },
 
         _uiSetSuit: function(suit) {
-            var className,
-                cards = this.get("cards"),
-                cardsEnabled = this.get("cardsEnabled"),
-                contentBox = this.get("contentBox");
-
-            if(suit && cardsEnabled && Y.Bridge.hasSuit(suit, cards)) {
-                className = Y.ClassNameManager.getClassName("bridge", "card", suit.toLowerCase());
-
-                this._uiSetCardsEnabled(false);
-                contentBox.all("." + className).each(Y.bind(this._enableButton, this));
-            }
+            this._uiSetCardsEnabled(this.get("cardsEnabled"));
         },
 
         _uiSetCardsEnabled: function(cardsEnabled) {
-            var cards,
-                contentBox = this.get("contentBox");
-            cards = contentBox.all("." + this.getClassName("cards") + " button");
+            var cards = this.get("cards"),
+                trickSuit = this.get("suit");
 
-            if(cardsEnabled) {
-                cards.each(Y.bind(this._enableButton, this));
-            } else {
-                cards.each(Y.bind(this._disableButton, this));
-            }
+            Y.each(cards, function(card) {
+                var cardSuit = Y.Bridge.parseSuit(card);
+
+                this._uiToggleButton(DOT + Y.Bridge.getCardClassName(card),
+                                     cardsEnabled &&
+                                     (!Y.Lang.isValue(trickSuit) ||
+                                      !Y.Bridge.hasSuit(trickSuit, cards) ||
+                                      (trickSuit === cardSuit)));
+            }, this);
         },
 
         _uiSetActive: function(active) {
             var barNode,
-                activeCN = this.getClassName("bar", "active"),
                 contentBox = this.get("contentBox");
-            barNode = contentBox.one("." + this.getClassName("bar"));
+            barNode = contentBox.one(DOT + Hand.C_BAR);
 
             if(active) {
-                barNode.addClass(activeCN);
+                barNode.addClass(Hand.C_BAR_ACTIVE);
             } else {
-                barNode.removeClass(activeCN);
+                barNode.removeClass(Hand.C_BAR_ACTIVE);
             }
         },
 
         _afterDisabledChange: function(event) {
             this.set("cardsEnabled", !event.newVal);
-        },
-
-        _enableButton: function(node) {
-            var disabledCN = this.getClassName("button", "disabled"),
-                enabledCN = this.getClassName("button", "enabled");
-
-            node.replaceClass(disabledCN, enabledCN).removeAttribute("disabled");
-        },
-
-        _disableButton: function(node) {
-            var disabledCN = this.getClassName("button", "disabled"),
-                enabledCN = this.getClassName("button", "enabled");
-
-            node.setAttribute("disabled", "disabled").replaceClass(enabledCN, disabledCN);
         }
 
     }, {
@@ -264,26 +217,38 @@ YUI.add("hand", function(Y) {
 
         },
 
+        C_DIRECTION:  getClassName("hand", "direction"),
+        C_JOIN:       getClassName("hand", "join"),
+        C_QUIT:       getClassName("hand", "quit"),
+        C_BUTTONS:    getClassName("hand", "buttons"),
+        C_NAME:       getClassName("hand", "name"),
+        C_CARDS:      getClassName("hand", "cards"),
+        C_BAR:        getClassName("hand", "bar"),
+        C_BAR_ACTIVE: getClassName("hand", "bar", "active"),
+        C_CARD:       getClassName("hand", "card"),
+
         MAIN_TEMPLATE: ''
-            + '<ul class="{{cardsCN}}"></ul>'
-            + '<div class="{{barCN}}">'
-            +   '<div class="{{directionCN}}">{{direction}}</div>'
-            +   '<div class="{{nameCN}}">{{name}}</div>'
-            +   '<div class="{{buttonsCN}}">'
-            +     '<button type="button" class="{{joinCN}}" data-event="join">Join</button>'
-            +     '<button type="button" class="{{quitCN}}" data-event="quit">Quit</button>'
+            + '<ul class="{{C_CARDS}}"></ul>'
+            + '<div class="{{C_BAR}}">'
+            +   '<div class="{{C_DIRECTION}}">{{direction}}</div>'
+            +   '<div class="{{C_NAME}}">{{name}}</div>'
+            +   '<div class="{{C_BUTTONS}}">'
+            +     '<button type="button" class="{{C_JOIN}}" data-event="join">Join</button>'
+            +     '<button type="button" class="{{C_QUIT}}" data-event="quit">Quit</button>'
             +   '</div>'
             + '</div>',
 
         CARDS_TEMPLATE: ''
             + '{{#cards}}'
-            +   '<li class="{{classNames}}">'
+            +   '<li class="{{className}}">'
             +     '{{{card}}}'
             +   '</li>'
             + '{{/cards}}'
 
     });
 
+    Y.augment(Hand, Y.Bridge.UiHelper);
+
     Y.Bridge.Hand = Hand;
 
-}, "0", { requires: ["widget", "collection", "mustache", "helpers"] });
+}, "0", { requires: ["widget", "collection", "mustache", "helpers", "uihelper"] });

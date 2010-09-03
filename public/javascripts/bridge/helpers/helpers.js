@@ -162,6 +162,14 @@ YUI.add("helpers", function(Y) {
         return '<span class="' + className + '">' + value + '</span>';
     };
 
+    Y.Bridge.getCardClassName = function(card) {
+        if(card === "") {
+            return Y.ClassNameManager.getClassName("bridge", "card", "unknown");
+        } else {
+            return Y.ClassNameManager.getClassName("bridge", "card", card.toLowerCase());
+        }
+    };
+
     Y.Bridge.renderCard = function(card) {
         var suit, value,
             content = "",
@@ -169,14 +177,13 @@ YUI.add("helpers", function(Y) {
                 Y.ClassNameManager.getClassName("bridge", "card")
             ];
 
+        classNames.push(Y.Bridge.getCardClassName(card));
+
         if(card !== "") {
             suit = Y.Bridge.parseSuit(card),
             value = Y.Bridge.parseValue(card),
             content = Y.Bridge.renderSuit(suit) + Y.Bridge.renderValue(value);
-            classNames.push(Y.ClassNameManager.getClassName("bridge", "card", card.toLowerCase()));
             classNames.push(Y.ClassNameManager.getClassName("bridge", "card", suit.toLowerCase()));
-        } else {
-            classNames.push(Y.ClassNameManager.getClassName("bridge", "card", "unknown"));
         }
 
         return ''
