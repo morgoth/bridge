@@ -8,6 +8,20 @@ YUI.add("uihelper", function(Y) {
 
     UiHelper.prototype = {
 
+        _uiHandleButtonEvents: function() {
+            var that = this,
+                contentBox = this.get("contentBox");
+
+            contentBox.delegate("click", function(event) {
+                var eventName = event.currentTarget.getAttribute("data-event"),
+                eventArgument = event.currentTarget.getAttribute("data-event-argument");
+
+                if(event.currentTarget.getAttribute("disabled") === "") {
+                    that.fire(eventName, [eventArgument]);
+                }
+            }, "button[data-event]");
+        },
+
         _uiSetContent: function(node, value) {
             var textNode,
                 contentBox = this.get("contentBox");

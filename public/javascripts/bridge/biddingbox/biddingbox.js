@@ -38,7 +38,7 @@ YUI.add("biddingbox", function(Y) {
             this.on("level", this._onLevel);
             this.on("suit", this._onSuit);
 
-            contentBox.delegate("click", Y.bind(this._onButtonClick, this), "button.yui3-biddingbox-button-enabled[data-event]");
+            this._uiHandleButtonEvents();
         },
 
         syncUI: function() {
@@ -62,13 +62,6 @@ YUI.add("biddingbox", function(Y) {
 
         _resetAlert: function() {
             return this._uiSetValue(DOT + BiddingBox.C_ALERT_INPUT, "");
-        },
-
-        _onButtonClick: function(event) {
-            var eventName = event.currentTarget.getAttribute("data-event"),
-                eventArgument = event.currentTarget.getAttribute("data-event-argument");
-
-            this.fire(eventName, [eventArgument]);
         },
 
         _onLevel: function(event) {

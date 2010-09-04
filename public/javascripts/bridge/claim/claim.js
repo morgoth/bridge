@@ -39,11 +39,11 @@ YUI.add("claim", function(Y) {
             this.after("tricksChange", this._afterTricksChange);
             this.after("maxTricksChange", this._afterMaxTricksChange);
 
-            contentBox.delegate("click", Y.bind(this._onButtonClick, this), "button[data-event]");
-
             this.after("less", this._afterLess);
             this.after("more", this._afterMore);
             this.after("ok", this._afterOk);
+
+            this._uiHandleButtonEvents();
         },
 
         _afterTricksChange: function(event) {
@@ -59,13 +59,6 @@ YUI.add("claim", function(Y) {
                 tricks = this.get("tricks");
 
             this.fire("claim", [tricks, explanation]);
-        },
-
-        _onButtonClick: function(event) {
-            var eventName = event.target.getAttribute("data-event"),
-                eventArgument = event.target.getAttribute("data-event-argument");
-
-            this.fire(eventName, [eventArgument]);
         },
 
         _afterLess: function(event) {

@@ -44,7 +44,7 @@ YUI.add("claimpreview", function(Y) {
             this.after("rejectEnabledChange", this._afterRejectEnabledChange);
             this.after("cancelEnabledChange", this._afterCancelEnabledChange);
 
-            contentBox.delegate("click", Y.bind(this._onButtonClick, this), "button[data-event]");
+            this._uiHandleButtonEvents();
 
             this.after("acceptclick", this._afterAcceptClick);
             this.after("rejectclick", this._afterRejectClick);
@@ -77,13 +77,6 @@ YUI.add("claimpreview", function(Y) {
 
         _afterCancelEnabledChange: function(event) {
             this._uiToggleButton(DOT + ClaimPreview.C_CANCEL, event.newVal);
-        },
-
-        _onButtonClick: function(event) {
-            var eventName = event.target.getAttribute("data-event"),
-                eventArgument = event.target.getAttribute("data-event-argument");
-
-            this.fire(eventName, [eventArgument]);
         },
 
         _afterAcceptClick: function(event) {
