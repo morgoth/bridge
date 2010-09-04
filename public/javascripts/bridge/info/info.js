@@ -1,5 +1,8 @@
 YUI.add("info", function(Y) {
 
+    var getClassName = Y.ClassNameManager.getClassName,
+        DOT = ".";
+
     Y.namespace("Bridge");
 
     function Info() {
@@ -16,21 +19,9 @@ YUI.add("info", function(Y) {
             var html,
                 contentBox = this.get("contentBox");
 
-            html = Y.mustache(Info.INFO_TEMPLATE, {
-                firstRowCN: this.getClassName("row", "1"),
-                secondRowCN: this.getClassName("row", "2"),
-                thirdRowCN: this.getClassName("row", "3"),
-                firstColCN: this.getClassName("col", "1"),
-                secondColCN: this.getClassName("col", "2"),
-                thirdColCN: this.getClassName("col", "3"),
-                firstDirectionCN: this.getClassName("direction", "1"),
-                secondDirectionCN: this.getClassName("direction", "2"),
-                thirdDirectionCN: this.getClassName("direction", "3"),
-                fourthDirectionCN: this.getClassName("direction", "4"),
-                infoCN: this.getClassName("info")
-            });
+            html = Y.mustache(Info.INFO_TEMPLATE, Info);
 
-            contentBox.set("innerHTML", html);
+            contentBox.setContent(html);
         },
 
         bindUI: function() {
@@ -64,39 +55,40 @@ YUI.add("info", function(Y) {
         },
 
         _uiSetDealer: function(dealer) {
-            var directionNodes, distance,
-                player = this.get("player"),
-                contentBox = this.get("contentBox");
-            directionNodes = [
-                contentBox.one("." + this.getClassName("direction", "1")),
-                contentBox.one("." + this.getClassName("direction", "2")),
-                contentBox.one("." + this.getClassName("direction", "3")),
-                contentBox.one("." + this.getClassName("direction", "4"))
+            var directionSelectors, distance,
+                player = this.get("player");
+
+            directionSelectors = [
+                DOT + Info.C_FIRST_DIRECTION,
+                DOT + Info.C_SECOND_DIRECTION,
+                DOT + Info.C_THIRD_DIRECTION,
+                DOT + Info.C_FOURTH_DIRECTION
             ];
-            Y.each(directionNodes, function(directionNode) {
-                directionNode.set("innerHTML", "");
+
+            Y.each(directionSelectors, function(directionSelector) {
+                this._uiSetContent(directionSelector, "");
             }, this);
 
             if(dealer) {
                 distance = Y.Bridge.directionDistance(player, dealer);
-                directionNodes[(distance + 2) % 4].set("innerHTML", "D");
+                this._uiSetContent(directionSelectors[(distance + 2) % 4], "D");
             }
         },
 
         _uiSetVulnerable: function(vulnerable) {
             var directionNodes,
-                vulnerableCN = this.getClassName("vulnerable"),
                 player = this.get("player"),
                 contentBox = this.get("contentBox");
+
             directionNodes = [
-                contentBox.one("." + this.getClassName("direction", "1")),
-                contentBox.one("." + this.getClassName("direction", "2")),
-                contentBox.one("." + this.getClassName("direction", "3")),
-                contentBox.one("." + this.getClassName("direction", "4"))
+                contentBox.one(DOT + Info.C_FIRST_DIRECTION),
+                contentBox.one(DOT + Info.C_SECOND_DIRECTION),
+                contentBox.one(DOT + Info.C_THIRD_DIRECTION),
+                contentBox.one(DOT + Info.C_FOURTH_DIRECTION)
             ];
 
             Y.each(directionNodes, function(directionNode) {
-                directionNode.removeClass(vulnerableCN);
+                directionNode.removeClass(Info.C_VULNERABLE);
             }, this);
 
             // OPTIMIZE
@@ -106,36 +98,32 @@ YUI.add("info", function(Y) {
                 break;
             case "NS":
                 if("NS".indexOf(player) !== -1) {
-                    directionNodes[0].addClass(vulnerableCN);
-                    directionNodes[2].addClass(vulnerableCN);
+                    directionNodes[0].addClass(Info.C_VULNERABLE);
+                    directionNodes[2].addClass(Info.C_VULNERABLE);
                 } else {
-                    directionNodes[1].addClass(vulnerableCN);
-                    directionNodes[3].addClass(vulnerableCN);
+                    directionNodes[1].addClass(Info.C_VULNERABLE);
+                    directionNodes[3].addClass(Info.C_VULNERABLE);
                 }
                 break;
             case "EW":
                 if("EW".indexOf(player) !== -1) {
-                    directionNodes[0].addClass(vulnerableCN);
-                    directionNodes[2].addClass(vulnerableCN);
+                    directionNodes[0].addClass(Info.C_VULNERABLE);
+                    directionNodes[2].addClass(Info.C_VULNERABLE);
                 } else {
-                    directionNodes[1].addClass(vulnerableCN);
-                    directionNodes[3].addClass(vulnerableCN);
+                    directionNodes[1].addClass(Info.C_VULNERABLE);
+                    directionNodes[3].addClass(Info.C_VULNERABLE);
                 }
                 break;
             case "BOTH":
                 Y.each(directionNodes, function(directionNode) {
-                    directionNode.addClass(vulnerableCN);
+                    directionNode.addClass(Info.C_VULNERABLE);
                 }, this);
                 break;
             }
         },
 
         _uiSetTableId: function(tableId) {
-            var infoNode,
-                contentBox = this.get("contentBox");
-            infoNode = contentBox.one("." + this.getClassName("info"));
-
-            infoNode.set("innerHTML", "Table " + tableId);
+            this._uiSetContent(DOT + Info.C_INFO, "Table " + tableId);
         }
 
     }, {
@@ -170,31 +158,44 @@ YUI.add("info", function(Y) {
 
         },
 
+        C_FIRST_ROW:        getClassName("info", "row", "1"),
+        C_SECOND_ROW:       getClassName("info", "row", "2"),
+        C_THIRD_ROW:        getClassName("info", "row", "3"),
+        C_FIRST_COL:        getClassName("info", "col", "1"),
+        C_SECOND_COL:       getClassName("info", "col", "2"),
+        C_THIRD_COL:        getClassName("info", "col", "3"),
+        C_FIRST_DIRECTION:  getClassName("info", "direction", "1"),
+        C_SECOND_DIRECTION: getClassName("info", "direction", "2"),
+        C_THIRD_DIRECTION:  getClassName("info", "direction", "3"),
+        C_FOURTH_DIRECTION: getClassName("info", "direction", "4"),
+        C_INFO:             getClassName("info", "info"),
+        C_VULNERABLE:       getClassName("info", "vulnerable"),
+
         INFO_TEMPLATE: ''
             + '<table>'
             +   '<tbody>'
-            +     '<tr class="{{firstRowCN}}">'
+            +     '<tr class="{{C_FIRST_ROW}}">'
             +       '<td></td>'
-            +       '<td class="{{secondColCN}}">'
-            +         '<div class="{{firstDirectionCN}}"></div>'
+            +       '<td class="{{C_SECOND_COL}}">'
+            +         '<div class="{{C_FIRST_DIRECTION}}"></div>'
             +       '</td>'
             +       '<td></td>'
             +     '</tr>'
-            +     '<tr class="{{secondRowCN}}">'
-            +       '<td class="{{firstColCN}}">'
-            +         '<div class="{{fourthDirectionCN}}"></div>'
+            +     '<tr class="{{C_SECOND_ROW}}">'
+            +       '<td class="{{C_FIRST_COL}}">'
+            +         '<div class="{{C_FOURTH_DIRECTION}}"></div>'
             +       '</td>'
-            +       '<td class="{{secondColCN}}">'
-            +         '<div class="{{infoCN}}"></div>'
+            +       '<td class="{{C_SECOND_COL}}">'
+            +         '<div class="{{C_INFO}}"></div>'
             +       '</td>'
-            +       '<td class="{{thirdColCN}}">'
-            +         '<div class="{{secondDirectionCN}}"></div>'
+            +       '<td class="{{C_THIRD_COL}}">'
+            +         '<div class="{{C_SECOND_DIRECTION}}"></div>'
             +       '</td>'
             +     '</tr>'
-            +     '<tr class="{{thirdRowCN}}">'
+            +     '<tr class="{{C_THIRD_ROW}}">'
             +       '<td></td>'
-            +       '<td class="{{secondColCN}}">'
-            +         '<div class="{{thirdDirectionCN}}"></div>'
+            +       '<td class="{{C_SECOND_COL}}">'
+            +         '<div class="{{C_THIRD_DIRECTION}}"></div>'
             +       '</td>'
             +       '<td></td>'
             +     '</tr>'
@@ -203,6 +204,8 @@ YUI.add("info", function(Y) {
 
     });
 
+    Y.augment(Info, Y.Bridge.UiHelper);
+
     Y.Bridge.Info = Info;
 
-}, "0", { requires: ["widget", "mustache", "helpers"] });
+}, "0", { requires: ["widget", "mustache", "helpers", "uihelper"] });

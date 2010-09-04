@@ -22,7 +22,7 @@ window.YUICONFIG = {
         },
         info: {
             path: "../bridge/info/info.js",
-            requires: ["widget", "mustache", "helpers"]
+            requires: ["widget", "mustache", "helpers", "uihelper"]
         },
         auction: {
             path: "../bridge/auction/auction.js",
@@ -38,7 +38,7 @@ window.YUICONFIG = {
         },
         tricks: {
             path: "../bridge/tricks/tricks.js",
-            requires: ["widget", "mustache", "helpers"]
+            requires: ["widget", "mustache", "helpers", "uihelper"]
         },
         table: {
             path: "../bridge/table/table.js",

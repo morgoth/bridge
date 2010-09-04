@@ -1,5 +1,8 @@
 YUI.add("trick", function(Y) {
 
+    var getClassName = Y.ClassNameManager.getClassName,
+        DOT = ".";
+
     Y.namespace("Bridge");
 
     function Trick() {
@@ -35,24 +38,11 @@ YUI.add("trick", function(Y) {
         },
 
         _renderTrick: function() {
-            var html, directions,
+            var html,
                 contentBox = this.get("contentBox");
-            directions = Y.Array.map(Y.Bridge.DIRECTIONS, function(direction) {
-                var classNames = [
-                    this.getClassName("direction"),
-                    this.getClassName("direction", direction.toLowerCase())
-                ];
+            html = Y.mustache(Trick.TRICK_TEMPLATE, Trick);
 
-                return {
-                    classNames: classNames.join(" ")
-                };
-            }, this);
-            html = Y.mustache(Trick.TRICK_TEMPLATE, {
-                cardsCN: this.getClassName("cards"),
-                directions: directions
-            });
-
-            contentBox.set("innerHTML", html);
+            contentBox.setContent(html);
         },
 
         _uiSetPlayer: function(player) {
@@ -65,18 +55,16 @@ YUI.add("trick", function(Y) {
                 lead =  this.get("lead"),
                 contentBox = this.get("contentBox");
             positionDistance = Y.Bridge.directionDistance(player, lead);
-            cardsNode = contentBox.one("." + this.getClassName("cards"));
+            cardsNode = contentBox.one(DOT + Trick.C_CARDS);
 
             if(cards) {
                 cardsData = Y.Array.map(cards, function(card, i) {
-                    var position = (i +  positionDistance + 2) % 4, // TODO: test me please!
-                        classNames = [
-                            this.getClassName("card"),
-                            this.getClassName("card", Y.Bridge.DIRECTIONS[position].toLowerCase())
-                        ];
+                    var direction,
+                        position = (i +  positionDistance + 2) % 4; // TODO: test me please!
+                    direction = Y.Bridge.DIRECTIONS[position];
 
                     return {
-                        classNames: classNames.join(" "),
+                        classNames: [Trick.C_CARD, Trick["C_CARD_" + direction]].join(" "),
                         card: Y.Bridge.renderCard(card)
                     };
                 }, this);
@@ -86,7 +74,7 @@ YUI.add("trick", function(Y) {
                 });
             }
 
-            cardsNode.set("innerHTML", html || "");
+            cardsNode.setContent(html);
         }
     }, {
 
@@ -112,8 +100,15 @@ YUI.add("trick", function(Y) {
 
         },
 
+        C_CARDS:  getClassName("trick", "cards"),
+        C_CARD:   getClassName("trick", "card"),
+        C_CARD_N: getClassName("trick", "card", "n"),
+        C_CARD_E: getClassName("trick", "card", "e"),
+        C_CARD_S: getClassName("trick", "card", "s"),
+        C_CARD_W: getClassName("trick", "card", "w"),
+
         TRICK_TEMPLATE: ''
-            + '<ul class="{{cardsCN}}">'
+            + '<ul class="{{C_CARDS}}">'
             + '</ul>',
 
         CARDS_TEMPLATE: ''

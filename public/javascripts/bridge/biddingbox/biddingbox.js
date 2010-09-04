@@ -38,12 +38,13 @@ YUI.add("biddingbox", function(Y) {
             this.on("level", this._onLevel);
             this.on("suit", this._onSuit);
 
-            contentBox.delegate("click", Y.bind(this._onButtonClick, this), "button[data-event]");
+            contentBox.delegate("click", Y.bind(this._onButtonClick, this), "button.yui3-biddingbox-button-enabled[data-event]");
         },
 
         syncUI: function() {
             this._uiSetContract(this.get("contract"));
             this._uiSetLevel(this.get("level"));
+            this._uiSetPassEnabled(true);
             this._uiSetDoubleEnabled(this.get("doubleEnabled"));
             this._uiSetRedoubleEnabled(this.get("redoubleEnabled"));
         },
@@ -134,6 +135,10 @@ YUI.add("biddingbox", function(Y) {
 
         _afterRedoubleEnabledChange: function(event) {
             this._uiSetRedoubleEnabled(event.newVal);
+        },
+
+        _uiSetPassEnabled: function(passEnabled) {
+            this._uiToggleButton(DOT + BiddingBox.C_MODIFIER_PASS, passEnabled);
         },
 
         _uiSetDoubleEnabled: function(doubleEnabled) {

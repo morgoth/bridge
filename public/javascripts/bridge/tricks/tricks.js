@@ -1,5 +1,8 @@
 YUI.add("tricks", function(Y) {
 
+    var getClassName = Y.ClassNameManager.getClassName,
+        DOT = ".";
+
     Y.namespace("Bridge");
 
     function Tricks() {
@@ -17,19 +20,19 @@ YUI.add("tricks", function(Y) {
                 contentBox = this.get("contentBox");
 
             html = Y.mustache(Tricks.MAIN_TEMPLATE, {
-                tricksCN: this.getClassName("tricks"),
-                barCN: this.getClassName("bar"),
-                contract: this.get("contract"),
-                contractCN: this.getClassName("contract"),
-                declarer: this.get("declarer"),
-                declarerCN: this.getClassName("declarer"),
+                C_TRICKS: Tricks.C_TRICKS,
+                C_BAR: Tricks.C_BAR,
+                C_CONTRACT: Tricks.C_CONTRACT,
+                C_DECLARER: Tricks.C_DECLARER,
+                C_RESULT_NS: Tricks.C_RESULT_NS,
+                C_RESULT_EW: Tricks.C_RESULT_EW,
                 resultNS: this.get("resultNS"),
-                resultNSCN: this.getClassName("result-ns"),
                 resultEW: this.get("resultEW"),
-                resultEWCN: this.getClassName("result-ew")
+                contract: this.get("contract"),
+                declarer: this.get("declarer")
             });
 
-            contentBox.set("innerHTML", html);
+            contentBox.setContent(html);
         },
 
         bindUI: function() {
@@ -60,77 +63,41 @@ YUI.add("tricks", function(Y) {
             this._uiSetTricks(event.newVal);
         },
 
-        syncUI: function() {
-
-        },
-
         _uiSetContract: function(contract) {
-            var contractNode,
-                contractCN = this.getClassName("contract"),
-                contentBox = this.get("contentBox");
-            contractNode = contentBox.one("." + contractCN);
-
-            contractNode.set("innerHTML", "");
-
-            if(contract) {
-                contractNode.set("innerHTML", Y.Bridge.renderContract(contract));
-            }
+            this._uiSetContent(DOT + Tricks.C_CONTRACT, contract ? Y.Bridge.renderContract(contract) : "");
         },
 
         _uiSetDeclarer: function(declarer) {
-            var declarerNode,
-                declarerCN = this.getClassName("declarer"),
-                contentBox = this.get("contentBox");
-            declarerNode = contentBox.one("." + declarerCN);
-
-            declarerNode.set("innerHTML", "");
-
-            if(declarer) {
-                declarerNode.set("innerHTML", declarer);
-            }
+            this._uiSetContent(DOT + Tricks.C_DECLARER, declarer || "");
         },
 
         _uiSetResultNS: function(resultNS) {
-            var resultNSNode,
-                resultNSCN = this.getClassName("result-ns"),
-                contentBox = this.get("contentBox");
-            resultNSNode = contentBox.one("." + resultNSCN);
-
-            resultNSNode.set("innerHTML", "NS " + resultNS);
+            this._uiSetContent(DOT + Tricks.C_RESULT_NS, "NS " + resultNS);
         },
 
         _uiSetResultEW: function(resultEW) {
-            var resultEWNode,
-                resultEWCN = this.getClassName("result-ew"),
-                contentBox = this.get("contentBox");
-            resultEWNode = contentBox.one("." + resultEWCN);
-
-            resultEWNode.set("innerHTML", "EW " + resultEW);
+            this._uiSetContent(DOT + Tricks.C_RESULT_EW, "EW " + resultEW);
         },
 
         _uiSetTricks: function(tricks) {
-            var tricksHtml, tricksData, tricksNode,
-                player = this.get("player"),
-                contentBox = this.get("contentBox");
+            var tricksData,
+                player = this.get("player");
+
             tricksData = Y.Array.map(tricks, function(trick) {
-                var classNames = [
-                    this.getClassName("trick")
-                ];
+                var classNames = [Tricks.C_TRICK];
 
                 if(Y.Bridge.isSameSide(player, trick.winner)) {
-                    classNames.push(this.getClassName("trick", "won"));
+                    classNames.push(Tricks.C_TRICK_WON);
                 } else {
-                    classNames.push(this.getClassName("trick", "lost"));
+                    classNames.push(Tricks.C_TRICK_LOST);
                 }
 
                 return {
                     classNames: classNames.join(" ")
                 };
             }, this);
-            tricksNode = contentBox.one("." + this.getClassName("tricks"));
 
-            tricksHtml = Y.mustache(Tricks.TRICKS_TEMPLATE, { tricks: tricksData });
-            tricksNode.set("innerHTML", tricksHtml);
+            this._uiSetContent(DOT + Tricks.C_TRICKS, Y.mustache(Tricks.TRICKS_TEMPLATE, { tricks: tricksData }));
         }
 
     }, {
@@ -176,13 +143,23 @@ YUI.add("tricks", function(Y) {
 
         },
 
+        C_TRICKS:     getClassName("tricks", "tricks"),
+        C_TRICK:      getClassName("tricks", "trick"),
+        C_TRICK_WON:  getClassName("tricks", "trick", "won"),
+        C_TRICK_LOST: getClassName("tricks", "trick", "lost"),
+        C_BAR:        getClassName("tricks", "bar"),
+        C_CONTRACT:   getClassName("tricks", "contract"),
+        C_DECLARER:   getClassName("tricks", "declarer"),
+        C_RESULT_NS:  getClassName("tricks", "result", "ns"),
+        C_RESULT_EW:  getClassName("tricks", "result", "ew"),
+
         MAIN_TEMPLATE: ''
-            + '<ul class="{{tricksCN}}"></ul>'
-            + '<div class="{{barCN}}">'
-            +   '<div class="{{contractCN}}">{{contract}}</div>'
-            +   '<div class="{{declarerCN}}">{{declarer}}</div>'
-            +   '<div class="{{resultEWCN}}">EW {{resultEW}}</div>'
-            +   '<div class="{{resultNSCN}}">NS {{resultNS}}</div>'
+            + '<ul class="{{C_TRICKS}}"></ul>'
+            + '<div class="{{C_BAR}}">'
+            +   '<div class="{{C_CONTRACT}}">{{contract}}</div>'
+            +   '<div class="{{C_DECLARER}}">{{declarer}}</div>'
+            +   '<div class="{{C_RESULT_EW}}">EW {{resultEW}}</div>'
+            +   '<div class="{{C_RESULT_NS}}">NS {{resultNS}}</div>'
             + '</div>',
 
         TRICKS_TEMPLATE: ''
@@ -194,6 +171,8 @@ YUI.add("tricks", function(Y) {
 
     });
 
+    Y.augment(Tricks, Y.Bridge.UiHelper);
+
     Y.Bridge.Tricks = Tricks;
 
-}, "0", { requires: ["widget", "collection", "mustache", "helpers"] });
+}, "0", { requires: ["widget", "collection", "mustache", "helpers", "uihelper"] });
