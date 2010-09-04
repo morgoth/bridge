@@ -32,12 +32,14 @@ YUI.add("biddingbox", function(Y) {
             this.after("doubleEnabledChange", this._afterDoubleEnabledChange);
             this.after("redoubleEnabledChange", this._afterRedoubleEnabledChange);
 
-            contentBox.delegate("click", Y.bind(this._onButtonClick, this), "button[data-event]");
             this.on("pass", Y.bind(this._fireBidEvent, this, "PASS"));
             this.on("x", Y.bind(this._fireBidEvent, this, "X"));
             this.on("xx", Y.bind(this._fireBidEvent, this, "XX"));
             this.on("level", this._onLevel);
             this.on("suit", this._onSuit);
+
+            // contentBox.delegate("click", Y.bind(this._onButtonClick, this), "button[data-event]");
+            contentBox.on("click", this._onButtonClick, this);
         },
 
         syncUI: function() {
@@ -63,10 +65,19 @@ YUI.add("biddingbox", function(Y) {
         },
 
         _onButtonClick: function(event) {
-            var eventName = event.target.getAttribute("data-event"),
-                eventArgument = event.target.getAttribute("data-event-argument");
+            var eventName, eventArgument, disabled,
+                buttonNode = event.target.ancestor("button[data-event]", true);
 
-            this.fire(eventName, [eventArgument]);
+            // quick fix - delegate doesn't work properly on webkit
+            if(buttonNode) {
+                disabled = buttonNode.getAttribute("disabled");
+                eventName = buttonNode.getAttribute("data-event");
+                eventArgument = buttonNode.getAttribute("data-event-argument");
+
+                if(!disabled) {
+                    this.fire(eventName, [eventArgument]);
+                }
+            }
         },
 
         _onLevel: function(event) {

@@ -46,7 +46,7 @@ YUI.add("hand", function(Y) {
             this.after("cardsEnabledChange", this._afterCardsEnabledChange);
             this.after("activeChange", this._afterActiveChange);
 
-            contentBox.delegate("click", Y.bind(this._onButtonClick, this), "button[data-event]");
+            contentBox.delegate("click", Y.bind(this._onButtonClick, this), "button.yui3-hand-button-enabled[data-event]");
         },
 
         _afterJoinEnabledChange: function(event) {
