@@ -53,7 +53,6 @@ YUI.add("instantaction", function(Y) {
                 } else {
                     cards = [card];
                     lead = hand.get("direction");
-                    Y.log(hand.get("direction"));
                 }
 
                 host.trick.set("lead", lead);

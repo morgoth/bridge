@@ -106,30 +106,8 @@ YUI.add("chat", function(Y) {
         },
 
         _uiSyncDisabled: function(disabled) {
-            var formInputNode, formSubmitNode,
-                contentBox = this.get("contentBox");
-            formSubmitNode = contentBox.one(DOT + Chat.C_FORM_SUBMIT);
-            formInputNode = contentBox.one(DOT + Chat.C_FORM_INPUT);
-
-            if(disabled) {
-                this._disableButton(formSubmitNode);
-                this._disableButton(formInputNode);
-            } else {
-                this._enableButton(formSubmitNode);
-                this._enableButton(formInputNode);
-            }
-        },
-
-        _enableButton: function(node) {
-            var className = this.getClassName("button", "disabled");
-
-            node.removeClass(className).removeAttribute("disabled");
-        },
-
-        _disableButton: function(node) {
-            var className = this.getClassName("button", "disabled");
-
-            node.addClass(className).setAttribute("disabled", "disabled");
+            this._uiToggleButton(DOT + Chat.C_FORM_SUBMIT, !disabled);
+            this._uiToggleButton(DOT + Chat.C_FORM_INPUT, !disabled);
         }
 
     }, {
@@ -171,6 +149,8 @@ YUI.add("chat", function(Y) {
 
     });
 
+    Y.augment(Chat, Y.Bridge.UiHelper);
+
     Y.Bridge.Chat = Chat;
 
-}, "0", { requires: ["widget", "mustache"] });
+}, "0", { requires: ["widget", "mustache", "uihelper"] });

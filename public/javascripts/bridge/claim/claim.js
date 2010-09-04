@@ -30,7 +30,7 @@ YUI.add("claim", function(Y) {
                 contentBox = this.get("contentBox");
 
             html = Y.mustache(Claim.CLAIM_TEMPLATE, Claim);
-            contentBox.set("innerHTML", html);
+            contentBox.setContent(html);
         },
 
         bindUI: function() {

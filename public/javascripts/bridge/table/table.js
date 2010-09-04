@@ -230,7 +230,7 @@ YUI.add("table", function(Y) {
             var container = this.get("container"),
                 html = Y.mustache(Table.MAIN_TEMPLATE, {});
 
-            container.set("innerHTML", html);
+            container.setContent(html);
         },
 
         _renderHands: function() {
@@ -373,8 +373,6 @@ YUI.add("table", function(Y) {
         },
 
         _afterMessageReceived: function(event) {
-            Y.log(event);
-
             var data = event[0];
 
             this.chat.addMessage(data.name, data.body);

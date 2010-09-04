@@ -52,7 +52,7 @@ YUI.add("auction", function(Y) {
                 headersCN: this.getClassName("headers")
             });
 
-            contentBox.set("innerHTML", html);
+            contentBox.setContent(html);
         },
 
         _uiSetBids: function(bids) {
@@ -83,11 +83,10 @@ YUI.add("auction", function(Y) {
                 bids.unshift({});
             }
 
-            html = Y.mustache(Auction.BIDS_TEMPLATE, {
-                bids: bids
-            });
+            html = Y.mustache(Auction.BIDS_TEMPLATE, { bids: bids });
 
-            bidsNode.set("innerHTML", html);
+            bidsNode.setContent(html);
+
             Y.later(0, this, function() {
                 var scrollHeight = bidsNode.get("scrollHeight"),
                     offsetHeight = bidsNode.get("offsetHeight");

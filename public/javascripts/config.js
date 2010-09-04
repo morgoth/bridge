@@ -46,7 +46,7 @@ window.YUICONFIG = {
         },
         chat: {
             path: "../bridge/chat/chat.js",
-            requires: ["widget", "mustache"]
+            requires: ["widget", "mustache", "uihelper"]
         },
         uihelper: {
             path: "../bridge/uihelper/uihelper.js",
