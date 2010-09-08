@@ -2,8 +2,8 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.2
-build: 56
+version: 3.2.0
+build: 2676
 */
 YUI.add('datasource-arrayschema', function(Y) {
 
@@ -91,7 +91,7 @@ Y.extend(DataSourceArraySchema, Y.Plugin.Base, {
      */
     _beforeDefDataFn: function(e) {
         var data = (Y.DataSource.IO && (this.get("host") instanceof Y.DataSource.IO) && Y.Lang.isString(e.data.responseText)) ? e.data.responseText : e.data,
-            response = Y.DataSchema.Array.apply(this.get("schema"), data);
+            response = Y.DataSchema.Array.apply.call(this, this.get("schema"), data);
             
         // Default
         if(!response) {
@@ -109,4 +109,5 @@ Y.extend(DataSourceArraySchema, Y.Plugin.Base, {
 Y.namespace('Plugin').DataSourceArraySchema = DataSourceArraySchema;
 
 
-}, '3.1.2' ,{requires:['plugin', 'datasource-local', 'dataschema-array']});
+
+}, '3.2.0' ,{requires:['plugin', 'datasource-local', 'dataschema-array']});

@@ -2,8 +2,8 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.2
-build: 56
+version: 3.2.0
+build: 2676
 */
 YUI.add('json-stringify', function(Y) {
 
@@ -246,6 +246,7 @@ Y.mix(Y.namespace('JSON'),{
      * @method dateToString
      * @param d {Date} The Date to serialize
      * @return {String} stringified Date in UTC format YYYY-MM-DDTHH:mm:SSZ
+     * @deprecated Use a replacer function
      * @static
      */
     dateToString : function (d) {
@@ -295,4 +296,4 @@ Y.mix(Y.namespace('JSON'),{
 });
 
 
-}, '3.1.2' );
+}, '3.2.0' );

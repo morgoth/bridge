@@ -2,8 +2,8 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.2
-build: 56
+version: 3.2.0
+build: 2676
 */
 YUI.add('console-filters', function(Y) {
 
@@ -28,7 +28,6 @@ var getCN = Y.ClassNameManager.getClassName,
     SOURCE_DOT   = 'source.',
 
     HOST     = 'host',
-    PARENT_NODE = 'parentNode',
     CHECKED  = 'checked',
     DEF_VISIBILITY = 'defaultVisibility',
 
@@ -129,10 +128,10 @@ Y.namespace('Plugin').ConsoleFilters = Y.extend(ConsoleFilters, Y.Plugin.Base,
         this._entries = [];
 
         if (this._categories) {
-            this._categories.get(PARENT_NODE).removeChild(this._categories);
+            this._categories.remove();
         }
         if (this._sources) {
-            this._sources.get(PARENT_NODE).removeChild(this._sources);
+            this._sources.remove();
         }
     },
 
@@ -728,4 +727,4 @@ Y.namespace('Plugin').ConsoleFilters = Y.extend(ConsoleFilters, Y.Plugin.Base,
 });
 
 
-}, '3.1.2' ,{requires:['console','plugin']});
+}, '3.2.0' ,{requires:['console','plugin']});

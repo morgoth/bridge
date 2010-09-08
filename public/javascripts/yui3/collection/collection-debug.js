@@ -2,8 +2,8 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.2
-build: 56
+version: 3.2.0
+build: 2676
 */
 YUI.add('array-extras', function(Y) {
 
@@ -127,6 +127,8 @@ A.reject = function(a, f, o) {
 
 /**
 * Executes the supplied function on each item in the array.
+* Iteration stops if the supplied function does not return
+* a truthy value.
 * @method Array.every
 * @param a {Array} the array to iterate
 * @param f {Function} the function to execute on each item
@@ -175,7 +177,11 @@ A.map = (Native.map) ?
 
 /**
 * Executes the supplied function on each item in the array.
-* Reduce "folds" the array into a single value.
+* Reduce "folds" the array into a single value.  The callback
+* function receives four arguments:
+* the value from the previous callback call (or the initial value), 
+* the value of the current element, the current index, and 
+* the array over which iteration is occurring.
 * @method Array.reduce
 * @param a {Array} the array to iterate
 * @param init The initial value to start from
@@ -297,7 +303,7 @@ A.zip = function (a, a2) {
 A.forEach = A.each;
 
 
-}, '3.1.2' );
+}, '3.2.0' );
 YUI.add('arraylist', function(Y) {
 
 /**
@@ -494,7 +500,7 @@ Y.mix( ArrayList, {
 Y.ArrayList = ArrayList;
 
 
-}, '3.1.2' );
+}, '3.2.0' );
 YUI.add('arraylist-add', function(Y) {
 
 /**
@@ -535,21 +541,21 @@ Y.mix( Y.ArrayList.prototype, {
 
     /**
      * Removes first or all occurrences of an item to the ArrayList.  If a
-     * comparitor is not provided, uses itemsAreEqual method to determine
+     * comparator is not provided, uses itemsAreEqual method to determine
      * matches.
      *
      * @method remove
      * @param needle { mixed } Item to find and remove from the list
      * @param all { Boolean } If true, remove all occurrences
-     * @param comparitor { Function } optional a/b function to test equivalence
+     * @param comparator { Function } optional a/b function to test equivalence
      * @return {ArrayList} the instance
      * @chainable
      */
-    remove: function ( needle, all, comparitor ) {
-        comparitor = comparitor || this.itemsAreEqual;
+    remove: function ( needle, all, comparator ) {
+        comparator = comparator || this.itemsAreEqual;
 
         for (var i = this._items.length - 1; i >= 0; --i) {
-            if ( comparitor.call( this, needle, this.item( i ) ) ) {
+            if ( comparator.call( this, needle, this.item( i ) ) ) {
                 this._items.splice( i, 1 );
                 if ( !all ) {
                     break;
@@ -561,7 +567,7 @@ Y.mix( Y.ArrayList.prototype, {
     },
 
     /**
-     * Default comparitor for items stored in this list.  Used by remove().
+     * Default comparator for items stored in this list.  Used by remove().
      *
      * @method itemsAreEqual
      * @param a { mixed } item to test equivalence with
@@ -575,7 +581,7 @@ Y.mix( Y.ArrayList.prototype, {
 } );
 
 
-}, '3.1.2' ,{requires:['arraylist']});
+}, '3.2.0' ,{requires:['arraylist']});
 YUI.add('arraylist-filter', function(Y) {
 
 /**
@@ -618,7 +624,7 @@ Y.mix( Y.ArrayList.prototype, {
 } );
 
 
-}, '3.1.2' ,{requires:['arraylist']});
+}, '3.2.0' ,{requires:['arraylist']});
 YUI.add('array-invoke', function(Y) {
 
 /**
@@ -662,8 +668,8 @@ Y.Array.invoke = function ( items, name ) {
 };
 
 
-}, '3.1.2' );
+}, '3.2.0' );
 
 
-YUI.add('collection', function(Y){}, '3.1.2' ,{use:['array-extras', 'arraylist', 'arraylist-add', 'arraylist-filter', 'array-invoke']});
+YUI.add('collection', function(Y){}, '3.2.0' ,{use:['array-extras', 'arraylist', 'arraylist-add', 'arraylist-filter', 'array-invoke']});
 

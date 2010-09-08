@@ -2,8 +2,8 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.2
-build: 56
+version: 3.2.0
+build: 2676
 */
 YUI.add('dom-base', function(Y) {
 
@@ -14,6 +14,7 @@ YUI.add('dom-base', function(Y) {
  * for other common tasks. 
  * @module dom
  * @submodule dom-base
+ * @for DOM
  *
  */
 
@@ -24,6 +25,7 @@ YUI.add('dom-base', function(Y) {
  */
 var NODE_TYPE = 'nodeType',
     OWNER_DOCUMENT = 'ownerDocument',
+    DOCUMENT_ELEMENT = 'documentElement',
     DEFAULT_VIEW = 'defaultView',
     PARENT_WINDOW = 'parentWindow',
     TAG_NAME = 'tagName',
@@ -35,7 +37,7 @@ var NODE_TYPE = 'nodeType',
     COMPARE_DOCUMENT_POSITION = 'compareDocumentPosition',
     EMPTY_STRING = '',
 
-    documentElement = document.documentElement,
+    documentElement = Y.config.doc.documentElement,
 
     re_tag = /<([a-z]+)/i;
 
@@ -217,21 +219,19 @@ Y.DOM = {
      * @return {Boolean} Whether or not the element is attached to the document. 
      */
     inDoc: function(element, doc) {
-        // there may be multiple elements with the same ID
-        doc = doc || element[OWNER_DOCUMENT];
-        var nodes = [],
-            ret = false,
-            i,
-            node,
-            query;
-                
-        element.id = element.id || Y.guid(); 
+        var ret = false,
+            rootNode;
 
-        nodes = Y.DOM.allById(element.id, doc);
-        for (i = 0; node = nodes[i++];) { // check for a match
-            if (node === element) {
-                ret = true;
-                break;
+        if (element && element.nodeType) {
+            (doc) || (doc = element[OWNER_DOCUMENT]);
+
+            rootNode = doc[DOCUMENT_ELEMENT];
+
+            // contains only works with HTML_ELEMENT
+            if (rootNode && rootNode.contains && element.tagName) {
+                ret = rootNode.contains(element);
+            } else {
+                ret = Y.DOM.contains(rootNode, element);
             }
         }
 
@@ -256,7 +256,8 @@ Y.DOM = {
 
             if (nodes && nodes.length) {
                 for (i = 0; node = nodes[i++];) { // check for a match
-                    if (node.id === id) { // avoid false positive for node.name
+                    if (node.attributes && node.attributes.id
+                            && node.attributes.id.value === id) { // avoid false positive for node.name & form.id
                         ret.push(node);
                     }
                 }
@@ -280,6 +281,7 @@ Y.DOM = {
     create: function(html, doc) {
         if (typeof html === 'string') {
             html = Y.Lang.trim(html); // match IE which trims whitespace from innerHTML
+
         }
 
         doc = doc || Y.config.doc;
@@ -289,20 +291,29 @@ Y.DOM = {
             ret = null,
             tag, nodes;
 
-        if (m && custom[m[1]]) {
-            if (typeof custom[m[1]] === 'function') {
-                create = custom[m[1]];
-            } else {
-                tag = custom[m[1]];
+        if (html != undefined) { // not undefined or null
+            if (m && custom[m[1]]) {
+                if (typeof custom[m[1]] === 'function') {
+                    create = custom[m[1]];
+                } else {
+                    tag = custom[m[1]];
+                }
             }
-        }
 
-        nodes = create(html, doc, tag).childNodes;
+            nodes = create(html, doc, tag).childNodes;
 
-        if (nodes.length === 1) { // return single node, breaking parentNode ref from "fragment"
-            ret = nodes[0].parentNode.removeChild(nodes[0]);
-        } else { // return multiple nodes as a fragment
-             ret = Y.DOM._nl2frag(nodes, doc);
+            if (nodes.length === 1) { // return single node, breaking parentNode ref from "fragment"
+                ret = nodes[0].parentNode.removeChild(nodes[0]);
+            } else if (nodes[0] && nodes[0].className === 'yui3-big-dummy') { // using dummy node to preserve some attributes (e.g. OPTION not selected)
+                if (nodes.length === 2) {
+                    ret = nodes[0].nextSibling;
+                } else {
+                    nodes[0].parentNode.removeChild(nodes[0]); 
+                     ret = Y.DOM._nl2frag(nodes, doc);
+                }
+            } else { // return multiple nodes as a fragment
+                 ret = Y.DOM._nl2frag(nodes, doc);
+            }
         }
 
         return ret;
@@ -402,18 +413,28 @@ Y.DOM = {
      * Inserts content in a node at the given location 
      * @method addHTML
      * @param {HTMLElement} node The node to insert into
-     * @param {String} content The content to be inserted 
-     * @param {String} where Where to insert the content; default is after lastChild 
+     * @param {String | HTMLElement} content The content to be inserted 
+     * @param {String | HTMLElement} where Where to insert the content
+     * If no "where" is given, content is appended to the node
+     * Possible values for "where"
+     * <dl>
+     * <dt>HTMLElement</dt>
+     * <dd>The element to insert before</dd>
+     * <dt>"replace"</dt>
+     * <dd>Replaces the existing HTML</dd>
+     * <dt>"before"</dt>
+     * <dd>Inserts before the existing HTML</dd>
+     * <dt>"before"</dt>
+     * <dd>Inserts content before the node</dd>
+     * <dt>"after"</dt>
+     * <dd>Inserts content after the node</dd>
+     * </dl>
      */
     addHTML: function(node, content, where) {
-        if (typeof content === 'string') {
-            content = Y.Lang.trim(content); // match IE which trims whitespace from innerHTML
-        }
-
         var nodeParent = node.parentNode,
             newNode;
             
-        if (content) {
+        if (content !== undefined && content !== null) {
             if (content.nodeType) { // domNode
                 newNode = content;
             } else { // create from string and cache
@@ -671,12 +692,14 @@ Y.DOM = {
                 }
             }
         });
+
+        Y.DOM.creators.style = Y.DOM.creators.script;
     }
 
     if (Y.UA.gecko || Y.UA.ie) {
         Y.mix(creators, {
             option: function(html, doc) {
-                return create('<select>' + html + '</select>', doc);
+                return create('<select><option class="yui3-big-dummy" selected></option>' + html + '</select>', doc);
             },
 
             tr: function(html, doc) {
@@ -714,7 +737,7 @@ Y.DOM = {
             var val = node.value,
                 options = node.options;
 
-            if (options && val === '') {
+            if (options && options.length && val === '') {
                 // TODO: implement multipe select
                 if (node.multiple) {
                     Y.log('multiple select normalization not implemented', 'warn', 'DOM');
@@ -735,6 +758,7 @@ Y.mix(Y.DOM, {
     /**
      * Determines whether a DOM element has the given className.
      * @method hasClass
+     * @for DOM
      * @param {HTMLElement} element The DOM element. 
      * @param {String} className the class name to search for
      * @return {Boolean} Whether or not the element has the given class. 
@@ -747,6 +771,7 @@ Y.mix(Y.DOM, {
     /**
      * Adds a class name to a given DOM element.
      * @method addClass         
+     * @for DOM
      * @param {HTMLElement} element The DOM element. 
      * @param {String} className the class name to add to the class attribute
      */
@@ -759,6 +784,7 @@ Y.mix(Y.DOM, {
     /**
      * Removes a class name from a given element.
      * @method removeClass         
+     * @for DOM
      * @param {HTMLElement} element The DOM element. 
      * @param {String} className the class name to remove from the class attribute
      */
@@ -777,6 +803,7 @@ Y.mix(Y.DOM, {
      * Replace a class with another class for a given element.
      * If no oldClassName is present, the newClassName is simply added.
      * @method replaceClass  
+     * @for DOM
      * @param {HTMLElement} element The DOM element 
      * @param {String} oldClassName the class name to be replaced
      * @param {String} newClassName the class name that will be replacing the old class name
@@ -790,6 +817,7 @@ Y.mix(Y.DOM, {
     /**
      * If the className exists on the node it is removed, if it doesn't exist it is added.
      * @method toggleClass  
+     * @for DOM
      * @param {HTMLElement} element The DOM element
      * @param {String} className the class name to be toggled
      * @param {Boolean} addClass optional boolean to indicate whether class
@@ -811,9 +839,52 @@ hasClass = Y.DOM.hasClass;
 removeClass = Y.DOM.removeClass;
 addClass = Y.DOM.addClass;
 
+Y.mix(Y.DOM, {
+    /**
+     * Sets the width of the element to the given size, regardless
+     * of box model, border, padding, etc.
+     * @method setWidth
+     * @param {HTMLElement} element The DOM element. 
+     * @param {String|Int} size The pixel height to size to
+     */
+
+    setWidth: function(node, size) {
+        Y.DOM._setSize(node, 'width', size);
+    },
+
+    /**
+     * Sets the height of the element to the given size, regardless
+     * of box model, border, padding, etc.
+     * @method setHeight
+     * @param {HTMLElement} element The DOM element. 
+     * @param {String|Int} size The pixel height to size to
+     */
+
+    setHeight: function(node, size) {
+        Y.DOM._setSize(node, 'height', size);
+    },
+
+    _setSize: function(node, prop, val) {
+        val = (val > 0) ? val : 0;
+        var size = 0;
+
+        node.style[prop] = val + 'px';
+        size = (prop === 'height') ? node.offsetHeight : node.offsetWidth;
+
+        if (size > val) {
+            val = val - (size - val);
+
+            if (val < 0) {
+                val = 0;
+            }
+
+            node.style[prop] = val + 'px';
+        }
+    }
+});
 
 
-}, '3.1.2' ,{requires:['oop']});
+}, '3.2.0' ,{requires:['oop']});
 YUI.add('dom-style', function(Y) {
 
 (function(Y) {
@@ -833,15 +904,29 @@ var DOCUMENT_ELEMENT = 'documentElement',
     STYLE_FLOAT = 'styleFloat',
     TRANSPARENT = 'transparent',
     GET_COMPUTED_STYLE = 'getComputedStyle',
+    GET_BOUNDING_CLIENT_RECT = 'getBoundingClientRect',
 
     DOCUMENT = Y.config.doc,
     UNDEFINED = undefined,
 
     Y_DOM = Y.DOM,
 
+    TRANSFORM = 'transform',
+    VENDOR_TRANSFORM = [
+        'WebkitTransform',
+        'MozTransform',
+        'OTransform'
+    ],
+
     re_color = /color$/i,
     re_unit = /width|height|top|left|right|bottom|margin|padding/i;
 
+
+Y.Array.each(VENDOR_TRANSFORM, function(val) {
+    if (val in DOCUMENT[DOCUMENT_ELEMENT].style) {
+        TRANSFORM = val;
+    }
+});
 
 Y.mix(Y_DOM, {
     DEFAULT_UNIT: 'px',
@@ -976,6 +1061,71 @@ if (Y.UA.webkit) {
     };
 
 }
+
+Y.DOM._getAttrOffset = function(node, attr) {
+    var val = Y.DOM[GET_COMPUTED_STYLE](node, attr),
+        offsetParent = node.offsetParent,
+        position,
+        parentOffset,
+        offset;
+
+    if (val === 'auto') {
+        position = Y.DOM.getStyle(node, 'position');
+        if (position === 'static' || position === 'relative') {
+            val = 0;    
+        } else if (offsetParent && offsetParent[GET_BOUNDING_CLIENT_RECT]) {
+            parentOffset = offsetParent[GET_BOUNDING_CLIENT_RECT]()[attr];
+            offset = node[GET_BOUNDING_CLIENT_RECT]()[attr];
+            if (attr === 'left' || attr === 'top') {
+                val = offset - parentOffset;
+            } else {
+                val = parentOffset - node[GET_BOUNDING_CLIENT_RECT]()[attr];
+            }
+        }
+    }
+
+    return val;
+};
+
+Y.DOM._getOffset = function(node) {
+    var pos,
+        xy = null;
+
+    if (node) {
+        pos = Y_DOM.getStyle(node, 'position');
+        xy = [
+            parseInt(Y_DOM[GET_COMPUTED_STYLE](node, 'left'), 10),
+            parseInt(Y_DOM[GET_COMPUTED_STYLE](node, 'top'), 10)
+        ];
+
+        if ( isNaN(xy[0]) ) { // in case of 'auto'
+            xy[0] = parseInt(Y_DOM.getStyle(node, 'left'), 10); // try inline
+            if ( isNaN(xy[0]) ) { // default to offset value
+                xy[0] = (pos === 'relative') ? 0 : node.offsetLeft || 0;
+            }
+        } 
+
+        if ( isNaN(xy[1]) ) { // in case of 'auto'
+            xy[1] = parseInt(Y_DOM.getStyle(node, 'top'), 10); // try inline
+            if ( isNaN(xy[1]) ) { // default to offset value
+                xy[1] = (pos === 'relative') ? 0 : node.offsetTop || 0;
+            }
+        } 
+    }
+
+    return xy;
+
+};
+
+Y_DOM.CUSTOM_STYLES.transform = {
+    set: function(node, val, style) {
+        style[TRANSFORM] = val;
+    },
+
+    get: function(node, style) {
+        return Y_DOM[GET_COMPUTED_STYLE](node, TRANSFORM);
+    }
+};
 })(Y);
 (function(Y) {
 var PARSE_INT = parseInt,
@@ -1051,326 +1201,9 @@ Y.Color = {
 };
 })(Y);
 
-(function(Y) {
-var HAS_LAYOUT = 'hasLayout',
-    PX = 'px',
-    FILTER = 'filter',
-    FILTERS = 'filters',
-    OPACITY = 'opacity',
-    AUTO = 'auto',
-
-    BORDER_WIDTH = 'borderWidth',
-    BORDER_TOP_WIDTH = 'borderTopWidth',
-    BORDER_RIGHT_WIDTH = 'borderRightWidth',
-    BORDER_BOTTOM_WIDTH = 'borderBottomWidth',
-    BORDER_LEFT_WIDTH = 'borderLeftWidth',
-    WIDTH = 'width',
-    HEIGHT = 'height',
-    TRANSPARENT = 'transparent',
-    VISIBLE = 'visible',
-    GET_COMPUTED_STYLE = 'getComputedStyle',
-    UNDEFINED = undefined,
-    documentElement = document.documentElement,
-
-    // TODO: unit-less lineHeight (e.g. 1.22)
-    re_unit = /^(\d[.\d]*)+(em|ex|px|gd|rem|vw|vh|vm|ch|mm|cm|in|pt|pc|deg|rad|ms|s|hz|khz|%){1}?/i,
-
-    _getStyleObj = function(node) {
-        return node.currentStyle || node.style;
-    },
-
-    ComputedStyle = {
-        CUSTOM_STYLES: {},
-
-        get: function(el, property) {
-            var value = '',
-                current;
-
-            if (el) {
-                    current = _getStyleObj(el)[property];
-
-                if (property === OPACITY && Y.DOM.CUSTOM_STYLES[OPACITY]) {
-                    value = Y.DOM.CUSTOM_STYLES[OPACITY].get(el);        
-                } else if (!current || (current.indexOf && current.indexOf(PX) > -1)) { // no need to convert
-                    value = current;
-                } else if (Y.DOM.IE.COMPUTED[property]) { // use compute function
-                    value = Y.DOM.IE.COMPUTED[property](el, property);
-                } else if (re_unit.test(current)) { // convert to pixel
-                    value = ComputedStyle.getPixel(el, property) + PX;
-                } else {
-                    value = current;
-                }
-            }
-
-            return value;
-        },
-
-        sizeOffsets: {
-            width: ['Left', 'Right'],
-            height: ['Top', 'Bottom'],
-            top: ['Top'],
-            bottom: ['Bottom']
-        },
-
-        getOffset: function(el, prop) {
-            var current = _getStyleObj(el)[prop],                     // value of "width", "top", etc.
-                capped = prop.charAt(0).toUpperCase() + prop.substr(1), // "Width", "Top", etc.
-                offset = 'offset' + capped,                             // "offsetWidth", "offsetTop", etc.
-                pixel = 'pixel' + capped,                               // "pixelWidth", "pixelTop", etc.
-                sizeOffsets = ComputedStyle.sizeOffsets[prop], 
-                value = '';
-
-            // IE pixelWidth incorrect for percent
-            // manually compute by subtracting padding and border from offset size
-            // NOTE: clientWidth/Height (size minus border) is 0 when current === AUTO so offsetHeight is used
-            // reverting to auto from auto causes position stacking issues (old impl)
-            if (current === AUTO || current.indexOf('%') > -1) {
-                value = el['offset' + capped];
-
-                if (sizeOffsets[0]) {
-                    value -= ComputedStyle.getPixel(el, 'padding' + sizeOffsets[0]);
-                    value -= ComputedStyle.getBorderWidth(el, 'border' + sizeOffsets[0] + 'Width', 1);
-                }
-
-                if (sizeOffsets[1]) {
-                    value -= ComputedStyle.getPixel(el, 'padding' + sizeOffsets[1]);
-                    value -= ComputedStyle.getBorderWidth(el, 'border' + sizeOffsets[1] + 'Width', 1);
-                }
-
-            } else { // use style.pixelWidth, etc. to convert to pixels
-                // need to map style.width to currentStyle (no currentStyle.pixelWidth)
-                if (!el.style[pixel] && !el.style[prop]) {
-                    el.style[prop] = current;
-                }
-                value = el.style[pixel];
-                
-            }
-            return value + PX;
-        },
-
-        borderMap: {
-            thin: '2px', 
-            medium: '4px', 
-            thick: '6px'
-        },
-
-        getBorderWidth: function(el, property, omitUnit) {
-            var unit = omitUnit ? '' : PX,
-                current = el.currentStyle[property];
-
-            if (current.indexOf(PX) < 0) { // look up keywords if a border exists
-                if (ComputedStyle.borderMap[current] &&
-                        el.currentStyle.borderStyle !== 'none') {
-                    current = ComputedStyle.borderMap[current];
-                } else { // otherwise no border (default is "medium")
-                    current = 0;
-                }
-            }
-            return (omitUnit) ? parseFloat(current) : current;
-        },
-
-        getPixel: function(node, att) {
-            // use pixelRight to convert to px
-            var val = null,
-                style = _getStyleObj(node),
-                styleRight = style.right,
-                current = style[att];
-
-            node.style.right = current;
-            val = node.style.pixelRight;
-            node.style.right = styleRight; // revert
-
-            return val;
-        },
-
-        getMargin: function(node, att) {
-            var val,
-                style = _getStyleObj(node);
-
-            if (style[att] == AUTO) {
-                val = 0;
-            } else {
-                val = ComputedStyle.getPixel(node, att);
-            }
-            return val + PX;
-        },
-
-        getVisibility: function(node, att) {
-            var current;
-            while ( (current = node.currentStyle) && current[att] == 'inherit') { // NOTE: assignment in test
-                node = node.parentNode;
-            }
-            return (current) ? current[att] : VISIBLE;
-        },
-
-        getColor: function(node, att) {
-            var current = _getStyleObj(node)[att];
-
-            if (!current || current === TRANSPARENT) {
-                Y.DOM.elementByAxis(node, 'parentNode', null, function(parent) {
-                    current = _getStyleObj(parent)[att];
-                    if (current && current !== TRANSPARENT) {
-                        node = parent;
-                        return true;
-                    }
-                });
-            }
-
-            return Y.Color.toRGB(current);
-        },
-
-        getBorderColor: function(node, att) {
-            var current = _getStyleObj(node),
-                val = current[att] || current.color;
-            return Y.Color.toRGB(Y.Color.toHex(val));
-        }
-    },
-
-    //fontSize: getPixelFont,
-    IEComputed = {};
-
-// use alpha filter for IE opacity
-try {
-    if (documentElement.style[OPACITY] === UNDEFINED &&
-            documentElement[FILTERS]) {
-        Y.DOM.CUSTOM_STYLES[OPACITY] = {
-            get: function(node) {
-                var val = 100;
-                try { // will error if no DXImageTransform
-                    val = node[FILTERS]['DXImageTransform.Microsoft.Alpha'][OPACITY];
-
-                } catch(e) {
-                    try { // make sure its in the document
-                        val = node[FILTERS]('alpha')[OPACITY];
-                    } catch(err) {
-                        Y.log('getStyle: IE opacity filter not found; returning 1', 'warn', 'dom-style');
-                    }
-                }
-                return val / 100;
-            },
-
-            set: function(node, val, style) {
-                var current,
-                    styleObj;
-
-                if (val === '') { // normalize inline style behavior
-                    styleObj = _getStyleObj(node);
-                    current = (OPACITY in styleObj) ? styleObj[OPACITY] : 1; // revert to original opacity
-                    val = current;
-                }
-
-                if (typeof style[FILTER] == 'string') { // in case not appended
-                    style[FILTER] = 'alpha(' + OPACITY + '=' + val * 100 + ')';
-                    
-                    if (!node.currentStyle || !node.currentStyle[HAS_LAYOUT]) {
-                        style.zoom = 1; // needs layout 
-                    }
-                }
-            }
-        };
-    }
-} catch(e) {
-    Y.log('document.documentElement.filters error (activeX disabled)', 'warn', 'dom-style');
-}
-
-try {
-    document.createElement('div').style.height = '-1px';
-} catch(e) { // IE throws error on invalid style set; trap common cases
-    Y.DOM.CUSTOM_STYLES.height = {
-        set: function(node, val, style) {
-            var floatVal = parseFloat(val);
-            if (isNaN(floatVal) || floatVal >= 0) {
-                style.height = val;
-            } else {
-                Y.log('invalid style value for height: ' + val, 'warn', 'dom-style');
-            }
-        }
-    };
-
-    Y.DOM.CUSTOM_STYLES.width = {
-        set: function(node, val, style) {
-            var floatVal = parseFloat(val);
-            if (isNaN(floatVal) || floatVal >= 0) {
-                style.width = val;
-            } else {
-                Y.log('invalid style value for width: ' + val, 'warn', 'dom-style');
-            }
-        }
-    };
-}
-
-// TODO: top, right, bottom, left
-IEComputed[WIDTH] = IEComputed[HEIGHT] = ComputedStyle.getOffset;
-
-IEComputed.color = IEComputed.backgroundColor = ComputedStyle.getColor;
-
-IEComputed[BORDER_WIDTH] = IEComputed[BORDER_TOP_WIDTH] = IEComputed[BORDER_RIGHT_WIDTH] =
-        IEComputed[BORDER_BOTTOM_WIDTH] = IEComputed[BORDER_LEFT_WIDTH] =
-        ComputedStyle.getBorderWidth;
-
-IEComputed.marginTop = IEComputed.marginRight = IEComputed.marginBottom =
-        IEComputed.marginLeft = ComputedStyle.getMargin;
-
-IEComputed.visibility = ComputedStyle.getVisibility;
-IEComputed.borderColor = IEComputed.borderTopColor =
-        IEComputed.borderRightColor = IEComputed.borderBottomColor =
-        IEComputed.borderLeftColor = ComputedStyle.getBorderColor;
-
-if (!Y.config.win[GET_COMPUTED_STYLE]) {
-    Y.DOM[GET_COMPUTED_STYLE] = ComputedStyle.get; 
-}
-
-Y.namespace('DOM.IE');
-Y.DOM.IE.COMPUTED = IEComputed;
-Y.DOM.IE.ComputedStyle = ComputedStyle;
-
-})(Y);
-Y.mix(Y.DOM, {
-    /**
-     * Sets the width of the element to the given size, regardless
-     * of box model, border, padding, etc.
-     * @method setWidth
-     * @param {HTMLElement} element The DOM element. 
-     * @param {String|Int} size The pixel height to size to
-     */
-
-    setWidth: function(node, size) {
-        Y.DOM._setSize(node, 'width', size);
-    },
-
-    /**
-     * Sets the height of the element to the given size, regardless
-     * of box model, border, padding, etc.
-     * @method setHeight
-     * @param {HTMLElement} element The DOM element. 
-     * @param {String|Int} size The pixel height to size to
-     */
-
-    setHeight: function(node, size) {
-        Y.DOM._setSize(node, 'height', size);
-    },
-
-    _getOffsetProp: function(node, prop) {
-        return 'offset' + prop.charAt(0).toUpperCase() + prop.substr(1);
-    },
-
-    _setSize: function(node, prop, val) {
-        var offset;
-
-        Y.DOM.setStyle(node, prop, val + 'px');
-        offset = node[Y.DOM._getOffsetProp(node, prop)];
-        val = val - (offset - val);
-
-        // TODO: handle size less than border/padding (add class?)
-        if (val < 0) {
-            val = 0; // no negative sizes
-        }
-        Y.DOM.setStyle(node, prop, val + 'px');
-    }
-});
 
 
-}, '3.1.2' ,{requires:['dom-base']});
+}, '3.2.0' ,{requires:['dom-base']});
 YUI.add('dom-screen', function(Y) {
 
 (function(Y) {
@@ -1400,7 +1233,17 @@ var DOCUMENT_ELEMENT = 'documentElement',
 
     // TODO: how about thead/tbody/tfoot/tr?
     // TODO: does caption matter?
-    RE_TABLE = /^t(?:able|d|h)$/i;
+    RE_TABLE = /^t(?:able|d|h)$/i,
+
+    SCROLL_NODE;
+
+if (Y.UA.ie) {
+    if (Y.config.doc[COMPAT_MODE] !== 'quirks') {
+        SCROLL_NODE = DOCUMENT_ELEMENT; 
+    } else {
+        SCROLL_NODE = 'body';
+    }
+}
 
 Y.mix(Y_DOM, {
     /**
@@ -1482,7 +1325,7 @@ Y.mix(Y_DOM, {
      TODO: test inDocument/display?
      */
     getXY: function() {
-        if (document[DOCUMENT_ELEMENT][GET_BOUNDING_CLIENT_RECT]) {
+        if (Y.config.doc[DOCUMENT_ELEMENT][GET_BOUNDING_CLIENT_RECT]) {
             return function(node) {
                 var xy = null,
                     scrollLeft,
@@ -1491,13 +1334,23 @@ Y.mix(Y_DOM, {
                     off1, off2,
                     bLeft, bTop,
                     mode,
-                    doc;
+                    doc,
+                    rootNode;
 
-                if (node) {
-                    if (Y_DOM.inDoc(node)) {
-                        doc = node.ownerDocument;
-                        scrollLeft = Y_DOM.docScrollX(node, doc);
-                        scrollTop = Y_DOM.docScrollY(node, doc);
+                if (node && node.tagName) {
+                    doc = node.ownerDocument;
+                    rootNode = doc[DOCUMENT_ELEMENT];
+
+                    // inline inDoc check for perf
+                    if (rootNode.contains) {
+                        inDoc = rootNode.contains(node); 
+                    } else {
+                        inDoc = Y.DOM.contains(rootNode, node);
+                    }
+
+                    if (inDoc) {
+                        scrollLeft = (SCROLL_NODE) ? doc[SCROLL_NODE].scrollLeft : Y_DOM.docScrollX(node, doc);
+                        scrollTop = (SCROLL_NODE) ? doc[SCROLL_NODE].scrollTop : Y_DOM.docScrollY(node, doc);
                         box = node[GET_BOUNDING_CLIENT_RECT]();
                         xy = [box.left, box.top];
 
@@ -1530,15 +1383,18 @@ Y.mix(Y_DOM, {
                             }
 
                         if ((scrollTop || scrollLeft)) {
-                            xy[0] += scrollLeft;
-                            xy[1] += scrollTop;
+                            if (!Y.UA.ios) {
+                                xy[0] += scrollLeft;
+                                xy[1] += scrollTop;
+                            }
+                            
                         }
-                    } else { // default to current offsets
-                        xy = Y_DOM._getOffset(node);
+                    } else {
+                        xy = Y_DOM._getOffset(node);       
                     }
                 }
                 return xy;                   
-            };
+            }
         } else {
             return function(node) { // manually calculate by crawling up offsetParents
                 //Calculate the Top and Left border sizes (assumes pixels)
@@ -1603,36 +1459,6 @@ Y.mix(Y_DOM, {
         }
     }(),// NOTE: Executing for loadtime branching
 
-    _getOffset: function(node) {
-        var pos,
-            xy = null;
-
-        if (node) {
-            pos = Y_DOM.getStyle(node, POSITION);
-            xy = [
-                parseInt(Y_DOM[GET_COMPUTED_STYLE](node, LEFT), 10),
-                parseInt(Y_DOM[GET_COMPUTED_STYLE](node, TOP), 10)
-            ];
-
-            if ( isNaN(xy[0]) ) { // in case of 'auto'
-                xy[0] = parseInt(Y_DOM.getStyle(node, LEFT), 10); // try inline
-                if ( isNaN(xy[0]) ) { // default to offset value
-                    xy[0] = (pos === RELATIVE) ? 0 : node.offsetLeft || 0;
-                }
-            } 
-
-            if ( isNaN(xy[1]) ) { // in case of 'auto'
-                xy[1] = parseInt(Y_DOM.getStyle(node, TOP), 10); // try inline
-                if ( isNaN(xy[1]) ) { // default to offset value
-                    xy[1] = (pos === RELATIVE) ? 0 : node.offsetTop || 0;
-                }
-            } 
-        }
-
-        return xy;
-
-    },
-
     /**
      * Gets the current X position of an element based on page coordinates. 
      * Element must be part of the DOM tree to have page coordinates
@@ -1678,12 +1504,10 @@ Y.mix(Y_DOM, {
             pos = Y_DOM.getStyle(node, POSITION);
 
             delta = Y_DOM._getOffset(node);       
-
             if (pos == 'static') { // default to relative
                 pos = RELATIVE;
                 setStyle(node, POSITION, pos);
             }
-
             currentXY = Y_DOM.getXY(node);
 
             if (xy[0] !== null) {
@@ -1812,6 +1636,7 @@ var TOP = 'top',
 Y.mix(DOM, {
     /**
      * Returns an Object literal containing the following about this element: (top, right, bottom, left)
+     * @for DOM
      * @method region
      * @param {HTMLElement} element The DOM element. 
      @return {Object} Object literal containing the following about this element: (top, right, bottom, left)
@@ -1835,6 +1660,7 @@ Y.mix(DOM, {
     /**
      * Find the intersect information for the passes nodes.
      * @method intersect
+     * @for DOM
      * @param {HTMLElement} element The first element 
      * @param {HTMLElement | Object} element2 The element or region to check the interect with
      * @param {Object} altRegion An object literal containing the region for the first element if we already have the data (for performance i.e. DragDrop)
@@ -1869,6 +1695,7 @@ Y.mix(DOM, {
     /**
      * Check if any part of this node is in the passed region
      * @method inRegion
+     * @for DOM
      * @param {Object} node2 The node to get the region from or an Object literal of the region
      * $param {Boolean} all Should all of the node be inside the region
      * @param {Object} altRegion An object literal containing the region for this node if we already have the data (for performance i.e. DragDrop)
@@ -1908,6 +1735,7 @@ Y.mix(DOM, {
     /**
      * Check if any part of this element is in the viewport
      * @method inViewportRegion
+     * @for DOM
      * @param {HTMLElement} element The DOM element. 
      * @param {Boolean} all Should all of the node be inside the region
      * @param {Object} altRegion An object literal containing the region for this node if we already have the data (for performance i.e. DragDrop)
@@ -1934,7 +1762,8 @@ Y.mix(DOM, {
     /**
      * Returns an Object literal containing the following about the visible region of viewport: (top, right, bottom, left)
      * @method viewportRegion
-     @return {Object} Object literal containing the following about the visible region of the viewport: (top, right, bottom, left)
+     * @for DOM
+     * @return {Object} Object literal containing the following about the visible region of the viewport: (top, right, bottom, left)
      */
     viewportRegion: function(node) {
         node = node || Y.config.doc.documentElement;
@@ -1958,7 +1787,7 @@ Y.mix(DOM, {
 })(Y);
 
 
-}, '3.1.2' ,{requires:['dom-base', 'dom-style', 'event-base']});
+}, '3.2.0' ,{requires:['dom-base', 'dom-style', 'event-base']});
 YUI.add('selector-native', function(Y) {
 
 (function(Y) {
@@ -1986,7 +1815,7 @@ var Selector = {
 
     useNative: true,
 
-    _compare: ('sourceIndex' in document.documentElement) ?
+    _compare: ('sourceIndex' in Y.config.doc.documentElement) ?
         function(nodeA, nodeB) {
             var a = nodeA.sourceIndex,
                 b = nodeB.sourceIndex;
@@ -1999,7 +1828,7 @@ var Selector = {
 
             return -1;
 
-        } : (document.documentElement[COMPARE_DOCUMENT_POSITION] ?
+        } : (Y.config.doc.documentElement[COMPARE_DOCUMENT_POSITION] ?
         function(nodeA, nodeB) {
             if (nodeA[COMPARE_DOCUMENT_POSITION](nodeB) & 4) {
                 return -1;
@@ -2064,7 +1893,7 @@ var Selector = {
     query: function(selector, root, firstOnly, skipNative) {
         root = root || Y.config.doc;
         var ret = [],
-            useNative = (Y.Selector.useNative && document.querySelector && !skipNative),
+            useNative = (Y.Selector.useNative && Y.config.doc.querySelector && !skipNative),
             queries = [[selector, root]],
             query,
             result,
@@ -2123,6 +1952,10 @@ var Selector = {
     },
 
     _nativeQuery: function(selector, root, one) {
+        if (Y.UA.webkit && selector.indexOf(':checked') > -1 &&
+                (Y.Selector.pseudos && Y.Selector.pseudos.checked)) { // webkit (chrome, safari) fails to find "selected"
+            return Y.Selector.query(selector, root, one, true); // redo with skipNative true to try brute query
+        }
         try {
             //Y.log('trying native query with: ' + selector, 'info', 'selector-native');
             return root['querySelector' + (one ? '' : 'All')](selector);
@@ -2223,7 +2056,7 @@ Y.mix(Y.Selector, Selector, true);
 })(Y);
 
 
-}, '3.1.2' ,{requires:['dom-base']});
+}, '3.2.0' ,{requires:['dom-base']});
 YUI.add('selector-css2', function(Y) {
 
 /**
@@ -2314,6 +2147,7 @@ var PARENT_NODE = 'parentNode',
                 tokens = Selector._tokenize(selector),
                 token = tokens[tokens.length - 1],
                 rootDoc = Y.DOM._getDoc(root),
+                child,
                 id,
                 className,
                 tagName;
@@ -2334,16 +2168,28 @@ var PARENT_NODE = 'parentNode',
                 className = token.className;
                 tagName = token.tagName || '*';
 
-                // try ID first
-                if (id) {
-                    nodes = Y.DOM.allById(id, root);
-                // try className
-                } else if (className) {
-                    nodes = root.getElementsByClassName(className);
-                } else { // default to tagName
-                    nodes = root.getElementsByTagName(tagName);
-                }
+                if (root.getElementsByTagName) { // non-IE lacks DOM api on doc frags
+                    // try ID first, unless no root.all && root not in document
+                    // (root.all works off document, but not getElementById)
+                    // TODO: move to allById?
+                    if (id && (root.all || (root.nodeType === 9 || Y.DOM.inDoc(root)))) {
+                        nodes = Y.DOM.allById(id, root);
+                    // try className
+                    } else if (className) {
+                        nodes = root.getElementsByClassName(className);
+                    } else { // default to tagName
+                        nodes = root.getElementsByTagName(tagName);
+                    }
 
+                } else { // brute getElementsByTagName('*')
+                    child = root.firstChild;
+                    while (child) {
+                        if (child.tagName) { // only collect HTMLElements
+                            nodes.push(child);
+                        }
+                        child = child.nextSilbing || child.firstChild;
+                    }
+                }
                 if (nodes.length) {
                     ret = Selector._filterNodes(nodes, tokens, firstOnly);
                 }
@@ -2397,7 +2243,8 @@ var PARENT_NODE = 'parentNode',
                             if ((operator === '=' && value !== test[2]) ||  // fast path for equality
                                 (typeof operator !== 'string' && // protect against String.test monkey-patch (Moo)
                                 operator.test && !operator.test(value)) ||  // regex test
-                                (typeof operator === 'function' && !operator(tmpNode, test[0]))) { // function test
+                                (!operator.test && // protect against RegExp as function (webkit)
+                                        typeof operator === 'function' && !operator(tmpNode, test[0]))) { // function test
 
                                 // skip non element nodes or non-matching tags
                                 if ((tmpNode = tmpNode[path])) {
@@ -2470,7 +2317,7 @@ var PARENT_NODE = 'parentNode',
                     // add prefiltering for ID and CLASS
                     if ((match[1] === 'id' && operator === '=') ||
                             (match[1] === 'className' &&
-                            document.documentElement.getElementsByClassName &&
+                            Y.config.doc.documentElement.getElementsByClassName &&
                             (operator === '~=' || operator === '='))) {
                         token.prefilter = match[1];
                         token[match[1]] = match[3];
@@ -2653,18 +2500,18 @@ Y.mix(Y.Selector, SelectorCSS2, true);
 Y.Selector.getters.src = Y.Selector.getters.rel = Y.Selector.getters.href;
 
 // IE wants class with native queries
-if (Y.Selector.useNative && document.querySelector) {
+if (Y.Selector.useNative && Y.config.doc.querySelector) {
     Y.Selector.shorthand['\\.(-?[_a-z]+[-\\w]*)'] = '[class~=$1]';
 }
 
 
 
-}, '3.1.2' ,{requires:['selector-native']});
+}, '3.2.0' ,{requires:['selector-native']});
 
 
-YUI.add('selector', function(Y){}, '3.1.2' ,{use:['selector-native', 'selector-css2']});
+YUI.add('selector', function(Y){}, '3.2.0' ,{use:['selector-native', 'selector-css2']});
 
 
 
-YUI.add('dom', function(Y){}, '3.1.2' ,{use:['dom-base', 'dom-style', 'dom-screen', 'selector']});
+YUI.add('dom', function(Y){}, '3.2.0' ,{use:['dom-base', 'dom-style', 'dom-screen', 'selector']});
 

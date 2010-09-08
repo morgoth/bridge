@@ -2,8 +2,8 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.2
-build: 56
+version: 3.2.0
+build: 2676
 */
 YUI.add('array-extras', function(Y) {
 
@@ -127,6 +127,8 @@ A.reject = function(a, f, o) {
 
 /**
 * Executes the supplied function on each item in the array.
+* Iteration stops if the supplied function does not return
+* a truthy value.
 * @method Array.every
 * @param a {Array} the array to iterate
 * @param f {Function} the function to execute on each item
@@ -175,7 +177,11 @@ A.map = (Native.map) ?
 
 /**
 * Executes the supplied function on each item in the array.
-* Reduce "folds" the array into a single value.
+* Reduce "folds" the array into a single value.  The callback
+* function receives four arguments:
+* the value from the previous callback call (or the initial value), 
+* the value of the current element, the current index, and 
+* the array over which iteration is occurring.
 * @method Array.reduce
 * @param a {Array} the array to iterate
 * @param init The initial value to start from
@@ -297,4 +303,4 @@ A.zip = function (a, a2) {
 A.forEach = A.each;
 
 
-}, '3.1.2' );
+}, '3.2.0' );

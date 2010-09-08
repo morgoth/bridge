@@ -2,8 +2,8 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.2
-build: 56
+version: 3.2.0
+build: 2676
 */
 YUI.add('pluginhost', function(Y) {
 
@@ -293,4 +293,4 @@ YUI.add('pluginhost', function(Y) {
     Y.namespace("Plugin").Host = PluginHost;
 
 
-}, '3.1.2' ,{requires:['yui-base']});
+}, '3.2.0' ,{requires:['yui-base']});

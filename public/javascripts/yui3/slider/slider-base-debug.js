@@ -2,8 +2,8 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.2
-build: 56
+version: 3.2.0
+build: 2676
 */
 YUI.add('slider-base', function(Y) {
 
@@ -318,7 +318,7 @@ Y.SliderBase = Y.extend( SliderBase, Y.Widget, {
          * Signals the end of a thumb drag operation.  Payload includes
          * the thumb's drag:end event.
          *
-         * @event slideStart
+         * @event slideEnd
          * @param event {Event} The event object for the slideEnd with the
          *                      following extra properties:
          *  <dl>
@@ -563,4 +563,4 @@ Y.SliderBase = Y.extend( SliderBase, Y.Widget, {
 });
 
 
-}, '3.1.2' ,{requires:['widget', 'substitute', 'dd-constrain']});
+}, '3.2.0' ,{requires:['widget', 'substitute', 'dd-constrain']});

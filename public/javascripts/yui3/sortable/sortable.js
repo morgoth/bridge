@@ -2,8 +2,8 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.2
-build: 56
+version: 3.2.0
+build: 2676
 */
 YUI.add('sortable', function(Y) {
 
@@ -119,19 +119,35 @@ YUI.add('sortable', function(Y) {
             if (e.drag.get(NODE) == e.drop.get(NODE)) {
                 return;
             }
+            // is drop a child of drag?
+            if (e.drag.get(NODE).contains(e.drop.get(NODE))) {
+                return;
+            }
+            var same = false, dir, oldNode, newNode, dropsort, dropNode,
+                moveType = this.get('moveType').toLowerCase();
 
-            switch (this.get('moveType').toLowerCase()) {
+            if (e.drag.get(NODE).get(PARENT_NODE).contains(e.drop.get(NODE))) {
+                same = true;
+            }
+            if (same && moveType == 'move') {
+                moveType = 'insert';
+            }
+            switch (moveType) {
                 case 'insert':
-                    var dir = ((this._up) ? 'before' : 'after');
-                    e.drop.get(NODE).insert(e.drag.get(NODE), dir);
+                    dir = ((this._up) ? 'before' : 'after');
+                    dropNode = e.drop.get(NODE);
+                    if (Y.Sortable._test(dropNode, this.get(CONT))) {
+                        dropNode.append(e.drag.get(NODE));
+                    } else {
+                        dropNode.insert(e.drag.get(NODE), dir);
+                    }
                     break;
                 case 'swap':
                     Y.DD.DDM.swapNode(e.drag, e.drop);
                     break;
                 case 'move':
                 case 'copy':
-                    var dropsort = Y.Sortable.getSortable(e.drop.get(NODE).get(PARENT_NODE)),
-                        oldNode, newNode;
+                    dropsort = Y.Sortable.getSortable(e.drop.get(NODE).get(PARENT_NODE));
 
                     if (!dropsort) {
                         return;
@@ -140,7 +156,7 @@ YUI.add('sortable', function(Y) {
                     Y.DD.DDM.getDrop(e.drag.get(NODE)).addToGroup(dropsort.get(ID));
 
                     //Same List
-                    if (e.drag.get(NODE).get(PARENT_NODE).contains(e.drop.get(NODE))) {
+                    if (same) {
                         Y.DD.DDM.swapNode(e.drag, e.drop);
                     } else {
                         if (this.get('moveType') == 'copy') {
@@ -160,6 +176,9 @@ YUI.add('sortable', function(Y) {
                     }
                     break;
             }
+
+            this.fire(moveType, { same: same, drag: e.drag, drop: e.drop });
+            this.fire('moved', { same: same, drag: e.drag, drop: e.drop });
         },
         /**
         * @private
@@ -194,7 +213,12 @@ YUI.add('sortable', function(Y) {
         * @chainable
         */
         plug: function(cls, config) {
-            this.delegate.dd.plug(cls, config);
+            //I don't like this.. Not at all, need to discuss with the team
+            if (cls && cls.NAME.substring(0, 4).toLowerCase() === 'sort') {
+                this.constructor.superclass.plug.call(this, cls, config);
+            } else {
+                this.delegate.dd.plug(cls, config);
+            }
             return this;
         },
         /**
@@ -212,7 +236,7 @@ YUI.add('sortable', function(Y) {
         },
         /**
         * @method join
-        * @param Sortable sel The sortable list to join with
+        * @param Sortable sel The Sortable list to join with
         * @param String type The type of join to do: full, inner, outer, none. Default: full
         * @description Join this Sortable with another Sortable instance.
         * <ul>
@@ -253,7 +277,7 @@ YUI.add('sortable', function(Y) {
         /**
         * @private
         * @method _join_full
-        * @param Sortable sel The sortable list to join with
+        * @param Sortable sel The Sortable list to join with
         * @description Joins both of the Sortables together.
         */
         _join_full: function(sel) {
@@ -263,7 +287,7 @@ YUI.add('sortable', function(Y) {
         /**
         * @private
         * @method _join_outer
-        * @param Sortable sel The sortable list to join with
+        * @param Sortable sel The Sortable list to join with
         * @description Allows this Sortable to accept items from the passed Sortable.
         */
         _join_outer: function(sel) {
@@ -272,12 +296,32 @@ YUI.add('sortable', function(Y) {
         /**
         * @private
         * @method _join_inner
-        * @param Sortable sel The sortable list to join with
+        * @param Sortable sel The Sortable list to join with
         * @description Allows this Sortable to give items to the passed Sortable.
         */
         _join_inner: function(sel) {
             sel.delegate.dd.addToGroup(this.get(ID));
-        }
+        },
+        /**
+        * A custom callback to allow a user to extract some sort of id or any other data from the node to use in the "ordering list" and then that data should be returned from the callback.
+        * @method getOrdering
+        * @param Function callback 
+        * @returns Array
+        */
+        getOrdering: function(callback) {
+            var ordering = [];
+
+            if (!Y.Lang.isFunction(callback)) {
+                callback = function (node) {
+                    return node;
+                };
+            }
+
+            Y.one(this.get(CONT)).all(this.get(NODES)).each(function(node) {
+                ordering.push(callback(node));
+            });
+            return ordering;
+       }
     }, {
         NAME: 'sortable',
         ATTRS: {
@@ -307,7 +351,7 @@ YUI.add('sortable', function(Y) {
             },
             /**
             * @attribute opacity
-            * @description The ocpacity to test the proxy item to when dragging.
+            * @description The opacity to change the proxy item to when dragging.
             * @type String
             */        
             opacity: {
@@ -323,7 +367,7 @@ YUI.add('sortable', function(Y) {
             },
             /**
             * @attribute id
-            * @description The id of this sortable, used to get a reference to this sortable list from another list.
+            * @description The id of this Sortable, used to get a reference to this Sortable list from another list.
             * @type String
             */        
             id: {
@@ -356,15 +400,29 @@ YUI.add('sortable', function(Y) {
         _sortables: [],
         /**
         * @static
+        * @method _test
+        * @param {Node} node The node instance to test.
+        * @param {String|Node} test The node instance or selector string to test against.
+        * @description Test a Node or a selector for the container
+        */
+        _test: function(node, test) {
+            if (test instanceof Y.Node) {
+                return (test === node);
+            } else {
+                return node.test(test);
+            }
+        },
+        /**
+        * @static
         * @method getSortable
         * @param {String|Node} node The node instance or selector string to use to find a Sortable instance.
-        * @description Get a sortable instance back from a node reference or a selector string.
+        * @description Get a Sortable instance back from a node reference or a selector string.
         */
         getSortable: function(node) {
             var s = null;
             node = Y.one(node);
-            Y.each(Sortable._sortables, function(v) {
-                if (node.test(v.get(CONT))) {
+            Y.each(Y.Sortable._sortables, function(v) {
+                if (Y.Sortable._test(node, v.get(CONT))) {
                     s = v;
                 }
             });
@@ -377,7 +435,7 @@ YUI.add('sortable', function(Y) {
         * @description Register a Sortable instance with the singleton to allow lookups later.
         */
         reg: function(s) {
-            Sortable._sortables.push(s);
+            Y.Sortable._sortables.push(s);
         },
         /**
         * @static
@@ -386,9 +444,9 @@ YUI.add('sortable', function(Y) {
         * @description Unregister a Sortable instance with the singleton.
         */
         unreg: function(s) {
-            Y.each(Sortable._sortables, function(v, k) {
+            Y.each(Y.Sortable._sortables, function(v, k) {
                 if (v === s) {
-                    Sortable._sortables[k] = null;
+                    Y.Sortable._sortables[k] = null;
                     delete Sortable._sortables[k];
                 }
             });
@@ -397,6 +455,62 @@ YUI.add('sortable', function(Y) {
 
     Y.Sortable = Sortable;
 
+    /**
+    * @event copy
+    * @description A Sortable node was moved.
+    * @param {Event.Facade} event An Event Facade object with the following specific property added:
+    * <dl>
+    * <dt>same</dt><dd>Moved to the same list.</dd>
+    * <dt>drag</dt><dd>The Drag Object</dd>
+    * <dt>drop</dt><dd>The Drop Object</dd>
+    * </dl>
+    * @type {Event.Custom}
+    *
+    *
+    * @event move
+    * @description A Sortable node was moved.
+    * @param {Event.Facade} event An Event Facade object with the following specific property added:
+    * <dl>
+    * <dt>same</dt><dd>Moved to the same list.</dd>
+    * <dt>drag</dt><dd>The Drag Object</dd>
+    * <dt>drop</dt><dd>The Drop Object</dd>
+    * </dl>
+    * @type {Event.Custom}
+    *
+    *
+    * @event insert
+    * @description A Sortable node was moved.
+    * @param {Event.Facade} event An Event Facade object with the following specific property added:
+    * <dl>
+    * <dt>same</dt><dd>Moved to the same list.</dd>
+    * <dt>drag</dt><dd>The Drag Object</dd>
+    * <dt>drop</dt><dd>The Drop Object</dd>
+    * </dl>
+    * @type {Event.Custom}
+    *
+    *
+    * @event swap
+    * @description A Sortable node was moved.
+    * @param {Event.Facade} event An Event Facade object with the following specific property added:
+    * <dl>
+    * <dt>same</dt><dd>Moved to the same list.</dd>
+    * <dt>drag</dt><dd>The Drag Object</dd>
+    * <dt>drop</dt><dd>The Drop Object</dd>
+    * </dl>
+    * @type {Event.Custom}
+    *
+    *
+    * @event moved
+    * @description A Sortable node was moved.
+    * @param {Event.Facade} event An Event Facade object with the following specific property added:
+    * <dl>
+    * <dt>same</dt><dd>Moved to the same list.</dd>
+    * <dt>drag</dt><dd>The Drag Object</dd>
+    * <dt>drop</dt><dd>The Drop Object</dd>
+    * </dl>
+    * @type {Event.Custom}
+    */
 
 
-}, '3.1.2' ,{requires:['dd-delegate', 'dd-drop-plugin', 'dd-proxy']});
+
+}, '3.2.0' ,{requires:['dd-delegate', 'dd-drop-plugin', 'dd-proxy']});

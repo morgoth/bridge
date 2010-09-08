@@ -2,8 +2,8 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.2
-build: 56
+version: 3.2.0
+build: 2676
 */
 YUI.add('yui-later', function(Y) {
 
@@ -38,31 +38,29 @@ YUI.add('yui-later', function(Y) {
      */
     later = function(when, o, fn, data, periodic) {
         when = when || 0; 
-        o = o || {};
-        var m=fn, d=Y.Array(data), f, r;
 
-        if (L.isString(fn)) {
+        var m = fn, f, id;
+
+        if (o && L.isString(fn)) {
             m = o[fn];
         }
 
-        if (!m) {
-            Y.log("method undefined");
-        }
-
-        f = function() {
-            m.apply(o, d);
+        f = !L.isUndefined(data) ? function() {
+            m.apply(o, Y.Array(data));
+        } : function() {
+            m.call(o);
         };
 
-        r = (periodic) ? setInterval(f, when) : setTimeout(f, when);
+        id = (periodic) ? setInterval(f, when) : setTimeout(f, when);
 
         return {
-            id: r,
+            id: id,
             interval: periodic,
             cancel: function() {
                 if (this.interval) {
-                    clearInterval(r);
+                    clearInterval(id);
                 } else {
-                    clearTimeout(r);
+                    clearTimeout(id);
                 }
             }
         };
@@ -74,4 +72,4 @@ YUI.add('yui-later', function(Y) {
 })();
 
 
-}, '3.1.2' ,{requires:['yui-base']});
+}, '3.2.0' ,{requires:['yui-base']});

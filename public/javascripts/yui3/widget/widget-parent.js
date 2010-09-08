@@ -2,8 +2,8 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.2
-build: 56
+version: 3.2.0
+build: 2676
 */
 YUI.add('widget-parent', function(Y) {
 
@@ -20,6 +20,8 @@ var Lang = Y.Lang;
  * parent of another Widget.
  *
  * @class WidgetParent
+ * @constructor
+ * @uses ArrayList
  * @param {Object} config User configuration object.
  */
 function Parent(config) {
@@ -839,4 +841,4 @@ Y.augment(Parent, Y.ArrayList);
 Y.WidgetParent = Parent;
 
 
-}, '3.1.2' ,{requires:['widget', 'arraylist']});
+}, '3.2.0' ,{requires:['base-build', 'arraylist', 'widget']});

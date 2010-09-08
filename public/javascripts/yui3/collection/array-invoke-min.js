@@ -2,7 +2,7 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.2
-build: 56
+version: 3.2.0
+build: 2676
 */
-YUI.add("array-invoke",function(A){A.Array.invoke=function(B,E){var D=A.Array(arguments,2,true),F=A.Lang.isFunction,C=[];A.Array.each(A.Array(B),function(H,G){if(F(H[E])){C[G]=H[E].apply(H,D);}});return C;};},"3.1.2");
+YUI.add("array-invoke",function(a){a.Array.invoke=function(b,e){var d=a.Array(arguments,2,true),f=a.Lang.isFunction,c=[];a.Array.each(a.Array(b),function(h,g){if(f(h[e])){c[g]=h[e].apply(h,d);}});return c;};},"3.2.0");

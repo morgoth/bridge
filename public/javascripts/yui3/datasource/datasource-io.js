@@ -2,8 +2,8 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.2
-build: 56
+version: 3.2.0
+build: 2676
 */
 YUI.add('datasource-io', function(Y) {
 
@@ -60,7 +60,18 @@ Y.mix(DSIO, {
         io: {
             value: Y.io,
             cloneDefaultValue: false
-        }
+        },
+        
+        /**
+         * Default IO Config.
+         *
+         * @attribute ioConfig
+         * @type Object
+         * @default null
+         */
+         ioConfig: {
+         	value: null
+         }
     }
 });
     
@@ -116,20 +127,30 @@ Y.extend(DSIO, Y.DataSource.Local, {
     _defRequestFn: function(e) {
         var uri = this.get("source"),
             io = this.get("io"),
+            defIOConfig = this.get("ioConfig"),
             request = e.request,
-            cfg = Y.mix(e.cfg, {
-                on: {
+            cfg = Y.merge(defIOConfig, e.cfg, {
+                on: Y.merge(defIOConfig, {
                     success: function (id, response, e) {
+                        delete Y.DataSource.Local.transactions[e.tId];
+
                         this.fire("data", Y.mix({data:response}, e));
+                        if (defIOConfig && defIOConfig.on && defIOConfig.on.success) {
+                        	defIOConfig.on.success.apply(defIOConfig.context || Y, arguments);
+                        }
                     },
                     failure: function (id, response, e) {
+                        delete Y.DataSource.Local.transactions[e.tId];
+
                         e.error = new Error("IO data failure");
-                        this.fire("error", Y.mix({data:response}, e));
                         this.fire("data", Y.mix({data:response}, e));
+                        if (defIOConfig && defIOConfig.on && defIOConfig.on.failure) {
+                        	defIOConfig.on.failure.apply(defIOConfig.context || Y, arguments);
+                        }
                     }
-                },
+                }),
                 context: this,
-                arguments: e
+                "arguments": e
             });
         
         // Support for POST transactions
@@ -141,13 +162,13 @@ Y.extend(DSIO, Y.DataSource.Local, {
                 uri += request;
             }
         }
-        io(uri, cfg);
+        Y.DataSource.Local.transactions[e.tId] = io(uri, cfg);
         return e.tId;
     }
 });
   
 Y.DataSource.IO = DSIO;
-    
 
 
-}, '3.1.2' ,{requires:['datasource-local', 'io']});
+
+}, '3.2.0' ,{requires:['datasource-local', 'io']});

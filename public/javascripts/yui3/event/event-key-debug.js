@@ -2,8 +2,8 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.2
-build: 56
+version: 3.2.0
+build: 2676
 */
 YUI.add('event-key', function(Y) {
 
@@ -108,4 +108,4 @@ Y.log('Illegal key spec, creating a regular keypress listener instead.', 'info',
 };
 
 
-}, '3.1.2' ,{requires:['node-base']});
+}, '3.2.0' ,{requires:['node-base']});

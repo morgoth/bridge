@@ -2,8 +2,8 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.2
-build: 56
+version: 3.2.0
+build: 2676
 */
 YUI.add('dd-ddm-drop', function(Y) {
 
@@ -190,7 +190,7 @@ YUI.add('dd-ddm-drop', function(Y) {
                         if (drop && drop.shim) {
                             if ((dMode == this.INTERSECT) && this._noShim) {
                                 r = ((aRegion) ? aRegion : this.activeDrag.get('node'));
-                                return drop.get('node').intersect(r).inRegion;
+                                return drop.get('node').intersect(r, drop.region).inRegion;
                             } else {
                                 if (this._noShim) {
                                     node = drop.get('node');
@@ -231,7 +231,7 @@ YUI.add('dd-ddm-drop', function(Y) {
             this._noShim = true;
             this.clearCache();
             Y.each(this.targets, function(v, k) {
-                v._activateShim.apply(v, []);
+                v._activateShim([]);
                 if (v.get('noShim') == true) {
                     this._noShim = false;
                 }
@@ -308,7 +308,7 @@ YUI.add('dd-ddm-drop', function(Y) {
             this.activeDrop = null;
 
             Y.each(this.targets, function(v, k) {
-                v._deactivateShim.apply(v, []);
+                v._deactivateShim([]);
             }, this);
         },
         /**
@@ -415,4 +415,4 @@ YUI.add('dd-ddm-drop', function(Y) {
 
 
 
-}, '3.1.2' ,{requires:['dd-ddm'], skinnable:false});
+}, '3.2.0' ,{skinnable:false, requires:['dd-ddm']});

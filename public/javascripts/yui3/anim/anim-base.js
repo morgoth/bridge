@@ -2,8 +2,8 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.2
-build: 56
+version: 3.2.0
+build: 2676
 */
 YUI.add('anim-base', function(Y) {
 
@@ -62,15 +62,16 @@ YUI.add('anim-base', function(Y) {
         NUM = Number;
 
     var _running = {},
-        _instances = {},
         _timer;
 
     Y.Anim = function() {
         Y.Anim.superclass.constructor.apply(this, arguments);
-        _instances[Y.stamp(this)] = this;
+        Y.Anim._instances[Y.stamp(this)] = this;
     };
 
     Y.Anim.NAME = 'anim';
+
+    Y.Anim._instances = {};
 
     /**
      * Regex of properties that should use the default unit.
@@ -124,8 +125,17 @@ YUI.add('anim-base', function(Y) {
      * @static
      */
     Y.Anim.DEFAULT_SETTER = function(anim, att, from, to, elapsed, duration, fn, unit) {
-        unit = unit || '';
-        anim._node.setStyle(att, fn(elapsed, NUM(from), NUM(to) - NUM(from), duration) + unit);
+        var node = anim._node,
+            val = fn(elapsed, NUM(from), NUM(to) - NUM(from), duration);
+
+        if (att in node._node.style || att in Y.DOM.CUSTOM_STYLES) {
+            unit = unit || '';
+            node.setStyle(att, val + unit);
+        } else if (node._node.attributes[att]) {
+            node.setAttribute(att, val);
+        } else {
+            node.set(att, val);
+        }
     };
 
     /**
@@ -134,8 +144,19 @@ YUI.add('anim-base', function(Y) {
      * @property DEFAULT_GETTER
      * @static
      */
-    Y.Anim.DEFAULT_GETTER = function(anim, prop) {
-        return anim._node.getComputedStyle(prop);
+    Y.Anim.DEFAULT_GETTER = function(anim, att) {
+        var node = anim._node,
+            val = '';
+
+        if (att in node._node.style || att in Y.DOM.CUSTOM_STYLES) {
+            val = node.getComputedStyle(att);
+        } else if (node._node.attributes[att]) {
+            val = node.getAttribute(att);
+        } else {
+            val = node.get(att);
+        }
+
+        return val;
     };
 
     Y.Anim.ATTRS = {
@@ -313,9 +334,10 @@ YUI.add('anim-base', function(Y) {
      * @static
      */    
     Y.Anim.run = function() {
-        for (var i in _instances) {
-            if (_instances[i].run) {
-                _instances[i].run();
+        var instances = Y.Anim._instances;
+        for (var i in instances) {
+            if (instances[i].run) {
+                instances[i].run();
             }
         }
     };
@@ -331,6 +353,7 @@ YUI.add('anim-base', function(Y) {
                 _running[i].pause();
             }
         }
+
         Y.Anim._stopTimer();
     };
 
@@ -413,6 +436,7 @@ YUI.add('anim-base', function(Y) {
         /**
          * Stops the animation and resets its time.
          * @method stop
+         * @param {Boolean} finish If true, the animation will move to the last frame
          * @chainable
          */    
         stop: function(finish) {
@@ -453,6 +477,8 @@ YUI.add('anim-base', function(Y) {
         _resume: function() {
             this._set(PAUSED, false);
             _running[Y.stamp(this)] = this;
+            this._set(START_TIME, new Date() - this.get(ELAPSED_TIME));
+            Y.Anim._startTimer();
 
             /**
             * @event resume
@@ -500,9 +526,14 @@ YUI.add('anim-base', function(Y) {
                 customAttr = Y.Anim.behaviors,
                 easing = attr.easing,
                 lastFrame = d,
+                done = false,
                 attribute,
                 setter,
                 i;
+
+            if (t >= d) {
+                done = true;
+            }
 
             if (reverse) {
                 t = d - t;
@@ -515,7 +546,7 @@ YUI.add('anim-base', function(Y) {
                     setter = (i in customAttr && 'set' in customAttr[i]) ?
                             customAttr[i].set : Y.Anim.DEFAULT_SETTER;
 
-                    if (t < d) {
+                    if (!done) {
                         setter(this, i, attribute.from, attribute.to, t, d, easing, attribute.unit); 
                     } else {
                         setter(this, i, attribute.from, attribute.to, lastFrame, d, easing, attribute.unit); 
@@ -621,10 +652,14 @@ YUI.add('anim-base', function(Y) {
             }
 
             return val;
+        },
+
+        destructor: function() {
+            delete Y.Anim._instances[Y.stamp(this)];
         }
     };
 
     Y.extend(Y.Anim, Y.Base, proto);
 
 
-}, '3.1.2' ,{requires:['base-base', 'node-style']});
+}, '3.2.0' ,{requires:['base-base', 'node-style']});

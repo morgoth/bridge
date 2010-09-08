@@ -2,8 +2,8 @@
 Copyright (c) 2010, Yahoo! Inc. All rights reserved.
 Code licensed under the BSD License:
 http://developer.yahoo.com/yui/license.html
-version: 3.1.2
-build: 56
+version: 3.2.0
+build: 2676
 */
 YUI.add('profiler', function(Y) {
 
@@ -552,4 +552,4 @@ YUI.add('profiler', function(Y) {
 
 
 
-}, '3.1.2' ,{requires:['oop']});
+}, '3.2.0' ,{requires:['oop']});
