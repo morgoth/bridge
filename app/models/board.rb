@@ -80,13 +80,17 @@ class Board < ActiveRecord::Base
   end
 
   def declarer_vulnerable?
+    direction_vulnerable?(declarer)
+  end
+
+  def direction_vulnerable?(direction)
     case vulnerable
     when "BOTH"
      true
     when "NONE"
      false
     else
-      vulnerable.split('').include?(declarer)
+      vulnerable.split('').include?(direction)
     end
   end
 

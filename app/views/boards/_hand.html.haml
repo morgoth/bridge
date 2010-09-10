@@ -1,0 +1,12 @@
+.suit
+  %span.suit-s &spades;
+  %span.cards= board.deal_cards_for(direction)["S"].map(&:value)
+.suit
+  %span.suit-h &hearts;
+  %span.cards= board.deal_cards_for(direction)["H"].map(&:value)
+.suit
+  %span.suit-d &diams;
+  %span.cards= board.deal_cards_for(direction)["D"].map(&:value)
+.suit
+  %span.suit-c &clubs;
+  %span.cards= board.deal_cards_for(direction)["C"].map(&:value)

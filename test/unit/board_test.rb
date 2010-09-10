@@ -71,4 +71,31 @@ class BoardTest < ActiveSupport::TestCase
     @board.bids.create!(:bid => "PASS", :user => @user_w)
     assert_equal "S", @board.reload.contract_trump
   end
+
+  test "check if given direction is vulnerable" do
+    @board.vulnerable = "NONE"
+    assert_false @board.direction_vulnerable?("N")
+    assert_false @board.direction_vulnerable?("E")
+    @board.vulnerable = "BOTH"
+    assert @board.direction_vulnerable?("N")
+    assert @board.direction_vulnerable?("E")
+    @board.vulnerable = "NS"
+    assert @board.direction_vulnerable?("N")
+    assert_false @board.direction_vulnerable?("E")
+    @board.vulnerable = "EW"
+    assert_false @board.direction_vulnerable?("N")
+    assert @board.direction_vulnerable?("E")
+  end
+
+  test "check if declarer is vulnerable" do
+    @board.declarer = "N"
+    @board.vulnerable = "NONE"
+    assert_false @board.declarer_vulnerable?
+    @board.vulnerable = "BOTH"
+    assert @board.declarer_vulnerable?
+    @board.vulnerable = "NS"
+    assert @board.declarer_vulnerable?
+    @board.vulnerable = "EW"
+    assert_false @board.declarer_vulnerable?
+  end
 end

@@ -9,4 +9,10 @@ module BoardsHelper
     score = board.score ? board.score.result_string : ""
     "#{board.contract} #{board.declarer} #{score}"
   end
+
+  def direction_classes(board, direction)
+    classes = ["direction-#{direction.downcase}"]
+    classes << "declarer" if board.declarer == direction
+    classes << (board.direction_vulnerable?(direction) ? "vulnerable" : "not-vulnerable")
+  end
 end
