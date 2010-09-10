@@ -12,7 +12,7 @@ module BoardsHelper
 
   def direction_classes(board, direction)
     classes = ["direction-#{direction.downcase}"]
-    classes << "declarer" if board.declarer == direction
+    classes << "dealer" if board.dealer == direction
     classes << (board.direction_vulnerable?(direction) ? "vulnerable" : "not-vulnerable")
   end
 end
