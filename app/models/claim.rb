@@ -1,4 +1,6 @@
 class Claim < ActiveRecord::Base
+  include Claim::States
+
   belongs_to :board, :touch => true
   belongs_to :claiming_user, :class_name => "User", :extend => ClaimingUserClaimExtension
 
@@ -23,23 +25,6 @@ class Claim < ActiveRecord::Base
   after_create :reject_active_claims
 
   attr_accessor :user
-
-  state_machine do
-    event :propose do
-      transition nil => :previous_accepted, :if => :previous_user_dummy?
-      transition nil => :next_accepted, :if => :next_user_dummy?
-      transition nil => :proposed, :if => :user_declarer?
-    end
-    event :accept do
-      transition :proposed => :previous_accepted, :if => :user_previous?
-      transition :proposed => :next_accepted, :if => :user_next?
-      transition :previous_accepted => :accepted, :if => :user_next?
-      transition :next_accepted => :accepted, :if => :user_previous?
-    end
-    event :reject do
-      transition [:proposed, :previous_accepted, :next_accepted] => :rejected, :if => :playing_user?
-    end
-  end
 
   def concerned_users
     board_users.tap do |users|

@@ -1,4 +1,6 @@
 class Table < ActiveRecord::Base
+  include Table::States
+
   has_many :players, :extend => PlayersTableExtension
   has_many :boards, :extend => BoardsTableExtension
   belongs_to :channel
@@ -6,18 +8,6 @@ class Table < ActiveRecord::Base
   after_touch :increment_version
   after_save :increment_version
   before_create :create_channel
-
-  state_machine :initial => :preparing do
-    event :start do
-      transition :preparing => :playing, :if => :four_players?
-    end
-
-    event :stop do
-      transition :playing => :preparing, :unless => :four_players?
-    end
-
-    after_transition :on => :start, :do => :create_board!
-  end
 
   def create_board!
     attributes = %w(n e s w).inject({}) do |hash, direction|
