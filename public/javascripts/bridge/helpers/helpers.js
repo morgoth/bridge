@@ -20,6 +20,38 @@ YUI.add("helpers", function(Y) {
         }));
     });
 
+    Y.Bridge.CARD_TEMPLATE = ''
+        + '<button class="card card-{{suit}} card-{{card}}">'
+        +   '<span class="card-content">'
+        +     '<span class="card-value card-value-top">'
+        +       '<span class="card-value-value">{{value}}</span>'
+        +       '<span class="card-value-suit">&{{suit}};</span>'
+        +     '</span>'
+        +     '<span class="card-value card-value-bottom card-upside-down">'
+        +       '<span class="card-value-value">{{value}}</span>'
+        +       '<span class="card-value-suit">&{{suit}};</span>'
+        +     '</span>'
+        +     '<span class="card-suits {{#image}}card-image{{/image}}">'
+        +       '{{#image}}<img width="60" height="110" src="/images/cards/{{card}}.png" />{{/image}}'
+        +       '{{#1}}<span class="card-suit card-suit-1">&{{suit}};</span>{{/1}}'
+        +       '{{#2}}<span class="card-suit card-suit-2">&{{suit}};</span>{{/2}}'
+        +       '{{#3}}<span class="card-suit card-suit-3">&{{suit}};</span>{{/3}}'
+        +       '{{#4}}<span class="card-suit card-suit-4">&{{suit}};</span>{{/4}}'
+        +       '{{#5}}<span class="card-suit card-suit-5">&{{suit}};</span>{{/5}}'
+        +       '{{#6}}<span class="card-suit card-suit-6">&{{suit}};</span>{{/6}}'
+        +       '{{#7}}<span class="card-suit card-suit-7">&{{suit}};</span>{{/7}}'
+        +       '{{#8}}<span class="card-suit card-suit-7">&{{suit}};</span>{{/8}}'
+        +       '{{#9}}<span class="card-suit card-suit-7">&{{suit}};</span>{{/9}}'
+        +       '{{#10}}<span class="card-suit card-suit-8 card-upside-down">&{{suit}};</span>{{/10}}'
+        +       '{{#11}}<span class="card-suit card-suit-9 card-upside-down">&{{suit}};</span>{{/11}}'
+        +       '{{#12}}<span class="card-suit card-suit-10 card-upside-down">&{{suit}};</span>{{/12}}'
+        +       '{{#13}}<span class="card-suit card-suit-11 card-upside-down">&{{suit}};</span>{{/13}}'
+        +       '{{#14}}<span class="card-suit card-suit-12 card-upside-down">&{{suit}};</span>{{/14}}'
+        +       '{{#15}}<span class="card-suit card-suit-13 card-upside-down">&{{suit}};</span>{{/15}}'
+        +     '</span>'
+        +   '</span>'
+        + '</button>';
+
     // SUITS
 
     Y.Bridge.isSuit = function(suit) {
@@ -164,37 +196,96 @@ YUI.add("helpers", function(Y) {
 
     Y.Bridge.getCardClassName = function(card) {
         if(card === "") {
-            return Y.ClassNameManager.getClassName("bridge", "card", "unknown");
+            return Y.ClassNameManager.getClassName("card", "unknown");
         } else {
-            return Y.ClassNameManager.getClassName("bridge", "card", card.toLowerCase());
+            return Y.ClassNameManager.getClassName("card", card.toLowerCase());
         }
     };
 
     Y.Bridge.renderCard = function(card) {
-        var suit, value,
-            content = "",
-            classNames = [
-                Y.ClassNameManager.getClassName("bridge", "card")
-            ];
-
-        classNames.push(Y.Bridge.getCardClassName(card));
+        var suit, value, suits,
+            cardData = {};
 
         if(card !== "") {
-            suit = Y.Bridge.parseSuit(card),
-            value = Y.Bridge.parseValue(card),
-            content = Y.Bridge.renderSuit(suit) + Y.Bridge.renderValue(value);
-            classNames.push(Y.ClassNameManager.getClassName("bridge", "card", suit.toLowerCase()));
-        }
+            suit = Y.Bridge.parseSuit(card);
+            value = Y.Bridge.parseValue(card);
 
-        return ''
-            + '<button '
-            +   'class="' + classNames.join(" ") + '" '
-            +   'disabled="disabled" '
-            +   'data-event="card" '
-            +   'data-event-argument="' + card + '"'
-            + '>'
-            + content
-            + '</button>';
+            cardData.card = card.toLowerCase();
+
+            if(value === "T") {
+                cardData.value = "10";
+            } else {
+                cardData.value = value;
+            }
+
+            switch(suit) {
+            case "C":
+                cardData.suit = "clubs";
+                break;
+            case "D":
+                cardData.suit = "diams";
+                break;
+            case "H":
+                cardData.suit = "hearts";
+                break;
+            case "S":
+                cardData.suit = "spades";
+                break;
+            }
+
+            switch(value) {
+            case "A":
+                suits = [8];
+                break;
+            case "2":
+                suits = [2, 14];
+                break;
+            case "3":
+                suits = [2, 8, 14];
+                break;
+            case "4":
+                suits = [1, 3, 13, 15];
+                break;
+            case "5":
+                suits = [1, 3, 8, 13, 15];
+                break;
+            case "6":
+                suits = [1, 3, 7, 9, 13, 15];
+                break;
+            case "7":
+                suits = [1, 3, 4, 7, 9, 13, 15];
+                break;
+            case "8":
+                suits = [1, 3, 5, 6, 10, 11, 13, 15];
+                break;
+            case "9":
+                suits = [1, 3, 5, 6, 8, 10, 11, 13, 15];
+                break;
+            case "T":
+                suits = [1, 3, 4, 5, 6, 10, 11, 12, 13, 15];
+                break;
+            case "J":
+                suits = [1, 15];
+                cardData.image = true;
+                break;
+            case "Q":
+                suits = [1, 15];
+                cardData.image = true;
+                break;
+            case "K":
+                suits = [1, 15];
+                cardData.image = true;
+                break;
+            }
+
+            Y.each(suits, function(suit) {
+                cardData[suit] = true;
+            });
+
+            return Y.mustache(Y.Bridge.CARD_TEMPLATE, cardData);
+        } else {
+            return "";
+        }
     };
 
     Y.Bridge.parseValue = function(card) {
@@ -213,4 +304,4 @@ YUI.add("helpers", function(Y) {
         return Y.Array.indexOf(Y.Bridge.VULNERABILITIES, vulnerability) !== -1;
     };
 
-}, "0", { requires: ["collection", "oop", "classnamemanager"] });
+}, "0", { requires: ["collection", "oop", "classnamemanager", "mustache"] });

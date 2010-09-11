@@ -6,7 +6,7 @@ window.YUICONFIG = {
         },
         helpers: {
             path: "../bridge/helpers/helpers.js",
-            requires: ["collection", "oop"]
+            requires: ["collection", "oop", "classnamemanager", "mustache"]
         },
         biddingbox: {
             path: "../bridge/biddingbox/biddingbox.js",
