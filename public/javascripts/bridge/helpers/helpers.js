@@ -32,7 +32,7 @@ YUI.add("helpers", function(Y) {
         +       '<span class="card-value-suit">&{{suit}};</span>'
         +     '</span>'
         +     '<span class="card-suits {{#image}}card-image{{/image}}">'
-        +       '{{#image}}<img width="60" height="110" src="/images/cards/{{card}}.png" />{{/image}}'
+        +       '{{#image}}<img width="48" height="90" src="/images/cards/{{card}}.png" />{{/image}}'
         +       '{{#1}}<span class="card-suit card-suit-1">&{{suit}};</span>{{/1}}'
         +       '{{#2}}<span class="card-suit card-suit-2">&{{suit}};</span>{{/2}}'
         +       '{{#3}}<span class="card-suit card-suit-3">&{{suit}};</span>{{/3}}'
@@ -40,14 +40,14 @@ YUI.add("helpers", function(Y) {
         +       '{{#5}}<span class="card-suit card-suit-5">&{{suit}};</span>{{/5}}'
         +       '{{#6}}<span class="card-suit card-suit-6">&{{suit}};</span>{{/6}}'
         +       '{{#7}}<span class="card-suit card-suit-7">&{{suit}};</span>{{/7}}'
-        +       '{{#8}}<span class="card-suit card-suit-7">&{{suit}};</span>{{/8}}'
-        +       '{{#9}}<span class="card-suit card-suit-7">&{{suit}};</span>{{/9}}'
-        +       '{{#10}}<span class="card-suit card-suit-8 card-upside-down">&{{suit}};</span>{{/10}}'
-        +       '{{#11}}<span class="card-suit card-suit-9 card-upside-down">&{{suit}};</span>{{/11}}'
-        +       '{{#12}}<span class="card-suit card-suit-10 card-upside-down">&{{suit}};</span>{{/12}}'
-        +       '{{#13}}<span class="card-suit card-suit-11 card-upside-down">&{{suit}};</span>{{/13}}'
-        +       '{{#14}}<span class="card-suit card-suit-12 card-upside-down">&{{suit}};</span>{{/14}}'
-        +       '{{#15}}<span class="card-suit card-suit-13 card-upside-down">&{{suit}};</span>{{/15}}'
+        +       '{{#8}}<span class="card-suit card-suit-8">&{{suit}};</span>{{/8}}'
+        +       '{{#9}}<span class="card-suit card-suit-9">&{{suit}};</span>{{/9}}'
+        +       '{{#10}}<span class="card-suit card-suit-10 card-upside-down">&{{suit}};</span>{{/10}}'
+        +       '{{#11}}<span class="card-suit card-suit-11 card-upside-down">&{{suit}};</span>{{/11}}'
+        +       '{{#12}}<span class="card-suit card-suit-12 card-upside-down">&{{suit}};</span>{{/12}}'
+        +       '{{#13}}<span class="card-suit card-suit-13 card-upside-down">&{{suit}};</span>{{/13}}'
+        +       '{{#14}}<span class="card-suit card-suit-14 card-upside-down">&{{suit}};</span>{{/14}}'
+        +       '{{#15}}<span class="card-suit card-suit-15 card-upside-down">&{{suit}};</span>{{/15}}'
         +     '</span>'
         +   '</span>'
         + '</button>';
@@ -196,9 +196,11 @@ YUI.add("helpers", function(Y) {
 
     Y.Bridge.getCardClassName = function(card) {
         if(card === "") {
-            return Y.ClassNameManager.getClassName("card", "unknown");
+            // return Y.ClassNameManager.getClassName("card", "unknown");
+            return "card-unknown";
         } else {
-            return Y.ClassNameManager.getClassName("card", card.toLowerCase());
+            // return Y.ClassNameManager.getClassName("card", card.toLowerCase());
+            return "card-" + card.toLowerCase();
         }
     };
 
@@ -206,7 +208,9 @@ YUI.add("helpers", function(Y) {
         var suit, value, suits,
             cardData = {};
 
-        if(card !== "") {
+        if(card === "") {
+            return '<button class="card card-unknown"><span class="card-content"></span></button>';
+        } else {
             suit = Y.Bridge.parseSuit(card);
             value = Y.Bridge.parseValue(card);
 
@@ -283,8 +287,6 @@ YUI.add("helpers", function(Y) {
             });
 
             return Y.mustache(Y.Bridge.CARD_TEMPLATE, cardData);
-        } else {
-            return "";
         }
     };
 

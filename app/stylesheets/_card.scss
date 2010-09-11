@@ -1,0 +1,201 @@
+.card {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding: 0; /* Firefox 3.6 */
+    font: 20px sans;
+    border: 1px solid black;
+    width: 86px;
+    height: 125px;
+    background: white;
+    text-align: center;
+    position: relative;
+}
+
+.card-clubs, .card-spades {
+    color: black;
+}
+
+.card-diams, .card-hearts {
+    color: #cb0000;
+}
+
+.card-content { /* Firefox 3.6 */
+    display: block;
+    width: 86px;
+    height: 125px;
+}
+
+.card-unknown .card-content {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid black;
+    background: #336799;
+    width: 75px;
+    height: 115px;
+    margin: 5px 4px;
+}
+
+.card-upside-down {
+    transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+    -ms-filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+}
+
+.card-value {
+    font-size: 0.75em;
+    letter-spacing: -3px;
+    width: 1em;
+}
+
+.card-value-suit {
+    display: block;
+    margin: -0.2em 0;
+}
+
+.card-value-value {
+    font-family: serif;
+}
+
+.card-value-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.card-value-bottom {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+.card-suits {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -25px;
+    margin-top: -46px;
+    width: 48px;
+    height: 90px;
+    border: 1px solid transparent;
+}
+
+.card-image {
+    border: 1px solid black;
+}
+
+.card-suit {
+    width: 100%;
+    line-height: 100%;
+}
+
+.card-suit-1 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    text-align: left;
+}
+
+.card-suit-2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.card-suit-3 {
+    position: absolute;
+    top: 0;
+    right: 0;
+    text-align: right;
+}
+
+.card-suit-4 {
+    position: absolute;
+    top: 22.5%;
+    left: 0;
+    margin-top: -0.5em;
+}
+
+.card-suit-5 {
+    position: absolute;
+    top: 47.5%;
+    left: 0;
+    text-align: left;
+    margin-top: -1em;
+}
+
+.card-suit-6 {
+    position: absolute;
+    top: 47.5%;
+    right: 0;
+    text-align: right;
+    margin-top: -1em;
+}
+
+.card-suit-7 {
+    position: absolute;
+    top: 47.5%;
+    left: 0;
+    margin-top: -0.5em;
+    text-align: left;
+}
+
+.card-suit-8 {
+    position: absolute;
+    top: 47.5%;
+    left: 0;
+    margin-top: -0.5em;
+}
+
+.card-suit-9 {
+    position: absolute;
+    top: 47.5%;
+    left: 0;
+    margin-top: -0.5em;
+    text-align: right;
+}
+
+.card-suit-10 {
+    position: absolute;
+    top: 52.5%;
+    left: 0;
+    text-align: right;
+}
+
+.card-suit-11 {
+    position: absolute;
+    top: 52.5%;
+    right: 0;
+    text-align: left;
+}
+
+.card-suit-12 {
+    position: absolute;
+    top: 77.5%;
+    left: 0;
+    margin-top: -0.5em;
+}
+
+.card-suit-13 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    text-align: right;
+}
+
+.card-suit-14 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.card-suit-15 {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    text-align: left;
+}
