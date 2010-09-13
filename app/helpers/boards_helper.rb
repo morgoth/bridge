@@ -10,6 +10,11 @@ module BoardsHelper
     "#{board.contract} #{board.declarer} #{score}"
   end
 
+  def chicago_imp(board)
+    return unless board.completed?
+    ["N", "S"].include?(board.declarer) ? board.chicago_imp_ns : -board.chicago_imp_ns
+  end
+
   def direction_classes(board, direction)
     classes = ["direction-#{direction.downcase}"]
     classes << "dealer" if board.dealer == direction

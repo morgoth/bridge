@@ -17,7 +17,7 @@ class Board < ActiveRecord::Base
   scope :playing, where(:state => "playing")
   scope :completed, where(:state => "completed")
 
-  delegate :n, :e, :s, :w, :owner, :cards_for, :to => :deal, :prefix => true, :allow_nil => true
+  delegate :n, :e, :s, :w, :owner, :cards_for, :hcp, :to => :deal, :prefix => true, :allow_nil => true
   delegate :create_board!, :to => :table, :prefix => true, :allow_nil => true
 
   def deal
@@ -116,6 +116,17 @@ class Board < ActiveRecord::Base
   def score
     if completed? or (tricks_ns.present? and contract.present? and declarer.present?)
       @score ||= Bridge::Score.new(:contract => contract, :vulnerable => declarer_vulnerable?, :tricks => send("tricks_#{Bridge.side_of(declarer).downcase}"))
+    end
+  end
+
+  def chicago_imp_ns
+    if completed?
+      hcp_ns = deal_hcp("NS")
+      if hcp_ns >= 20
+        Bridge::Points::Chicago.new(:hcp => hcp_ns, :vulnerable => direction_vulnerable?("N"), :points => points_ns).imps
+      else
+        -Bridge::Points::Chicago.new(:hcp => 40 - hcp_ns, :vulnerable => direction_vulnerable?("E"), :points => -points_ns).imps
+      end
     end
   end
 
