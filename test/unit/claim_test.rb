@@ -4,9 +4,9 @@ class ClaimTest < ActiveSupport::TestCase
   setup do
     @claim = Factory.build(:claim, :board => Factory(:board_1S_by_N))
     @user_n = @declarer = @claim.board.user_n
-    @user_e = @first_lead = @claim.board.user_e
+    @user_e = @lho = @claim.board.user_e
     @user_s = @dummy = @claim.board.user_s
-    @user_w = @first_lead_partner = @claim.board.user_w
+    @user_w = @rho = @claim.board.user_w
     @stranger = Factory(:user)
   end
 
@@ -15,7 +15,7 @@ class ClaimTest < ActiveSupport::TestCase
   end
 
   test "claim accepted when first lead user claims" do
-    @claim.user = @first_lead
+    @claim.user = @lho
     @claim.save!
     assert_equal "next_accepted", @claim.state
     @claim.user = @claim.claiming_user.previous
@@ -24,7 +24,7 @@ class ClaimTest < ActiveSupport::TestCase
   end
 
   test "claim accepted when partner of first lead user claims" do
-    @claim.user = @first_lead_partner
+    @claim.user = @rho
     @claim.save!
     assert_equal "previous_accepted", @claim.state
     @claim.user = @claim.claiming_user.next
@@ -55,7 +55,7 @@ class ClaimTest < ActiveSupport::TestCase
   end
 
   test "claim rejected when first lead user claims" do
-    @claim.user = @first_lead
+    @claim.user = @lho
     @claim.save!
     @claim.user = @claim.claiming_user.previous
     @claim.reject!
@@ -63,7 +63,7 @@ class ClaimTest < ActiveSupport::TestCase
   end
 
   test "claim rejected when partner of first lead user claims" do
-    @claim.user = @first_lead_partner
+    @claim.user = @rho
     @claim.save!
     @claim.user = @claim.claiming_user.next
     @claim.reject!
@@ -79,9 +79,9 @@ class ClaimTest < ActiveSupport::TestCase
   end
 
   test "claim can't be accepted by wrong user" do
-    @claim.user = @first_lead
+    @claim.user = @lho
     @claim.save!
-    @claim.user = @first_lead_partner
+    @claim.user = @rho
     assert_false @claim.accept
   end
 
@@ -110,23 +110,23 @@ class ClaimTest < ActiveSupport::TestCase
   end
 
   test "claiming user can reject" do
-    @claim.user = @first_lead
+    @claim.user = @lho
     @claim.save!
-    @claim.user = @first_lead
+    @claim.user = @lho
     assert @claim.reject
     assert_equal "rejected", @claim.state
   end
 
   test "claiming user's partner can reject" do
-    @claim.user = @first_lead
+    @claim.user = @lho
     @claim.save!
-    @claim.user = @first_lead_partner
+    @claim.user = @rho
     assert @claim.reject
     assert_equal "rejected", @claim.state
   end
 
   test "claiming user's opponent can reject" do
-    @claim.user = @first_lead
+    @claim.user = @lho
     @claim.save!
     @claim.user = @declarer
     assert @claim.reject
@@ -137,8 +137,8 @@ class ClaimTest < ActiveSupport::TestCase
     @claim.user = @declarer
     @claim.save!
     assert       @claim.concerned_users.include?(@declarer)
-    assert       @claim.concerned_users.include?(@first_lead)
-    assert       @claim.concerned_users.include?(@first_lead_partner)
+    assert       @claim.concerned_users.include?(@lho)
+    assert       @claim.concerned_users.include?(@rho)
     assert_false @claim.concerned_users.include?(@dummy)
   end
 
@@ -146,8 +146,8 @@ class ClaimTest < ActiveSupport::TestCase
     @claim.user = @declarer
     @claim.save!
     assert_false @claim.accept_users.include?(@declarer)
-    assert       @claim.accept_users.include?(@first_lead)
-    assert       @claim.accept_users.include?(@first_lead_partner)
+    assert       @claim.accept_users.include?(@lho)
+    assert       @claim.accept_users.include?(@rho)
     assert_false @claim.accept_users.include?(@dummy)
   end
 
@@ -155,8 +155,8 @@ class ClaimTest < ActiveSupport::TestCase
     @claim.user = @declarer
     @claim.save!
     assert_false @claim.reject_users.include?(@declarer)
-    assert       @claim.reject_users.include?(@first_lead)
-    assert       @claim.reject_users.include?(@first_lead_partner)
+    assert       @claim.reject_users.include?(@lho)
+    assert       @claim.reject_users.include?(@rho)
     assert_false @claim.reject_users.include?(@dummy)
   end
 
@@ -166,8 +166,8 @@ class ClaimTest < ActiveSupport::TestCase
     @claim.user = @claim.claiming_user.next
     @claim.accept!
     assert       @claim.concerned_users.include?(@declarer)
-    assert_false @claim.concerned_users.include?(@first_lead)
-    assert       @claim.concerned_users.include?(@first_lead_partner)
+    assert_false @claim.concerned_users.include?(@lho)
+    assert       @claim.concerned_users.include?(@rho)
     assert_false @claim.concerned_users.include?(@dummy)
   end
 
@@ -177,26 +177,26 @@ class ClaimTest < ActiveSupport::TestCase
     @claim.user = @claim.claiming_user.previous
     @claim.accept!
     assert       @claim.concerned_users.include?(@declarer)
-    assert       @claim.concerned_users.include?(@first_lead)
-    assert_false @claim.concerned_users.include?(@first_lead_partner)
+    assert       @claim.concerned_users.include?(@lho)
+    assert_false @claim.concerned_users.include?(@rho)
     assert_false @claim.concerned_users.include?(@dummy)
   end
 
-  test "concerned_users returns declarer and claiming user only if first_lead player claims" do
-    @claim.user = @first_lead
+  test "concerned_users returns declarer and claiming user only if lho player claims" do
+    @claim.user = @lho
     @claim.save!
     assert       @claim.concerned_users.include?(@declarer)
-    assert       @claim.concerned_users.include?(@first_lead)
-    assert_false @claim.concerned_users.include?(@first_lead_partner)
+    assert       @claim.concerned_users.include?(@lho)
+    assert_false @claim.concerned_users.include?(@rho)
     assert_false @claim.concerned_users.include?(@dummy)
   end
 
-  test "concerned_users returns declarer and claiming user only if first_lead_partner player claims" do
-    @claim.user = @first_lead_partner
+  test "concerned_users returns declarer and claiming user only if rho player claims" do
+    @claim.user = @rho
     @claim.save!
     assert       @claim.concerned_users.include?(@declarer)
-    assert_false @claim.concerned_users.include?(@first_lead)
-    assert       @claim.concerned_users.include?(@first_lead_partner)
+    assert_false @claim.concerned_users.include?(@lho)
+    assert       @claim.concerned_users.include?(@rho)
     assert_false @claim.concerned_users.include?(@dummy)
   end
 
@@ -212,14 +212,14 @@ class ClaimTest < ActiveSupport::TestCase
     assert_equal @claim.declarer_total_tricks, 11
   end
 
-  test "return declarer_total_tricks when first_lead claims" do
+  test "return declarer_total_tricks when lho claims" do
     # trick taken by declarer
     @claim.board.cards.create!(:card => "H2", :user => @claim.board.user_e)
     @claim.board.cards.create!(:card => "D2", :user => @claim.board.user_n)
     @claim.board.cards.create!(:card => "C2", :user => @claim.board.user_w)
     @claim.board.cards.create!(:card => "S2", :user => @claim.board.user_n)
 
-    @claim.claiming_user = @first_lead
+    @claim.claiming_user = @lho
     @claim.tricks = 10
     assert_equal @claim.declarer_total_tricks, 3
   end

@@ -65,7 +65,7 @@ module CardsBoardExtension
 
   def current_user
     if current_lead?
-      previous_trick_winner || proxy_owner.users.first_lead
+      previous_trick_winner || proxy_owner.users.lho
     else
       proxy_owner.users.owner(last.card).next
     end

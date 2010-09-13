@@ -21,9 +21,10 @@ module UserExtension
     board.send("user_#{previous_direction.downcase}")
   end
 
-  def first_lead?
-    board.users.first_lead == proxy_target
+  def left_hand_oponent?
+    board.users.lho == proxy_target
   end
+  alias lho? left_hand_oponent?
 
   def declarer?
     board.users.declarer == proxy_target

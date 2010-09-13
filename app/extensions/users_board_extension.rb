@@ -25,9 +25,15 @@ module UsersBoardExtension
     self[proxy_owner.declarer]
   end
 
-  def first_lead
+  def left_hand_oponent
     declarer.next
   end
+  alias lho left_hand_oponent
+
+  def right_hand_oponent
+    declarer.previous
+  end
+  alias rho right_hand_oponent
 
   def dummy
     declarer.partner
