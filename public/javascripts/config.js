@@ -47,7 +47,8 @@ window.YUICONFIG = {
                 },
                 trick: {
                     path: "trick/trick.js",
-                    requires: ["widget", "mustache"]
+                    requires: ["cardlist", "mustache", "helpers"],
+                    skinnable: true
                 },
                 tricks: {
                     path: "tricks/tricks.js",

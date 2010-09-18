@@ -191,7 +191,7 @@ YUI.add("card", function(Y) {
             },
 
             imagesBase: {
-                value: "/bridge/card/assets/skins/sam/"
+                value: "/images/cards/"
             },
 
             imageHeight: {

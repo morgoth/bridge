@@ -69,6 +69,13 @@ YUI.add("hand", function(Y) {
             this._uiSyncActive(this.get("active"));
         },
 
+        _uiSyncCards: function(cards) {
+            Hand.superclass._uiSyncCards.apply(this, arguments);
+            this.each(function(child) {
+                child.get("boundingBox").addClass(Hand.C_CARD);
+            });
+        },
+
         _uiSyncSuit: function(suit) {
             var disabled = this.get("disabled"),
                 hasCardInSuit = Y.Lang.isValue(Y.Array.find(this._items, function(child) {
