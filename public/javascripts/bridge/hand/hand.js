@@ -1,144 +1,95 @@
 YUI.add("hand", function(Y) {
 
     var getClassName = Y.ClassNameManager.getClassName,
-        DOT   = ".";
+        DOT = ".";
 
     Y.namespace("Bridge");
 
-    function Hand() {
-        Hand.superclass.constructor.apply(this, arguments);
-    }
-
-    Y.extend(Hand, Y.Widget, {
+    var Hand = Y.Base.create("hand", Y.Bridge.CardList, [], {
 
         initializer: function() {
-            var host = this.get("host");
-
+            this.publish("card");
             this.publish("join");
             this.publish("quit");
-            this.publish("card");
-            this.addTarget(host);
+            this.addTarget(this.get("host"));
         },
 
         renderUI: function() {
-            this._renderMainTemplate();
+            Hand.superclass.renderUI.apply(this, arguments);
+            this._renderBar();
         },
 
-        _renderMainTemplate: function() {
-            var html,
-                contentBox = this.get("contentBox");
-
-            html = Y.mustache(Hand.MAIN_TEMPLATE, Hand);
-
-            contentBox.setContent(html);
+        _renderBar: function() {
+            this.get("contentBox").append(Y.mustache(Hand.BAR_TEMPLATE, Hand));
         },
 
         bindUI: function() {
-            var contentBox = this.get("contentBox");
-
-            this.after("cardsChange", this._afterCardsChange);
+            Hand.superclass.bindUI.apply(this, arguments);
             this.after("suitChange", this._afterSuitChange);
-            this.after("nameChange", this._afterNameChange);
-            this.after("directionChange", this._afterDirectionChange);
-            this.after("disabledChange", this._afterDisabledChange);
-            this.after("joinEnabledChange", this._afterJoinEnabledChange);
-            this.after("quitEnabledChange", this._afterQuitEnabledChange);
-            this.after("cardsEnabledChange", this._afterCardsEnabledChange);
             this.after("activeChange", this._afterActiveChange);
-
-            this._uiHandleButtonEvents();
+            this.after("directionChange", this._afterDirectionChange);
+            this.after("nameChange", this._afterNameChange);
+            this.get("contentBox").one(DOT + Hand.C_BAR).on("click", this._onBarClick, this);
         },
 
-        _afterJoinEnabledChange: function(event) {
-            this._uiSyncJoin(event.newVal);
-        },
-
-        _afterQuitEnabledChange: function(event) {
-            this._uiSyncQuit(event.newVal);
-        },
-
-        _afterCardsEnabledChange: function(event) {
-            this._uiSetCardsEnabled(event.newVal);
-        },
-
-        _afterActiveChange: function(event) {
-            this._uiSetActive(event.newVal);
-        },
-
-        syncUI: function() {
-            this._uiSyncJoin(this.get("joinEnabled"));
-            this._uiSyncQuit(this.get("quitEnabled"));
-            this._uiSetName(this.get("name"));
-            this._uiSetDirection(this.get("direction"));
-        },
-
-        _afterCardsChange: function(event) {
-            this._uiSetCards(event.newVal);
+        _afterDisabledChange: function(event) {
+            this._uiSyncSuit(this.get("suit"));
         },
 
         _afterSuitChange: function(event) {
-            this._uiSetSuit(event.newVal);
+            this._uiSyncSuit(event.newVal);
+        },
+
+        _afterActiveChange: function(event) {
+            this._uiSyncActive(event.newVal);
         },
 
         _afterDirectionChange: function(event) {
-            this._uiSetDirection(event.newVal);
+            this._uiSyncDirection(event.newVal);
         },
 
         _afterNameChange: function(event) {
-            this._uiSetName(event.newVal);
+            this._uiSyncName(event.newVal);
         },
 
-        _uiSyncJoin: function(joinEnabled) {
-            this._uiToggleButton(DOT + Hand.C_JOIN, joinEnabled);
+        _onBarClick: function(event) {
+            if(this.get("joinEnabled")) {
+                this.fire("join", [this.get("direction")]);
+            }
+            if(this.get("quitEnabled")) {
+                this.fire("quit", [this.get("direction")]);
+            }
         },
 
-        _uiSyncQuit: function(quitEnabled) {
-            this._uiToggleButton(DOT + Hand.C_QUIT, quitEnabled);
+        syncUI: function() {
+            Hand.superclass.syncUI.apply(this, arguments);
+            this._uiSyncSuit(this.get("suit"));
+            this._uiSyncDirection(this.get("direction"));
+            this._uiSyncName(this.get("name"));
+            this._uiSyncActive(this.get("active"));
         },
 
-        _uiSetDirection: function(direction) {
-            this._uiSetContent(DOT + Hand.C_DIRECTION, direction);
-        },
+        _uiSyncSuit: function(suit) {
+            var disabled = this.get("disabled"),
+                hasCardInSuit = Y.Lang.isValue(Y.Array.find(this._items, function(child) {
+                    return child.get("suit") === suit;
+                }));
 
-        _uiSetName: function(name) {
-            this._uiSetContent(DOT + Hand.C_NAME, name);
-        },
-
-        _uiSetCards: function(cards) {
-            var cardsData = Y.Array.map(cards, function(card) {
-                return {
-                    card: Y.Bridge.renderCard(card),
-                    className: Hand.C_CARD
-                };
-            }, this);
-
-            this._uiSetContent(DOT + Hand.C_CARDS, Y.mustache(Hand.CARDS_TEMPLATE, { cards: cardsData }));
-            this._uiSetCardsEnabled(this.get("cardsEnabled"));
-        },
-
-        _uiSetSuit: function(suit) {
-            this._uiSetCardsEnabled(this.get("cardsEnabled"));
-        },
-
-        _uiSetCardsEnabled: function(cardsEnabled) {
-            var cards = this.get("cards"),
-                trickSuit = this.get("suit");
-
-            Y.each(cards, function(card) {
-                var cardSuit = Y.Bridge.parseSuit(card);
-
-                this._uiToggleButton(DOT + Y.Bridge.getCardClassName(card),
-                                     cardsEnabled &&
-                                     (!Y.Lang.isValue(trickSuit) ||
-                                      !Y.Bridge.hasSuit(trickSuit, cards) ||
-                                      (trickSuit === cardSuit)));
+            this.each(function(child) {
+                child.set("disabled", disabled || Y.Lang.isValue(suit) && hasCardInSuit && child.get("suit") !== suit);
             }, this);
         },
 
-        _uiSetActive: function(active) {
-            var barNode,
-                contentBox = this.get("contentBox");
-            barNode = contentBox.one(DOT + Hand.C_BAR);
+        _uiSyncDirection: function(direction) {
+            this.get("contentBox").one(DOT + Hand.C_DIRECTION).setContent(direction);
+        },
+
+        _uiSyncName: function(name) {
+            this.get("contentBox").one(DOT + Hand.C_NAME).setContent(name);
+        },
+
+        _uiSyncActive: function(active) {
+            var barNode = this.get("contentBox").one(DOT + Hand.C_BAR);
 
             if(active) {
                 barNode.addClass(Hand.C_BAR_ACTIVE);
@@ -147,101 +98,67 @@ YUI.add("hand", function(Y) {
             }
         },
 
-        _afterDisabledChange: function(event) {
-            this.set("cardsEnabled", !event.newVal);
+        _setSuit: function(suit) {
+            return Y.Lang.isString(suit) && /^(C|D|H|S)$/.test(suit) ? suit : undefined;
         }
 
     }, {
 
-        NAME: "hand",
-
         ATTRS: {
 
-            host: {
-
-            },
-
             direction: {
-                validator: Y.Bridge.isDirection
-            },
-
-            userId: {
-
-            },
-
-            suit: {
-                setter: function(suit) {
-                    return (Y.Lang.isValue(suit) && Y.Bridge.isSuit(suit)) ? suit : undefined;
-                }
+                value: ""
             },
 
             name: {
-                setter: function(value) {
-                    return Y.Lang.isValue(value) ? value.toString() : undefined;
-                }
-            },
-
-            cards: {
-                value: []
+                value: ""
             },
 
             active: {
-                value: false,
-                validator: Y.Lang.isBoolean
+                value: false
             },
 
             joinEnabled: {
-                value: false,
-                validator: Y.Lang.isBoolean,
-                setter: function(value) {
-                    return Y.Lang.isNumber(this.get("userId")) && value;
-                }
+                value: false
             },
 
             quitEnabled: {
-                value: false,
-                validator: Y.Lang.isBoolean
+                value: false
             },
 
+            // DEPRECATED
             cardsEnabled: {
-                value: false,
-                validator: Y.Lang.isBoolean
+                setter: function(value) {
+                    this.set("disabled", !value);
+                }
+            },
+
+            suit: {
+                value: undefined,
+                setter: "_setSuit"
+            },
+
+            host: {
             }
 
         },
 
         C_DIRECTION:  getClassName("hand", "direction"),
-        C_JOIN:       getClassName("hand", "join"),
-        C_QUIT:       getClassName("hand", "quit"),
-        C_BUTTONS:    getClassName("hand", "buttons"),
         C_NAME:       getClassName("hand", "name"),
         C_CARDS:      getClassName("hand", "cards"),
         C_BAR:        getClassName("hand", "bar"),
         C_BAR_ACTIVE: getClassName("hand", "bar", "active"),
         C_CARD:       getClassName("hand", "card"),
+        C_CARDS:      getClassName("hand", "cards"),
 
-        MAIN_TEMPLATE: ''
-            + '<ul class="{{C_CARDS}}"></ul>'
-            + '<div class="{{C_BAR}}">'
-            +   '<div class="{{C_DIRECTION}}">{{direction}}</div>'
-            +   '<div class="{{C_NAME}}">{{name}}</div>'
-            +   '<div class="{{C_BUTTONS}}">'
-            +     '<button type="button" class="{{C_JOIN}}" data-event="join">Join</button>'
-            +     '<button type="button" class="{{C_QUIT}}" data-event="quit">Quit</button>'
-            +   '</div>'
-            + '</div>',
-
-        CARDS_TEMPLATE: ''
-            + '{{#cards}}'
-            +   '<li class="{{className}}">'
-            +     '{{{card}}}'
-            +   '</li>'
-            + '{{/cards}}'
+        BAR_TEMPLATE: ''
+            + '<dl class="{{C_BAR}}">'
+            +   '<dd class="{{C_DIRECTION}}">{{direction}}</dd>'
+            +   '<dt class="{{C_NAME}}">{{name}}</dt>'
+            + '</dl>'
 
     });
 
-    Y.augment(Hand, Y.Bridge.UiHelper);
-
     Y.Bridge.Hand = Hand;
 
-}, "0", { requires: ["widget", "collection", "mustache", "helpers", "uihelper"] });
+}, "0", { requires: ["cardlist", "collection"] });

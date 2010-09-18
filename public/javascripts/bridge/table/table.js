@@ -58,7 +58,7 @@ YUI.add("table", function(Y) {
             this.on("chat:message", this._onChatMessage);
             this.on("hand:join", this._onHandJoin);
             this.on("hand:quit", this._onHandQuit);
-            this.on("hand:card", this._onHandCard);
+            this.on("card:card", this._onHandCard);
             this.on("biddingbox:bid", this._onBiddingBoxBid);
             this.on("claim:claim", this._onClaimClaim);
             // temporarily disabled
