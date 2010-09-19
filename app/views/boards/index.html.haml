@@ -8,6 +8,7 @@
     %th(colspan=4) Players (N E S W)
     %th Tricks NS
     %th Points NS
+    %th Chicago IMP NS
     %th State
   - @boards.each do |board|
     %tr
@@ -20,4 +21,5 @@
       %td= link_to board.user_w, user_boards_path(board.user_w)
       %td= board.tricks_ns
       %td= board.points_ns
+      %td= board.chicago_imp_ns
       %td= board.state

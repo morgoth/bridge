@@ -14,7 +14,7 @@ class BoardPlayingTest < ActiveSupport::TestCase
   end
 
   test "return user E as first lead user" do
-    assert_equal @user_e, @board.users.first_lead
+    assert_equal @user_e, @board.users.lho
   end
 
   test "return user S as dummy user" do
