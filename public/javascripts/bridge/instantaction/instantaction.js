@@ -11,7 +11,7 @@ YUI.add("instantaction", function(Y) {
         initializer: function() {
             this.afterHostEvent("tableDataChange", this._afterHostTableDataChange);
             this.afterHostEvent("biddingbox:bid", this._afterHostBiddingBoxBid);
-            this.afterHostEvent("hand:card", this._afterHostHandCard);
+            this.afterHostEvent("card:card", this._afterHostCardCard);
             this.afterHostEvent("claim:claim", this._afterHostClaimClaim);
             this.afterHostEvent("claimpreview:accept", this._afterHostClaimPreviewAccept);
             this.afterHostEvent("claimpreview:reject", this._afterHostClaimPreviewReject);
@@ -28,7 +28,7 @@ YUI.add("instantaction", function(Y) {
                 bid = event[0];
 
             if(enabled) {
-                bids = Y.clone(host.auction.get("bids"));
+                bids = host.auction.get("bids");
                 bids.push({ bid: bid, alert: null });
                 host.biddingBox.hide();
                 host.auction.set("bids", bids);
@@ -37,16 +37,16 @@ YUI.add("instantaction", function(Y) {
             }
         },
 
-        _afterHostHandCard: function(event) {
+        _afterHostCardCard: function(event) {
             var cards, lead,
                 enabled = this.get("enabled"),
                 host = this.get("host"),
-                hand = event.target,
+                hand = event.target.get("parent"),
                 card = event[0];
 
             if(enabled) {
                 lead = host.trick.get("lead");
-                cards = Y.clone(host.trick.get("cards"));
+                cards = host.trick.get("cards");
 
                 if(cards && cards.length < 4) {
                     cards.push(card);
@@ -59,7 +59,7 @@ YUI.add("instantaction", function(Y) {
                 host.trick.set("cards", cards);
                 host.trick.show();
 
-                cards = Y.clone(hand.get("cards"));
+                cards = hand.get("cards");
                 cards = Y.Array.reject(cards, function(c) {
                     return c === card;
                 });
@@ -116,4 +116,4 @@ YUI.add("instantaction", function(Y) {
 
     Y.Bridge.InstantAction = InstantAction;
 
-}, "", { requires: ["plugin", "oop"] });
+}, "", { requires: ["plugin"] });

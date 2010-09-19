@@ -145,7 +145,7 @@ YUI.add("card", function(Y) {
 
         _onContentBoxClick: function(event) {
             if(!this.get("disabled")) {
-                this.fire("card", [this.get("card"), this.get("position")]);
+                this.fire("card", [this.get("card")]);
             }
         },
 
@@ -185,9 +185,6 @@ YUI.add("card", function(Y) {
             value: {
                 getter: "_getValue",
                 readOnly: true
-            },
-
-            position: {
             },
 
             imagesBase: {

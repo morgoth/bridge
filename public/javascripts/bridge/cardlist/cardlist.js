@@ -35,7 +35,7 @@ YUI.add("cardlist", function(Y) {
             }
 
             Y.each(cards, function(card, i) {
-                this.add(new Y.Bridge.Card({ card: card, disabled: true, visible: true, position: i }));
+                this.add(new Y.Bridge.Card({ card: card, disabled: true, visible: true }));
             }, this);
         },
 
