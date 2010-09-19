@@ -160,8 +160,8 @@ YUI.add("hand", function(Y) {
 
         BAR_TEMPLATE: ''
             + '<dl class="{{C_BAR}}">'
-            +   '<dd class="{{C_DIRECTION}}">{{direction}}</dd>'
-            +   '<dt class="{{C_NAME}}">{{name}}</dt>'
+            +   '<dt class="{{C_DIRECTION}}">{{direction}}</dt>'
+            +   '<dd class="{{C_NAME}}">{{name}}</dd>'
             + '</dl>'
 
     });

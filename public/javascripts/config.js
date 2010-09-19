@@ -52,7 +52,8 @@ window.YUICONFIG = {
                 },
                 tricks: {
                     path: "tricks/tricks.js",
-                    requires: ["widget", "mustache", "helpers", "uihelper"]
+                    requires: ["widget", "mustache", "helpers", "uihelper"],
+                    skinnable: true
                 },
                 table: {
                     path: "table/table.js",
