@@ -1,6 +1,14 @@
 window.YUICONFIG = {
     filter: "raw",
     groups: {
+        gallery: {
+            base: "/javascripts/gallery/",
+            modules: {
+                "gallery-preload": {
+                    path: "gallery-preload/gallery-preload.js"
+                }
+            }
+        },
         bridge: {
             base: "/javascripts/bridge/",
             modules: {
