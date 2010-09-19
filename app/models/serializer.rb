@@ -88,7 +88,7 @@ class Serializer
   memoize :trick
 
   def tricks
-    Rails.cache.fetch("serializer/tricks/table-#{table_id}/board-#{board_id}/tricks-#{board_tricks_count}") do
+    Rails.cache.fetch("serializer/tricks/table-#{table_id}/board-#{board_id}/state-#{board_state}/tricks-#{board_tricks_count}") do
       {:contract => "", :declarer => "", :resultNS => 0, :resultEW => 0, :tricks => [], :visible => false}.tap do |tricks|
         if playing?
           tricks[:visible] = true
@@ -198,6 +198,11 @@ class Serializer
     board.try(:id)
   end
   memoize :board_id
+
+  def board_state
+    board.try(:state)
+  end
+  memoize :board_state
 
   def board_bids_count
     board.try(:bids).try(:count)
