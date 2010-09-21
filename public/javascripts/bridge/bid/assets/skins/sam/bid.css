@@ -1,0 +1,32 @@
+.yui3-bid {
+    text-align: center;
+}
+
+.yui3-bid-content {
+    margin: 0;
+    padding: 0;
+}
+
+.yui3-bid-value {
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+    display: inline;
+}
+
+.yui3-bid-suit {
+    margin: 0;
+    padding: 0;
+    display: inline;
+}
+
+.yui3-bid-suit-d, .yui3-bid-suit-h {
+    color: #cb0000;
+}
+
+.yui3-bid-alert {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background: #ffce00;
+}

@@ -16,12 +16,7 @@ YUI.add("info", function(Y) {
         },
 
         _renderInfo: function() {
-            var html,
-                contentBox = this.get("contentBox");
-
-            html = Y.mustache(Info.INFO_TEMPLATE, Info);
-
-            contentBox.setContent(html);
+            this.get("contentBox").setContent(Y.mustache(Info.INFO_TEMPLATE, Info));
         },
 
         bindUI: function() {

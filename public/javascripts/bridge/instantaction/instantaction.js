@@ -25,11 +25,12 @@ YUI.add("instantaction", function(Y) {
             var bids,
                 enabled = this.get("enabled"),
                 host = this.get("host"),
-                bid = event[0];
+                bid = event[0],
+                alert = event[1];
 
             if(enabled) {
                 bids = host.auction.get("bids");
-                bids.push({ bid: bid, alert: null });
+                bids.push({ bid: bid, alert: alert });
                 host.biddingBox.hide();
                 host.auction.set("bids", bids);
                 host.auction.show();

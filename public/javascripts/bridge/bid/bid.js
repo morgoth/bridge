@@ -62,18 +62,17 @@ YUI.add("bid", function(Y) {
         },
 
         _uiSyncBid: function(bid) {
-            var contentBox = this.get("contentBox"),
-                tokens = Y.merge(Bid);
+            if(bid) {
+                var tokens = Y.merge(Bid, {
+                    renderedValue: this._renderedValue(bid),
+                    value: this._getValue(bid).toLowerCase(),
+                    renderedSuit: this._renderedSuit(bid),
+                    suit: this._getSuit(bid) && this._getSuit(bid).toLowerCase()
+                });
 
-            if(bid !== "") {
-                tokens.renderedValue = this._renderedValue(bid);
-                tokens.value = this._getValue(bid).toLowerCase();
-                tokens.renderedSuit = this._renderedSuit(bid);
-                tokens.suit = this._getSuit(bid) && this._getSuit(bid).toLowerCase();
-
-                contentBox.setContent(Y.mustache(Bid.BID_TEMPLATE, tokens));
+                this.get("contentBox").setContent(Y.mustache(Bid.BID_TEMPLATE, tokens));
             } else {
-                contentBox.setContent("");
+                this.get("contentBox").setContent("");
             }
         },
 
@@ -86,10 +85,8 @@ YUI.add("bid", function(Y) {
         },
 
         bindUI: function() {
-            var contentBox = this.get("contentBox");
-
             this.after("bidChange", this._afterBidChange);
-            contentBox.on("click", this._onContentBoxClick, this);
+            this.get("contentBox").on("click", this._onContentBoxClick, this);
         },
 
         _afterBidChange: function(event) {
@@ -110,8 +107,8 @@ YUI.add("bid", function(Y) {
             var matchData;
             bid = bid || this.get("bid");
 
-            matchData = bid && bid.match(/C|D|H|S|NT/);
-            return matchData ? matchData[0] : undefined;
+            matchData = bid && bid.match(/^(1|2|3|4|5|6|7)(C|D|H|S|NT)$/);
+            return matchData ? matchData[2] : undefined;
         },
 
         _getValue: function(bid) {
@@ -152,13 +149,13 @@ YUI.add("bid", function(Y) {
             value: {
                 getter: "_getValue",
                 readOnly: true
-            },
+            }
 
-            BID_TEMPLATE: ''
-                + '{{#value}}<dt class="{{C_VALUE}}">{{renderedValue}}</dt>{{/value}}'
-                + '{{#suit}}<dd class="{{C_SUIT}} {{C_SUIT}}-{{suit}}">{{renderedSuit}}</dd>{{/suit}}'
+        },
 
-        }
+        BID_TEMPLATE: ''
+            + '{{#value}}<dt class="{{C_VALUE}}">{{renderedValue}}</dt>{{/value}}'
+            + '{{#suit}}<dd class="{{C_SUIT}} {{C_SUIT}}-{{suit}}">{{renderedSuit}}</dd>{{/suit}}'
 
     });
 

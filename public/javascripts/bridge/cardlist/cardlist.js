@@ -13,10 +13,8 @@ YUI.add("cardlist", function(Y) {
         },
 
         _renderChildrenContainer: function() {
-            var contentBox = this.get("contentBox");
-
             this._childrenContainer = Y.Node.create("<ul></ul>").addClass(this.getClassName("cards"));
-            contentBox.appendChild(this._childrenContainer);
+            this.get("contentBox").appendChild(this._childrenContainer);
         },
 
         bindUI: function() {

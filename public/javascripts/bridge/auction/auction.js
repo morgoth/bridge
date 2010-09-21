@@ -1,14 +1,19 @@
 YUI.add("auction", function(Y) {
 
+    var getClassName = Y.ClassNameManager.getClassName,
+        DOT = ".";
+
     Y.namespace("Bridge");
 
-    function Auction() {
-        Auction.superclass.constructor.apply(this, arguments);
-    };
+    var Auction = Y.Base.create("auction", Y.Widget, [Y.WidgetParent], {
 
-    Y.extend(Auction, Y.Widget, {
         renderUI: function() {
             this._renderAuction();
+        },
+
+        _renderAuction: function() {
+            var tokens = Y.merge(Auction, { directions: ["N", "E", "S", "W"] });
+            this.get("contentBox").setContent(Y.mustache(Auction.AUCTION_TEMPLATE, tokens));
         },
 
         bindUI: function() {
@@ -18,117 +23,90 @@ YUI.add("auction", function(Y) {
         },
 
         syncUI: function() {
-            this._uiSetBids(this.get("bids"));
+            this._uiSyncBids(this.get("bids"));
         },
 
         _afterBidsChange: function(event) {
-            this._uiSetBids(event.newVal);
+            this._uiSyncBids(event.newVal);
         },
 
         _afterDealerChange: function(event) {
-            this._uiSetDealer(event.newVal);
+            this._uiSyncDealer(event.newVal);
         },
 
         _afterVulnerableChange: function(event) {
-            this._uiSetVulnerable(event.newVal);
+            this._uiSyncVulnerable(event.newVal);
         },
 
-        _uiSetDealer: function(dealer) {
-            this._uiSetBids(this.get("bids"));
+        _uiSyncDealer: function(dealer) {
+            this._uiSyncBids(this.get("bids"));
         },
 
-        _renderAuction: function() {
-            var html, headers,
-                dealer = this.get("dealer"),
-                contentBox = this.get("contentBox");
-            headers = Y.Array.map(Y.Bridge.DIRECTIONS, function(direction) {
-                return {
-                    name: direction,
-                    classNames: this.getClassName("header", direction.toLowerCase())
-                };
-            }, this);
-            html = Y.mustache(Auction.AUCTION_TEMPLATE, {
-                headers: headers,
-                headersCN: this.getClassName("headers")
-            });
-
-            contentBox.setContent(html);
-        },
-
-        _uiSetBids: function(bids) {
-            var bidsNode, html, dealerPosition,
-                dealer = this.get("dealer"),
-                contentBox = this.get("contentBox");
-            bidsNode = contentBox.one("." + this.getClassName("bids"));
-            dealerPosition = Y.Array.indexOf(Y.Bridge.DIRECTIONS, dealer);
-
-            bids = Y.Array.map(bids, function(bid, i) {
-                var player = Y.Bridge.DIRECTIONS[(i + dealerPosition) % 4],
-                    classNames = [this.getClassName("bid", bid.bid.toLowerCase())];
-
-                if (bid.alert) {
-                    classNames[classNames.length] = this.getClassName("bid", "alerted");
-                }
-
-                return {
-                    name: Y.Bridge.renderBid(bid.bid),
-                    classNames: classNames.join(" "),
-                    alert: bid.alert,
-                    player: player
-                };
-            }, this);
-
-            for(var i = 0; i < dealerPosition; i++) {
-                // add empty bids
-                bids.unshift({});
+        _uiClearBids: function() {
+            while(this._items.length) {
+                this._items[0].destroy();
             }
+        },
 
-            html = Y.mustache(Auction.BIDS_TEMPLATE, { bids: bids });
+        _uiSyncBids: function(bids) {
+            bids = Y.clone(bids);
 
-            bidsNode.setContent(html);
+            this._uiClearBids();
+            this._childrenContainer = this.get("contentBox").one(DOT + Auction.C_BIDS);
+
+            // add empty bids
+            for(var i = 0; i < Y.Array.indexOf(["N", "E", "S", "W"], this.get("dealer")); i++) {
+                bids.unshift({});
+            };
+
+            Y.each(bids, function(bid, i) {
+                this.add(new Y.Bridge.Bid(Y.merge(bid, { disabled: true, visible: true })));
+            }, this);
+
+            this._uiScrollDownBids();
+        },
+
+        _uiScrollDownBids: function() {
+            var bidsNode = this.get("contentBox").one(DOT + Auction.C_BIDS);
 
             Y.later(0, this, function() {
-                var scrollHeight = bidsNode.get("scrollHeight"),
-                    offsetHeight = bidsNode.get("offsetHeight");
-
-                bidsNode.set("scrollTop", scrollHeight - offsetHeight);
+                bidsNode.set("scrollTop", bidsNode.get("scrollHeight") - bidsNode.get("offsetHeight"));
             });
         },
 
-        _uiSetVulnerable: function(vulnerable) {
-            var headerNodeN, headerNodeE, headerNodeS, headerNodeW,
-                contentBox = this.get("contentBox"),
-                vulnerableCN = this.getClassName("header", "vulnerable");
+        _uiSyncVulnerable: function(vulnerable) {
+            var headerNodes = this.get("contentBox").all(DOT + Auction.C_HEADER);
 
-            headerNodeN = contentBox.one("." + this.getClassName("header", "n")).removeClass(vulnerableCN);
-            headerNodeE = contentBox.one("." + this.getClassName("header", "e")).removeClass(vulnerableCN);
-            headerNodeS = contentBox.one("." + this.getClassName("header", "s")).removeClass(vulnerableCN);
-            headerNodeW = contentBox.one("." + this.getClassName("header", "w")).removeClass(vulnerableCN);
+            headerNodes.each(function(headerNode) {
+                headerNode.removeClass(Auction.C_VULNERABLE);
+            });
 
             switch(vulnerable) {
             case "NONE":
                 // DO NOTHING
                 break;
             case "NS":
-                headerNodeN.addClass(vulnerableCN);
-                headerNodeS.addClass(vulnerableCN);
+                headerNodes.item(0).addClass(Auction.C_VULNERABLE);
+                headerNodes.item(2).addClass(Auction.C_VULNERABLE);
                 break;
             case "EW":
-                headerNodeE.addClass(vulnerableCN);
-                headerNodeW.addClass(vulnerableCN);
+                headerNodes.item(1).addClass(Auction.C_VULNERABLE);
+                headerNodes.item(3).addClass(Auction.C_VULNERABLE);
                 break;
             case "BOTH":
-                headerNodeN.addClass(vulnerableCN);
-                headerNodeE.addClass(vulnerableCN);
-                headerNodeS.addClass(vulnerableCN);
-                headerNodeW.addClass(vulnerableCN);
+                headerNodes.each(function(headerNode) {
+                    headerNode.addClass(Auction.C_VULNERABLE);
+                });
                 break;
             }
         }
 
     }, {
 
-        NAME: "auction",
+        C_BIDS: getClassName("auction", "bids"),
+        C_HEADERS: getClassName("auction", "headers"),
+        C_HEADER: getClassName("auction", "header"),
+        C_VULNERABLE: getClassName("auction", "vulnerable"),
 
         ATTRS: {
 
@@ -142,49 +120,20 @@ YUI.add("auction", function(Y) {
 
             bids: {
                 value: []
-            },
-
-            strings: {
-                value: {
-                    modifiers: {
-                        PASS: "Pass",
-                        X: "Dbl",
-                        XX: "Rdbl"
-                    },
-                    suits: {
-                        C: "&clubs;",
-                        D: "&diams;",
-                        H: "&hearts;",
-                        S: "&spades;",
-                        NT: "NT"
-                    }
-                }
             }
+
         },
 
         AUCTION_TEMPLATE: ''
-            + '<ol class="{{headersCN}}">'
-            +   '{{#headers}}'
-            +     '<li class="yui3-auction-header {{classNames}}">{{name}}</li>'
-            +   '{{/headers}}'
+            + '<ol class="{{C_HEADERS}}">'
+            +   '{{#directions}}'
+            +     '<li class="{{C_HEADER}}">{{.}}</li>'
+            +   '{{/directions}}'
             + '</ol>'
-            + '<ol class="yui3-auction-bids"></ol>'
-            + '</ol>'
-            + '<div class="yui3-auction-clear"></div>',
-
-        BIDS_TEMPLATE: ''
-            + '{{#bids}}'
-            +   '<li>'
-            +     '{{#name}}'
-            +       '<button type="button" class="yui3-auction-bid {{classNames}}" data-player="{{player}}" title="{{alert}}">'
-            +         '{{{name}}}'
-            +       '</button>'
-            +     '{{/name}}'
-            +   '</li>'
-            + '{{/bids}}'
+            + '<ol class="{{C_BIDS}}"></ol>'
 
     });
 
     Y.Bridge.Auction = Auction;
 
-}, "0", { requires: ["widget"] });
+}, "0", { requires: ["widget", "widget-parent", "bid"] });

@@ -35,9 +35,15 @@ window.YUICONFIG = {
                     path: "info/info.js",
                     requires: ["widget", "mustache", "helpers", "uihelper"]
                 },
+                bid: {
+                    path: "bid/bid.js",
+                    requires: ["widget", "widget-child", "mustache"],
+                    skinnable: true
+                },
                 auction: {
                     path: "auction/auction.js",
-                    requires: ["widget", "mustache"]
+                    requires: ["widget", "widget-parent", "mustache", "bid"],
+                    skinnable: true
                 },
                 card: {
                     path: "card/card.js",
