@@ -1,47 +1,13 @@
 YUI.add("table", function(Y) {
 
+    var getClassName = Y.ClassNameManager.getClassName,
+        DOT = ".";
+
     Y.namespace("Bridge");
 
-    function Table() {
-        Table.superclass.constructor.apply(this, arguments);
-    };
+    var Table = Y.Base.create("table", Y.Widget, [], {
 
-    Y.extend(Table, Y.Base, {
-
-        initializer: function() {
-            this._parseTableId();
-            this._parseUserId();
-            this._parsePusherApiKey();
-            this._renderUI();
-            this._bindUI();
-            this._parseChannelName();
-        },
-
-        _parseTableId: function() {
-            var container = this.get("container");
-
-            this.set("tableId", container.getAttribute("data-table-id"));
-        },
-
-        _parseUserId: function() {
-            var container = this.get("container");
-
-            this.set("userId", container.getAttribute("data-user-id"));
-        },
-
-        _parsePusherApiKey: function() {
-            var container = this.get("container");
-
-            this.set("pusherApiKey", container.getAttribute("data-pusher-api-key"));
-        },
-
-        _parseChannelName: function() {
-            var container = this.get("container");
-
-            this.set("channelName", container.getAttribute("data-channel-name"));
-        },
-
-        _renderUI: function() {
+        renderUI: function() {
             this._renderTable();
             this._renderHands();
             this._renderBiddingBox();
@@ -54,7 +20,7 @@ YUI.add("table", function(Y) {
             this._renderChat();
         },
 
-        _bindUI: function() {
+        bindUI: function() {
             this.on("chat:message", this._onChatMessage);
             this.on("hand:join", this._onHandJoin);
             this.on("hand:quit", this._onHandQuit);
@@ -72,6 +38,10 @@ YUI.add("table", function(Y) {
             this.after("connectedChange", this._afterConnectedChange);
             this.after("ioLockChange", this._afterIoLockChange);
             this.after("messageReceived", this._afterMessageReceived);
+        },
+
+        syncUI: function() {
+            this._reconnect(undefined, this.get("channelName"));
         },
 
         _onHandJoin: function(event) {
@@ -164,8 +134,6 @@ YUI.add("table", function(Y) {
         },
 
         _io: function(uri, configuration) {
-            var userId = this.get("userId");
-
             configuration = configuration || {};
             configuration.on = configuration.on || {};
             configuration.on.start = Y.bind(this._onRequestStart, this);
@@ -217,7 +185,6 @@ YUI.add("table", function(Y) {
 
         _onRequestFailure: function(id, response) {
             Y.log(response);
-            Y.log(this.get("tableData"));
             this._uiSyncTable(this.get("tableData"), true);
             alert("Error: communication problem occured, page reload might be required.");
         },
@@ -227,18 +194,18 @@ YUI.add("table", function(Y) {
         },
 
         _renderTable: function() {
-            var container = this.get("container"),
+            var contentBox = this.get("contentBox"),
                 html = Y.mustache(Table.MAIN_TEMPLATE, {});
 
-            container.setContent(html);
+            contentBox.setContent(html);
         },
 
         _renderHands: function() {
             var userId = this.get("userId"),
-                container = this.get("container");
+                contentBox = this.get("contentBox");
 
             this.hands = Y.Array.map(Y.Bridge.DIRECTIONS, function(direction, i) {
-                var handNode = container.one(".bridge-hand-" + direction.toLowerCase());
+                var handNode = contentBox.one(".bridge-hand-" + direction.toLowerCase());
 
                 return new Y.Bridge.Hand({
                     host: this,
@@ -252,8 +219,8 @@ YUI.add("table", function(Y) {
 
         _renderBiddingBox: function() {
             var biddingBoxNode,
-                container = this.get("container");
-            biddingBoxNode = container.one(".bridge-biddingbox");
+                contentBox = this.get("contentBox");
+            biddingBoxNode = contentBox.one(".bridge-biddingbox");
 
             this.biddingBox = new Y.Bridge.BiddingBox({
                 host: this,
@@ -264,9 +231,9 @@ YUI.add("table", function(Y) {
 
         _renderAuction: function() {
             var auctionNode,
-                container = this.get("container");
+                contentBox = this.get("contentBox");
 
-            auctionNode = container.one(".bridge-auction");
+            auctionNode = contentBox.one(".bridge-auction");
 
             this.auction = new Y.Bridge.Auction({
                 host: this,
@@ -277,9 +244,9 @@ YUI.add("table", function(Y) {
 
         _renderTrick: function() {
             var trickNode,
-                container = this.get("container");
+                contentBox = this.get("contentBox");
 
-            trickNode = container.one(".bridge-trick");
+            trickNode = contentBox.one(".bridge-trick");
 
             this.trick = new Y.Bridge.Trick({
                 host: this,
@@ -290,8 +257,8 @@ YUI.add("table", function(Y) {
 
         _renderTricks: function() {
             var tricksNode,
-                container = this.get("container");
-            tricksNode = container.one(".bridge-tricks");
+                contentBox = this.get("contentBox");
+            tricksNode = contentBox.one(".bridge-tricks");
 
             this.tricks = new Y.Bridge.Tricks({
                 host: this,
@@ -302,8 +269,8 @@ YUI.add("table", function(Y) {
 
         _renderInfo: function() {
             var infoNode,
-                container = this.get("container");
-            infoNode = container.one(".bridge-info");
+                contentBox = this.get("contentBox");
+            infoNode = contentBox.one(".bridge-info");
 
             this.info = new Y.Bridge.Info({
                 host: this,
@@ -314,8 +281,8 @@ YUI.add("table", function(Y) {
 
         _renderClaim: function() {
             var claimNode,
-                container = this.get("container");
-            claimNode = container.one(".bridge-claim");
+                contentBox = this.get("contentBox");
+            claimNode = contentBox.one(".bridge-claim");
 
             this.claim = new Y.Bridge.Claim({
                 host: this,
@@ -326,8 +293,8 @@ YUI.add("table", function(Y) {
 
         _renderClaimPreview: function() {
             var claimPreviewNode,
-                container = this.get("container");
-            claimPreviewNode = container.one(".bridge-claimpreview");
+                contentBox = this.get("contentBox");
+            claimPreviewNode = contentBox.one(".bridge-claimpreview");
 
             this.claimPreview = new Y.Bridge.ClaimPreview({
                 host: this,
@@ -339,8 +306,8 @@ YUI.add("table", function(Y) {
         _renderChat: function() {
             var chatNode,
                 userId = this.get("userId"),
-                container = this.get("container");
-            chatNode = container.one(".bridge-chat");
+                contentBox = this.get("contentBox");
+            chatNode = contentBox.one(".bridge-chat");
 
             this.chat = new Y.Bridge.Chat({
                 host: this,
@@ -381,18 +348,18 @@ YUI.add("table", function(Y) {
         _uiSetPlayer: function(player) {
             var handNodes, slotNodes,
                 position = Y.Bridge.dealerPosition(player),
-                container = this.get("container");
+                contentBox = this.get("contentBox");
             handNodes = [
-                container.one(".bridge-hand-n"),
-                container.one(".bridge-hand-e"),
-                container.one(".bridge-hand-s"),
-                container.one(".bridge-hand-w")
+                contentBox.one(".bridge-hand-n"),
+                contentBox.one(".bridge-hand-e"),
+                contentBox.one(".bridge-hand-s"),
+                contentBox.one(".bridge-hand-w")
             ];
             slotNodes = [
-                container.one(".bridge-table-row-1 .bridge-table-col-2"),
-                container.one(".bridge-table-row-2 .bridge-table-col-3"),
-                container.one(".bridge-table-row-3 .bridge-table-col-2"),
-                container.one(".bridge-table-row-2 .bridge-table-col-1")
+                contentBox.one(".bridge-table-row-1 .bridge-table-col-2"),
+                contentBox.one(".bridge-table-row-2 .bridge-table-col-3"),
+                contentBox.one(".bridge-table-row-3 .bridge-table-col-2"),
+                contentBox.one(".bridge-table-row-2 .bridge-table-col-1")
             ];
 
             this.trick.set("player", player);
@@ -406,11 +373,11 @@ YUI.add("table", function(Y) {
 
         _uiSetBoardState: function(boardState) {
             var auctionNode, auctionSlotNodes,
-                container = this.get("container");
-            auctionNode = container.one(".bridge-auction");
+                contentBox = this.get("contentBox");
+            auctionNode = contentBox.one(".bridge-auction");
             auctionSlotNodes = [
-                container.one(".bridge-table-row-1 .bridge-table-col-3"),
-                container.one(".bridge-table-row-2 .bridge-table-col-2")
+                contentBox.one(".bridge-table-row-1 .bridge-table-col-3"),
+                contentBox.one(".bridge-table-row-2 .bridge-table-col-2")
             ];
 
             switch(boardState) {
@@ -462,7 +429,25 @@ YUI.add("table", function(Y) {
 
     }, {
 
-        NAME: "table",
+        HTML_PARSER: {
+
+            tableId: function(srcNode) {
+                return srcNode.getAttribute("data-table-id");
+            },
+
+            userId: function(srcNode) {
+                return srcNode.getAttribute("data-user-id");
+            },
+
+            pusherApiKey: function(srcNode) {
+                return srcNode.getAttribute("data-pusher-api-key");
+            },
+
+            channelName: function(srcNode) {
+                return srcNode.getAttribute("data-channel-name");
+            }
+
+        },
 
         ATTRS: {
 
@@ -507,13 +492,6 @@ YUI.add("table", function(Y) {
 
             connected: {
 
-            },
-
-            container: {
-                value: "body",
-                setter: function(selector) {
-                    return Y.one(selector);
-                }
             }
 
         },
@@ -571,4 +549,4 @@ YUI.add("table", function(Y) {
 
     Y.Bridge.Table = Table;
 
-}, "0", { requires: ["base", "node", "json", "mustache", "hand", "biddingbox", "auction", "trick", "tricks", "info", "claim", "claimpreview", "io", "chat"] });
+}, "0", { requires: ["widget", "node", "json", "mustache", "hand", "biddingbox", "auction", "trick", "tricks", "info", "claim", "claimpreview", "io", "chat"] });

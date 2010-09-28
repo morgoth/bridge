@@ -71,7 +71,8 @@ window.YUICONFIG = {
                 },
                 table: {
                     path: "table/table.js",
-                    requires: ["base-base", "node", "json", "mustache", "hand", "biddingbox", "auction", "helpers", "trick", "tricks", "info", "claim", "claimpreview", "io", "chat"]
+                    requires: ["widget", "node", "json", "mustache", "hand", "biddingbox", "auction", "helpers", "trick", "tricks", "info", "claim", "claimpreview", "io", "chat"],
+                    skinnable: true
                 },
                 chat: {
                     path: "chat/chat.js",
