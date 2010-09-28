@@ -21,9 +21,7 @@ class Serializer
       config[:tricks] = tricks
       config[:claim] = claim(user)
       config[:claimPreview] = claim_preview(user)
-      config[:hands] = Bridge::DIRECTIONS.inject([]) do |hands, direction|
-        hands << hand(user, direction)
-      end
+      config[:hands] = Bridge::DIRECTIONS.map { |d| hand(user, d) }
     end
   end
 
@@ -47,8 +45,7 @@ class Serializer
           auction[:dealer] = board.dealer
           auction[:vulnerable] = board.vulnerable
           auction[:bids] = board.bids.map do |bid|
-            {:bid => bid.bid.to_s,
-              :alert => bid.user.partner == user ? nil : bid.alert}
+            {:bid => bid.bid.to_s, :alert => bid.user.partner == user ? nil : bid.alert}
           end
         end
       end
@@ -58,7 +55,7 @@ class Serializer
   def bidding_box(user)
     {:contract => "", :disabled => true, :visible => false, :doubleEnabled => false, :redoubleEnabled => false}.tap do |bidding_box|
       if auction?
-        bidding_box[:contract] = (board.bids.active.contracts.first and board.bids.active.contracts.first.bid.to_s) # cache in instance variable probably
+        bidding_box[:contract] = active_contract
         if user_turn?(user)
           bidding_box[:disabled] = false
           bidding_box[:visible] = true
@@ -96,8 +93,8 @@ class Serializer
           tricks[:declarer] = board.declarer
           tricks[:resultNS] = board.tricks_taken("NS")
           tricks[:resultEW] = board.tricks_taken("EW")
-          board.cards.completed_tricks.each do |trick|
-            tricks[:tricks] << {:cards => trick.map { |t| t.card.to_s }, :lead => board.deal_owner(trick.first.card.to_s), :winner => board.trick_winner(trick)}
+          tricks[:tricks] = board.cards.completed_tricks.map do |trick|
+            {:cards => trick.map { |t| t.card.to_s }, :lead => board.deal_owner(trick.first.card.to_s), :winner => board.trick_winner(trick)}
           end
         end
       end
@@ -208,6 +205,11 @@ class Serializer
     board.try(:bids).try(:count)
   end
   memoize :board_bids_count
+
+  def active_contract
+    board.bids.active.contracts.first and board.bids.active.contracts.first.bid.to_s
+  end
+  memoize :active_contract
 
   def board_cards_count
     board.try(:cards).try(:count)
