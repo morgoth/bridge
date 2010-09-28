@@ -60,7 +60,7 @@ class Board < ActiveRecord::Base
   end
 
   def users
-    Proxies::ObjectProxy.new([user_n, user_e, user_s, user_w], :owner => self, :extend => UsersBoardExtension)
+    Proxies::Proxy.new(lambda { [user_n, user_e, user_s, user_w] }, :owner => self, :extend => UsersBoardExtension)
   end
 
   def users=(users)
