@@ -146,7 +146,7 @@ class Serializer
   def bar(user)
     {:visible => true, :quitEnabled => false, :claimEnabled => false}.tap do |hand|
       hand[:quitEnabled] = quit_enabled?(user)
-      hand[:claimEnabled] = (board? and board.playing_user == user and board.claims.active.empty?)
+      hand[:claimEnabled] = (playing? and board.playing_user == user and board.claims.active.empty?)
     end
   end
 
