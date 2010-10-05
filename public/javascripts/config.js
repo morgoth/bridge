@@ -33,7 +33,8 @@ window.YUICONFIG = {
                 },
                 info: {
                     path: "info/info.js",
-                    requires: ["widget", "mustache", "helpers", "uihelper"]
+                    requires: ["widget", "mustache", "helpers", "uihelper"],
+                    skinnable: true
                 },
                 bid: {
                     path: "bid/bid.js",
@@ -71,12 +72,17 @@ window.YUICONFIG = {
                 },
                 table: {
                     path: "table/table.js",
-                    requires: ["widget", "node", "json", "mustache", "hand", "biddingbox", "auction", "helpers", "trick", "tricks", "info", "claim", "claimpreview", "io", "chat"],
+                    requires: ["widget", "node", "json", "mustache", "hand", "biddingbox", "auction", "helpers", "trick", "tricks", "info", "claim", "claimpreview", "io", "chat", "bar"],
                     skinnable: true
                 },
                 chat: {
                     path: "chat/chat.js",
                     requires: ["widget", "mustache", "uihelper"]
+                },
+                bar: {
+                    path: "bar/bar.js",
+                    requires: ["widget", "mustache"],
+                    skinnable: true
                 },
                 uihelper: {
                     path: "uihelper/uihelper.js",

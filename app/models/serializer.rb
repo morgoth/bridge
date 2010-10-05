@@ -22,6 +22,7 @@ class Serializer
       config[:claim] = claim(user)
       config[:claimPreview] = claim_preview(user)
       config[:hands] = Bridge::DIRECTIONS.map { |d| hand(user, d) }
+      config[:bar] = bar(user)
     end
   end
 
@@ -105,7 +106,6 @@ class Serializer
   def claim(user)
     {:maxTricks => 13, :visible => false}.tap do |claim|
       if playing?
-        claim[:visible] = (board.playing_user == user and board.claims.active.empty?)
         claim[:maxTricks] = 13 - board.cards.completed_tricks_count
       end
     end
@@ -129,9 +129,8 @@ class Serializer
   end
 
   def hand(user, direction)
-    {:direction => direction, :name => "", :joinEnabled => false, :quitEnabled => false, :cards => [], :cardsEnabled => false, :suit => nil, :visible => true, :active => false, :suit => "", :cardsEnabled => false}.tap do |hand|
+    {:direction => direction, :name => "", :joinEnabled => false, :cards => [], :cardsEnabled => false, :suit => nil, :visible => true, :active => false, :suit => "", :cardsEnabled => false}.tap do |hand|
       hand[:joinEnabled] = join_enabled?(user, direction)
-      hand[:quitEnabled] = quit_enabled?(user, direction)
       if player = table.players[direction]
         hand[:name] = player.name
       end
@@ -141,6 +140,13 @@ class Serializer
         hand[:cardsEnabled] = cards_enabled?(user, direction)
         hand[:suit] = board.cards.current_trick_suit
       end
+    end
+  end
+
+  def bar(user)
+    {:visible => true, :quitEnabled => false, :claimEnabled => false}.tap do |hand|
+      hand[:quitEnabled] = quit_enabled?(user)
+      hand[:claimEnabled] = (board? and board.playing_user == user and board.claims.active.empty?)
     end
   end
 
@@ -176,8 +182,8 @@ class Serializer
   end
   memoize :join_enabled?
 
-  def quit_enabled?(user, direction)
-    table.players[direction].present? and user.present? and table.players[direction] == table.players.for(user)
+  def quit_enabled?(user)
+    user.present? and table.players.for(user).present?
   end
   memoize :quit_enabled?
 

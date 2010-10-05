@@ -17,18 +17,19 @@ YUI.add("table", function(Y) {
             this._renderInfo();
             this._renderClaim();
             this._renderClaimPreview();
+            this._renderBar();
             this._renderChat();
         },
 
         bindUI: function() {
+            this.on("bar:quit", this._onBarQuit);
+            this.on("bar:claim", this._onBarClaim);
             this.on("chat:message", this._onChatMessage);
             this.on("hand:join", this._onHandJoin);
-            this.on("hand:quit", this._onHandQuit);
             this.on("card:card", this._onHandCard);
             this.on("biddingbox:bid", this._onBiddingBoxBid);
             this.on("claim:claim", this._onClaimClaim);
-            // temporarily disabled
-            // this.on("claim:cancel", this._onClaimCancel);
+            this.on("claim:cancel", this._onClaimCancel);
             this.on("claimpreview:accept", this._onClaimPreviewAccept);
             this.on("claimpreview:reject", this._onClaimPreviewReject);
             this.on("channelNameChange", this._onChannelNameChange);
@@ -50,8 +51,12 @@ YUI.add("table", function(Y) {
             this._io(this._tablePlayerPath(), { method: "POST", data: "player[direction]=" + direction });
         },
 
-        _onHandQuit: function(event) {
+        _onBarQuit: function(event) {
             this._io(this._tablePlayerPath(), { method: "POST", data: "_method=DELETE" });
+        },
+
+        _onBarClaim: function(event) {
+            this.claim.show();
         },
 
         _onBiddingBoxBid: function(event) {
@@ -78,6 +83,10 @@ YUI.add("table", function(Y) {
                 method: "POST",
                 data: "claim[tricks]=" + tricks + "&" + "claim[explanation]=" + encodeURIComponent(explanation)
             });
+        },
+
+        _onClaimCancel: function(event) {
+            event.target.hide();
         },
 
         _onChatMessage: function(event) {
@@ -194,126 +203,81 @@ YUI.add("table", function(Y) {
         },
 
         _renderTable: function() {
-            var contentBox = this.get("contentBox"),
-                html = Y.mustache(Table.MAIN_TEMPLATE, {});
-
-            contentBox.setContent(html);
+            this.get("contentBox").setContent(Y.mustache(Table.MAIN_TEMPLATE));
         },
 
         _renderHands: function() {
-            var userId = this.get("userId"),
-                contentBox = this.get("contentBox");
-
             this.hands = Y.Array.map(Y.Bridge.DIRECTIONS, function(direction, i) {
-                var handNode = contentBox.one(".bridge-hand-" + direction.toLowerCase());
-
                 return new Y.Bridge.Hand({
                     host: this,
                     direction: direction,
-                    userId: userId,
-                    boundingBox: handNode,
+                    userId: this.get("userId"),
                     visible: false
-                }).render();
+                }).render(this.get("contentBox").one(".bridge-hand-" + direction.toLowerCase()));
             }, this);
         },
 
         _renderBiddingBox: function() {
-            var biddingBoxNode,
-                contentBox = this.get("contentBox");
-            biddingBoxNode = contentBox.one(".bridge-biddingbox");
-
             this.biddingBox = new Y.Bridge.BiddingBox({
                 host: this,
-                boundingBox: biddingBoxNode,
                 visible: false
-            }).render();
+            }).render(this.get("contentBox").one(".bridge-biddingbox"));
         },
 
         _renderAuction: function() {
-            var auctionNode,
-                contentBox = this.get("contentBox");
-
-            auctionNode = contentBox.one(".bridge-auction");
-
             this.auction = new Y.Bridge.Auction({
                 host: this,
-                boundingBox: auctionNode,
                 visible: false
-            }).render();
+            }).render(this.get("contentBox").one(".bridge-auction"));
         },
 
         _renderTrick: function() {
-            var trickNode,
-                contentBox = this.get("contentBox");
-
-            trickNode = contentBox.one(".bridge-trick");
-
             this.trick = new Y.Bridge.Trick({
                 host: this,
-                boundingBox: trickNode,
                 visible: false
-            }).render();
+            }).render(this.get("contentBox").one(".bridge-trick"));
         },
 
         _renderTricks: function() {
-            var tricksNode,
-                contentBox = this.get("contentBox");
-            tricksNode = contentBox.one(".bridge-tricks");
-
             this.tricks = new Y.Bridge.Tricks({
                 host: this,
-                boundingBox: tricksNode,
                 visible: false
-            }).render();
+            }).render(this.get("contentBox").one(".bridge-tricks"));
         },
 
         _renderInfo: function() {
-            var infoNode,
-                contentBox = this.get("contentBox");
-            infoNode = contentBox.one(".bridge-info");
-
             this.info = new Y.Bridge.Info({
                 host: this,
-                boundingBox: infoNode,
                 visible: false
-            }).render();
+            }).render(this.get("contentBox").one(".bridge-info"));
         },
 
         _renderClaim: function() {
-            var claimNode,
-                contentBox = this.get("contentBox");
-            claimNode = contentBox.one(".bridge-claim");
-
             this.claim = new Y.Bridge.Claim({
                 host: this,
-                boundingBox: claimNode,
                 visible: false
-            }).render();
+            }).render(this.get("contentBox").one(".bridge-claim"));
         },
 
         _renderClaimPreview: function() {
-            var claimPreviewNode,
-                contentBox = this.get("contentBox");
-            claimPreviewNode = contentBox.one(".bridge-claimpreview");
-
             this.claimPreview = new Y.Bridge.ClaimPreview({
                 host: this,
-                boundingBox: claimPreviewNode,
                 visible: false
-            }).render();
+            }).render(this.get("contentBox").one(".bridge-claimpreview"));
+        },
+
+        _renderBar: function() {
+            this.bar = new Y.Bridge.Bar({
+                host: this,
+                visible: false
+            }).render(this.get("contentBox").one(".bridge-bar"));
         },
 
         _renderChat: function() {
-            var chatNode,
-                userId = this.get("userId"),
-                contentBox = this.get("contentBox");
-            chatNode = contentBox.one(".bridge-chat");
-
             this.chat = new Y.Bridge.Chat({
                 host: this,
-                boundingBox: chatNode,
                 disabled: true
-            }).render();
+            }).render(this.get("contentBox").one(".bridge-chat"));
 
             this.chat.addMessage("bridge", "connecting...");
         },
@@ -336,6 +300,7 @@ YUI.add("table", function(Y) {
                 this.info.setAttrs(tableData.info);
                 this.claim.setAttrs(tableData.claim);
                 this.claimPreview.setAttrs(tableData.claimPreview);
+                this.bar.setAttrs(tableData.bar);
             }
         },
 
@@ -542,6 +507,7 @@ YUI.add("table", function(Y) {
             +       '<div class="bridge-tricks"></div>'
             +     '</div>'
             +   '</div>'
+            +   '<div class="bridge-bar"></div>'
             +   '<div class="bridge-chat"></div>'
             + '</div>'
 
@@ -549,4 +515,4 @@ YUI.add("table", function(Y) {
 
     Y.Bridge.Table = Table;
 
-}, "0", { requires: ["widget", "node", "json", "mustache", "hand", "biddingbox", "auction", "trick", "tricks", "info", "claim", "claimpreview", "io", "chat"] });
+}, "0", { requires: ["widget", "node", "json", "mustache", "hand", "biddingbox", "auction", "trick", "tricks", "info", "claim", "claimpreview", "io", "chat", "bar"] });

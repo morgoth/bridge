@@ -10,7 +10,6 @@ YUI.add("hand", function(Y) {
         initializer: function() {
             this.publish("card");
             this.publish("join");
-            this.publish("quit");
             this.addTarget(this.get("host"));
         },
 
@@ -29,6 +28,7 @@ YUI.add("hand", function(Y) {
             this.after("activeChange", this._afterActiveChange);
             this.after("directionChange", this._afterDirectionChange);
             this.after("nameChange", this._afterNameChange);
+            this.after("joinEnabledChange", this._afterJoinEnabledChange);
             this.get("contentBox").one(DOT + Hand.C_BAR).on("click", this._onBarClick, this);
         },
 
@@ -52,12 +52,13 @@ YUI.add("hand", function(Y) {
             this._uiSyncName(event.newVal);
         },
 
+        _afterJoinEnabledChange: function(event) {
+            this._uiSyncJoinEnabled(event.newVal);
+        },
+
         _onBarClick: function(event) {
-            if(this.get("joinEnabled")) {
+            if(this.get("joinEnabled") && this.get("userId")) {
                 this.fire("join", [this.get("direction")]);
-            }
-            if(this.get("quitEnabled")) {
-                this.fire("quit", [this.get("direction")]);
             }
         },
 
@@ -89,6 +90,11 @@ YUI.add("hand", function(Y) {
 
         _uiSyncDirection: function(direction) {
             this.get("contentBox").one(DOT + Hand.C_DIRECTION).setContent(direction);
+        },
+
+        _uiSyncJoinEnabled: function(joinEnabled) {
+            var name = (this.get("userId") && joinEnabled) ? "Click to join!" : this.get("name");
+            this._uiSyncName(name);
         },
 
         _uiSyncName: function(name) {
@@ -129,10 +135,6 @@ YUI.add("hand", function(Y) {
                 value: false
             },
 
-            quitEnabled: {
-                value: false
-            },
-
             // DEPRECATED
             cardsEnabled: {
                 setter: function(value) {
@@ -143,6 +145,9 @@ YUI.add("hand", function(Y) {
             suit: {
                 value: undefined,
                 setter: "_setSuit"
+            },
+
+            userId: {
             },
 
             host: {
