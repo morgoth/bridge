@@ -1,0 +1,27 @@
+.yui3-claim-hidden {
+    display: none;
+}
+
+.yui3-claim-content {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid white;
+    padding: 5px;
+    background: #e1e1ba;
+}
+
+.yui3-claim-less, .yui3-claim-more, .yui3-claim-explanation, .yui3-claim-buttons {
+    list-style: none;
+}
+
+.yui3-claim-less-button, .yui3-claim-more-button, .yui3-claim-buttons button {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding: 2px;
+    margin: 0 0 0 10px;
+    background-color: #99cccc;
+    border: 1px solid black;
+    cursor: pointer;
+}

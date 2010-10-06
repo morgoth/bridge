@@ -21,15 +21,18 @@ window.YUICONFIG = {
                 },
                 biddingbox: {
                     path: "biddingbox/biddingbox.js",
-                    requires: ["widget", "mustache", "collection", "helpers", "uihelper"]
+                    requires: ["widget", "mustache", "collection", "helpers", "uihelper"],
+                    skinnable: true
                 },
                 claim: {
                     path: "claim/claim.js",
-                    requires: ["widget", "mustache", "uihelper"]
+                    requires: ["widget", "mustache", "uihelper"],
+                    skinnable: true
                 },
                 claimpreview: {
                     path: "claimpreview/claimpreview.js",
-                    requires: ["widget", "mustache", "uihelper"]
+                    requires: ["widget", "mustache", "uihelper"],
+                    skinnable: true
                 },
                 info: {
                     path: "info/info.js",
@@ -77,7 +80,8 @@ window.YUICONFIG = {
                 },
                 chat: {
                     path: "chat/chat.js",
-                    requires: ["widget", "mustache", "uihelper"]
+                    requires: ["widget", "mustache", "uihelper"],
+                    skinnable: true
                 },
                 bar: {
                     path: "bar/bar.js",

@@ -1,3 +1,15 @@
 .yui3-table {
     background: #006d00;
 }
+
+.yui3-table-row-1 {
+    height: 155px;
+}
+
+.yui3-table-row-2 {
+    height: 200px;
+}
+
+.yui3-table-row-3 {
+    height: 140px;
+}

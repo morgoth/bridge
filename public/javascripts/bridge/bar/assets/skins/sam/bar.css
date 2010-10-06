@@ -1,3 +1,33 @@
 .yui3-bar-hidden {
     display: none;
 }
+
+.yui3-bar-content {
+    background: #cbcbcb;
+}
+
+.yui3-bar-buttons {
+    padding: 0;
+    margin: 0;
+}
+
+.yui3-bar-button {
+    list-style: none;
+    display: inline;
+}
+
+.yui3-bar-button-button {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid white;
+    background: #99cccc;
+    color: black;
+}
+
+.yui3-bar-button-button[disabled] {
+    color: #6b6b6b;
+    background: #ababab;
+}

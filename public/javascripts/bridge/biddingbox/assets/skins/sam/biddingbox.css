@@ -1,0 +1,86 @@
+.yui3-biddingbox-hidden {
+    display: none;
+}
+
+.yui3-biddingbox-content {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid white;
+    padding: 5px;
+    background: #cbcbcb;
+}
+
+.yui3-biddingbox-modifiers, .yui3-biddingbox-levels, .yui3-biddingbox-suits, .yui3-biddingbox-alerts {
+    margin: 0;
+    padding: 0;
+    display: block;
+    line-height: 30px;
+    height: 30px;
+}
+
+.yui3-biddingbox-modifiers li, .yui3-biddingbox-levels li, .yui3-biddingbox-suits li, .yui3-biddingbox-alerts li {
+    list-style: none;
+    display: inline;
+}
+
+.yui3-biddingbox-button-disabled {
+    display: none;
+}
+
+input.yui3-biddingbox-alert-input {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background: white;
+    border: 1px solid black;
+    padding: 3px 5px;
+    margin-right: 1px;
+    font-size: 167%;
+    width: 230px;
+}
+
+.yui3-biddingbox-alert-label {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid black;
+    background: #336799;
+    color: white;
+    padding: 2px 5px;
+    margin-right: 1px;
+    font-size: 167%;
+}
+
+.yui3-biddingbox-modifier, .yui3-biddingbox-level, .yui3-biddingbox-suit {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid black;
+    font-size: 167%;
+    padding: 0 5px;
+    margin-right: 1px;
+}
+
+.yui3-biddingbox-modifier-pass {
+    background: #006d00;
+    color: white;
+}
+
+.yui3-biddingbox-modifier-x, .yui3-biddingbox-modifier-xx {
+    background: #cb0000;
+    color: white;
+}
+
+.yui3-biddingbox-level, .yui3-biddingbox-suit {
+    background: #99cccc;
+    color: black;
+}
+
+.yui3-biddingbox-level-selected {
+    background: #ffce00;
+}
+
+.yui3-biddingbox-button-enabled {
+    cursor: pointer;
+}

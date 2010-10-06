@@ -203,7 +203,7 @@ YUI.add("table", function(Y) {
         },
 
         _renderTable: function() {
-            this.get("contentBox").setContent(Y.mustache(Table.MAIN_TEMPLATE));
+            this.get("contentBox").setContent(Y.mustache(Table.MAIN_TEMPLATE, Table));
         },
 
         _renderHands: function() {
@@ -213,7 +213,7 @@ YUI.add("table", function(Y) {
                     direction: direction,
                     userId: this.get("userId"),
                     visible: false
-                }).render(this.get("contentBox").one(".bridge-hand-" + direction.toLowerCase()));
+                }).render(this.get("contentBox").one(DOT + Table["C_HAND_" + direction]));
             }, this);
         },
 
@@ -221,63 +221,63 @@ YUI.add("table", function(Y) {
             this.biddingBox = new Y.Bridge.BiddingBox({
                 host: this,
                 visible: false
-            }).render(this.get("contentBox").one(".bridge-biddingbox"));
+            }).render(this.get("contentBox").one(DOT + Table.C_BIDDINGBOX));
         },
 
         _renderAuction: function() {
             this.auction = new Y.Bridge.Auction({
                 host: this,
                 visible: false
-            }).render(this.get("contentBox").one(".bridge-auction"));
+            }).render(this.get("contentBox").one(DOT + Table.C_AUCTION));
         },
 
         _renderTrick: function() {
             this.trick = new Y.Bridge.Trick({
                 host: this,
                 visible: false
-            }).render(this.get("contentBox").one(".bridge-trick"));
+            }).render(this.get("contentBox").one(DOT + Table.C_TRICK));
         },
 
         _renderTricks: function() {
             this.tricks = new Y.Bridge.Tricks({
                 host: this,
                 visible: false
-            }).render(this.get("contentBox").one(".bridge-tricks"));
+            }).render(this.get("contentBox").one(DOT + Table.C_TRICKS));
         },
 
         _renderInfo: function() {
             this.info = new Y.Bridge.Info({
                 host: this,
                 visible: false
-            }).render(this.get("contentBox").one(".bridge-info"));
+            }).render(this.get("contentBox").one(DOT + Table.C_INFO));
         },
 
         _renderClaim: function() {
             this.claim = new Y.Bridge.Claim({
                 host: this,
                 visible: false
-            }).render(this.get("contentBox").one(".bridge-claim"));
+            }).render(this.get("contentBox").one(DOT + Table.C_CLAIM));
         },
 
         _renderClaimPreview: function() {
             this.claimPreview = new Y.Bridge.ClaimPreview({
                 host: this,
                 visible: false
-            }).render(this.get("contentBox").one(".bridge-claimpreview"));
+            }).render(this.get("contentBox").one(DOT + Table.C_CLAIMPREVIEW));
         },
 
         _renderBar: function() {
             this.bar = new Y.Bridge.Bar({
                 host: this,
                 visible: false
-            }).render(this.get("contentBox").one(".bridge-bar"));
+            }).render(this.get("contentBox").one(DOT + Table.C_BAR));
         },
 
         _renderChat: function() {
             this.chat = new Y.Bridge.Chat({
                 host: this,
                 disabled: true
-            }).render(this.get("contentBox").one(".bridge-chat"));
+            }).render(this.get("contentBox").one(DOT + Table.C_CHAT));
 
             this.chat.addMessage("bridge", "connecting...");
         },
@@ -315,16 +315,16 @@ YUI.add("table", function(Y) {
                 position = Y.Bridge.dealerPosition(player),
                 contentBox = this.get("contentBox");
             handNodes = [
-                contentBox.one(".bridge-hand-n"),
-                contentBox.one(".bridge-hand-e"),
-                contentBox.one(".bridge-hand-s"),
-                contentBox.one(".bridge-hand-w")
+                contentBox.one(DOT + Table.C_HAND_N),
+                contentBox.one(DOT + Table.C_HAND_E),
+                contentBox.one(DOT + Table.C_HAND_S),
+                contentBox.one(DOT + Table.C_HAND_W)
             ];
             slotNodes = [
-                contentBox.one(".bridge-table-row-1 .bridge-table-col-2"),
-                contentBox.one(".bridge-table-row-2 .bridge-table-col-3"),
-                contentBox.one(".bridge-table-row-3 .bridge-table-col-2"),
-                contentBox.one(".bridge-table-row-2 .bridge-table-col-1")
+                contentBox.one(DOT + Table.C_ROW_1).one(DOT + Table.C_COL_2),
+                contentBox.one(DOT + Table.C_ROW_2).one(DOT + Table.C_COL_3),
+                contentBox.one(DOT + Table.C_ROW_3).one(DOT + Table.C_COL_2),
+                contentBox.one(DOT + Table.C_ROW_2).one(DOT + Table.C_COL_1)
             ];
 
             this.trick.set("player", player);
@@ -337,23 +337,23 @@ YUI.add("table", function(Y) {
         },
 
         _uiSetBoardState: function(boardState) {
-            var auctionNode, auctionSlotNodes,
+            var auctionNode, slotNodes,
                 contentBox = this.get("contentBox");
-            auctionNode = contentBox.one(".bridge-auction");
-            auctionSlotNodes = [
-                contentBox.one(".bridge-table-row-1 .bridge-table-col-3"),
-                contentBox.one(".bridge-table-row-2 .bridge-table-col-2")
+            auctionNode = contentBox.one(DOT + Table.C_AUCTION);
+            slotNodes = [
+                contentBox.one(DOT + Table.C_ROW_1).one(DOT + Table.C_COL_3),
+                contentBox.one(DOT + Table.C_ROW_2).one(DOT + Table.C_COL_2)
             ];
 
             switch(boardState) {
             case "preparing":
-                auctionSlotNodes[0].append(auctionNode);
+                slotNodes[0].append(auctionNode);
                 break;
             case "auction":
-                auctionSlotNodes[1].append(auctionNode);
+                slotNodes[1].append(auctionNode);
                 break;
             case "playing":
-                auctionSlotNodes[0].append(auctionNode);
+                slotNodes[0].append(auctionNode);
                 break;
             }
         },
@@ -470,46 +470,64 @@ YUI.add("table", function(Y) {
         TABLE_ACCEPT_CLAIM_PATH: "/ajax/tables/{{tableId}}/claims/{{claimId}}/accept",
         TABLE_REJECT_CLAIM_PATH: "/ajax/tables/{{tableId}}/claims/{{claimId}}/reject",
 
+        C_ROW_1:        getClassName("table", "row", "1"),
+        C_ROW_2:        getClassName("table", "row", "2"),
+        C_ROW_3:        getClassName("table", "row", "3"),
+        C_COL_1:        getClassName("table", "col", "1"),
+        C_COL_2:        getClassName("table", "col", "2"),
+        C_COL_3:        getClassName("table", "col", "3"),
+        C_INFO:         getClassName("table", "info"),
+        C_HAND_N:       getClassName("table", "hand", "n"),
+        C_HAND_E:       getClassName("table", "hand", "e"),
+        C_HAND_S:       getClassName("table", "hand", "s"),
+        C_HAND_W:       getClassName("table", "hand", "w"),
+        C_CLAIM:        getClassName("table", "claim"),
+        C_CLAIMPREVIEW: getClassName("table", "claimpreview"),
+        C_TRICK:        getClassName("table", "trick"),
+        C_AUCTION:      getClassName("table", "auction"),
+        C_BIDDINGBOX:   getClassName("table", "biddingbox"),
+        C_TRICKS:       getClassName("table", "tricks"),
+        C_BAR:          getClassName("table", "bar"),
+        C_CHAT:         getClassName("table", "chat"),
+
         MAIN_TEMPLATE: ''
-            + '<div class="bridge-table">'
-            +   '<div class="bridge-table-row-1">'
-            +     '<div class="bridge-table-col-1">'
-            +       '<div class="bridge-info"></div>'
-            +     '</div>'
-            +     '<div class="bridge-table-col-2">'
-            +       '<div class="bridge-hand-n"></div>'
-            +     '</div>'
-            +     '<div class="bridge-table-col-3">'
-            +       '<div class="bridge-auction"></div>'
-            +     '</div>'
+            + '<div class="{{C_ROW_1}}">'
+            +   '<div class="{{C_COL_1}} yui3-u-1-3">'
+            +     '<div class="{{C_INFO}}"></div>'
             +   '</div>'
-            +   '<div class="bridge-table-row-2">'
-            +     '<div class="bridge-table-col-1">'
-            +       '<div class="bridge-hand-w"></div>'
-            +     '</div>'
-            +     '<div class="bridge-table-col-2">'
-            +       '<div class="bridge-trick"></div>'
-            +     '</div>'
-            +     '<div class="bridge-table-col-3">'
-            +       '<div class="bridge-hand-e"></div>'
-            +     '</div>'
+            +   '<div class="{{C_COL_2}} yui3-u-1-3">'
+            +     '<div class="{{C_HAND_N}}"></div>'
             +   '</div>'
-            +   '<div class="bridge-table-row-3">'
-            +     '<div class="bridge-table-col-1">'
-            +       '<div class="bridge-claim"></div>'
-            +       '<div class="bridge-claimpreview"></div>'
-            +     '</div>'
-            +     '<div class="bridge-table-col-2">'
-            +       '<div class="bridge-hand-s"></div>'
-            +     '</div>'
-            +     '<div class="bridge-table-col-3">'
-            +       '<div class="bridge-biddingbox"></div>'
-            +       '<div class="bridge-tricks"></div>'
-            +     '</div>'
+            +   '<div class="{{C_COL_3}} yui3-u-1-3">'
+            +     '<div class="{{C_AUCTION}}"></div>'
             +   '</div>'
-            +   '<div class="bridge-bar"></div>'
-            +   '<div class="bridge-chat"></div>'
             + '</div>'
+            + '<div class="{{C_ROW_2}}">'
+            +   '<div class="{{C_COL_1}} yui3-u-1-3">'
+            +     '<div class="{{C_HAND_W}}"></div>'
+            +   '</div>'
+            +   '<div class="{{C_COL_2}} yui3-u-1-3">'
+            +     '<div class="{{C_TRICK}}"></div>'
+            +   '</div>'
+            +   '<div class="{{C_COL_3}} yui3-u-1-3">'
+            +     '<div class="{{C_HAND_E}}"></div>'
+            +   '</div>'
+            + '</div>'
+            + '<div class="{{C_ROW_3}}">'
+            +   '<div class="{{C_COL_1}} yui3-u-1-3">'
+            +     '<div class="{{C_CLAIM}}"></div>'
+            +     '<div class="{{C_CLAIMPREVIEW}}"></div>'
+            +   '</div>'
+            +   '<div class="{{C_COL_2}} yui3-u-1-3">'
+            +     '<div class="{{C_HAND_S}}"></div>'
+            +   '</div>'
+            +   '<div class="{{C_COL_3}} yui3-u-1-3">'
+            +     '<div class="{{C_BIDDINGBOX}}"></div>'
+            +     '<div class="{{C_TRICKS}}"></div>'
+            +   '</div>'
+            + '</div>'
+            + '<div class="{{C_BAR}} yui3-u-1"></div>'
+            + '<div class="{{C_CHAT}} yui3-u-1"></div>'
 
     });
 

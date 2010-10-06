@@ -62,18 +62,19 @@ YUI.add("bar", function(Y) {
 
         },
 
-        C_BUTTON:  getClassName("bar", "button"),
-        C_BUTTONS: getClassName("bar", "buttons"),
-        C_CLAIM:   getClassName("bar", "claim"),
-        C_QUIT:    getClassName("bar", "quit"),
+        C_BUTTON:        getClassName("bar", "button"),
+        C_BUTTONS:       getClassName("bar", "buttons"),
+        C_BUTTON_BUTTON: getClassName("bar", "button", "button"),
+        C_CLAIM:         getClassName("bar", "claim"),
+        C_QUIT:          getClassName("bar", "quit"),
 
         BAR_TEMPLATE: ''
-            + '<ul>'
-            +   '<li>'
-            +     '<button type="button" class="{{C_CLAIM}}" disabled="disabled" data-event="claim">Claim</button>'
+            + '<ul class="{{C_BUTTONS}}">'
+            +   '<li class="{{C_BUTTON}}">'
+            +     '<button type="button" class="{{C_BUTTON_BUTTON}} {{C_CLAIM}}" disabled="disabled" data-event="claim">Claim</button>'
             +   '</li>'
-            +   '<li>'
-            +     '<button type="button" class="{{C_QUIT}}" disabled="disabled" data-event="quit">Quit</button>'
+            +   '<li class="{{C_BUTTON}}">'
+            +     '<button type="button" class="{{C_BUTTON_BUTTON}} {{C_QUIT}}" disabled="disabled" data-event="quit">Quit</button>'
             +   '</li>'
             + '</ul>'
 
