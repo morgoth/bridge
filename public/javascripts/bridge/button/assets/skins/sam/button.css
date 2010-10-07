@@ -1,0 +1,28 @@
+.yui3-button {
+
+}
+
+.yui3-button-hidden {
+    display: none;
+}
+
+.yui3-button-content {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid white;
+    background: #99cccc;
+    cursor: pointer;
+}
+
+.yui3-button-focused .yui3-button-content, .yui3-button-content:hover {
+    background: #a9dcdc;
+}
+
+.yui3-button-content:active {
+    background: #ffce00;
+}
+
+.yui3-button-disabled .yui3-button-content, .yui3-button-disabled .yui3-button-content:hover, .yui3-button-disabled .yui3-button-content:active {
+    background: #cbcbcb;
+}

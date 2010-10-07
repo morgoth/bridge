@@ -15,6 +15,11 @@ window.YUICONFIG = {
                 mustache: {
                     path: "mustache/mustache.js"
                 },
+                button: {
+                    path: "button/button.js",
+                    requires: ["widget"],
+                    skinnable: true
+                },
                 helpers: {
                     path: "helpers/helpers.js",
                     requires: ["collection", "oop", "classnamemanager", "mustache"]
