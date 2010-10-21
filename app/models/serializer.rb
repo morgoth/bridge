@@ -103,9 +103,8 @@ class Serializer
   end
   memoize :tricks
 
-  # TODO: check if we need attribute 'visible'
   def claim(user)
-    {:maxTricks => 13, :visible => false}.tap do |claim|
+    {:maxTricks => 13}.tap do |claim|
       if playing?
         claim[:maxTricks] = 13 - board.cards.completed_tricks_count
       end
