@@ -10,25 +10,9 @@ class SerializerClaimTest < ActiveSupport::TestCase
     assert_equal expected, Serializer.new(table).claim(Factory(:user))
   end
 
-  test "should set visible to true for playing user" do
-    table = table_before_first_lead
-    board = table.boards.current
-    expected = {:maxTricks => 13, :visible => true}
-    assert_equal expected, Serializer.new(table).claim(board.user_e)
-  end
-
-  test "should not set visible when user is not playing" do
-    table = table_before_first_lead
-    board = table.boards.current
-    expected = {:maxTricks => 13, :visible => false}
-    assert_equal expected, Serializer.new(table).claim(board.user_n)
-  end
-
-  test "should not set visible when there is claim already" do
-    table = table_before_first_lead
-    board = table.boards.current
-    Factory(:claim, :board => board)
-    expected = {:maxTricks => 13, :visible => false}
-    assert_equal expected, Serializer.new(table).claim(board.user_e)
+  test "should return 12 tricks when played 1" do
+    table = table_with_trick
+    expected = {:maxTricks => 12, :visible => false}
+    assert_equal expected, Serializer.new(table).claim(Factory(:user))
   end
 end

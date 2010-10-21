@@ -1,6 +1,6 @@
 source :rubygems
 
-gem "rails", "3.0.0"
+gem "rails", ">=3.0.0"
 
 gem "acts_as_list"
 gem "bridge"

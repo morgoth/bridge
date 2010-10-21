@@ -103,6 +103,7 @@ class Serializer
   end
   memoize :tricks
 
+  # TODO: check if we need attribute 'visible'
   def claim(user)
     {:maxTricks => 13, :visible => false}.tap do |claim|
       if playing?
