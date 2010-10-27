@@ -9,6 +9,7 @@
     border: 1px solid white;
     padding: 5px;
     background: #cbcbcb;
+    font-size: 167%;
 }
 
 .yui3-biddingbox-modifiers, .yui3-biddingbox-levels, .yui3-biddingbox-suits, .yui3-biddingbox-alerts {
@@ -36,7 +37,6 @@ input.yui3-biddingbox-alert-input {
     border: 1px solid black;
     padding: 3px 5px;
     margin-right: 1px;
-    font-size: 167%;
     width: 230px;
 }
 
@@ -49,7 +49,6 @@ input.yui3-biddingbox-alert-input {
     color: white;
     padding: 2px 5px;
     margin-right: 1px;
-    font-size: 167%;
 }
 
 .yui3-biddingbox-modifier, .yui3-biddingbox-level, .yui3-biddingbox-suit {
@@ -57,7 +56,6 @@ input.yui3-biddingbox-alert-input {
     -moz-border-radius: 5px;
     border-radius: 5px;
     border: 1px solid black;
-    font-size: 167%;
     padding: 0 5px;
     margin-right: 1px;
 }

@@ -18,6 +18,7 @@
     margin: 0;
     padding: 0;
     display: inline;
+    font-family: sans;
 }
 
 .yui3-bid-suit-d, .yui3-bid-suit-h {

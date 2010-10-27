@@ -11,6 +11,7 @@
     width: 300px;
     background: #99cccc;
     border: 1px solid white;
+    font-size: 167%;
 }
 
 .yui3-auction-headers {
@@ -19,7 +20,6 @@
 }
 
 .yui3-auction-header {
-    font-size: 167%;
     background-color: white;
     color: black;
     list-style: none;
@@ -49,5 +49,4 @@
     width: 70px;
     height: 30px;
     float: left;
-    font-size: 167%;
 }
