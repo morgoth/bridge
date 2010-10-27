@@ -2,7 +2,7 @@
 %html
   %head
     %title Bridge Libre
-    = stylesheet_link_tag "/stylesheets/screen.css", :media => "screen, projection"
+    = stylesheet_link_tag "application.css", :media => "screen, projection"
     = csrf_meta_tag
     - if current_user
       %meta{:name => "bridge-user-id", :content => current_user.id}

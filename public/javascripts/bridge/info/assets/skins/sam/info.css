@@ -1,4 +1,5 @@
 .yui3-info-col-1, .yui3-info-col-2, .yui3-info-col-3 {
+    border: 0;
     padding: 0;
 }
 
@@ -9,7 +10,7 @@
 .yui3-info-content {
     margin: auto;
     width: 130px;
-    font: 167% sans;
+    font: 116% sans;
     color: black;
 }
 

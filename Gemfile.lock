@@ -43,8 +43,6 @@ GEM
       selenium-webdriver (>= 0.0.3)
     childprocess (0.1.3)
       ffi (~> 0.6.3)
-    compass (0.10.5)
-      haml (>= 3.0.4)
     crack (0.1.8)
     culerity (0.2.12)
     dalli (0.10.0)
@@ -127,7 +125,6 @@ DEPENDENCIES
   acts_as_list
   bridge
   capybara
-  compass
   dalli
   database_cleaner
   devise

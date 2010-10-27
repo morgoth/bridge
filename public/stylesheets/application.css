@@ -1,0 +1,9 @@
+@import url("/javascripts/yui3/cssreset/reset.css");
+@import url("/javascripts/yui3/cssbase/base.css");
+@import url("/javascripts/yui3/cssfonts/fonts.css");
+@import url("/javascripts/yui3/cssgrids/grids.css");
+
+body {
+    margin: auto !important;
+    width: 960px;
+}
