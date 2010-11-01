@@ -1,9 +1,16 @@
 %h2 Sign in
 
-= simple_form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
-  = f.input :email, :label => "Email or display name"
-  = f.input :password
-  = f.input :remember_me, :as => :boolean
-  = f.button :submit, "Sign in"
+= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
+  .field
+    = f.label :email, "Display name or email"
+    = f.text_field :email
+  .field
+    = f.label :password
+    = f.password_field :password
+  .field
+    = f.label :remember_me
+    = f.check_box :remember_me
+  .actions
+    = f.submit "Sing in"
 
 = render :partial => "devise/shared/links"
