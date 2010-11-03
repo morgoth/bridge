@@ -32,7 +32,6 @@ YUI.add("table", function(Y) {
             this.on("claim:cancel", this._onClaimCancel);
             this.on("claimpreview:accept", this._onClaimPreviewAccept);
             this.on("claimpreview:reject", this._onClaimPreviewReject);
-            this.on("channelNameChange", this._onChannelNameChange);
             this.after("tableDataChange", this._afterTableDataChange);
             this.after("playerChange", this._afterPlayerChange);
             this.after("boardStateChange", this._afterBoardStateChange);
@@ -42,7 +41,7 @@ YUI.add("table", function(Y) {
         },
 
         syncUI: function() {
-            this._reconnect(undefined, this.get("channelName"));
+            this._connect();
         },
 
         _onHandJoin: function(event) {
@@ -176,12 +175,6 @@ YUI.add("table", function(Y) {
             window.READY = !event.newVal;
         },
 
-        _onChannelNameChange: function(event) {
-            if(event.prevVal !== event.newVal) {
-                this._reconnect(event.prevVal, event.newVal);
-            }
-        },
-
         _onRequestStart: function() {
             this.set("ioLock", true);
         },
@@ -290,7 +283,6 @@ YUI.add("table", function(Y) {
                 this.set("connected", true);
                 this.set("player", tableData.player);
                 this.set("boardState", tableData.boardState);
-                this.set("channelName", tableData.channelName);
                 this.set("tableVersion", tableData.tableVersion);
                 this._uiSyncHands(tableData.hands);
                 this.biddingBox.setAttrs(tableData.biddingBox);
@@ -364,32 +356,24 @@ YUI.add("table", function(Y) {
             }, this);
         },
 
-        _reconnect: function(oldChannelName, newChannelName) {
-            var tableId = this.get("tableId"),
+        _connect: function() {
+            var options = { log: true },
+                channelName = "table-" + this.get("tableId"),
+                userId = this.get("userId"),
                 that = this;
 
-            if(this.pusher === undefined) {
-                this.pusher = new Pusher(this.get("pusherApiKey"));
-
-                this.pusher.bind("connection_established", function() {
-                    that._io(that._tablePath());
-                });
-
-                this.pusher.subscribe("table-" + tableId + "-chat").bind("add-message", function(data) {
-                    that.fire("messageReceived", [data]);
-                });
+            if(Y.Lang.isValue(this.get("userId"))) {
+                options.user = userId;
             }
 
-            if(Y.Lang.isString(oldChannelName)) {
-                Y.log("reconnect: unsubscribing from " + oldChannelName);
-                that.pusher.unsubscribe(oldChannelName);
-            }
-
-            this.pusher.subscribe(newChannelName).bind("update-table-data", function(data) {
-                that.set("tableData", data);
+            Beacon.connect(this.get("beaconpushApiKey"), [channelName], options);
+            Beacon.listen(function (data) {
+                that.set("tableData", Y.JSON.parse(data));
             });
 
-            Y.log("reconnect: subscribing to " + newChannelName);
+            this._io(this._tablePath());
+
+            Y.log("connect: subscribing to " + channelName);
         }
 
     }, {
@@ -404,12 +388,8 @@ YUI.add("table", function(Y) {
                 return srcNode.getAttribute("data-user-id");
             },
 
-            pusherApiKey: function(srcNode) {
-                return srcNode.getAttribute("data-pusher-api-key");
-            },
-
-            channelName: function(srcNode) {
-                return srcNode.getAttribute("data-channel-name");
+            beaconpushApiKey: function(srcNode) {
+                return srcNode.getAttribute("data-beaconpush-api-key");
             }
 
         },
@@ -429,11 +409,7 @@ YUI.add("table", function(Y) {
                 value: -1
             },
 
-            channelName: {
-
-            },
-
-            pusherApiKey: {
+            beaconpushApiKey: {
 
             },
 

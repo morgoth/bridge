@@ -4,9 +4,6 @@
     %title Bridge Libre
     = stylesheet_link_tag "application.css", :media => "screen, projection"
     = csrf_meta_tag
-    - if current_user
-      %meta{:name => "bridge-user-id", :content => current_user.id}
-      %meta{:name => "bridge-user-name", :content => current_user.name}
   %body
     #container
       #libre-notice= notice
@@ -24,4 +21,4 @@
           = link_to "Sign in", new_user_session_path
           = link_to "Sign up", new_user_registration_path
       = yield
-      = javascript_include_tag "http://js.pusherapp.com/1.6/pusher.js", "yui3/yui/yui", "config", "application"
+      = javascript_include_tag "http://beaconpush.com/1/client.js", "yui3/yui/yui", "config", "application"

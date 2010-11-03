@@ -1,5 +1,4 @@
 class Serializer
-  include ChannelHelper
   extend ActiveSupport::Memoizable
 
   attr_reader :table, :board
@@ -13,7 +12,6 @@ class Serializer
     {:id => table.id, :state => table.state, :tableVersion => table.version, :boardState => ""}.tap do |config|
       config[:player] = table.players.for(user).try(:direction)
       config[:boardState] = board.state if board?
-      config[:channelName] = channel_name(table, user)
       config[:info] = info
       config[:auction] = auction(user)
       config[:biddingBox] = bidding_box(user)

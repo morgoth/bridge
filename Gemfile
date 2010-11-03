@@ -7,7 +7,7 @@ gem "bridge"
 gem "devise"
 gem "haml"
 gem "proxies"
-gem "pusher"
+gem "beaconpush"
 gem "sqlite3-ruby", :group => [:development, :test]
 gem "state_machine"
 

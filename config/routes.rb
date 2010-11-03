@@ -9,10 +9,6 @@ Libre::Application.routes.draw do
     resources :boards, :only => [:index, :show]
   end
 
-  # pusher
-
-  match "pusher/auth" => "pusher#auth"
-
   # ajax api
 
   namespace :ajax do

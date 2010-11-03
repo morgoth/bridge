@@ -46,10 +46,10 @@ class AjaxResponder < ActionController::Responder
     return display(resource.errors, :status => :unprocessable_entity) if has_errors?
 
     if not get?
-      Pusher[channel_name(table, nil)].trigger("update-table-data", serialized_table(nil))
+      Beaconpush.channel_message("table-#{table.id}", serialized_table(nil))
 
       (%w[N E S W] - [current_player_direction]).compact.each do |direction|
-        Pusher[channel_name(table, table_user(direction))].trigger("update-table-data", serialized_table(direction)) if table_user(direction)
+        Beaconpush.user_message(table_user(direction).id.to_s, serialized_table(direction)) if table_user(direction)
       end
     end
 
