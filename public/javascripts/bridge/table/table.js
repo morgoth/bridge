@@ -1,4 +1,4 @@
-YUI.add("table", function(Y) {
+YUI.add("table", function (Y) {
 
     var getClassName = Y.ClassNameManager.getClassName,
         DOT = ".";
@@ -7,7 +7,7 @@ YUI.add("table", function(Y) {
 
     var Table = Y.Base.create("table", Y.Widget, [], {
 
-        renderUI: function() {
+        renderUI: function () {
             this._renderTable();
             this._renderHands();
             this._renderBiddingBox();
@@ -21,7 +21,7 @@ YUI.add("table", function(Y) {
             this._renderChat();
         },
 
-        bindUI: function() {
+        bindUI: function () {
             this.on("bar:quit", this._onBarQuit);
             this.on("bar:claim", this._onBarClaim);
             this.on("chat:message", this._onChatMessage);
@@ -40,25 +40,25 @@ YUI.add("table", function(Y) {
             this.after("messageReceived", this._afterMessageReceived);
         },
 
-        syncUI: function() {
+        syncUI: function () {
             this._connect();
         },
 
-        _onHandJoin: function(event) {
+        _onHandJoin: function (event) {
             var direction = event.target.get("direction");
 
             this._io(this._tablePlayerPath(), { method: "POST", data: "player[direction]=" + direction });
         },
 
-        _onBarQuit: function(event) {
+        _onBarQuit: function (event) {
             this._io(this._tablePlayerPath(), { method: "POST", data: "_method=DELETE" });
         },
 
-        _onBarClaim: function(event) {
+        _onBarClaim: function (event) {
             this.claim.show();
         },
 
-        _onBiddingBoxBid: function(event) {
+        _onBiddingBoxBid: function (event) {
             var bid = event[0],
                 alert = event[1];
 
@@ -68,13 +68,13 @@ YUI.add("table", function(Y) {
             });
         },
 
-        _onHandCard: function(event) {
+        _onHandCard: function (event) {
             var card = event[0];
 
             this._io(this._tableCardsPath(), { method: "POST", data: "card[card]=" + card });
         },
 
-        _onClaimClaim: function(event) {
+        _onClaimClaim: function (event) {
             var tricks = event[0],
                 explanation = event[1];
 
@@ -84,11 +84,11 @@ YUI.add("table", function(Y) {
             });
         },
 
-        _onClaimCancel: function(event) {
+        _onClaimCancel: function (event) {
             event.target.hide();
         },
 
-        _onChatMessage: function(event) {
+        _onChatMessage: function (event) {
             var body = event[0];
 
             this._io(this._tableMessagesPath(), {
@@ -97,51 +97,51 @@ YUI.add("table", function(Y) {
             });
         },
 
-        _onClaimPreviewAccept: function(event) {
+        _onClaimPreviewAccept: function (event) {
             var id = event[0];
 
             this._io(this._tableAcceptClaimPath(id), { method: "POST", data: "_method=PUT" });
         },
 
-        _onClaimPreviewReject: function(event) {
+        _onClaimPreviewReject: function (event) {
             var id = event[0];
 
             this._io(this._tableRejectClaimPath(id), { method: "POST", data: "_method=PUT" });
         },
 
-        _tablePath: function() {
+        _tablePath: function () {
             return Y.mustache(Table.TABLE_PATH, { tableId: this.get("tableId") });
         },
 
-        _tablePlayerPath: function() {
+        _tablePlayerPath: function () {
             return Y.mustache(Table.TABLE_PLAYER_PATH, { tableId: this.get("tableId") });
         },
 
-        _tableBidsPath: function() {
+        _tableBidsPath: function () {
             return Y.mustache(Table.TABLE_BIDS_PATH, { tableId: this.get("tableId") });
         },
 
-        _tableCardsPath: function() {
+        _tableCardsPath: function () {
             return Y.mustache(Table.TABLE_CARDS_PATH, { tableId: this.get("tableId") });
         },
 
-        _tableClaimsPath: function() {
+        _tableClaimsPath: function () {
             return Y.mustache(Table.TABLE_CLAIMS_PATH, { tableId: this.get("tableId") });
         },
 
-        _tableAcceptClaimPath: function(claimId) {
+        _tableAcceptClaimPath: function (claimId) {
             return Y.mustache(Table.TABLE_ACCEPT_CLAIM_PATH, { tableId: this.get("tableId"), claimId: claimId });
         },
 
-        _tableRejectClaimPath: function(claimId) {
+        _tableRejectClaimPath: function (claimId) {
             return Y.mustache(Table.TABLE_REJECT_CLAIM_PATH, { tableId: this.get("tableId"), claimId: claimId });
         },
 
-        _tableMessagesPath: function() {
+        _tableMessagesPath: function () {
             return Y.mustache(Table.TABLE_MESSAGES_PATH, { tableId: this.get("tableId") });
         },
 
-        _io: function(uri, configuration) {
+        _io: function (uri, configuration) {
             configuration = configuration || {};
             configuration.on = configuration.on || {};
             configuration.on.start = Y.bind(this._onRequestStart, this);
@@ -149,58 +149,57 @@ YUI.add("table", function(Y) {
             configuration.on.failure = Y.bind(this._onRequestFailure, this);
             configuration.on.end = Y.bind(this._onRequestEnd, this);
 
-            if(!this.get("ioLock")) {
+            if (!this.get("ioLock")) {
                 Y.io(uri, configuration);
             }
         },
 
-        _afterTableDataChange: function(event) {
+        _afterTableDataChange: function (event) {
             this._uiSyncTable(event.newVal, event.force);
         },
 
-        _afterPlayerChange: function(event) {
+        _afterPlayerChange: function (event) {
             this._uiSetPlayer(event.newVal);
         },
 
-        _afterBoardStateChange: function(event) {
+        _afterBoardStateChange: function (event) {
             this._uiSetBoardState(event.newVal);
         },
 
-        _afterConnectedChange: function(event) {
+        _afterConnectedChange: function (event) {
             this.chat.addMessage("bridge", "successfully connected");
         },
 
-        _afterIoLockChange: function(event) {
+        _afterIoLockChange: function (event) {
             this.chat.set("disabled", event.newVal || !Y.Lang.isValue(this.get("userId")));
-            window.READY = !event.newVal;
         },
 
-        _onRequestStart: function() {
+        _onRequestStart: function () {
             this.set("ioLock", true);
         },
 
-        _onRequestSuccess: function(id, response) {
-            if(Y.Lang.isString(response.responseText) && Y.Lang.trim(response.responseText) !== "") {
+        _onRequestSuccess: function (id, response) {
+            if (Y.Lang.isString(response.responseText) && Y.Lang.trim(response.responseText) !== "") {
                 this.set("tableData", Y.JSON.parse(response.responseText), { force: true });
             }
         },
 
-        _onRequestFailure: function(id, response) {
+        _onRequestFailure: function (id, response) {
             Y.log(response);
             this._uiSyncTable(this.get("tableData"), true);
             alert("Error: communication problem occured, page reload might be required.");
         },
 
-        _onRequestEnd: function() {
+        _onRequestEnd: function () {
             this.set("ioLock", false);
         },
 
-        _renderTable: function() {
+        _renderTable: function () {
             this.get("contentBox").setContent(Y.mustache(Table.MAIN_TEMPLATE, Table));
         },
 
-        _renderHands: function() {
-            this.hands = Y.Array.map(Y.Bridge.DIRECTIONS, function(direction, i) {
+        _renderHands: function () {
+            this.hands = Y.Array.map(Y.Bridge.DIRECTIONS, function (direction, i) {
                 return new Y.Bridge.Hand({
                     host: this,
                     direction: direction,
@@ -210,63 +209,63 @@ YUI.add("table", function(Y) {
             }, this);
         },
 
-        _renderBiddingBox: function() {
+        _renderBiddingBox: function () {
             this.biddingBox = new Y.Bridge.BiddingBox({
                 host: this,
                 visible: false
             }).render(this.get("contentBox").one(DOT + Table.C_BIDDINGBOX));
         },
 
-        _renderAuction: function() {
+        _renderAuction: function () {
             this.auction = new Y.Bridge.Auction({
                 host: this,
                 visible: false
             }).render(this.get("contentBox").one(DOT + Table.C_AUCTION));
         },
 
-        _renderTrick: function() {
+        _renderTrick: function () {
             this.trick = new Y.Bridge.Trick({
                 host: this,
                 visible: false
             }).render(this.get("contentBox").one(DOT + Table.C_TRICK));
         },
 
-        _renderTricks: function() {
+        _renderTricks: function () {
             this.tricks = new Y.Bridge.Tricks({
                 host: this,
                 visible: false
             }).render(this.get("contentBox").one(DOT + Table.C_TRICKS));
         },
 
-        _renderInfo: function() {
+        _renderInfo: function () {
             this.info = new Y.Bridge.Info({
                 host: this,
                 visible: false
             }).render(this.get("contentBox").one(DOT + Table.C_INFO));
         },
 
-        _renderClaim: function() {
+        _renderClaim: function () {
             this.claim = new Y.Bridge.Claim({
                 host: this,
                 visible: false
             }).render(this.get("contentBox").one(DOT + Table.C_CLAIM));
         },
 
-        _renderClaimPreview: function() {
+        _renderClaimPreview: function () {
             this.claimPreview = new Y.Bridge.ClaimPreview({
                 host: this,
                 visible: false
             }).render(this.get("contentBox").one(DOT + Table.C_CLAIMPREVIEW));
         },
 
-        _renderBar: function() {
+        _renderBar: function () {
             this.bar = new Y.Bridge.Bar({
                 host: this,
                 visible: false
             }).render(this.get("contentBox").one(DOT + Table.C_BAR));
         },
 
-        _renderChat: function() {
+        _renderChat: function () {
             this.chat = new Y.Bridge.Chat({
                 host: this,
                 disabled: true
@@ -275,15 +274,12 @@ YUI.add("table", function(Y) {
             this.chat.addMessage("bridge", "connecting...");
         },
 
-        _uiSyncTable: function(tableData, force) {
-            var tableVersion = this.get("tableVersion");
-
-            if(force || (tableVersion < tableData.tableVersion)) {
-                Y.log("table: syncing to version " + tableData.tableVersion + ", forced: " + !!force);
+        _uiSyncTable: function (tableData, force) {
+            if (force || (this.get("realPlayer") === tableData.player)) {
+                Y.log("table: syncing, forced: " + !!force);
                 this.set("connected", true);
                 this.set("player", tableData.player);
                 this.set("boardState", tableData.boardState);
-                this.set("tableVersion", tableData.tableVersion);
                 this._uiSyncHands(tableData.hands);
                 this.biddingBox.setAttrs(tableData.biddingBox);
                 this.auction.setAttrs(tableData.auction);
@@ -296,13 +292,13 @@ YUI.add("table", function(Y) {
             }
         },
 
-        _afterMessageReceived: function(event) {
+        _afterMessageReceived: function (event) {
             var data = event[0];
 
             this.chat.addMessage(data.name, data.body);
         },
 
-        _uiSetPlayer: function(player) {
+        _uiSetPlayer: function (player) {
             var handNodes, slotNodes,
                 position = Y.Bridge.dealerPosition(player),
                 contentBox = this.get("contentBox");
@@ -323,12 +319,12 @@ YUI.add("table", function(Y) {
             this.tricks.set("player", player);
             this.info.set("player", player);
 
-            Y.each(slotNodes, function(slotNode, i) {
+            Y.each(slotNodes, function (slotNode, i) {
                 slotNode.append(handNodes[(i + position + 2) % 4]);
             }, this);
         },
 
-        _uiSetBoardState: function(boardState) {
+        _uiSetBoardState: function (boardState) {
             var auctionNode, slotNodes,
                 contentBox = this.get("contentBox");
             auctionNode = contentBox.one(DOT + Table.C_AUCTION);
@@ -350,25 +346,33 @@ YUI.add("table", function(Y) {
             }
         },
 
-        _uiSyncHands: function(hands) {
-            Y.each(hands, function(hand, i) {
+        _uiSyncHands: function (hands) {
+            Y.each(hands, function (hand, i) {
                 this.hands[i].setAttrs(hand);
             }, this);
         },
 
-        _connect: function() {
-            var options = { log: true },
-                channelName = "table-" + this.get("tableId"),
+        _connect: function () {
+            var channelName,
+                options = { log: true },
+                tableId = this.get("tableId"),
                 userId = this.get("userId"),
                 that = this;
 
-            if(Y.Lang.isValue(this.get("userId"))) {
+            channelName = "table-" + tableId;
+
+            if (Y.Lang.isValue(userId)) {
                 options.user = userId;
             }
 
             Beacon.connect(this.get("beaconpushApiKey"), [channelName], options);
             Beacon.listen(function (data) {
-                that.set("tableData", Y.JSON.parse(data));
+                // FIXME: there should be some 'event type' field
+                if (Y.Lang.isString(data.name) && Y.Lang.isString(data.body)) {
+                    that.fire("messageReceived", [data]);
+                } else {
+                    that.set("tableData", data);
+                }
             });
 
             this._io(this._tablePath());
@@ -380,15 +384,15 @@ YUI.add("table", function(Y) {
 
         HTML_PARSER: {
 
-            tableId: function(srcNode) {
+            tableId: function (srcNode) {
                 return srcNode.getAttribute("data-table-id");
             },
 
-            userId: function(srcNode) {
+            userId: function (srcNode) {
                 return srcNode.getAttribute("data-user-id");
             },
 
-            beaconpushApiKey: function(srcNode) {
+            beaconpushApiKey: function (srcNode) {
                 return srcNode.getAttribute("data-beaconpush-api-key");
             }
 
@@ -413,8 +417,14 @@ YUI.add("table", function(Y) {
 
             },
 
+            // FIXME: this sucks
+            realPlayer: {
+
+            },
+
             player: {
-                setter: function(player) {
+                setter: function (player) {
+                    this.set("realPlayer", player);
                     return Y.Bridge.isDirection(player) ? player : "S";
                 }
             },

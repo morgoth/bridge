@@ -9,7 +9,7 @@ class Serializer
   end
 
   def config(user)
-    {:id => table.id, :state => table.state, :tableVersion => table.version, :boardState => ""}.tap do |config|
+    {:id => table.id, :state => table.state, :boardState => ""}.tap do |config|
       config[:player] = table.players.for(user).try(:direction)
       config[:boardState] = board.state if board?
       config[:info] = info

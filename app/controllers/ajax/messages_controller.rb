@@ -6,6 +6,6 @@ class Ajax::MessagesController < Ajax::BaseController
     @message.user = current_user
     @message.save!
     head :created
-    Pusher["table-#{@table.id}-chat"].trigger("add-message", {:name => @message.user_name, :body => @message.body})
+    Beaconpush.channel_message("table-#{@table.id}", {:name => @message.user_name, :body => @message.body})
   end
 end

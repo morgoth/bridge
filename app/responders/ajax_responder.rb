@@ -30,7 +30,7 @@ class AjaxResponder < ActionController::Responder
 
   def serialized_table(direction)
     user = direction ? table.players[direction].try(:user) : nil
-    render_to_string("ajax/tables/show", :locals => {:serializer => serializer, :user => table_user(direction)})
+    serializer.config(table_user(direction))
   end
   memoize :serialized_table
 
@@ -53,6 +53,6 @@ class AjaxResponder < ActionController::Responder
       end
     end
 
-    render :text => serialized_table(current_player_direction)
+    render :text => serialized_table(current_player_direction).to_json
   end
 end
