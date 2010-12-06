@@ -180,6 +180,12 @@ class CardPlayingTest < ActiveSupport::TestCase
     @board.cards.create!(:card => "SA", :user => @board.user_n)
     assert_equal "N", @board.trick_winner(@board.cards.all)
   end
+
+  test "played card rejects active claim" do
+    claim = Factory(:claim, :board => @board, :user => @board.user_e)
+    @board.cards.create!(:card => "S5", :user => @board.user_e)
+    assert_equal "rejected", claim.reload.state
+  end
 end
 
 class CardPreviousTrickWinnerTest < ActiveSupport::TestCase

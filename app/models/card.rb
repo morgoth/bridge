@@ -2,7 +2,7 @@ class Card < ActiveRecord::Base
   acts_as_list :scope => :board
   belongs_to :board, :touch => true
 
-  validates :card, :presence => true, :uniqueness => { :scope => :board_id }
+  validates :card, :presence => true, :uniqueness => {:scope => :board_id}
   validate :presence_of_card_in_hand, :correct_user, :state_of_board
   validate :identicalness_of_suit, :unless => :current_lead?
 
@@ -10,8 +10,7 @@ class Card < ActiveRecord::Base
   delegate :suit, :value, :to_s, :to => :card, :allow_nil => true
   delegate :current_trick_suit, :current_lead?, :current_user, :playing_user, :to => :board_cards
 
-  after_create :board_card_played
-  after_create { |card| card.board.claims.active.each { |claim| claim.user = card.user; claim.reject! } }
+  after_create :board_card_played, :reject_active_claims
 
   attr_writer :user
 
