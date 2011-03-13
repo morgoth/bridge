@@ -8,7 +8,7 @@ gem "devise"
 gem "haml"
 gem "proxies"
 gem "beaconpush"
-gem "sqlite3-ruby", :group => [:development, :test]
+gem "sqlite3", :group => [:development, :test]
 gem "state_machine"
 
 group :development do

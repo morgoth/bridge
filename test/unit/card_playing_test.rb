@@ -202,7 +202,7 @@ class CardPreviousTrickWinnerTest < ActiveSupport::TestCase
     @board.cards.create!(:card => "CK", :user => @board.user_n)
     @board.cards.create!(:card => "C8", :user => @board.user_w)
     @board.cards.create!(:card => "CA", :user => @board.user_n)
-    assert @board.user_n, @board.cards.previous_trick_winner
+    assert @board.user_n, @board.cards.previous_trick_winner.inspect
   end
 
   test "return W as trick winner when cards in not one suit" do
@@ -210,7 +210,7 @@ class CardPreviousTrickWinnerTest < ActiveSupport::TestCase
     @board.cards.create!(:card => "H5", :user => @board.user_n)
     @board.cards.create!(:card => "HA", :user => @board.user_w)
     @board.cards.create!(:card => "DT", :user => @board.user_n)
-    assert @board.user_w, @board.cards.previous_trick_winner
+    assert @board.user_w, @board.cards.previous_trick_winner.inspect
   end
 
   test "return trick N as winner when trump played" do
@@ -218,6 +218,6 @@ class CardPreviousTrickWinnerTest < ActiveSupport::TestCase
     @board.cards.create!(:card => "H5", :user => @board.user_n)
     @board.cards.create!(:card => "HA", :user => @board.user_w)
     @board.cards.create!(:card => "SJ", :user => @board.user_n)
-    assert @board.user_n, @board.cards.previous_trick_winner
+    assert @board.user_n, @board.cards.previous_trick_winner.inspect
   end
 end
