@@ -1,10 +1,10 @@
 source :rubygems
 
-gem "rails"
+gem "rails", "=3.0.3"
 
 gem "acts_as_list"
 gem "bridge"
-gem "devise"
+gem "devise", "~> 1.2.rc2"
 gem "haml"
 gem "proxies"
 gem "beaconpush"
