@@ -4,7 +4,7 @@ gem "rails", "=3.0.3"
 
 gem "acts_as_list"
 gem "bridge"
-gem "devise", "~> 1.2.rc2"
+gem "devise", "~> 1.2"
 gem "haml"
 gem "proxies"
 gem "beaconpush"
