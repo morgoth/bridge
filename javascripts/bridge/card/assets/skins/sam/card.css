@@ -1,0 +1,213 @@
+.yui3-card {
+    cursor: pointer;
+}
+
+.yui3-card-disabled {
+    cursor: default;
+}
+
+.yui3-card-hidden {
+    display: none;
+}
+
+.yui3-card-card {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    font: 167% sans;
+    border: 1px solid black;
+    width: 86px;
+    height: 125px;
+    background: white;
+    text-align: center;
+    position: relative;
+}
+
+.yui3-card-suit-c, .yui3-card-suit-s {
+    color: black;
+}
+
+.yui3-card-suit-d, .yui3-card-suit-h {
+    color: #cb0000;
+}
+
+.yui3-card-cover {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid black;
+    background: #336799;
+    width: 74px;
+    height: 113px;
+    margin: 5px;
+}
+
+.yui3-card-upside-down {
+    transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+    -ms-filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+}
+
+.yui3-card-value {
+    font-size: 0.75em;
+    letter-spacing: -3px;
+    width: 1em;
+}
+
+.yui3-card-value-suit {
+    display: block;
+    margin: -0.2em 0;
+}
+
+.yui3-card-value-value {
+    font-family: serif;
+}
+
+.yui3-card-value-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.yui3-card-value-bottom {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+.yui3-card-suits {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -27px;
+    margin-top: -46px;
+    width: 53px;
+    height: 90px;
+    border: 1px solid transparent;
+}
+
+.yui3-card-image {
+    border: 1px solid black;
+}
+
+.yui3-card-suit {
+    width: 100%;
+    line-height: 100%;
+}
+
+.yui3-card-suit-1 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    text-align: left;
+}
+
+.yui3-card-suit-2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.yui3-card-suit-3 {
+    position: absolute;
+    top: 0;
+    right: 0;
+    text-align: right;
+}
+
+.yui3-card-suit-4 {
+    position: absolute;
+    top: 22.5%;
+    left: 0;
+    margin-top: -0.5em;
+}
+
+.yui3-card-suit-5 {
+    position: absolute;
+    top: 40%;
+    left: 0;
+    margin-top: -1em;
+}
+
+.yui3-card-suit-6 {
+    position: absolute;
+    top: 47.5%;
+    left: 0;
+    text-align: left;
+    margin-top: -1em;
+}
+
+.yui3-card-suit-7 {
+    position: absolute;
+    top: 47.5%;
+    right: 0;
+    text-align: right;
+    margin-top: -1em;
+}
+
+.yui3-card-suit-8 {
+    position: absolute;
+    top: 47.5%;
+    left: 0;
+    margin-top: -0.5em;
+    text-align: left;
+}
+
+.yui3-card-suit-9 {
+    position: absolute;
+    top: 47.5%;
+    left: 0;
+    margin-top: -0.5em;
+p}
+
+.yui3-card-suit-10 {
+    position: absolute;
+    top: 47.5%;
+    left: 0;
+    margin-top: -0.5em;
+    text-align: right;
+}
+
+.yui3-card-suit-11 {
+    position: absolute;
+    top: 52.5%;
+    left: 0;
+    text-align: right;
+}
+
+.yui3-card-suit-12 {
+    position: absolute;
+    top: 52.5%;
+    right: 0;
+    text-align: left;
+}
+
+.yui3-card-suit-13 {
+    position: absolute;
+    top: 77.5%;
+    left: 0;
+    margin-top: -0.5em;
+}
+
+.yui3-card-suit-14 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    text-align: right;
+}
+
+.yui3-card-suit-15 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.yui3-card-suit-16 {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    text-align: left;
+}
