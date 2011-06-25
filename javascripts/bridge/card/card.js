@@ -1,35 +1,30 @@
 YUI.add("card", function (Y) {
 
-    var getClassName = Y.ClassNameManager.getClassName,
-        DOT = ".";
-
     var Card = Y.Base.create("card", Y.Widget, [Y.WidgetChild], {
 
-        BOUNDING_TEMPLATE : "<li></li>",
-        CONTENT_TEMPLATE : "<div></div>",
+        BOUNDING_TEMPLATE : '<li></li>',
+        CONTENT_TEMPLATE : '<div></div>',
 
         renderUI: function () {
             this._renderCard();
         },
 
         _renderCard: function () {
-            this._cardNode = this.get("contentBox").appendChild('<div>').addClass(this.getClassName("card"));
-
             // card cover
-            this._coverNode = this._cardNode.appendChild('<div>').addClass(this.getClassName("cover"));
+            this._coverNode = this.get("contentBox").appendChild('<div>').addClass(this.getClassName("cover"));
 
             // card value (top)
-            this._topNode = this._cardNode.appendChild('<div>').addClass(this.getClassName("value")).addClass(this.getClassName("value", "top"));
+            this._topNode = this.get("contentBox").appendChild('<div>').addClass(this.getClassName("value")).addClass(this.getClassName("value", "top"));
             this._topValueNode = this._topNode.appendChild('<div>').addClass(this.getClassName("value", "value"));
             this._topSuitNode = this._topNode.appendChild('<div>').addClass(this.getClassName("value", "suit"));
 
             // card value (bottom)
-            this._bottomNode = this._cardNode.appendChild('<div>').addClass(this.getClassName("value")).addClass(this.getClassName("value", "bottom")).addClass(this.getClassName("upside", "down"));
+            this._bottomNode = this.get("contentBox").appendChild('<div>').addClass(this.getClassName("value")).addClass(this.getClassName("value", "bottom")).addClass(this.getClassName("upside", "down"));
             this._bottomValueNode = this._bottomNode.appendChild('<div>').addClass(this.getClassName("value", "value"));
             this._bottomSuitNode = this._bottomNode.appendChild('<div>').addClass(this.getClassName("value", "suit"));
 
             // card suits and image
-            this._suitsNode = this._cardNode.appendChild('<div>').addClass(this.getClassName("suits"));
+            this._suitsNode = this.get("contentBox").appendChild('<div>').addClass(this.getClassName("suits"));
             this._imageNode = this._suitsNode.appendChild('<img>').addClass(this.getClassName("image"));
             this._suitNodes = [];
 
@@ -44,6 +39,7 @@ YUI.add("card", function (Y) {
         bindUI: function () {
             this.after("imageSizeChange", this._afterImageSizeChange);
             this.after("cardChange", this._afterCardChange);
+            this.get("contentBox").after("click", this._afterContentBoxClick, this);
         },
 
         _afterImageSizeChange: function (event) {
@@ -52,6 +48,14 @@ YUI.add("card", function (Y) {
 
         _afterCardChange: function (event) {
             this._syncCard(event.newVal, event.prevVal);
+        },
+
+        _afterContentBoxClick: function (event) {
+            event.preventDefault();
+
+            if (!this.get("disabled")) {
+                this.fire("card", this.get("card"));
+            }
         },
 
         syncUI: function () {
@@ -72,9 +76,15 @@ YUI.add("card", function (Y) {
                 newSuit = newCard[0],
                 newValue = newCard[1];
 
-            if (Y.Lang.isValue(newSuit) && Y.Lang.isValue(newValue)) {
-                this._cardNode.replaceClass(this.getClassName("suit", prevSuit), this.getClassName("suit", newSuit));
+            if (Y.Lang.isString(prevSuit)) {
+                this.get("contentBox").removeClass(this.getClassName("suit", prevSuit.toLowerCase()));
+            }
 
+            if (Y.Lang.isString(newSuit)) {
+                this.get("contentBox").addClass(this.getClassName("suit", newSuit.toLowerCase()));
+            }
+
+            if (Y.Lang.isValue(newSuit) && Y.Lang.isValue(newValue)) {
                 this._coverNode.hide();
 
                 this._suitsNode.show();
@@ -91,8 +101,6 @@ YUI.add("card", function (Y) {
                 }
 
             } else {
-                this._cardNode.removeClass(this.getClassName("suit", prevSuit));
-
                 this._coverNode.show();
 
                 this._suitsNode.hide();
@@ -105,8 +113,7 @@ YUI.add("card", function (Y) {
         },
 
         _syncValue: function (value) {
-            var content = value,
-                suitsArray = this._suitsArray(value);
+            var content = value;
 
             if (value === "T") {
                 content = "10";
@@ -117,81 +124,14 @@ YUI.add("card", function (Y) {
             });
 
             Y.each(this._suitNodes, function (node, i) {
-                Y.Array.indexOf(suitsArray, i) !== -1 ? node.show() : node.hide();
+                Y.Array.indexOf(Card.SUIT_ARRAYS[value] || [], i) === -1 ? node.hide() : node.show();
             }, this);
         },
 
         _syncSuit: function (suit) {
-            var content;
-
-            switch(suit) {
-            case "C":
-                content = "&clubs;";
-                break;
-            case "D":
-                content = "&diams;";
-                break;
-            case "H":
-                content = "&hearts;";
-                break;
-            case "S":
-                content = "&spades;";
-                break;
-            default:
-                content = "";
-                break;
-            }
-
             Y.each(this._suitNodes.concat(this._topSuitNode, this._bottomSuitNode), function (node) {
-                node.setContent(content);
+                node.setContent(Card.SUITS[suit] || "");
             });
-        },
-
-        _suitsArray: function (value) {
-            switch(value) {
-            case "A":
-                return [9];
-                break;
-            case "2":
-                return [2, 15];
-                break;
-            case "3":
-                return [2, 9, 15];
-                break;
-            case "4":
-                return [1, 3, 14, 16];
-                break;
-            case "5":
-                return [1, 3, 9, 14, 16];
-                break;
-            case "6":
-                return [1, 3, 8, 10, 14, 16];
-                break;
-            case "7":
-                return [1, 3, 5, 8, 10, 14, 16];
-                break;
-            case "8":
-                return [1, 3, 6, 7, 11, 12, 14, 16];
-                break;
-            case "9":
-                return [1, 3, 6, 7, 9, 11, 12, 14, 16];
-                break;
-            case "T":
-                return [1, 3, 4, 6, 7, 11, 12, 13, 14, 16];
-                break;
-            case "J":
-                return [1, 16];
-                break;
-            case "Q":
-                return [1, 16];
-                break;
-            case "K":
-                return [1, 16];
-                break;
-            default:
-                return [];
-                break;
-            }
         }
 
     }, {
@@ -210,6 +150,29 @@ YUI.add("card", function (Y) {
                 value: [53, 90]
             }
 
+        },
+
+        SUITS: {
+            "C": "&clubs;",
+            "D": "&diams;",
+            "H": "&hearts;",
+            "S": "&spades;"
+        },
+
+        SUIT_ARRAYS: {
+            "2": [2, 15],
+            "3": [2, 9, 15],
+            "4": [1, 3, 14, 16],
+            "5": [1, 3, 9, 14, 16],
+            "6": [1, 3, 8, 10, 14, 16],
+            "7": [1, 3, 5, 8, 10, 14, 16],
+            "8": [1, 3, 6, 7, 11, 12, 14, 16],
+            "9": [1, 3, 6, 7, 9, 11, 12, 14, 16],
+            "T": [1, 3, 4, 6, 7, 11, 12, 13, 14, 16],
+            "J": [1, 16],
+            "Q": [1, 16],
+            "K": [1, 16],
+            "A": [9]
         }
 
     });
