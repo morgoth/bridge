@@ -1,5 +1,13 @@
+@charset "UTF-8";
+
 .yui3-card {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
     cursor: pointer;
+    list-style-type: none;
 }
 
 .yui3-card-disabled {
@@ -14,7 +22,7 @@
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-    font: 167% sans;
+    font: 22px sans;
     border: 1px solid black;
     width: 86px;
     height: 125px;
@@ -23,12 +31,21 @@
     position: relative;
 }
 
-.yui3-card-suit-c, .yui3-card-suit-s {
-    color: black;
-}
-
-.yui3-card-suit-d, .yui3-card-suit-h {
-    color: #cb0000;
+.yui3-card-suits {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -27px;
+    margin-top: -45px;
+    width: 52px;
+    height: 88px;
+    border: 1px solid transparent;
+    background-position: center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    border: 1px solid transparent;
 }
 
 .yui3-card-cover {
@@ -40,6 +57,41 @@
     width: 74px;
     height: 113px;
     margin: 5px;
+    display: none;
+}
+
+.yui3-card-unknown .yui3-card-cover {
+    display: block;
+}
+
+.yui3-card-suit-c,
+.yui3-card-suit-s {
+    color: black;
+}
+
+.yui3-card-suit-d,
+.yui3-card-suit-h {
+    color: #cb0000;
+}
+
+.yui3-card-suit-s .yui3-card-suit:before,
+.yui3-card-suit-s .yui3-card-value-suit:before {
+    content: "♠";
+}
+
+.yui3-card-suit-h .yui3-card-suit:before,
+.yui3-card-suit-h .yui3-card-value-suit:before {
+    content: "♥";
+}
+
+.yui3-card-suit-d .yui3-card-suit:before,
+.yui3-card-suit-d .yui3-card-value-suit:before {
+    content: "♦";
+}
+
+.yui3-card-suit-c .yui3-card-suit:before,
+.yui3-card-suit-c .yui3-card-value-suit:before {
+    content: "♣";
 }
 
 .yui3-card-upside-down {
@@ -78,15 +130,216 @@
     right: 0;
 }
 
-.yui3-card-suits {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    margin-left: -27px;
-    margin-top: -46px;
-    width: 53px;
-    height: 90px;
-    border: 1px solid transparent;
+.yui3-card-value-a .yui3-card-value-value:before {
+    content: "A"
+}
+
+.yui3-card-value-k .yui3-card-value-value:before {
+    content: "K"
+}
+
+.yui3-card-value-q .yui3-card-value-value:before {
+    content: "Q"
+}
+
+.yui3-card-value-j .yui3-card-value-value:before {
+    content: "J"
+}
+
+.yui3-card-value-t .yui3-card-value-value:before {
+    content: "10"
+}
+
+.yui3-card-value-9 .yui3-card-value-value:before {
+    content: "9"
+}
+
+.yui3-card-value-8 .yui3-card-value-value:before {
+    content: "8"
+}
+
+.yui3-card-value-7 .yui3-card-value-value:before {
+    content: "7"
+}
+
+.yui3-card-value-6 .yui3-card-value-value:before {
+    content: "6"
+}
+
+.yui3-card-value-5 .yui3-card-value-value:before {
+    content: "5"
+}
+
+.yui3-card-value-4 .yui3-card-value-value:before {
+    content: "4"
+}
+
+.yui3-card-value-3 .yui3-card-value-value:before {
+    content: "3"
+}
+
+.yui3-card-value-2 .yui3-card-value-value:before {
+    content: "2"
+}
+
+.yui3-card-suit-1,
+.yui3-card-suit-2,
+.yui3-card-suit-3,
+.yui3-card-suit-4,
+.yui3-card-suit-5,
+.yui3-card-suit-6,
+.yui3-card-suit-7,
+.yui3-card-suit-8,
+.yui3-card-suit-9,
+.yui3-card-suit-10,
+.yui3-card-suit-11,
+.yui3-card-suit-12,
+.yui3-card-suit-13,
+.yui3-card-suit-14,
+.yui3-card-suit-15,
+.yui3-card-suit-16 {
+    display: none;
+}
+
+.yui3-card-value-2 .yui3-card-suit-2,
+.yui3-card-value-2 .yui3-card-suit-15,
+
+.yui3-card-value-3 .yui3-card-suit-2,
+.yui3-card-value-3 .yui3-card-suit-9,
+.yui3-card-value-3 .yui3-card-suit-15,
+
+.yui3-card-value-4 .yui3-card-suit-1,
+.yui3-card-value-4 .yui3-card-suit-3,
+.yui3-card-value-4 .yui3-card-suit-14,
+.yui3-card-value-4 .yui3-card-suit-16,
+
+.yui3-card-value-4 .yui3-card-suit-1,
+.yui3-card-value-4 .yui3-card-suit-3,
+.yui3-card-value-4 .yui3-card-suit-14,
+.yui3-card-value-4 .yui3-card-suit-16,
+
+.yui3-card-value-5 .yui3-card-suit-1,
+.yui3-card-value-5 .yui3-card-suit-3,
+.yui3-card-value-5 .yui3-card-suit-9,
+.yui3-card-value-5 .yui3-card-suit-14,
+.yui3-card-value-5 .yui3-card-suit-16,
+
+.yui3-card-value-6 .yui3-card-suit-1,
+.yui3-card-value-6 .yui3-card-suit-3,
+.yui3-card-value-6 .yui3-card-suit-8,
+.yui3-card-value-6 .yui3-card-suit-10,
+.yui3-card-value-6 .yui3-card-suit-14,
+.yui3-card-value-6 .yui3-card-suit-16,
+
+.yui3-card-value-7 .yui3-card-suit-1,
+.yui3-card-value-7 .yui3-card-suit-3,
+.yui3-card-value-7 .yui3-card-suit-5,
+.yui3-card-value-7 .yui3-card-suit-8,
+.yui3-card-value-7 .yui3-card-suit-10,
+.yui3-card-value-7 .yui3-card-suit-14,
+.yui3-card-value-7 .yui3-card-suit-16,
+
+.yui3-card-value-8 .yui3-card-suit-1,
+.yui3-card-value-8 .yui3-card-suit-3,
+.yui3-card-value-8 .yui3-card-suit-6,
+.yui3-card-value-8 .yui3-card-suit-7,
+.yui3-card-value-8 .yui3-card-suit-11,
+.yui3-card-value-8 .yui3-card-suit-12,
+.yui3-card-value-8 .yui3-card-suit-14,
+.yui3-card-value-8 .yui3-card-suit-16,
+
+.yui3-card-value-9 .yui3-card-suit-1,
+.yui3-card-value-9 .yui3-card-suit-3,
+.yui3-card-value-9 .yui3-card-suit-6,
+.yui3-card-value-9 .yui3-card-suit-7,
+.yui3-card-value-9 .yui3-card-suit-9,
+.yui3-card-value-9 .yui3-card-suit-11,
+.yui3-card-value-9 .yui3-card-suit-12,
+.yui3-card-value-9 .yui3-card-suit-14,
+.yui3-card-value-9 .yui3-card-suit-16,
+
+.yui3-card-value-t .yui3-card-suit-1,
+.yui3-card-value-t .yui3-card-suit-3,
+.yui3-card-value-t .yui3-card-suit-4,
+.yui3-card-value-t .yui3-card-suit-6,
+.yui3-card-value-t .yui3-card-suit-7,
+.yui3-card-value-t .yui3-card-suit-11,
+.yui3-card-value-t .yui3-card-suit-12,
+.yui3-card-value-t .yui3-card-suit-13,
+.yui3-card-value-t .yui3-card-suit-14,
+.yui3-card-value-t .yui3-card-suit-16,
+
+.yui3-card-value-j .yui3-card-suit-1,
+.yui3-card-value-j .yui3-card-suit-16,
+
+.yui3-card-value-q .yui3-card-suit-1,
+.yui3-card-value-q .yui3-card-suit-16,
+
+.yui3-card-value-k .yui3-card-suit-1,
+.yui3-card-value-k .yui3-card-suit-16,
+
+.yui3-card-value-a .yui3-card-suit-9 {
+    display: block;
+}
+
+.yui3-card-sk .yui3-card-suits {
+    background-image: url(sk.png);
+    border-color: black;
+}
+
+.yui3-card-sq .yui3-card-suits {
+    background-image: url(sq.png);
+    border-color: black;
+}
+
+.yui3-card-sj .yui3-card-suits {
+    background-image: url(sj.png);
+    border-color: black;
+}
+
+.yui3-card-hk .yui3-card-suits {
+    background-image: url(hk.png);
+    border-color: black;
+}
+
+.yui3-card-hq .yui3-card-suits {
+    background-image: url(hq.png);
+    border-color: black;
+}
+
+.yui3-card-hj .yui3-card-suits {
+    background-image: url(hj.png);
+    border-color: black;
+}
+
+.yui3-card-dk .yui3-card-suits {
+    background-image: url(dk.png);
+    border-color: black;
+}
+
+.yui3-card-dq .yui3-card-suits {
+    background-image: url(dq.png);
+    border-color: black;
+}
+
+.yui3-card-dj .yui3-card-suits {
+    background-image: url(dj.png);
+    border-color: black;
+}
+
+.yui3-card-ck .yui3-card-suits {
+    background-image: url(ck.png);
+    border-color: black;
+}
+
+.yui3-card-cq .yui3-card-suits {
+    background-image: url(cq.png);
+    border-color: black;
+}
+
+.yui3-card-cj .yui3-card-suits {
+    background-image: url(cj.png);
+    border-color: black;
 }
 
 .yui3-card-image {
