@@ -4,6 +4,6 @@ YUI().use("card", function (Y) {
             "HA", "HK", "HQ", "HJ", "HT", "H9", "H8", "H7", "H6", "H5", "H4", "H3", "H2",
             "DA", "DK", "DQ", "DJ", "DT", "D9", "D8", "D7", "D6", "D5", "D4", "D3", "D2",
             "CA", "CK", "CQ", "CJ", "CT", "C9", "C8", "C7", "C6", "C5", "C4", "C3", "C2"], function (card) {
-                new Y.Bridge.Card({ card: card }).render();
+                window.card = new Y.Bridge.Card({ card: card }).render();
             });
 });

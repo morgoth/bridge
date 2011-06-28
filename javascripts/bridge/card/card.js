@@ -66,8 +66,8 @@ YUI.add("card", function (Y) {
                 newSuit = newCard[0],
                 newValue = newCard[1];
 
-            newCard = newCard || "UNKNOWN";
-            prevCard = prevCard || "UNKNOWN";
+            newCard = (newCard === "") ? "UNKNOWN" : newCard;
+            prevCard = (prevCard === "") ? "UNKNOWN" : prevCard;
 
             if (Y.Lang.isString(prevSuit)) {
                 this.get("contentBox").removeClass(this.getClassName("suit", prevSuit.toLowerCase()));
