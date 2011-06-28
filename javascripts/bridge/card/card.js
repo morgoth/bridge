@@ -3,7 +3,6 @@ YUI.add("card", function (Y) {
     var Card = Y.Base.create("card", Y.Widget, [Y.WidgetChild], {
 
         BOUNDING_TEMPLATE : '<li></li>',
-        CONTENT_TEMPLATE : '<div></div>',
 
         renderUI: function () {
             this._renderCard();

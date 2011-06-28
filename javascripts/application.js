@@ -1,3 +1,3 @@
-YUI().use("card", function (Y) {
-    new Y.Bridge.Card({ card: "HA" }).render();
+YUI().use("hand", function (Y) {
+    new Y.Bridge.Hand({ cards: ["HA", "HT", "SQ"] }).render();
 });
