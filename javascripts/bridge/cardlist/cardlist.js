@@ -1,4 +1,4 @@
-YUI.add("card-list", function (Y) {
+YUI.add("cardlist", function (Y) {
 
     var CardList = Y.Base.create("cardlist", Y.Widget, [Y.WidgetParent], {
 
@@ -59,4 +59,4 @@ YUI.add("card-list", function (Y) {
 
     Y.namespace("Bridge").CardList = CardList;
 
-}, "0", { requires: ["widget", "widget-parent", "card"] });
+}, "", { requires: ["widget", "widget-parent", "card"] });

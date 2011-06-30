@@ -9,13 +9,18 @@ window.YUI_config = {
                     requires: ["widget", "widget-child", "collection"],
                     skinnable: true
                 },
-                "card-list": {
+                "cardlist": {
                     path: "cardlist/cardlist.js",
                     requires: ["widget", "widget-parent", "card"]
                 },
                 "hand": {
                     path: "hand/hand.js",
-                    requires: ["card-list", "collection"],
+                    requires: ["cardlist", "handbar"],
+                    skinnable: true
+                },
+                "handbar": {
+                    path: "handbar/handbar.js",
+                    requires: ["widget"],
                     skinnable: true
                 }
             }

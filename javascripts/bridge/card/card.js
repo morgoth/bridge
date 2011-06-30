@@ -61,29 +61,11 @@ YUI.add("card", function (Y) {
         },
 
         _syncCard: function (newCard, prevCard) {
-            var prevSuit = prevCard[0],
-                prevValue = prevCard[1],
-                newSuit = newCard[0],
-                newValue = newCard[1];
+            this._syncSuit(newCard[0], prevCard[0]);
+            this._syncValue(newCard[1], prevCard[1]);
 
             newCard = (newCard === "") ? "UNKNOWN" : newCard;
             prevCard = (prevCard === "") ? "UNKNOWN" : prevCard;
-
-            if (Y.Lang.isString(prevSuit)) {
-                this.get("contentBox").removeClass(this.getClassName("suit", prevSuit.toLowerCase()));
-            }
-
-            if (Y.Lang.isString(newSuit)) {
-                this.get("contentBox").addClass(this.getClassName("suit", newSuit.toLowerCase()));
-            }
-
-            if (Y.Lang.isString(prevValue)) {
-                this.get("contentBox").removeClass(this.getClassName("value", prevValue.toLowerCase()));
-            }
-
-            if (Y.Lang.isString(newValue)) {
-                this.get("contentBox").addClass(this.getClassName("value", newValue.toLowerCase()));
-            }
 
             if (Y.Lang.isString(prevCard)) {
                 this.get("contentBox").removeClass(this.getClassName(prevCard.toLowerCase()));
@@ -92,6 +74,26 @@ YUI.add("card", function (Y) {
             if (Y.Lang.isString(newCard)) {
                 this.get("contentBox").addClass(this.getClassName(newCard.toLowerCase()));
             }
+        },
+
+        _syncSuit: function (newSuit, prevSuit) {
+            if (Y.Lang.isString(prevSuit)) {
+                this.get("contentBox").removeClass(this.getClassName("suit", prevSuit.toLowerCase()));
+            }
+
+            if (Y.Lang.isString(newSuit)) {
+                this.get("contentBox").addClass(this.getClassName("suit", newSuit.toLowerCase()));
+            }
+        },
+
+        _syncValue: function (newValue, prevValue) {
+            if (Y.Lang.isString(prevValue)) {
+                this.get("contentBox").removeClass(this.getClassName("value", prevValue.toLowerCase()));
+            }
+
+            if (Y.Lang.isString(newValue)) {
+                this.get("contentBox").addClass(this.getClassName("value", newValue.toLowerCase()));
+            }
         }
 
     }, {
@@ -99,7 +101,8 @@ YUI.add("card", function (Y) {
         ATTRS: {
 
             card: {
-                value: ""
+                value: "",
+                validator: Y.Lang.isString
             }
 
         }
@@ -108,4 +111,4 @@ YUI.add("card", function (Y) {
 
     Y.namespace("Bridge").Card = Card;
 
-}, "0", { requires: ["widget", "widget-child", "collection"] });
+}, "", { requires: ["widget", "widget-child", "collection"] });
