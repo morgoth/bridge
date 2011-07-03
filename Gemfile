@@ -1,11 +1,12 @@
 source :rubygems
 
-gem "rails", "=3.0.3"
+gem "rails"
 
 gem "acts_as_list"
 gem "bridge"
-gem "devise", "~> 1.2"
+gem "devise"
 gem "haml"
+gem "sass"
 gem "proxies"
 gem "beaconpush"
 gem "sqlite3", :group => [:development, :test]

@@ -1,3 +1,4 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery
+  # FIXME: add YUI3 ujs
+  # protect_from_forgery
 end
