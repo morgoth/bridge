@@ -9,14 +9,20 @@ YUI.add("trick", function (Y) {
         },
 
         _renderCards: function () {
-            for (var i = 0; i < 4; i++) {
-                this.add({ disabled: true, visible: true });
-            }
+            this._cards = [];
+
+            Y.each(["top", "right", "bottom", "left"], function (position) {
+                var card = this.add({ disabled: true, visible: true }).item(0);
+
+                this._cards.push(card);
+
+                card.get("boundingBox").addClass(card.getClassName(position));
+            }, this);
         },
 
         bindUI: function () {
             this.after("leadChange", this._afterLeadChange);
-            this.after("rotationChange", this._afterRotationChange);
+            this.after("bottomChange", this._afterBottomChange);
         },
 
         syncUI: function () {
@@ -27,21 +33,26 @@ YUI.add("trick", function (Y) {
             this._uiSyncCards(this.get("cards"));
         },
 
-        _afterRotationChange: function (event) {
+        _afterBottomChange: function (event) {
             this._uiSyncCards(this.get("cards"));
         },
 
         _uiSyncCards: function (cards) {
-            this.each(function (child, i) {
-                // var direction = Y.Bridge.DIRECTIONS[(i +  Y.Bridge.directionDistance(this.get("rotation"), this.get("lead")) + 2) % 4]; // TODO: test
-                var card = cards[(i +  Y.Bridge.directionDistance(this.get("rotation"), this.get("lead")) + 2) % 4];
+            this.each(function (child) {
+                child.hide();
+            });
 
-                if (Y.Lang.isValue(card)) {
-                    child.setAttrs({ card: card, visible: true });
-                } else {
-                    child.set("visible", false);
-                }
+            Y.each(cards, function (card, i) {
+                var index = (((this.get("bottom") - this.get("lead")) % 4) + i + 2 + 4) % 4;
+
+                this.add(this._cards[index].setAttrs({ card: card, visible: true }), i);
             }, this);
+        },
+
+        _setDirection: function (direction) {
+            var result = Y.Array.indexOf(["N", "E", "S", "W"], direction);
+
+            return (result === -1) ? Y.Attribute.INVALID_VALUE : result;
         }
 
     }, {
@@ -53,17 +64,17 @@ YUI.add("trick", function (Y) {
             },
 
             lead: {
-                validator: Y.Bridge.isDirection,
-                value: "N"
+                value: "N",
+                setter: "_setDirection"
+            },
+
+            bottom: {
+                value: "S",
+                setter: "_setDirection"
             },
 
             cards: {
                 value: []
-            },
-
-            rotation: {
-                validator: Y.Bridge.isDirection,
-                value: "S"
             }
 
         }
@@ -72,4 +83,4 @@ YUI.add("trick", function (Y) {
 
     Y.namespace("Bridge").Trick = Trick;
 
-}, "0", { requires: ["widget", "widget-parent", "card", "helpers"] });
+}, "0", { requires: ["widget", "widget-parent", "card"] });
