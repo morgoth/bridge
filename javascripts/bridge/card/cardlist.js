@@ -10,7 +10,7 @@ YUI.add("cardlist", function (Y) {
 
         _renderCards: function () {
             for (var i = 0; i < this.get("size"); i++) {
-                this.add(new Y.Bridge.Card({ disabled: this.get("disabled"), visible: true }));
+                this.add({ disabled: this.get("disabled"), visible: true });
             }
         },
 
@@ -57,6 +57,10 @@ YUI.add("cardlist", function (Y) {
     }, {
 
         ATTRS: {
+
+            defaultChildType: {
+                value: Y.Bridge.Card
+            },
 
             size: {
                 value: 13,

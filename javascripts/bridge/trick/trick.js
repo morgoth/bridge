@@ -1,11 +1,17 @@
 YUI.add("trick", function (Y) {
 
-    var Trick = Y.Base.create("trick", Y.Widget, [], {
+    var Trick = Y.Base.create("trick", Y.Widget, [Y.WidgetParent], {
 
         CONTENT_TEMPLATE: '<ul></ul>',
 
         renderUI: function () {
+            this._renderCards();
+        },
 
+        _renderCards: function () {
+            for (var i = 0; i < 4; i++) {
+                this.add({ disabled: true, visible: true });
+            }
         },
 
         bindUI: function () {
@@ -27,21 +33,27 @@ YUI.add("trick", function (Y) {
 
         _uiSyncCards: function (cards) {
             this.each(function (child, i) {
-                var direction = Y.Bridge.DIRECTIONS[(i +  Y.Bridge.directionDistance(this.get("rotation"), this.get("lead")) + 2) % 4]; // TODO: test
+                // var direction = Y.Bridge.DIRECTIONS[(i +  Y.Bridge.directionDistance(this.get("rotation"), this.get("lead")) + 2) % 4]; // TODO: test
+                var card = cards[(i +  Y.Bridge.directionDistance(this.get("rotation"), this.get("lead")) + 2) % 4];
 
-                child.get("boundingBox").addClass(this.getClassName("card", direction.toLowerCase()));
+                if (Y.Lang.isValue(card)) {
+                    child.setAttrs({ card: card, visible: true });
+                } else {
+                    child.set("visible", false);
+                }
             }, this);
-        },
-
-        _setRotation: function (rotation) {
-            return Y.Bridge.isRotation(rotation) ? rotation : "S";
         }
 
     }, {
 
         ATTRS: {
 
+            defaultChildType: {
+                value: Y.Bridge.Card
+            },
+
             lead: {
+                validator: Y.Bridge.isDirection,
                 value: "N"
             },
 
@@ -50,7 +62,7 @@ YUI.add("trick", function (Y) {
             },
 
             rotation: {
-                setter: "_setRotation",
+                validator: Y.Bridge.isDirection,
                 value: "S"
             }
 
@@ -60,4 +72,4 @@ YUI.add("trick", function (Y) {
 
     Y.namespace("Bridge").Trick = Trick;
 
-}, "0", { requires: ["cardlist", "helpers"] });
+}, "0", { requires: ["widget", "widget-parent", "card", "helpers"] });

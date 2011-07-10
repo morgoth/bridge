@@ -26,6 +26,14 @@ window.YUI_config = {
                     path: "biddingbox/biddingbox.js",
                     requires: ["widget"],
                     skinnable: true
+                },
+                "trick": {
+                    path: "trick/trick.js",
+                    requires: ["widget", "widget-parent", "card", "helpers"],
+                    skinnable: true
+                },
+                "helpers": {
+                    path: "helpers/helpers.js"
                 }
             }
         }
