@@ -111,4 +111,4 @@ YUI.add("card", function (Y) {
 
     Y.namespace("Bridge").Card = Card;
 
-}, "", { requires: ["widget", "widget-child", "collection"] });
+}, "", { requires: ["widget", "widget-child"] });

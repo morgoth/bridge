@@ -6,11 +6,11 @@ window.YUI_config = {
             modules: {
                 "card": {
                     path: "card/card.js",
-                    requires: ["widget", "widget-child", "collection"],
+                    requires: ["widget", "widget-child"],
                     skinnable: true
                 },
                 "cardlist": {
-                    path: "cardlist/cardlist.js",
+                    path: "card/cardlist.js",
                     requires: ["widget", "widget-parent", "card"]
                 },
                 "hand": {
@@ -19,7 +19,11 @@ window.YUI_config = {
                     skinnable: true
                 },
                 "handbar": {
-                    path: "handbar/handbar.js",
+                    path: "hand/handbar.js",
+                    requires: ["widget"]
+                },
+                "biddingbox": {
+                    path: "biddingbox/biddingbox.js",
                     requires: ["widget"],
                     skinnable: true
                 }

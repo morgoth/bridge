@@ -4,5 +4,5 @@ YUI().use("hand", function (Y) {
                  "DA", "DK", "DQ", "DJ", "DT", "D9", "D8", "D7", "D6", "D5", "D4", "D3", "D2",
                  "CA", "CK", "CQ", "CJ", "CT", "C9", "C8", "C7", "C6", "C5", "C4", "C3", "C2"];
 
-    new Y.Bridge.Hand({ cards: cards }).render();
+    window.hand = new Y.Bridge.Hand({ cards: cards }).render();
 });

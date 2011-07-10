@@ -12,9 +12,54 @@
     margin: 0 -36px;
 }
 
-.yui3-hand .yui3-cardlist-cards {
+.yui3-hand .yui3-card-hidden {
+    display: none;
+}
+
+.yui3-hand .yui3-cardlist-content {
     margin: 0;
     padding: 0;
     height: 90px;
     overflow: hidden;
+}
+
+.yui3-handbar-content {
+    font-size: 167%;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid white;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 40px;
+    background: #cbcbcb;
+}
+
+.yui3-handbar-bar-active {
+    background: #ffce00;
+}
+
+.yui3-handbar-direction {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid white;
+    height: 40px;
+    line-height: 40px;
+    width: 40px;
+    background: #336799;
+    color: white;
+    display: block;
+    float: left;
+    margin: -1px;
+}
+
+.yui3-handbar-name {
+    height: 40px;
+    line-height: 40px;
+    text-align: left;
+    margin: 0 10px;
+    display: block;
+    float: left;
 }
