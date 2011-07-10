@@ -15,7 +15,6 @@ YUI.add("trick", function (Y) {
                 var card = this.add({ disabled: true, visible: true }).item(0);
 
                 this._cards.push(card);
-
                 card.get("boundingBox").addClass(card.getClassName(position));
             }, this);
         },
@@ -38,15 +37,16 @@ YUI.add("trick", function (Y) {
         },
 
         _uiSyncCards: function (cards) {
-            this.each(function (child) {
-                child.hide();
-            });
+            var position, i;
 
-            Y.each(cards, function (card, i) {
-                var index = (((this.get("bottom") - this.get("lead")) % 4) + i + 2 + 4) % 4;
-
-                this.add(this._cards[index].setAttrs({ card: card, visible: true }), i);
-            }, this);
+            for (position = 0; position < 4; position++) {
+                if (cards[position]) {
+                    i = (((this.get("bottom") - this.get("lead") + 4) % 4) + position + 2) % 4; // pure magic
+                    this.add(this._cards[position].setAttrs({ card: cards[i], visible: true }), i);
+                } else {
+                    cards[position].hide();
+                }
+            }
         },
 
         _setDirection: function (direction) {
