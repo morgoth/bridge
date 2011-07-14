@@ -8,24 +8,40 @@ YUI.add("biddingbox", function (Y) {
 
         bindUI: function () {
             var contentBox = this.get("contentBox");
+
+            this.after("levelChange", this._afterLevelChange);
+            this.after("contractChange", this._afterContractChange);
+            this.after("doubleEnabledChange", this._afterDoubleEnabledChange);
+            this.after("redoubleEnabledChange", this._afterRedoubleEnabledChange);
+
+            this.on("pass", Y.bind(this._fireBidEvent, this, "PASS"));
+            this.on("x", Y.bind(this._fireBidEvent, this, "X"));
+            this.on("xx", Y.bind(this._fireBidEvent, this, "XX"));
+            this.on("level", this._onLevel);
+            this.on("suit", this._onSuit);
         },
 
         syncUI: function () {
-
+            this._uiSetContract(this.get("contract"));
+            this._uiSetLevel(this.get("level"));
+            this._uiSetPassEnabled(true);
+            this._uiSetDoubleEnabled(this.get("doubleEnabled"));
+            this._uiSetRedoubleEnabled(this.get("redoubleEnabled"));
         },
 
         _fireBidEvent: function (bid) {
             var alert = this._getAlert();
+
             this._resetAlert();
             this.fire("bid", [bid, alert]);
         },
 
         _getAlert: function () {
-
+            return this._uiGetValue(DOT + BiddingBox.C_ALERT_INPUT);
         },
 
         _resetAlert: function () {
-
+            return this._uiSetValue(DOT + BiddingBox.C_ALERT_INPUT, "");
         },
 
         _onLevel: function (event) {
@@ -42,6 +58,37 @@ YUI.add("biddingbox", function (Y) {
         _renderBiddingBox: function () {
             var html,
                 contentBox = this.get("contentBox"),
+                modifiers = [
+                    { className: BiddingBox.C_MODIFIER_PASS, eventName: "pass", name: Y.Bridge.renderBid("PASS") },
+                    { className: BiddingBox.C_MODIFIER_X, eventName: "x", name: Y.Bridge.renderBid("X") },
+                    { className: BiddingBox.C_MODIFIER_XX, eventName: "xx", name: Y.Bridge.renderBid("XX") }
+                ], levels = [
+                    { name: "1", className: BiddingBox.C_LEVEL_1 },
+                    { name: "2", className: BiddingBox.C_LEVEL_2 },
+                    { name: "3", className: BiddingBox.C_LEVEL_3 },
+                    { name: "4", className: BiddingBox.C_LEVEL_4 },
+                    { name: "5", className: BiddingBox.C_LEVEL_5 },
+                    { name: "6", className: BiddingBox.C_LEVEL_6 },
+                    { name: "7", className: BiddingBox.C_LEVEL_7 }
+                ], suits = [
+                    { name: Y.Bridge.renderSuit("C"), eventArgument: "C", className: BiddingBox.C_SUIT_C },
+                    { name: Y.Bridge.renderSuit("D"), eventArgument: "D", className: BiddingBox.C_SUIT_D },
+                    { name: Y.Bridge.renderSuit("H"), eventArgument: "H", className: BiddingBox.C_SUIT_H },
+                    { name: Y.Bridge.renderSuit("S"), eventArgument: "S", className: BiddingBox.C_SUIT_S },
+                    { name: Y.Bridge.renderSuit("NT"), eventArgument: "NT", className: BiddingBox.C_SUIT_NT }
+                ];
+
+            html = Y.mustache(BiddingBox.BIDDING_BOX_TEMPLATE, {
+                C_MODIFIERS: BiddingBox.C_MODIFIERS,
+                C_LEVELS: BiddingBox.C_LEVELS,
+                C_SUITS: BiddingBox.C_SUITS,
+                C_ALERTS: BiddingBox.C_ALERTS,
+                C_ALERT_LABEL: BiddingBox.C_ALERT_LABEL,
+                C_ALERT_INPUT: BiddingBox.C_ALERT_INPUT,
+                modifiers: modifiers,
+                levels: levels,
+                suits: suits
+            });
 
             contentBox.setContent(html);
         },
