@@ -31,7 +31,7 @@ YUI.add("passbox", function (Y) {
         },
 
         _renderPassBox: function () {
-            this._this.add([
+            this.add([
                 { label: "pass", name: "pass" },
                 { label: "x", name: "x" },
                 { label: "xx", name: "xx" }
