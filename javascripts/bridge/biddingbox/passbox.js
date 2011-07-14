@@ -13,7 +13,7 @@ YUI.add("passbox", function(Y){
             this.each(function(button){
                 button.set("enabled",
                            this.get("enableButtons." + button.get("name")));
-            });
+            }, this);
         },
 
         bindUI: function () {
