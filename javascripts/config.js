@@ -1,6 +1,23 @@
 window.YUI_config = {
     filter: "raw",
     groups: {
+        gallery: {
+            base: "/assets/gallery/",
+            modules: {
+                "gallery-button": {
+                    path: "gallery-button/gallery-button.js",
+                    requires: ["widget","event-mouseenter","widget-child"]
+                },
+                "gallery-button-toggle": {
+                    path: "gallery-button-toggle/gallery-button-toggle.js",
+                    requires: ["gallery-button"]
+                },
+                "gallery-button-group": {
+                    path: "gallery-button-group/gallery-button-group.js",
+                    requires: ["widget-parent","widget-child"]
+                }
+            }
+        },
         bridge: {
             base: "/assets/bridge/",
             modules: {
@@ -34,8 +51,12 @@ window.YUI_config = {
                 },
                 "trick": {
                     path: "trick/trick.js",
-                    requires: ["widget", "widget-parent", "card", "helpers"],
+                    requires: ["widget", "widget-parent", "trickcard", "helpers"],
                     skinnable: true
+                },
+                "trickcard": {
+                    path: "trick/trickcard.js",
+                    requires: ["card"]
                 },
                 "helpers": {
                     path: "helpers/helpers.js"
