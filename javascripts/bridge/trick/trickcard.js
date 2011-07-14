@@ -4,7 +4,11 @@ YUI.add("trickcard", function (Y) {
 
         syncUI: function () {
             this.constructor.superclass.syncUI.apply(this, arguments);
-            this.get("boundingBox").addClass(this.getClassName(this.get("position")));
+            this._syncPosition(this.get("position"));
+        },
+
+        _syncPosition: function (position) {
+            this.get("boundingBox").addClass(this.getClassName(position));
         }
 
     }, {
