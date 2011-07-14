@@ -1,0 +1,18 @@
+* Pytania
+** Zaśmiecanie namespace podwidgetami
+
+* BiddingBox
+* PassBox
+** In:
+   - enable: {
+     'x': true,
+     'xx': true,
+     }
+** Out:
+   - events:
+     pass, x, xx
+* ContractBox
+** In:
+   - minBid
+
+* AlertBox
