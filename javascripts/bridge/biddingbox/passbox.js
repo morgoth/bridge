@@ -40,8 +40,6 @@ YUI.add("passbox", function (Y) {
 
     }, {
 
-        NAME: "passbox",
-
         ATTRS: {
 
             defaultChildType: {
