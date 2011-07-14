@@ -21,7 +21,7 @@ YUI.add("passbox", function (Y) {
 
         _syncEnabledButtons: function (enabledButtons) {
             this.each(function (button) {
-                button.set("enabled", enabledButtons[button.get("name")];
+                button.set("enabled", enabledButtons[button.get("name")]);
             });
         },
 
