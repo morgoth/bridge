@@ -1,7 +1,7 @@
 window.YUI_config = {
     filter: "raw",
     groups: {
-        bridge: {
+        gallery: {
             base: "/assets/gallery/",
             modules: {
                 "gallery-button": {
