@@ -9,9 +9,9 @@ YUI.add("passbox", function (Y) {
 
         _renderPassBox: function () {
             this.add([
-                { label: "pass", name: "pass" },
-                { label: "x", name: "x" },
-                { label: "xx", name: "xx" }
+                { label: "Pass", name: "pass" },
+                { label: "Dbl", name: "x" },
+                { label: "Rdbl", name: "xx" }
             ]);
         },
 
