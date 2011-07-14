@@ -44,12 +44,7 @@ YUI.add("trick", function (Y) {
 
             for (position = 0; position < 4; position++) {
                 i = (Y.Bridge.directionDistance(this.get("bottom"), this.get("lead")) + position + 2) % 4; // pure magic
-
-                if (cards[position]) {
-                    this.add(this._cards.item(i).setAttrs({ card: cards[position], visible: true }), position);
-                } else {
-                    this.add(this._cards.item(i).setAttrs({ card: "", visible: false }), position);
-                }
+                this.add(this._cards.item(i).setAttrs({ card: cards[position], visible: !!cards[position] }), position);
             }
         }
 
