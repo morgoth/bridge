@@ -1,5 +1,5 @@
 YUI.add("passbox", function(Y){
-
+    // Fires pressed button name (pass, x, xx)
     var PassBox = Y.Base.create("passbox", Y.ButtonGroup, [Y.WidgetChild], {
         initializer: function () {
             this._addChildren();
@@ -9,14 +9,38 @@ YUI.add("passbox", function(Y){
             this._renderPassBox();
         },
 
+        syncUI: function () {
+            this.each(function(button){
+                button.set('enabled',
+                           this.get('enableButtons.' + button.get('name')));
+            });
+        },
+
+        bindUI: function () {
+            this.on('button:press', function (e) {
+                this.fire(e.target.get('name'));
+            });
+        },
+
         _addChildren: function () {
-            this.add(new Y.Button({ label: 'pass' }));
-            this.add(new Y.Button({ label: 'x' }));
-            this.add(new Y.Button({ label: 'xx' }));
+            this.buttons = {
+                pass: new Y.Button({ label: 'pass' }),
+                x: new Y.Button({ label: 'x',
+                                  enabled: this.get('enableButtons.x') }),
+                xx: new Y.Button({ label: 'xx',
+                                   enabled: this.get('enableButtons.xx') })
+            }
+
+            // Adding buttons and assigning them names
+            Y.each(this.buttons, function(button, name){
+                button.set('name', name);
+                this.add(button);
+            }, this);
+
         },
 
         _renderPassBox: function () {
-            this.get('contentBox').append(Y.Node.create(''));
+
         },
 
     }, {
@@ -27,7 +51,8 @@ YUI.add("passbox", function(Y){
             },
             enableButtons: {
                 value: {
-                    'x': true,
+                    'pass': true,
+                    'x': false,
                     'xx': true
                 }
             }
