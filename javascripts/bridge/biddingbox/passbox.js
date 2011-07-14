@@ -11,29 +11,27 @@ YUI.add("passbox", function(Y){
 
         syncUI: function () {
             this.each(function(button){
-                button.set('enabled',
-                           this.get('enableButtons.' + button.get('name')));
+                button.set("enabled",
+                           this.get("enableButtons." + button.get("name")));
             });
         },
 
         bindUI: function () {
-            this.on('button:press', function (e) {
-                this.fire(e.target.get('name'));
+            this.on("button:press", function (e) {
+                this.fire(e.target.get("name"));
             });
         },
 
         _addChildren: function () {
-            this.buttons = {
-                pass: new Y.Button({ label: 'pass' }),
-                x: new Y.Button({ label: 'x',
-                                  enabled: this.get('enableButtons.x') }),
-                xx: new Y.Button({ label: 'xx',
-                                   enabled: this.get('enableButtons.xx') })
+            buttons = {
+                pass: new Y.Button({ label: "pass" }),
+                x: new Y.Button({ label: "x" }),
+                xx: new Y.Button({ label: "xx" })
             }
 
             // Adding buttons and assigning them names
-            Y.each(this.buttons, function(button, name){
-                button.set('name', name);
+            Y.each(buttons, function(button, name){
+                button.set("name", name);
                 this.add(button);
             }, this);
 
@@ -47,13 +45,13 @@ YUI.add("passbox", function(Y){
         NAME: "passbox",
         ATTRS: {
             label: {
-                value: ''
+                value: ""
             },
             enableButtons: {
                 value: {
-                    'pass': true,
-                    'x': false,
-                    'xx': true
+                    "pass": true,
+                    "x": false,
+                    "xx": true
                 }
             }
         }
