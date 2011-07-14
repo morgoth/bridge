@@ -29,8 +29,12 @@ window.YUI_config = {
                 },
                 "trick": {
                     path: "trick/trick.js",
-                    requires: ["widget", "widget-parent", "card", "helpers"],
+                    requires: ["widget", "widget-parent", "trickcard", "helpers"],
                     skinnable: true
+                },
+                "trickcard": {
+                    path: "trick/trickcard.js",
+                    requires: ["card"]
                 },
                 "helpers": {
                     path: "helpers/helpers.js"
