@@ -73,13 +73,7 @@ YUI.add("helpers", function (Y) {
             secondPosition = Y.Bridge.directionPosition(secondDirection);
 
         if (Y.Bridge.isDirection(firstDirection) && Y.Bridge.isDirection(secondDirection)) {
-            difference = secondPosition - firstPosition;
-
-            if (difference < 0) {
-                difference += 4;
-            }
-
-            return difference % 4;
+            return (((secondPosition - firstPosition) % 4) + 4) % 4;
         } else {
             return undefined;
         }

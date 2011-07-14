@@ -20,6 +20,7 @@ YUI.add("trick", function (Y) {
         bindUI: function () {
             this.after("leadChange", this._afterLeadChange);
             this.after("bottomChange", this._afterBottomChange);
+            this.after("cardsChange", this._afterCardsChange);
         },
 
         syncUI: function () {
@@ -34,15 +35,20 @@ YUI.add("trick", function (Y) {
             this._uiSyncCards(this.get("cards"));
         },
 
+        _afterCardsChange: function (event) {
+            this._uiSyncCards(event.newVal);
+        },
+
         _uiSyncCards: function (cards) {
             var position, i;
 
             for (position = 0; position < 4; position++) {
+                i = (Y.Bridge.directionDistance(this.get("bottom"), this.get("lead")) + position + 2) % 4; // pure magic
+
                 if (cards[position]) {
-                    i = (((this.get("bottom") - this.get("lead") + 4) % 4) + position + 2) % 4; // pure magic
-                    this.add(this._cards.item(position).setAttrs({ card: cards[i], visible: true }), i);
+                    this.add(this._cards.item(i).setAttrs({ card: cards[position], visible: true }), position);
                 } else {
-                    cards[position].hide();
+                    this.add(this._cards.item(i).setAttrs({ card: "", visible: false }), position);
                 }
             }
         }
@@ -57,12 +63,12 @@ YUI.add("trick", function (Y) {
 
             lead: {
                 value: "N",
-                setter: Y.Bridge.isDirection
+                validator: Y.Bridge.isDirection
             },
 
             bottom: {
                 value: "S",
-                setter: Y.Bridge.isDirection
+                validator: Y.Bridge.isDirection
             },
 
             cards: {
