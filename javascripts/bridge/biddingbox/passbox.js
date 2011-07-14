@@ -7,6 +7,14 @@ YUI.add("passbox", function (Y) {
             this._renderPassBox();
         },
 
+        _renderPassBox: function () {
+            this.add([
+                { label: "pass", name: "pass" },
+                { label: "x", name: "x" },
+                { label: "xx", name: "xx" }
+            ]);
+        },
+
         syncUI: function () {
             this._syncEnabledButtons(this.get("enabledButtons"));
         },
@@ -28,14 +36,6 @@ YUI.add("passbox", function (Y) {
 
         _afterEnabledButtonsChange: function (event) {
             this._syncEnabledButtons(event.newVal);
-        },
-
-        _renderPassBox: function () {
-            this.add([
-                { label: "pass", name: "pass" },
-                { label: "x", name: "x" },
-                { label: "xx", name: "xx" }
-            ]);
         }
 
     }, {
