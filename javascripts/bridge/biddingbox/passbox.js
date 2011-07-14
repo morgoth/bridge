@@ -8,6 +8,10 @@ YUI.add("passbox", function (Y) {
         },
 
         syncUI: function () {
+            this._syncEnabled(this.get("enabled"));
+        },
+
+        _syncEnabled: function (enabled) {
             this.each(function (button) {
                 button.set("enabled", this.get("enableButtons." + button.get("name")));
             }, this);
@@ -15,10 +19,15 @@ YUI.add("passbox", function (Y) {
 
         bindUI: function () {
             this.after("button:press", this._afterButtonPress);
+            this.after("enabledChange", this._afterEnabledChange);
         },
 
         _afterButtonPress: function (event) {
             this.fire(event.target.get("name"));
+        },
+
+        _afterEnabledChange: function (event) {
+            this._syncEnabled(event.newVal);
         },
 
         _renderPassBox: function () {
