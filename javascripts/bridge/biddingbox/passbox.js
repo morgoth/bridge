@@ -4,10 +4,10 @@ YUI.add("passbox", function (Y) {
     var PassBox = Y.Base.create("passbox", Y.ButtonGroup, [], {
 
         renderUI: function () {
-            this._renderPassBox();
+            this._renderButtons();
         },
 
-        _renderPassBox: function () {
+        _renderButtons: function () {
             this.add([
                 { label: "Pass", name: "pass" },
                 { label: "Dbl", name: "x" },
@@ -44,10 +44,6 @@ YUI.add("passbox", function (Y) {
 
             defaultChildType: {
                 value: Y.Button
-            },
-
-            label: {
-                value: ""
             },
 
             enabledButtons: {
