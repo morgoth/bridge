@@ -1,7 +1,7 @@
 YUI.add("passbox", function (Y) {
 
     // Fires pressed button name (pass, x, xx)
-    var PassBox = Y.Base.create("passbox", Y.ButtonGroup, [Y.WidgetChild], {
+    var PassBox = Y.Base.create("passbox", Y.ButtonGroup, [], {
 
         renderUI: function () {
             this._renderPassBox();
