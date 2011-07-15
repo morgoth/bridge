@@ -30,7 +30,13 @@ YUI.add("helpers", function (Y) {
                           "7C", "7D", "7H", "7S", "7NT"];
 
     // SUITS
-
+    Y.Bridge.makeContract = function (level, suit, modifiers) {
+      // Modifiers are not required
+      // TODO: Validation?
+      modifiers = modifiers || "";
+      return level + suit + modifiers;
+    };
+    
     Y.Bridge.isContractSuit = function (suit) {
         return Y.Array.indexOf(Y.Bridge.CONTRACT_SUITS, suit) !== -1;
     };
@@ -43,6 +49,10 @@ YUI.add("helpers", function (Y) {
         var matchData = contract.match(new RegExp(Y.Bridge.CONTRACT_SUITS.join("|")));
 
         return matchData ? matchData[0] : undefined;
+    };
+
+    Y.Bridge.parseLevel = function (contract) {
+        return parseInt(contract, 10);
     };
 
     Y.Bridge.hasSuit = function (suit, cards) {

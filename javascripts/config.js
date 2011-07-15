@@ -41,12 +41,17 @@ window.YUI_config = {
                 },
                 "biddingbox": {
                     path: "biddingbox/biddingbox.js",
-                    requires: ["passbox"],
+                    requires: ["passbox", "newbidbox"],
                     skinnable: true
                 },
                 "passbox": {
                     path: "biddingbox/passbox.js",
                     requires: ["gallery-button", "gallery-button-group"],
+                    skinnable: true
+                },
+                "newbidbox": {
+                    path: "biddingbox/newbidbox.js",
+                    requires: ["gallery-button", "gallery-button-toggle", "gallery-button-group"],
                     skinnable: true
                 },
                 "trick": {
