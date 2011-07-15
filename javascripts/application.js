@@ -9,8 +9,14 @@ YUI().use("hand", "trick", "biddingbox", "widget-stack", function (Y) {
     window.biddingBox = new Y.Bridge.BiddingBox({ contract: contract }).render();
 
     // Test
-    window.biddingBox.after("bid", function (event, bid) {
-        alert("Your bid is: " + bid);
+    window.biddingBox.after("bid", function (event, data) {
+        var msg = "Your bid is: " + data.bid + "\n";
+        if (data.alert) {
+            msg += "alert: " + data.alertMsg;
+        } else {
+            msg += "no alert";
+        }
+        alert(msg);
     });
 
     window.hand = new Y.Bridge.Hand({ cards: cards }).render();

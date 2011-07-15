@@ -29,14 +29,18 @@ YUI.add("biddingbox", function (Y) {
       this._resetAlert();
       // TODO: Poprzedni format: (ja bym to wrzucił do obiektu tak jak niżej)
       // this.fire("bid", [bid, alert]);
-      this.fire("bid", {
+      this.fire("bid", {}, {
         bid: bid,
         alert: alertData.alert,
-        alertMsg: alertData.msg });
+        alertMsg: alertData.msg
+      });
     },
 
     _getAlert: function () {
-      
+      return {
+        alert: true,
+        msg: "todo"
+      };
     },
 
     _resetAlert: function () {
@@ -45,19 +49,19 @@ YUI.add("biddingbox", function (Y) {
 
     _renderBiddingBox: function () {
       var contentBox = this.get("contentBox");
-      this.get('contentBox').append(Y.Node.create(
-        '<div>Bid: (previous bid: ' + this.get("contract") + ' </div>'
+      this.get("contentBox").append(Y.Node.create(
+        '<div>Bid: (previous bid: ' + this.get("contract") + ') </div>'
       ));
     },
 
     _addChildren: function() {
-      var ours = true,      // TODO: get that attr from somewhere
+      var ours = false,      // TODO: get that attr from somewhere
         contract = this.get("contract"),
         mods = Y.Bridge.parseModifiers(contract);
       this._passBox = new Y.Bridge.PassBox({
         enableButtons: {
           x: !ours && !mods,
-          xx: ours && mods == "x"
+          xx: ours && mods == "X"
         }
       });
       this.add(this._passBox);
