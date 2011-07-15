@@ -58,6 +58,15 @@ window.YUI_config = {
                     path: "trick/trickcard.js",
                     requires: ["card"]
                 },
+                "auction": {
+                    path: "auction/auction.js",
+                    requires: ["widget", "widget-parent", "auctionbid"],
+                    skinnable: true
+                },
+                "auctionbid": {
+                    path: "auction/auctionbid.js",
+                    requires: ["gallery-button"]
+                },
                 "helpers": {
                     path: "helpers/helpers.js"
                 }
