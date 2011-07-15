@@ -50,6 +50,7 @@ http://www.assembla.com/code/yui/git/node/blob/yui3-gallery/sandbox/apipkin/gall
 
 .yui3-biddingbox-content .yui3-button:hover,
 .yui3-biddingbox-content .yui3-button-hover {
+    background: #91b0cd;
     background-position: left -30px;
 }
 
@@ -69,7 +70,7 @@ http://www.assembla.com/code/yui/git/node/blob/yui3-gallery/sandbox/apipkin/gall
 
 .yui3-biddingbox-content .yui3-button-selected {
     border-color: CornflowerBlue;
-    background: #336799;
+    background: #4d85bc;
     background-image:url('img/background-active.png');
 }
 
