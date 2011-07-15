@@ -18,7 +18,6 @@ YUI.add("newbidbox", function(Y){
       this._bindSuits();
       this.after("levelChange", this._afterLevelChange);
       this.after("contractChange", this._afterContractChange);
-      this.after("suitChange", this._afterSuitChange);
     },
 
     _syncLevels: function () {
@@ -27,9 +26,8 @@ YUI.add("newbidbox", function(Y){
       }, this);
     },
 
-    _syncSuits: function () {
-      var cs = Y.Bridge.CONTRACT_SUITS,
-        level = this.get("level");
+    _syncSuits: function (level) {
+      var cs = Y.Bridge.CONTRACT_SUITS;
       if (level == this._minLevel) {
         // Enable only those higher than current min suit
         this._suitWidget.each(function (child) {
@@ -52,13 +50,14 @@ YUI.add("newbidbox", function(Y){
     _syncContract: function (contract) {
       this._calcMinBid(contract);
       this._syncLevels();
-      this._syncSuits();
+      this._syncSuits(this.get("level"));
     },
 
     _bindSuits: function () {
       this._suitWidget.after("button:press", function (event) {
         var suit = event.target.get("suit");
         this.set("suit", suit);
+        this._newBidSelected();
       }, this);
     },
 
@@ -75,10 +74,6 @@ YUI.add("newbidbox", function(Y){
 
     _afterLevelChange: function (event) {
       this._syncSuits(event.newVal);
-    },
-
-    _afterSuitChange: function (event) {
-      this._newBidSelected();
     },
 
     _addChildren: function () {
@@ -132,7 +127,7 @@ YUI.add("newbidbox", function(Y){
     },
 
     _newBidSelected: function () {
-      this.fire("newBid", Y.Bridge.makeContract(
+      this.fire("bid", Y.Bridge.makeContract(
         this.get("level"),
         this.get("suit")));
     },
@@ -152,11 +147,15 @@ YUI.add("newbidbox", function(Y){
       },
       level: {
         value: "",
-        validator: Y.Bridge.isLevel
+        setter: function (level) {
+          return (Y.Lang.isValue(level) && Y.Bridge.isLevel(level)) ? level : undefined;
+        }
       },
       suit: {
         value: "",
-        validator: Y.Bridge.isContractSuit
+        setter: function (suit) {
+          return (Y.Lang.isValue(suit) && Y.Bridge.isContractSuit(suit)) ? suit : undefined;
+        }
       }
     }
   });
