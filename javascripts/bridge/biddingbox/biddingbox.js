@@ -1,63 +1,84 @@
 YUI.add("biddingbox", function (Y) {
 
-    var BiddingBox = Y.Base.create("biddingbox", Y.Widget, [Y.WidgetParent], {
-        initializer: function () {
-            this._addChildren();
-        },
+  var BiddingBox = Y.Base.create("biddingbox", Y.Widget, [Y.WidgetParent], {
+    initializer: function () {
+      this._addChildren();
+    },
 
-        renderUI: function () {
-            this._renderBiddingBox();
-        },
+    renderUI: function () {
+      this._renderBiddingBox();
+    },
 
-        bindUI: function () {
-            var contentBox = this.get("contentBox");
-        },
+    bindUI: function () {
+      var contentBox = this.get("contentBox");
+      // TODO: passbox bid event
+      this.after("passbox:bid", this._afterBid);
+      this.after("newbidbox:bid", this._afterBid);
+    },
 
-        syncUI: function () {
+    syncUI: function () {
 
-        },
+    },
+    
+    _afterBid: function (event, bid) {
+      this._fireBidEvent(bid);
+    },
 
-        _fireBidEvent: function (bid) {
-            var alert = this._getAlert();
-            this._resetAlert();
-            this.fire("bid", [bid, alert]);
-        },
+    _fireBidEvent: function (bid) {
+      var alertData = this._getAlert();
+      this._resetAlert();
+      // TODO: Poprzedni format: (ja bym to wrzucił do obiektu tak jak niżej)
+      // this.fire("bid", [bid, alert]);
+      this.fire("bid", {
+        bid: bid,
+        alert: alertData.alert,
+        alertMsg: alertData.msg });
+    },
 
-        _getAlert: function () {
+    _getAlert: function () {
+      
+    },
 
-        },
+    _resetAlert: function () {
 
-        _resetAlert: function () {
+    },
 
-        },
+    _renderBiddingBox: function () {
+      var contentBox = this.get("contentBox");
+      this.get('contentBox').append(Y.Node.create(
+        '<div>Bid: (previous bid: ' + this.get("contract") + ' </div>'
+      ));
+    },
 
-        _renderBiddingBox: function () {
-            contentBox = this.get("contentBox");
-            this.get('contentBox').append(Y.Node.create(
-                '<div>Bid:</div>'
-            ));
-        },
+    _addChildren: function() {
+      var ours = true,      // TODO: get that attr from somewhere
+        contract = this.get("contract"),
+        mods = Y.Bridge.parseModifiers(contract);
+      this._passBox = new Y.Bridge.PassBox({
+        enableButtons: {
+          x: !ours && !mods,
+          xx: ours && mods == "x"
+        }
+      });
+      this.add(this._passBox);
+      this._newBidBox = new Y.Bridge.NewBidBox({
+        contract: contract
+      });
+      this.add(this._newBidBox);
+    }
 
-        _addChildren: function() {
-            this._passBox = new Y.Bridge.PassBox();
-            this.add(this._passBox);
-        },
+  }, {
+    ATTRS: {
 
-    }, {
+      contract: {
+        setter: function (contract) {
+          return (Y.Lang.isValue(contract) && Y.Bridge.isContract(contract)) ? contract : undefined;
+        }
+      }
 
-        NAME: "biddingbox",
+    }
+  });
 
-        ATTRS: {
+  Y.namespace("Bridge").BiddingBox = BiddingBox;
 
-            contract: {
-                setter: function (contract) {
-                    return (Y.Lang.isValue(contract) && Y.Bridge.isContract(contract)) ? contract : undefined;
-                }
-            }
-
-        },
-    });
-
-    Y.namespace("Bridge").BiddingBox = BiddingBox;
-
-}, "0", { requires: ["passbox"] });
+}, "0", { requires: ["passbox", "newbidbox"] });
