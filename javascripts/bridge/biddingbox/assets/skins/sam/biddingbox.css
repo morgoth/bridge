@@ -12,9 +12,6 @@ http://www.assembla.com/code/yui/git/node/blob/yui3-gallery/sandbox/apipkin/gall
 /* button.css */
 
 .yui3-biddingbox-content .yui3-button {
-    /* TODO: Breaks without fixed width, but should not */
-    width: 100px;
-
     background: #d9d9d9 left top repeat-x;
     border: 1px solid #959595;
     color: #3a3a3a;
@@ -32,9 +29,9 @@ http://www.assembla.com/code/yui/git/node/blob/yui3-gallery/sandbox/apipkin/gall
 }
 .yui3-biddingbox-content .yui3-button .yui3-button-content,
 .yui3-biddingbox-content .yui3-button .yui3-icon {
-    display: inline-block;
+    *display: inline-block;
     zoom: 1;
-    *display: inline;
+    display: inline;
     vertical-align: middle;
 }
 .yui3-biddingbox-content .yui3-button-focused {
@@ -72,6 +69,7 @@ http://www.assembla.com/code/yui/git/node/blob/yui3-gallery/sandbox/apipkin/gall
 
 .yui3-biddingbox-content .yui3-button-selected {
     border-color: CornflowerBlue;
+    background: #336799;
     background-image:url('img/background-active.png');
 }
 
