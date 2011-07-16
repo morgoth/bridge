@@ -46,19 +46,23 @@ YUI.add("auction", function (Y) {
         },
 
         _uiSyncBids: function (bids) {
-            var i, length;
+            var i, length,
+                emptyBids = [];
 
-            length = bids.length + 4 - this.size();
-
-            // add missing children
-            if (length > 0) {
-                for (i = 0; i < length; i++) {
-                    this.add({});
-                }
+            for (i = 0, length = Y.Array.indexOf(["N", "E", "S", "W"], this.get("dealer")); i < length; i++) {
+                emptyBids.push(undefined);
             }
 
-            this.each(function (child, i) {
-                child.set("bid", bids[i - Y.Array.indexOf(["N", "E", "S", "W"], this.get("dealer"))]);
+            if (this.size() > emptyBids.length + bids.length) {
+                this.removeAll();
+            }
+
+            Y.each(emptyBids.concat(bids), function (bid, i) {
+                if (this.item(i)) {
+                    this.item(i).set("bid", bid);
+                } else {
+                    this.add({ bid: bid });
+                }
             }, this);
 
             this._uiScrollDownBids();

@@ -44,7 +44,7 @@
     float: left;
 }
 
-.yui3-auction-bids .yui3-bid {
+.yui3-auction-bids .yui3-auctionbid {
     list-style: none;
     width: 70px;
     height: 30px;
