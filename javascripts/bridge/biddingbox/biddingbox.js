@@ -3,13 +3,8 @@ YUI.add("biddingbox", function (Y) {
     var BiddingBox = Y.Base.create("biddingbox", Y.Widget, [Y.WidgetParent], {
 
         renderUI: function () {
-            this._renderHeader();
             this._renderPassBox();
             this._renderNewBidBox();
-        },
-
-        _renderHeader: function () {
-            this.get("contentBox").appendChild('<div>').setContent("Bid: (previous bid: " + this.get("contract") + ")");
         },
 
         _renderPassBox: function () {
@@ -42,7 +37,7 @@ YUI.add("biddingbox", function (Y) {
 
         _syncContract: function (contract) {
             this.item(1).set("contract", contract);
-            this._syncOurs(this.get("ours"));
+            this._syncOurs(this.get("ours")); // FIXME: it's not nice
         },
 
         _syncOurs: function (ours) {

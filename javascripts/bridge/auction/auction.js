@@ -46,20 +46,22 @@ YUI.add("auction", function (Y) {
         },
 
         _uiSyncBids: function (bids) {
-            // bids = Y.clone(bids);
+            var i, length;
 
-            // this._childrenContainer = this.get("contentBox").one(DOT + Auction.C_BIDS);
+            length = bids.length + 4 - this.size();
 
-            // // add empty bids
-            // for (var i = 0; i < Y.Array.indexOf(["N", "E", "S", "W"], this.get("dealer")); i++) {
-            //     bids.unshift({});
-            // };
+            // add missing children
+            if (length > 0) {
+                for (i = 0; i < length; i++) {
+                    this.add({});
+                }
+            }
 
-            // Y.each(bids, function (bid, i) {
-            //     this.add(new Y.Bridge.Bid(Y.merge(bid, { disabled: true, visible: true })));
-            // }, this);
+            this.each(function (child, i) {
+                child.set("bid", bids[i - Y.Array.indexOf(["N", "E", "S", "W"], this.get("dealer"))]);
+            }, this);
 
-            // this._uiScrollDownBids();
+            this._uiScrollDownBids();
         },
 
         _uiScrollDownBids: function () {
@@ -88,6 +90,10 @@ YUI.add("auction", function (Y) {
     }, {
 
         ATTRS: {
+
+            defaultChildType: {
+                value: Y.Bridge.AuctionBid
+            },
 
             dealer: {
                 value: "N"

@@ -36,7 +36,7 @@ YUI.add("helpers", function (Y) {
       modifiers = modifiers || "";
       return level + suit + modifiers;
     };
-    
+
     Y.Bridge.isContractSuit = function (suit) {
         return Y.Array.indexOf(Y.Bridge.CONTRACT_SUITS, suit) !== -1;
     };

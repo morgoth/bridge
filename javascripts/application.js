@@ -23,5 +23,5 @@ YUI().use("hand", "trick", "biddingbox", "auction", function (Y) {
 
     window.trick = new Y.Bridge.Trick({ cards: ["CA", "DA", "HA", "SA"] }).render();
 
-    window.auction = new Y.Bridge.Auction({}).render();
+    window.auction = new Y.Bridge.Auction({ bids: ["1C", "1D", "1H"], dealer: "S" }).render();
 });

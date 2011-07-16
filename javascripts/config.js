@@ -70,7 +70,7 @@ window.YUI_config = {
                 },
                 "auctionbid": {
                     path: "auction/auctionbid.js",
-                    requires: ["gallery-button"]
+                    requires: ["gallery-button", "helpers"]
                 },
                 "helpers": {
                     path: "helpers/helpers.js"
