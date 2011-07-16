@@ -3,17 +3,14 @@ YUI.add("passbox", function (Y) {
     // Fires pressed button name (pass, x, xx)
     var PassBox = Y.Base.create("passbox", Y.ButtonGroup, [], {
 
+        _buttonNames: ["pass", "x", "xx"],
+
         renderUI: function () {
             this._renderButtons();
         },
 
         _renderButtons: function () {
-            // TODO: Tutaj jest problem. Podanie niezadeklarowanego atrybutu w konstruktorze nie działa. Działa jedynie instance.set("name", "pass"). Być może to nie powinno w ogóle działać i trzeba to rozwiązać inaczej
-            this.add([
-                { label: "Pass", name: "pass" },
-                { label: "Dbl", name: "x" },
-                { label: "Rdbl", name: "xx" }
-            ]);
+            this.add([{ label: "Pass" }, { label: "Dbl" }, { label: "Rdbl" }]);
         },
 
         syncUI: function () {
@@ -21,9 +18,9 @@ YUI.add("passbox", function (Y) {
         },
 
         _syncEnabledButtons: function (enabledButtons) {
-            this.each(function (button) {
-                button.set("enabled", enabledButtons[button.get("name")]);
-            });
+            this.each(function (button, i) {
+                button.set("enabled", enabledButtons[this._buttonNames[i]]);
+            }, this);
         },
 
         bindUI: function () {
@@ -32,7 +29,9 @@ YUI.add("passbox", function (Y) {
         },
 
         _afterButtonPress: function (event) {
-            this.fire("bid", event.target.get("name"));
+            var i = event.target.get("index");
+
+            this.fire("bid", this._buttonNames[i]);
         },
 
         _afterEnabledButtonsChange: function (event) {
@@ -51,7 +50,7 @@ YUI.add("passbox", function (Y) {
                 value: {
                     pass: true,
                     x: false,
-                    xx: true
+                    xx: false
                 }
             }
 
