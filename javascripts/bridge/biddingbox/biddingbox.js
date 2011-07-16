@@ -11,7 +11,6 @@ YUI.add("biddingbox", function (Y) {
 
     bindUI: function () {
       var contentBox = this.get("contentBox");
-      // TODO: passbox bid event
       this.after("passbox:bid", this._afterBid);
       this.after("newbidbox:bid", this._afterBid);
     },
@@ -19,7 +18,7 @@ YUI.add("biddingbox", function (Y) {
     syncUI: function () {
 
     },
-    
+
     _afterBid: function (event, bid) {
       this._fireBidEvent(bid);
     },
@@ -59,7 +58,8 @@ YUI.add("biddingbox", function (Y) {
         contract = this.get("contract"),
         mods = Y.Bridge.parseModifiers(contract);
       this._passBox = new Y.Bridge.PassBox({
-        enableButtons: {
+        enabledButtons: {
+          pass: true,
           x: !ours && !mods,
           xx: ours && mods == "X"
         }

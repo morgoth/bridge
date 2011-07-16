@@ -8,6 +8,7 @@ YUI.add("passbox", function (Y) {
         },
 
         _renderButtons: function () {
+            // TODO: Tutaj jest problem. Podanie niezadeklarowanego atrybutu w konstruktorze nie działa. Działa jedynie instance.set("name", "pass"). Być może to nie powinno w ogóle działać i trzeba to rozwiązać inaczej
             this.add([
                 { label: "Pass", name: "pass" },
                 { label: "Dbl", name: "x" },
@@ -31,7 +32,7 @@ YUI.add("passbox", function (Y) {
         },
 
         _afterButtonPress: function (event) {
-            this.fire(event.target.get("name"));
+            this.fire("bid", event.target.get("name"));
         },
 
         _afterEnabledButtonsChange: function (event) {
