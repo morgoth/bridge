@@ -1,62 +1,63 @@
-YUI.add("passbox", function(Y){
-  // Fires pressed button name (pass, x, xx)
-  var PassBox = Y.Base.create("passbox", Y.ButtonGroup, [Y.WidgetChild], {
-    initializer: function () {
-      this._addChildren();
-    },
+YUI.add("passbox", function (Y) {
 
-    renderUI: function () {
-      this._renderPassBox();
-    },
+    // Fires pressed button name (pass, x, xx)
+    var PassBox = Y.Base.create("passbox", Y.ButtonGroup, [], {
 
-    syncUI: function () {
-      this.each(function(button){
-        button.set("enabled",
-                   this.get("enableButtons." + button.get("name")));
-      }, this);
-    },
+        renderUI: function () {
+            this._renderButtons();
+        },
 
-    bindUI: function () {
-      this.on("button:press", function (e) {
-        this.fire(e.target.get("name"));
-      });
-    },
+        _renderButtons: function () {
+            this.add([
+                { label: "Pass", name: "pass" },
+                { label: "Dbl", name: "x" },
+                { label: "Rdbl", name: "xx" }
+            ]);
+        },
 
-    _addChildren: function () {
-      var buttons = {
-        pass: new Y.Button({ label: "pass" }),
-        x: new Y.Button({ label: "x" }),
-        xx: new Y.Button({ label: "xx" })
-      };
+        syncUI: function () {
+            this._syncEnabledButtons(this.get("enabledButtons"));
+        },
 
-      // Adding buttons and assigning them names
-      Y.each(buttons, function(button, name){
-        button.set("name", name);
-        this.add(button);
-      }, this);
+        _syncEnabledButtons: function (enabledButtons) {
+            this.each(function (button) {
+                button.set("enabled", enabledButtons[button.get("name")]);
+            });
+        },
 
-    },
+        bindUI: function () {
+            this.after("button:press", this._afterButtonPress);
+            this.after("enabledButtonsChange", this._afterEnabledButtonsChange);
+        },
 
-    _renderPassBox: function () {
+        _afterButtonPress: function (event) {
+            this.fire(event.target.get("name"));
+        },
 
-    }
-
-  }, {
-    NAME: "passbox",
-    ATTRS: {
-      label: {
-        value: ""
-      },
-      enableButtons: {
-        value: {
-          "pass": true,
-          "x": false,
-          "xx": true
+        _afterEnabledButtonsChange: function (event) {
+            this._syncEnabledButtons(event.newVal);
         }
-      }
-    }
-  });
 
-  Y.namespace("Bridge").PassBox = PassBox;
+    }, {
+
+        ATTRS: {
+
+            defaultChildType: {
+                value: Y.Button
+            },
+
+            enabledButtons: {
+                value: {
+                    pass: true,
+                    x: false,
+                    xx: true
+                }
+            }
+
+        }
+
+    });
+
+    Y.namespace("Bridge").PassBox = PassBox;
 
 }, "0", { requires: ["gallery-button", "gallery-button-group"] });
