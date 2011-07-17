@@ -3,7 +3,7 @@ class Board < ActiveRecord::Base
 
   acts_as_list :scope => :table
 
-  %w[n e s w].each { |d| belongs_to "user_#{d}", :class_name => "User", :extend => UserBoardExtension }
+  %w[n e s w].each { |d| belongs_to "user_#{d}", :class_name => "User" }
   has_many :bids, :order => "bids.position", :extend => BidsBoardExtension
   has_many :cards, :order => "cards.position", :extend => CardsBoardExtension
   has_many :claims
@@ -19,6 +19,13 @@ class Board < ActiveRecord::Base
 
   delegate :n, :e, :s, :w, :owner, :cards_for, :hcp, :to => :deal, :prefix => true, :allow_nil => true
   delegate :create_board!, :to => :table, :prefix => true, :allow_nil => true
+
+  %w[n e s w].each do |d|
+    define_method("user_#{d}_with_direction") do
+      user_n_without_direction.tap { |user| user && user.define_singleton_method("direction") { d.upcase } }
+    end
+    alias_method_chain "user_#{d}", :direction
+  end
 
   def deal
     Bridge::Deal.from_id(deal_id.to_i)
