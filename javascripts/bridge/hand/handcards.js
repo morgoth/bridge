@@ -1,6 +1,6 @@
-YUI.add("cardlist", function (Y) {
+YUI.add("handcards", function (Y) {
 
-    var CardList = Y.Base.create("cardlist", Y.Widget, [Y.WidgetParent], {
+    var HandCards = Y.Base.create("handcards", Y.Widget, [Y.WidgetParent], {
 
         CONTENT_TEMPLATE : '<ul></ul>',
 
@@ -76,6 +76,6 @@ YUI.add("cardlist", function (Y) {
 
     });
 
-    Y.namespace("Bridge").CardList = CardList;
+    Y.namespace("Bridge").HandCards = HandCards;
 
 }, "", { requires: ["widget", "widget-parent", "card"] });

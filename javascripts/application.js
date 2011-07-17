@@ -19,7 +19,7 @@ YUI().use("hand", "trick", "biddingbox", "auction", function (Y) {
         alert(msg);
     });
 
-    window.hand = new Y.Bridge.Hand({ cards: cards }).render();
+    window.hand = new Y.Bridge.Hand({ cards: cards, name: "qoobaa", direction: "N" }).render();
 
     window.trick = new Y.Bridge.Trick({ cards: ["CA", "DA", "HA", "SA"] }).render();
 

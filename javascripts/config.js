@@ -26,18 +26,18 @@ window.YUI_config = {
                     requires: ["widget", "widget-child"],
                     skinnable: true
                 },
-                "cardlist": {
-                    path: "card/cardlist.js",
-                    requires: ["widget", "widget-parent", "card"]
-                },
                 "hand": {
                     path: "hand/hand.js",
-                    requires: ["cardlist", "handbar"],
+                    requires: ["widget", "handcards", "handbar"],
                     skinnable: true
                 },
                 "handbar": {
                     path: "hand/handbar.js",
                     requires: ["widget"]
+                },
+                "handcards": {
+                    path: "hand/handcards.js",
+                    requires: ["widget", "widget-parent", "card"]
                 },
                 "biddingbox": {
                     path: "biddingbox/biddingbox.js",

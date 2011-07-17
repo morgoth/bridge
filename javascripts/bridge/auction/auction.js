@@ -16,7 +16,7 @@ YUI.add("auction", function (Y) {
         },
 
         _renderChildrenContainer: function () {
-            this._childrenContainer = this.get("contentBox").appendChild('<ol>').addClass(this.getClassName("bids"));
+            this._childrenContainer = this.get("contentBox").appendChild('<div>').addClass(this.getClassName("bids"));
         },
 
         bindUI: function () {
