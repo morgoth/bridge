@@ -22,7 +22,9 @@ class Board < ActiveRecord::Base
 
   %w[n e s w].each do |d|
     define_method("user_#{d}_with_direction") do
-      user_n_without_direction.tap { |user| user && user.define_singleton_method("direction") { d.upcase } }
+      user_n_without_direction.tap do |user|
+        user && user.define_singleton_method("direction") { d.upcase }
+      end
     end
     alias_method_chain "user_#{d}", :direction
   end
