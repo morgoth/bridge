@@ -59,15 +59,15 @@ module CardsBoardExtension
 
   def previous_trick_winner
     return if previous_trick.empty?
-    card = Bridge::Trick.new(previous_trick.map(&:card)).winner(proxy_owner.contract_trump)
-    proxy_owner.users.owner(card)
+    card = Bridge::Trick.new(previous_trick.map(&:card)).winner(@association.owner.contract_trump)
+    @association.owner.users.owner(card)
   end
 
   def current_user
     if current_lead?
-      previous_trick_winner || proxy_owner.users.lho
+      previous_trick_winner || @association.owner.users.lho
     else
-      proxy_owner.users.owner(last.card).next
+      @association.owner.users.owner(last.card).next
     end
   end
   memoize :current_user
