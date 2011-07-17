@@ -1,5 +1,7 @@
-Factory.define :player do |player|
-  player.association :user
-  player.association :table
-  player.direction "N"
+FactoryGirl.define do
+  factory :player do
+    user
+    table
+    direction "N"
+  end
 end

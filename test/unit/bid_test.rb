@@ -2,8 +2,8 @@ require "test_helper"
 
 class BidValidationTest < ActiveSupport::TestCase
   setup do
-    @board = Factory(:board)
-    @bid = Factory.build(:bid, :board => @board)
+    @board = FactoryGirl.create(:board)
+    @bid = FactoryGirl.build(:bid, :board => @board)
   end
 
   test "is valid with valid attributes" do

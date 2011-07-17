@@ -2,7 +2,7 @@ require "test_helper"
 
 class PlayerTest < ActiveSupport::TestCase
   setup do
-    @player = Factory.build(:player)
+    @player = FactoryGirl.build(:player)
     @table = @player.table
     @user = @player.user
     @direction = @player.direction
@@ -38,14 +38,14 @@ class PlayerTest < ActiveSupport::TestCase
 
   test "is not valid with same user on same table" do
     @player.save!
-    player = Factory.build(:player, :table => @table, :user => @user)
+    player = FactoryGirl.build(:player, :table => @table, :user => @user)
     assert player.invalid?
     assert player.errors[:user_id].present?
   end
 
   test "is not valid with same direction on same table" do
     @player.save!
-    player = Factory.build(:player, :table => @table, :direction => @direction)
+    player = FactoryGirl.build(:player, :table => @table, :direction => @direction)
     assert player.invalid?
     assert player.errors[:direction].present?
   end

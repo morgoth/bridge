@@ -2,7 +2,7 @@ require "test_helper"
 
 class TableTest < ActiveSupport::TestCase
   setup do
-    @table = Factory.build(:table)
+    @table = FactoryGirl.build(:table)
   end
 
   test "is valid with valid attributes" do
@@ -11,20 +11,20 @@ class TableTest < ActiveSupport::TestCase
 
   test "starts if four players on table" do
     @table.save!
-    Factory(:player, :table => @table, :direction => "N")
+    FactoryGirl.create(:player, :table => @table, :direction => "N")
     assert @table.reload.preparing?
-    Factory(:player, :table => @table, :direction => "E")
+    FactoryGirl.create(:player, :table => @table, :direction => "E")
     assert @table.reload.preparing?
-    Factory(:player, :table => @table, :direction => "S")
+    FactoryGirl.create(:player, :table => @table, :direction => "S")
     assert @table.reload.preparing?
-    Factory(:player, :table => @table, :direction => "W")
+    FactoryGirl.create(:player, :table => @table, :direction => "W")
     assert @table.reload.playing?
   end
 
   test "creates a new board after start" do
     @table.save!
     assert_nil @table.reload.boards.current
-    %w(N E S W).each { |direction| Factory(:player, :table => @table, :direction => direction) }
+    %w(N E S W).each { |direction| FactoryGirl.create(:player, :table => @table, :direction => direction) }
     assert @table.reload.boards.current
   end
 

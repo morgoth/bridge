@@ -1,2 +1,4 @@
-Factory.define :user do |f|
+FactoryGirl.define do
+  factory :user do
+  end
 end

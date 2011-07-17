@@ -1,16 +1,18 @@
-Factory.define :claim do |claim|
-  claim.association :board, :factory => :board_1S_by_N
-  claim.tricks 13
-  claim.user { |c| c.board.user_n }
-end
+FactoryGirl.define do
+  factory :claim do
+    association :board, :factory => :board_1S_by_N
+    tricks 13
+    user { board.user_n }
+  end
 
-Factory.define :accepted_claim, :parent => :claim do |claim|
-  claim.after_create do |c|
-    c.user = c.board.user_e
-    c.accept!
-    c.user = c.board.user_w
-    c.accept!
-    c.reload
-    c.board.reload
+  factory :accepted_claim, :parent => :claim do
+    after_create do |claim|
+      claim.user = claim.board.user_e
+      claim.accept!
+      claim.user = claim.board.user_w
+      claim.accept!
+      claim.reload
+      claim.board.reload
+    end
   end
 end

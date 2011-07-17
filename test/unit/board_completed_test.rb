@@ -2,7 +2,7 @@ require "test_helper"
 
 class BoardCompletedTest < ActiveSupport::TestCase
   setup do
-    @board = Factory(:full_board)
+    @board = FactoryGirl.create(:full_board)
     # 1S-N +2
   end
 

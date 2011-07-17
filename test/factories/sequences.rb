@@ -1,3 +1,5 @@
-Factory.sequence :email do |n|
-  "person#{n}@example.com"
+FactoryGirl.define do
+  sequence :email do |n|
+    "person#{n}@example.com"
+  end
 end
