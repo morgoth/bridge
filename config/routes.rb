@@ -1,6 +1,4 @@
-Libre::Application.routes.draw do
-  devise_for :users
-
+Bridge::Application.routes.draw do
   # bridge
 
   resource :account

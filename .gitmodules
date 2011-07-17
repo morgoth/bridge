@@ -1,0 +1,3 @@
+[submodule "app/assets/javascripts/yui"]
+	path = app/assets/javascripts/yui
+	url = https://github.com/yui/yui3.git
