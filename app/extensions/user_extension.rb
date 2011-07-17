@@ -22,16 +22,16 @@ module UserExtension
   end
 
   def left_hand_oponent?
-    board.users.lho == proxy_target
+    board.users.lho == self
   end
   alias lho? left_hand_oponent?
 
   def declarer?
-    board.users.declarer == proxy_target
+    board.users.declarer == self
   end
 
   def dummy?
-    board.users.dummy == proxy_target
+    board.users.dummy == self
   end
 
   def has_card?(card)
