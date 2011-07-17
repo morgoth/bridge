@@ -21,9 +21,9 @@ class Board < ActiveRecord::Base
   delegate :create_board!, :to => :table, :prefix => true, :allow_nil => true
 
   %w[n e s w].each do |d|
-    define_method("user_#{d}_with_direction") do
+    define_method("user_#{d}_with_augmentation") do
       board = self
-      user_n_without_direction.tap do |user|
+      send("user_#{d}_without_augmentation").tap do |user|
         if user
           user.define_singleton_method(:direction) { d.upcase }
           user.define_singleton_method(:board) { board }
@@ -31,7 +31,7 @@ class Board < ActiveRecord::Base
         end
       end
     end
-    alias_method_chain "user_#{d}", :direction
+    alias_method_chain "user_#{d}", :augmentation
   end
 
   def deal

@@ -2,7 +2,7 @@ class Claim < ActiveRecord::Base
   include Claim::States
 
   belongs_to :board, :touch => true
-  belongs_to :claiming_user, :class_name => "User", :extend => ClaimingUserClaimExtension
+  belongs_to :claiming_user, :class_name => "User"
 
   validates :board, :presence => true
   validates :tricks, :presence => true, :numericality => true
@@ -25,6 +25,11 @@ class Claim < ActiveRecord::Base
   after_create :reject_active_claims
 
   attr_accessor :user
+
+  def claiming_user_with_augmentation
+    board.users.find { |user| user.id == claiming_user_id }
+  end
+  alias_method_chain :claiming_user, :augmentation
 
   def concerned_users
     board_users.tap do |users|
