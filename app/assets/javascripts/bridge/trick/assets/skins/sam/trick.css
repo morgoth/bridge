@@ -1,0 +1,37 @@
+.yui3-trick-hidden {
+    display: none;
+}
+
+.yui3-trick-content {
+    width: 140px;
+    height: 200px;
+    position: relative;
+    display: block;
+    margin: auto;
+}
+
+.yui3-trick .yui3-card {
+    list-style: none;
+    position: absolute;
+}
+
+.yui3-trick .yui3-card-top {
+    top: 0;
+    left: 15%;
+}
+
+.yui3-trick .yui3-card-right {
+    right: 0;
+    top: 10%;
+}
+
+.yui3-trick .yui3-card-bottom {
+    bottom: 0;
+    right: 15%;
+}
+
+.yui3-trick .yui3-card-left {
+    bottom: 10%;
+    left: 0;
+}
+

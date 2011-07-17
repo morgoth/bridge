@@ -1,0 +1,183 @@
+/* BiddingBox buttons
+
+css for buttons needs cleanup
+
+from:
+http://www.assembla.com/code/yui/git/node/blob/yui3-gallery/sandbox/apipkin/skins/Xarno/Smooth/button.css
+examples:
+http://www.assembla.com/code/yui/git/node/blob/yui3-gallery/sandbox/apipkin/gallery-button/skin.html
+http://www.assembla.com/code/yui/git/node/blob/yui3-gallery/sandbox/apipkin/gallery-button-group/skin.html
+*/
+
+/* button.css */
+
+.yui3-biddingbox-content .yui3-button {
+    background: #d9d9d9 left top repeat-x;
+    border: 1px solid #959595;
+    color: #3a3a3a;
+    padding: 2px 4px;
+    margin: 3px;
+    cursor: pointer;
+    border-radius: 3px;
+    -ms-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    text-decoration: none;
+    display: inline-block;
+    zoom: 1;
+    *display: inline;
+}
+.yui3-biddingbox-content .yui3-button .yui3-button-content,
+.yui3-biddingbox-content .yui3-button .yui3-icon {
+    *display: inline-block;
+    zoom: 1;
+    display: inline;
+    vertical-align: middle;
+}
+.yui3-biddingbox-content .yui3-button-focused {
+    border-color: #009ee7;
+    box-shadow: 0 0 2px #009ee7;
+    -moz-box-shadow: 0 0 2px #009ee7;
+    -webkit-box-shadow: 0 0 2px #009ee7;
+}
+.yui3-biddingbox-content .yui3-button .yui3-button-content {
+    line-height: 16px;
+    text-shadow: 1px 1px #efefef;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    height: 16px;
+    cursor: pointer;
+}
+
+.yui3-biddingbox-content .yui3-button:hover,
+.yui3-biddingbox-content .yui3-button-hover {
+    background: #91b0cd;
+    background-position: left -30px;
+}
+
+.yui3-biddingbox-content .yui3-button-pressed,
+.yui3-biddingbox-content .yui3-button-pressed:hover {
+    background-position: left -60px;
+}
+
+.yui3-biddingbox-content .yui3-button-disabled:hover,
+.yui3-biddingbox-content .yui3-button-disabled {
+    background-position: left 0px;
+    cursor: default;
+}
+.yui3-biddingbox-content .yui3-button-disabled .yui3-button-content {
+    cursor: default;
+}
+
+.yui3-biddingbox-content .yui3-button-selected {
+    border-color: CornflowerBlue;
+    background: #4d85bc;
+    background-image:url('img/background-active.png');
+}
+
+.yui3-biddingbox-content .yui3-button-disabled .yui3-button-content {
+    text-shadow: none;
+    opacity: .5;
+    filter: alpha(opacity=50);
+}
+.yui3-biddingbox-content .yui3-button-disabled .yui3-icon {
+    background-image: url('img/icon-sprite-bw.gif');
+}
+.yui3-biddingbox-content .yui3-icon-default .yui3-button-content {
+    padding-left: 0;
+    background: none;
+}
+.yui3-biddingbox-content .yui3-button .yui3-icon {
+    background-image: url('img/icon-sprite.gif');
+    width: 22px;
+    height: 16px;
+}
+.yui3-biddingbox-content .yui3-icon-default .yui3-icon {
+    width: 0px;
+}
+
+/* BiddingBox */
+
+.yui3-biddingbox-hidden {
+    display: none;
+}
+
+.yui3-biddingbox-content {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid white;
+    padding: 5px;
+    background: #cbcbcb;
+    font-size: 167%;
+}
+
+.yui3-biddingbox-modifiers, .yui3-biddingbox-levels, .yui3-biddingbox-suits, .yui3-biddingbox-alerts {
+    margin: 0;
+    padding: 0;
+    display: block;
+    line-height: 30px;
+    height: 30px;
+}
+
+.yui3-biddingbox-modifiers li, .yui3-biddingbox-levels li, .yui3-biddingbox-suits li, .yui3-biddingbox-alerts li {
+    list-style: none;
+    display: inline;
+}
+
+.yui3-biddingbox-button-disabled {
+    display: none;
+}
+
+input.yui3-biddingbox-alert-input {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background: white;
+    border: 1px solid black;
+    padding: 3px 5px;
+    margin-right: 1px;
+    width: 230px;
+}
+
+.yui3-biddingbox-alert-label {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid black;
+    background: #336799;
+    color: white;
+    padding: 2px 5px;
+    margin-right: 1px;
+}
+
+.yui3-biddingbox-modifier, .yui3-biddingbox-level, .yui3-biddingbox-suit {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid black;
+    padding: 0 5px;
+    margin-right: 1px;
+}
+
+.yui3-biddingbox-modifier-pass {
+    background: #006d00;
+    color: white;
+}
+
+.yui3-biddingbox-modifier-x, .yui3-biddingbox-modifier-xx {
+    background: #cb0000;
+    color: white;
+}
+
+.yui3-biddingbox-level, .yui3-biddingbox-suit {
+    background: #99cccc;
+    color: black;
+}
+
+.yui3-biddingbox-level-selected {
+    background: #ffce00;
+}
+
+.yui3-biddingbox-button-enabled {
+    cursor: pointer;
+}
