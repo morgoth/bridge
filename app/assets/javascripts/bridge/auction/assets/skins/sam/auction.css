@@ -52,6 +52,27 @@
     float: left;
 }
 
+.yui3-auction-bids .yui3-auctionbid-n {
+    margin-left: 0;
+    margin-right: -300px;
+    clear: left;
+}
+
+.yui3-auction-bids .yui3-auctionbid-e {
+    margin-left: 70px;
+    margin-right: -300px;
+}
+
+.yui3-auction-bids .yui3-auctionbid-s {
+    margin-left: 140px;
+    margin-right: -300px;
+}
+
+.yui3-auction-bids .yui3-auctionbid-w {
+    margin-left: 210px;
+    margin-right: -300px;
+}
+
 .yui3-auction-vulnerable {
     background: #cb0000;
 }

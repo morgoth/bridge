@@ -47,22 +47,16 @@ YUI.add("auction", function (Y) {
 
         _uiSyncBids: function (bids) {
             var i, length,
-                emptyBids = [];
+                dealerIndex = Y.Array.indexOf(["N", "E", "S", "W"], this.get("dealer"));
 
-            for (i = 0, length = Y.Array.indexOf(["N", "E", "S", "W"], this.get("dealer")); i < length; i++) {
-                emptyBids.push(undefined);
-            }
-
-            if (this.size() > emptyBids.length + bids.length) {
+            if (this.size() > bids.length) {
                 this.removeAll();
             }
 
-            Y.each(emptyBids.concat(bids), function (bid, i) {
-                if (this.item(i)) {
-                    this.item(i).set("bid", bid);
-                } else {
-                    this.add({ bid: bid });
-                }
+            Y.each(bids, function (bid, i) {
+                var attrs = { bid: bid, direction: ["N", "E", "S", "W"][(i + dealerIndex) % 4] };
+
+                this.item(i) ? this.item(i).setAttrs(attrs) : this.add(attrs);
             }, this);
 
             this._uiScrollDownBids();
