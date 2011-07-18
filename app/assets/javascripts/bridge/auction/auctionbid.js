@@ -22,9 +22,27 @@ YUI.add("auctionbid", function (Y) {
             this._syncDirection(this.get("direction"));
         },
 
+        _renderSuit: function (suit) {
+            var content = {C: "&clubs;", D: "&diams;", H: "&hearts;", S: "&spades;", NT: "NT"}[suit];
+
+            return '<span class="' + this.getClassName("suit", suit.toLowerCase()) + '">' + content + '</span>';
+        },
+
         _syncBid: function (bid) {
+            var content;
+
+            if (bid === "PASS") {
+                content = "Pass";
+            } else if (Y.Bridge.parseModifiers(bid) === "X") {
+                content = "Dbl";
+            } else if (Y.Bridge.parseModifiers(bid) === "XX") {
+                content = "Rdbl";
+            } else {
+                content = Y.Bridge.parseLevel(bid) + this._renderSuit(Y.Bridge.parseSuit(bid));
+            }
+
             if (Y.Lang.isValue(bid)) {
-                this.set("label", bid);
+                this.set("label", content);
             } else {
                 this.set("label", "");
             }

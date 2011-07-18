@@ -73,6 +73,17 @@
     margin-right: -300px;
 }
 
+
+.yui3-auction-bids .yui3-auctionbid-suit-h,
+.yui3-auction-bids .yui3-auctionbid-suit-d {
+    color: #cb0000;
+}
+
+.yui3-auction-bids .yui3-auctionbid-suit-c,
+.yui3-auction-bids .yui3-auctionbid-suit-s {
+    color: #000000;
+}
+
 .yui3-auction-vulnerable {
     background: #cb0000;
 }
