@@ -1,9 +1,10 @@
-Factory.define :table do |table|
+FactoryGirl.define do
+  factory :table do
+  end
 
-end
-
-Factory.define :table_with_players, :parent => :table do |table|
-  table.after_create do |t|
-    %w(N E S W).map { |direction| Factory(:player, :direction => direction, :table => t) }
+  factory :table_with_players, :parent => :table do
+    after_create do |table|
+      %w(N E S W).map { |direction| FactoryGirl.create(:player, :direction => direction, :table => table) }
+    end
   end
 end

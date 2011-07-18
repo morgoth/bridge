@@ -10,7 +10,7 @@ gem "sqlite3", :group => [:development, :test]
 gem "state_machine"
 
 group :test do
-  gem "factory_girl_rails"
+  gem "factory_girl_rails", "~> 1.1.rc1"
   gem "mocha"
   gem "turn", :require => false
 end

@@ -1,5 +1,7 @@
-Factory.define :bid do |bid|
-  bid.association :board
-  bid.bid "PASS"
-  bid.user { |b| b.current_user }
+FactoryGirl.define do
+  factory :bid do
+    board
+    bid "PASS"
+    user { current_user }
+  end
 end

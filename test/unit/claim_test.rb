@@ -2,12 +2,12 @@ require "test_helper"
 
 class ClaimTest < ActiveSupport::TestCase
   setup do
-    @claim = Factory.build(:claim, :board => Factory(:board_1S_by_N))
+    @claim = FactoryGirl.build(:claim, :board => FactoryGirl.create(:board_1S_by_N))
     @user_n = @declarer = @claim.board.user_n
     @user_e = @lho = @claim.board.user_e
     @user_s = @dummy = @claim.board.user_s
     @user_w = @rho = @claim.board.user_w
-    @stranger = Factory(:user)
+    @stranger = FactoryGirl.create(:user)
   end
 
   test "is valid with valid attributes" do

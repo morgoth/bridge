@@ -2,7 +2,7 @@ require "test_helper"
 
 class CardPlayingTest < ActiveSupport::TestCase
   setup do
-    @board = Factory(:board_1S_by_N, :deal_id => 636839108127179982824423290.to_s )
+    @board = FactoryGirl.create(:board_1S_by_N, :deal_id => 636839108127179982824423290.to_s )
     # :n => ["SA", "SK", "SQ", "S8", "S6", "HK", "H7", "H6", "H4", "DK", "DQ", "DJ", "C3"]
     # :e => ["S5", "S4", "S3", "HA", "HQ", "HJ", "H9", "D5", "D4", "CK", "CJ", "C9", "C5"]
     # :s => ["ST", "S7", "S2", "HT", "H8", "H2", "DT", "D8", "D3", "CA", "CT", "C6", "C2"]
@@ -182,7 +182,7 @@ class CardPlayingTest < ActiveSupport::TestCase
   end
 
   test "played card rejects active claim" do
-    claim = Factory(:claim, :board => @board, :user => @board.user_e)
+    claim = FactoryGirl.create(:claim, :board => @board, :user => @board.user_e)
     @board.cards.create!(:card => "S5", :user => @board.user_e)
     assert_equal "rejected", claim.reload.state
   end
@@ -190,7 +190,7 @@ end
 
 class CardPreviousTrickWinnerTest < ActiveSupport::TestCase
   setup do
-    @board = Factory(:board_1S_by_N, :deal_id => 2354882295268699396238561385.to_s)
+    @board = FactoryGirl.create(:board_1S_by_N, :deal_id => 2354882295268699396238561385.to_s)
     # "N"=>["SA", "SK", "SJ", "ST", "S8", "S5", "DT", "D2", "CA", "C9", "C7", "C5", "C2"]
     # "E"=>["S4", "HK", "HQ", "H8", "H6", "DA", "DK", "DQ", "D9", "D6", "D4", "CJ", "C4"]
     # "S"=>["S9", "S6", "S3", "S2", "H5", "H4", "H3", "D8", "D5", "CK", "CQ", "CT", "C3"]
