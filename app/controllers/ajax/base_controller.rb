@@ -1,9 +1,9 @@
 class Ajax::BaseController < ApplicationController
-  before_filter :fetch_table, :fetch_board, :fetch_user
+  # before_filter :fetch_table, :fetch_board, :fetch_user
 
   respond_to :json
 
-  self.responder = AjaxResponder
+  # self.responder = AjaxResponder
 
   protected
 
