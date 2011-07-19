@@ -39,9 +39,9 @@ class TableSerializer
         :vulnerable => board.vulnerable,
         :declarer   => board.declarer,
         :contract   => board.contract,
+        :deal       => board.deal.to_hash
         :bids       => bids,
         :cards      => cards,
-        :deal       => deal
       }
     else
       nil
@@ -52,7 +52,7 @@ class TableSerializer
     board.bids.map do |bid|
       {
         :id  => bid.id,
-        :bid => bid.bid
+        :bid => bid.bid.to_s
       }
     end
   end
@@ -61,17 +61,8 @@ class TableSerializer
     board.cards.map do |card|
       {
         :id   => card.id,
-        :card => card.card
+        :card => card.card.to_s
       }
     end
-  end
-
-  def deal
-    {
-      :n => board.deal.n,
-      :e => board.deal.e,
-      :s => board.deal.s,
-      :w => board.deal.w
-    }
   end
 end
