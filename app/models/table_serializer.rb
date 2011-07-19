@@ -16,7 +16,7 @@ class TableSerializer
       :state         => table.state,
       :version       => table.version,
       :players       => players,
-      :current_board => current_board
+      :board => board
     }
   end
 
@@ -30,7 +30,7 @@ class TableSerializer
     end
   end
 
-  def current_board
+  def board
     if board
       {
         :id         => board.id,
@@ -39,7 +39,7 @@ class TableSerializer
         :vulnerable => board.vulnerable,
         :declarer   => board.declarer,
         :contract   => board.contract,
-        :deal       => board.deal.to_hash
+        :deal       => board.deal.to_hash,
         :bids       => bids,
         :cards      => cards,
       }

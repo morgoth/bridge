@@ -1,4 +1,4 @@
-YUI().use("hand", "trick", "biddingbox", "auction", function (Y) {
+YUI().use("hand", "trick", "biddingbox", "auction", "table-model", function (Y) {
     this.Y = Y;
 
     var cards = ["SA", "SK", "SQ", "SJ", "ST", "S9", "S8", "S7", "S6", "S5", "S4", "S3", "S2",
