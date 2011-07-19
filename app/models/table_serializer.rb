@@ -1,12 +1,16 @@
-class Serializer
+class TableSerializer
   attr_reader :table, :board
 
-  def initialize(table)
-    @table = table
+  def initialize(table_id)
+    @table = Table.find(table_id)
     @board = @table.boards.current
   end
 
-  def config
+  def to_json
+    to_hash.to_json
+  end
+
+  def to_hash
     {
       :id            => table.id,
       :state         => table.state,
@@ -19,8 +23,9 @@ class Serializer
   def players
     table.players.map do |player|
       {
-        :id   => player.id,
-        :name => player.name
+        :id        => player.id,
+        :name      => player.name,
+        :direction => player.direction
       }
     end
   end

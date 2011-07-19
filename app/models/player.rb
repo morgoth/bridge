@@ -8,7 +8,11 @@ class Player < ActiveRecord::Base
   validates :direction, :presence => true, :inclusion => Bridge::DIRECTIONS, :uniqueness => {:scope => :table_id}
 
   delegate :start, :stop, :to => :table, :prefix => true
-  delegate :name, :to => :user
+  # delegate :name, :to => :user
+
+  def name
+    "user #{direction}"
+  end
 
   after_create :table_start
   after_destroy :table_stop
