@@ -58,6 +58,11 @@ window.YUI_config = {
         "bridge": {
             base: "/assets/bridge/",
             modules: {
+                "table": {
+                    path: "table/table.js",
+                    requires: ["widget", "hand", "auction", "biddingbox", "trick"],
+                    skinnable: true
+                },
                 "card": {
                     path: "card/card.js",
                     requires: ["widget", "widget-child"],
