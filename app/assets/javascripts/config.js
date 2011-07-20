@@ -31,7 +31,7 @@ window.YUI_config = {
                 },
                 "board-model": {
                     path: "board/board.js",
-                    requires: ["model"]
+                    requires: ["model", "bid-model-list", "card-model-list"]
                 },
                 "card-model": {
                     path: "card/card.js",

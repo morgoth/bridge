@@ -11,28 +11,40 @@ YUI.add("table-model", function (Y) {
             this._playerList.parent = this;
             this._playerList.addTarget(this);
 
-            // this._refreshBoard(this.get("board"));
-            // this._refreshBoard(this.get("players"));
+            this.after("playersChange", this._afterPlayersChange);
+            this.after("boardChange", this._afterBoardChange);
         },
 
-        _refreshBoard: function (board) {
-            this._board.setAttrs(board);
+        _afterPlayersChange: function (event) {
+            this._refreshPlayers(event.newVal);
+        },
+
+        _afterBoardChange: function (event) {
+            this._refreshBoard(event.newVal);
         },
 
         _refreshPlayers: function (players) {
             this._playerList.refresh(players);
         },
 
+        _refreshBoard: function (board) {
+            this._board.setAttrs(board);
+        },
+
+        _url: function (id) {
+            id || (id = this.get("id"));
+
+            if (id) {
+                return "/ajax/tables/" + id + ".json";
+            } else {
+                return "/ajax/tables.json";
+            }
+        },
+
         sync: function (action, options, callback) {
-            switch (action) {
-            case "create":
+            options || (options = {});
 
-                break;
-            case "update":
-
-                break;
-            case "read":
-                Y.io("/ajax/tables/" + this.get("id") + ".json", {
+            var configuration = {
                     on: {
                         success: function (transactionId, response) {
                             callback(null, response.responseText);
@@ -41,12 +53,24 @@ YUI.add("table-model", function (Y) {
                             callback(response.statusText, response.responseText);
                         }
                     }
-                });
+                };
+
+            switch (action) {
+            case "create":
+                configuration.method = "POST";
+                break;
+            case "update":
+                configuration.method = "PUT";
+                break;
+            case "read":
+                configuration.method = "GET";
                 break;
             case "delete":
-
+                configuration.method = "DELETE";
                 break;
             }
+
+            Y.io(this._url(options.id), configuration);
         }
 
     }, {
@@ -55,6 +79,10 @@ YUI.add("table-model", function (Y) {
 
             state: {
 
+            },
+
+            players: {
+                value: []
             }
 
         }
