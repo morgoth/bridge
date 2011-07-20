@@ -1,15 +1,12 @@
 YUI.add("newbidbox", function(Y){
 
     // FIXME: to nie są przypadkiem dwa widgety połączone w jeden? (dwa buttongroupy)
-
-    // Fires pressed button name (pass, x, xx)
-    var NewBidBox = Y.Base.create("newbidbox", Y.Widget, [Y.WidgetParent, Y.WidgetChild], {
-        initializer: function () {
-            this._addChildren();
-        },
-
+    var NewBidBox = Y.Base.create("newbidbox", Y.Widget, [], {
+        
         renderUI: function () {
             this._renderNewBidBox();
+            this._renderLevels();
+            this._renderSuits();
         },
 
         syncUI: function () {
@@ -21,6 +18,13 @@ YUI.add("newbidbox", function(Y){
             this._bindSuits();
             this.after("levelChange", this._afterLevelChange);
             this.after("contractChange", this._afterContractChange);
+        },
+
+        resetUI: function () {
+            // Uncheck level buttons
+            this._levelWidget.each(function (button) {
+                button.set("selected", 0);
+            });
         },
 
         _syncLevels: function () {
@@ -38,7 +42,6 @@ YUI.add("newbidbox", function(Y){
                 }, this);
             } else if (! level) {
                 // If level is not set, than suits are disabled.
-                // TODO: Sth better than iteration?
                 this._suitWidget.each(function (child) {
                     child.set("enabled", false);
                 }, this);
@@ -67,7 +70,12 @@ YUI.add("newbidbox", function(Y){
         _bindLevels: function () {
             this._levelWidget.after("selectionChange", function (event) {
                 var button = event.newVal;
-                this.set("level", button.get("level"));
+                if (Y.Lang.isValue(button)){
+                    this.set("level", button.get("level"));
+                } else {
+                    // On toggle deselect
+                    this.set("level", undefined);
+                }
             }, this);
         },
 
@@ -79,14 +87,9 @@ YUI.add("newbidbox", function(Y){
             this._syncSuits(event.newVal);
         },
 
-        _addChildren: function () {
-            this._addLevels();
-            this._addSuits();
-        },
-
-        _addLevels: function () {
-            // Create simple container class and its instance on the fly
-            var lw = this._levelWidget = new (Y.Base.create("levelwidget", Y.ButtonGroup, [Y.WidgetChild]))({
+        _renderLevels: function () {
+            // Create levels toggle group
+            var lw = this._levelWidget = new Y.ButtonGroup({
                 alwaysSelected: true,
                 label: ""
             });
@@ -95,25 +98,26 @@ YUI.add("newbidbox", function(Y){
                 var button = new Y.ButtonToggle({
                     label: level.toString()
                 });
-                // Setting undeclared attribute in constructor does not work
+                // TODO: Setting undeclared attribute in constructor does not work
                 button.set("level", level);
                 lw.add(button);
             }, this);
-            // Add as a child
-            this.add(lw);
+            lw.render(this.get("contentBox"));
         },
 
-        _addSuits: function () {
-            var sw = this._suitWidget = new (Y.Base.create("suitwidget", Y.Widget, [Y.WidgetParent, Y.WidgetChild]))();
+        _renderSuits: function () {
+            // Suits button group
+            var sw = this._suitWidget = new Y.ButtonGroup({ label: "" });
+            
             Y.each(Y.Bridge.CONTRACT_SUITS, function (suit) {
                 var button = new Y.Button({ label: suit });
                 button.set("suit", suit);
                 sw.add(button);
             }, this);
             // Add as a child
-            this.add(sw);
+            sw.render(this.get("contentBox"));
         },
-
+        
         _calcMinBid: function (contract) {
             if (! contract) {
                 this._minLevel = Y.Bridge.LEVELS[0];
@@ -123,47 +127,52 @@ YUI.add("newbidbox", function(Y){
             var cs = Y.Bridge.CONTRACT_SUITS,
                 level = Y.Bridge.parseLevel(contract),
                 suit = Y.Bridge.parseSuit(contract),
-                isNT = cs.indexOf(suit) == cs.length;
+                isNT = cs.indexOf(suit) + 1 == cs.length;
 
             this._minLevel = level + isNT;
             this._minSuit = isNT ? cs[0] : cs[cs.indexOf(suit) + 1];
         },
 
         _newBidSelected: function () {
-            this.fire("bid", Y.Bridge.makeContract(this.get("level"), this.get("suit")));
+            this._fireBidEvent();
+        },
+
+        _fireBidEvent: function () {
+            this.fire("bid", Y.Bridge.makeContract(
+                this.get("level"),
+                this.get("suit")));
         },
 
         _renderNewBidBox: function () {
             // Extra rendering stuff
+            
         }
 
     }, {
-
         ATTRS: {
-
+            
             contract: {
                 value: "",
                 setter: function (contract) {
                     return (Y.Lang.isValue(contract) && Y.Bridge.isContract(contract)) ? contract : undefined;
                 }
             },
-
+            
             level: {
-                value: "",
+                value: undefined,
                 setter: function (level) {
                     return (Y.Lang.isValue(level) && Y.Bridge.isLevel(level)) ? level : undefined;
                 }
             },
-
+            
             suit: {
                 value: "",
                 setter: function (suit) {
                     return (Y.Lang.isValue(suit) && Y.Bridge.isContractSuit(suit)) ? suit : undefined;
                 }
             }
-
+            
         }
-
     });
 
     Y.namespace("Bridge").NewBidBox = NewBidBox;

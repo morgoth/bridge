@@ -1,16 +1,19 @@
 YUI.add("passbox", function (Y) {
 
-    // Fires pressed button name (pass, x, xx)
     var PassBox = Y.Base.create("passbox", Y.ButtonGroup, [], {
 
-        _buttonNames: ["pass", "x", "xx"],
-
+        _buttonNames: ["PASS", "X", "XX"],
+        
         renderUI: function () {
             this._renderButtons();
         },
 
         _renderButtons: function () {
-            this.add([{ label: "Pass" }, { label: "Dbl" }, { label: "Rdbl" }]);
+            this.add([
+                { label: "Pass" },
+                { label: "Dbl" },
+                { label: "Rdbl" }
+            ]);
         },
 
         syncUI: function () {
@@ -30,7 +33,6 @@ YUI.add("passbox", function (Y) {
 
         _afterButtonPress: function (event) {
             var i = event.target.get("index");
-
             this.fire("bid", this._buttonNames[i]);
         },
 
@@ -48,9 +50,9 @@ YUI.add("passbox", function (Y) {
 
             enabledButtons: {
                 value: {
-                    pass: true,
-                    x: false,
-                    xx: false
+                    PASS: true,
+                    X: false,
+                    XX: true
                 }
             }
 

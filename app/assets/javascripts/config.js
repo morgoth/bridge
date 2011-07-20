@@ -78,7 +78,7 @@ window.YUI_config = {
                 },
                 "biddingbox": {
                     path: "biddingbox/biddingbox.js",
-                    requires: ["passbox", "newbidbox"],
+                    requires: ["passbox", "newbidbox", "alertbox"],
                     skinnable: true
                 },
                 "passbox": {
@@ -89,6 +89,11 @@ window.YUI_config = {
                 "newbidbox": {
                     path: "biddingbox/newbidbox.js",
                     requires: ["gallery-button", "gallery-button-toggle", "gallery-button-group"],
+                    skinnable: true
+                },
+                "alertbox": {
+                    path: "biddingbox/alertbox.js",
+                    requires: ["node", "gallery-button-toggle"],
                     skinnable: true
                 },
                 "trick": {
