@@ -1,6 +1,7 @@
 Bridge::Application.routes.draw do
   # bridge
   resources :tables, :only => [:index, :show, :create]
+  resource :session, :only => [:new, :create, :destroy]
 
   # ajax api
   namespace :ajax do

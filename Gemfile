@@ -6,8 +6,12 @@ gem "acts_as_list"
 gem "bridge"
 gem "proxies"
 gem "beaconpush"
-gem "sqlite3", :group => [:development, :test]
 gem "state_machine"
+
+group :development, :test do
+  gem "sqlite3"
+  gem "ruby-debug19", :require => "ruby-debug", :platform => :ruby_19
+end
 
 group :test do
   gem "factory_girl_rails", "~> 1.1.rc1"
