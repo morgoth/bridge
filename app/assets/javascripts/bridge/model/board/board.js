@@ -7,7 +7,12 @@ YUI.add("board-model", function (Y) {
         ATTRS: {
 
             deal: {
-
+                value: {
+                    "N": ["", "", "", "", "", "", "", "", "", "", "", "", ""],
+                    "E": ["", "", "", "", "", "", "", "", "", "", "", "", ""],
+                    "S": ["", "", "", "", "", "", "", "", "", "", "", "", ""],
+                    "W": ["", "", "", "", "", "", "", "", "", "", "", "", ""]
+                }
             },
 
             dealer: {
@@ -19,19 +24,19 @@ YUI.add("board-model", function (Y) {
             },
 
             declarer: {
-
+                value: null
             },
 
             contract: {
-
+                value: null
             },
 
             bids: {
-
+                value: []
             },
 
             cards: {
-
+                value: []
             }
 
         }
