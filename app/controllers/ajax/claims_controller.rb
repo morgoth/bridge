@@ -1,4 +1,4 @@
-class Ajax::ClaimsController < Ajax::BaseController
+class Ajax::ClaimsController < Ajax::ApplicationController
   def create
     @claim = @board.claims.build(params[:claim])
     @claim.user = current_user

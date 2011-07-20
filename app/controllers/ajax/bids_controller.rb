@@ -1,4 +1,4 @@
-class Ajax::BidsController < Ajax::BaseController
+class Ajax::BidsController < Ajax::ApplicationController
   def create
     @bid = @board.bids.build(params[:bid])
     @bid.user = @user
