@@ -18,6 +18,10 @@ class Table < ActiveRecord::Base
     boards.create!(attributes)
   end
 
+  def to_s
+    "Table #{id}"
+  end
+
   private
 
   def increment_version
