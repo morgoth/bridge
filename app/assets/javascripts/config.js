@@ -1,7 +1,7 @@
 window.YUI_config = {
     filter: "raw",
     groups: {
-        gallery: {
+        "gallery": {
             base: "/assets/gallery/",
             modules: {
                 "gallery-button": {
@@ -18,7 +18,44 @@ window.YUI_config = {
                 }
             }
         },
-        bridge: {
+        "bridge-model": {
+            base: "/assets/bridge/model/",
+            modules: {
+                "bid-model": {
+                    path: "bid/bid.js",
+                    requires: ["model"]
+                },
+                "bid-model-list": {
+                    path: "bidlist/bidlist.js",
+                    requires: ["model-list", "bid-model"]
+                },
+                "board-model": {
+                    path: "board/board.js",
+                    requires: ["model"]
+                },
+                "card-model": {
+                    path: "card/card.js",
+                    requires: ["model"]
+                },
+                "card-model-list": {
+                    path: "cardlist/cardlist.js",
+                    requires: ["model-list", "card-model"]
+                },
+                "player-model": {
+                    path: "player/player.js",
+                    requires: ["model"]
+                },
+                "player-model-list": {
+                    path: "playerlist/playerlist.js",
+                    requires: ["model-list", "player-model"]
+                },
+                "table-model": {
+                    path: "table/table.js",
+                    requires: ["model", "board-model", "player-model-list"]
+                }
+            }
+        },
+        "bridge": {
             base: "/assets/bridge/",
             modules: {
                 "card": {

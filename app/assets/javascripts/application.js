@@ -1,3 +1,3 @@
-YUI().use("hand", "trick", "biddingbox", "auction", function (Y) {
-
+YUI().use("hand", "trick", "biddingbox", "auction", "table-model", function (Y) {
+    this.Y = Y;
 });
