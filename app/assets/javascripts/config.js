@@ -51,7 +51,7 @@ window.YUI_config = {
                 },
                 "table-model": {
                     path: "table/table.js",
-                    requires: ["model", "board-model", "player-model-list"]
+                    requires: ["model", "board-model", "player-model-list", "io"]
                 }
             }
         },
