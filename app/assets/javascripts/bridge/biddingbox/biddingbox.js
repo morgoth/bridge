@@ -17,7 +17,6 @@ YUI.add("biddingbox", function (Y) {
         },
         
         _afterBid: function (event, bid) {
-            this._newBidBox.resetUI();
             this._fireBidEvent(bid);
         },
 

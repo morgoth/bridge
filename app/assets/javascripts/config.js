@@ -93,7 +93,17 @@ window.YUI_config = {
                 },
                 "newbidbox": {
                     path: "biddingbox/newbidbox.js",
-                    requires: ["gallery-button", "gallery-button-toggle", "gallery-button-group"],
+                    requires: ["newbidboxsuits", "newbidboxlevels"],
+                    skinnable: true
+                },
+                "newbidboxlevels": {
+                    path: "biddingbox/newbidboxlevels.js",
+                    requires: ["gallery-button-toggle", "gallery-button-group"],
+                    skinnable: true
+                },
+                "newbidboxsuits": {
+                    path: "biddingbox/newbidboxsuits.js",
+                    requires: ["gallery-button", "gallery-button-group"],
                     skinnable: true
                 },
                 "alertbox": {
