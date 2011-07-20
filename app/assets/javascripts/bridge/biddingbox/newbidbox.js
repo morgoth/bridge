@@ -65,7 +65,8 @@ YUI.add("newbidbox", function(Y){
         },
 
         _newBidSelected: function (bid) {
-            this._levelWidget.resetSelected();
+            this._levelWidget.clearSelected();
+            this._suitWidget.clearChoices();
             this._fireBidEvent(bid);
         },
 

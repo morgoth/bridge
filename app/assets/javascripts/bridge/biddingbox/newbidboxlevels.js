@@ -15,7 +15,7 @@ YUI.add("newbidboxlevels", function(Y){
             this.on("minLevelChange", this._afterMinLevelChange);
         },
 
-        resetSelected: function () {
+        clearSelected: function () {
             this.each(function (child) {
                 child.set("selected", 0);
             }, this);

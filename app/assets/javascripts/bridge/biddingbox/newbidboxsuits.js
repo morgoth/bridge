@@ -25,6 +25,10 @@ YUI.add("newbidboxsuits", function(Y){
             this.after("button:press", this._afterButtonPress);
         },
 
+        clearChoices: function () {
+            this.set("minSuit", undefined);
+        },
+
         _getButtonSuit: function (button) {
             return Y.Bridge.CONTRACT_SUITS[button.get("index")];
         },
