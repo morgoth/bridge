@@ -1,4 +1,4 @@
-class Ajax::PlayersController < Ajax::BaseController
+class Ajax::PlayersController < Ajax::ApplicationController
   before_filter :fetch_player, :except => [:create]
 
   def create

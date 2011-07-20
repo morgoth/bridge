@@ -1,6 +1,4 @@
 class TablesController < ApplicationController
-  before_filter :authenticate_user!, :only => [:create]
-
   def index
     @tables = Table.all
   end

@@ -22,6 +22,10 @@ class Table < ActiveRecord::Base
     "Table #{id}"
   end
 
+  def board
+    boards.current
+  end
+
   private
 
   def increment_version

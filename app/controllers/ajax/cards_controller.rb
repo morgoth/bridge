@@ -1,4 +1,4 @@
-class Ajax::CardsController < Ajax::BaseController
+class Ajax::CardsController < Ajax::ApplicationController
   def create
     @card = @board.cards.build(params[:card])
     @card.user = @user
