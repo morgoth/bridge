@@ -11,6 +11,8 @@ http://www.assembla.com/code/yui/git/node/blob/yui3-gallery/sandbox/apipkin/gall
 
 /* button.css */
 
+/* FIXME: rename .yui3-button* -> .yui3-button-content */
+
 .yui3-biddingbox-content .yui3-button {
     background: #d9d9d9 left top repeat-x;
     border: 1px solid #959595;
@@ -90,7 +92,6 @@ http://www.assembla.com/code/yui/git/node/blob/yui3-gallery/sandbox/apipkin/gall
 
 .yui3-biddingbox-content .yui3-icon-default .yui3-button-content {
     padding-left: 0;
-    background: none;
 }
 
 .yui3-biddingbox-content .yui3-button .yui3-icon {
