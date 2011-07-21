@@ -1,0 +1,24 @@
+<h1> Log in </h1>
+
+<%= form_for(@session, :url => session_path) do |f| %>
+  <% if @session.errors.any? %>
+    <ul>
+    <% @session.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  <% end %>
+
+  <p>
+    <%= f.label(:email) %> </br>
+    <%= f.text_field(:email) %>
+  </p>
+  <p>
+    <%= f.label(:password) %> </br>
+    <%= f.password_field(:password) %>
+  </p>
+  <p>
+    <%= f.submit "Log in" %> </br>
+  </p>
+
+<% end %>

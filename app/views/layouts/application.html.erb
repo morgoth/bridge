@@ -7,6 +7,21 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
+<header>
+  <nav>
+    <% if current_user %>
+      <%= button_to "Log out #{current_user.name}", session_path, :method => :delete %>
+    <% else %>
+      <%= link_to "Log in", new_session_path %>
+    <% end %>
+  </nav>
+</header>
+
+<% if alert %>
+  <%= alert %>
+<% elsif notice %>
+  <%= notice %>
+<% end %>
 
 <%= yield %>
 

@@ -1,32 +1,24 @@
-YUI.add("newbidboxsuits", function(Y){
+YUI.add("bidboxsuits", function(Y){
 
-    var NewBidBoxSuits = Y.Base.create("newbidboxsuit", Y.ButtonGroup, [], {
+    var BidBoxSuits = Y.Base.create("bidboxsuit", Y.ButtonGroup, [], {
+        
+        clearChoices: function () {
+            this.set("minSuit", undefined);
+        },
 
         renderUI: function () {
-            this._renderNewBidBoxSuits();
+            this._renderBidBoxSuits();
         },
 
-        syncUI: function () {
-            this._syncMinSuit(this.get("minSuit"));
-        },
-
-        _syncMinSuit: function (minSuit) {
-            var minIndex = Y.Bridge.CONTRACT_SUITS.indexOf(minSuit);
-            if (! Y.Lang.isValue(minSuit)){
-                minIndex = 5; // nah nah nah
-            }
-            this.each(function (button, i) {
-                button.set("enabled", i >= minIndex);
+        _renderBidBoxSuits: function () {
+            Y.each(Y.Bridge.CONTRACT_SUITS, function (suit) {
+                this.add({ label: suit });
             }, this);
         },
 
         bindUI: function () {
             this.after("minSuitChange", this._afterMinSuitChange);
             this.after("button:press", this._afterButtonPress);
-        },
-
-        clearChoices: function () {
-            this.set("minSuit", undefined);
         },
 
         _getButtonSuit: function (button) {
@@ -41,11 +33,23 @@ YUI.add("newbidboxsuits", function(Y){
             this._fireSuitSelected(this._getButtonSuit(event.target));
         },
 
-        _renderNewBidBoxSuits: function () {
-            Y.each(Y.Bridge.CONTRACT_SUITS, function (suit) {
-                var button = new Y.Button({ label: suit });
-                this.add(button);
+        syncUI: function () {
+            this._syncMinSuit(this.get("minSuit"));
+        },
+
+        _syncMinSuit: function (minSuit) {
+            var minIndex = Y.Bridge.CONTRACT_SUITS.indexOf(minSuit);
+
+            if (!Y.Lang.isValue(minSuit)){
+                minIndex = 5; // nah nah nah
+            }
+            this.each(function (button, i) {
+                button.set("enabled", i >= minIndex);
             }, this);
+        },
+
+        _getButtonSuit: function (button) {
+            return Y.Bridge.CONTRACT_SUITS[button.get("index")];
         },
 
         _newSuitSelected: function () {
@@ -54,14 +58,14 @@ YUI.add("newbidboxsuits", function(Y){
 
         _fireSuitSelected: function (suit) {
             this.fire("suitSelected", suit);
-        },
-
-        _renderNewBidBox: function () {
-            // Extra rendering stuff
         }
 
     }, {
         ATTRS: {
+
+            defaultChildType: {
+                value: Y.Button
+            },
 
             minSuit: {
                 value: undefined,
@@ -73,6 +77,6 @@ YUI.add("newbidboxsuits", function(Y){
         }
     });
 
-    Y.namespace("Bridge").NewBidBoxSuits = NewBidBoxSuits;
+    Y.namespace("Bridge").BidBoxSuits = BidBoxSuits;
 
 }, "0", { requires: ["gallery-button", "gallery-button-toggle", "gallery-button-group"] });

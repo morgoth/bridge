@@ -83,7 +83,7 @@ window.YUI_config = {
                 },
                 "biddingbox": {
                     path: "biddingbox/biddingbox.js",
-                    requires: ["passbox", "newbidbox", "alertbox"],
+                    requires: ["passbox", "bidbox", "alertbox"],
                     skinnable: true
                 },
                 "passbox": {
@@ -91,18 +91,18 @@ window.YUI_config = {
                     requires: ["gallery-button", "gallery-button-group"],
                     skinnable: true
                 },
-                "newbidbox": {
-                    path: "biddingbox/newbidbox.js",
-                    requires: ["newbidboxsuits", "newbidboxlevels"],
+                "bidbox": {
+                    path: "biddingbox/bidbox.js",
+                    requires: ["bidboxsuits", "bidboxlevels"],
                     skinnable: true
                 },
-                "newbidboxlevels": {
-                    path: "biddingbox/newbidboxlevels.js",
+                "bidboxlevels": {
+                    path: "biddingbox/bidboxlevels.js",
                     requires: ["gallery-button-toggle", "gallery-button-group"],
                     skinnable: true
                 },
-                "newbidboxsuits": {
-                    path: "biddingbox/newbidboxsuits.js",
+                "bidboxsuits": {
+                    path: "biddingbox/bidboxsuits.js",
                     requires: ["gallery-button", "gallery-button-group"],
                     skinnable: true
                 },
