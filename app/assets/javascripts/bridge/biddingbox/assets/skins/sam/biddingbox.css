@@ -192,9 +192,11 @@ input.yui3-biddingbox-alert-input {
 
 .yui3-bidboxsuit-suit-c,
 .yui3-bidboxsuit-suit-s {
+    font-family: sans-serif;
 }
 
 .yui3-bidboxsuit-suit-d,
 .yui3-bidboxsuit-suit-h {
+    font-family: sans-serif;
     color: #cb0000;
 }
