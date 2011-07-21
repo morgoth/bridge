@@ -51,7 +51,7 @@ YUI.add("biddingbox", function (Y) {
 
         _syncOurs: function (ours) {
             var contract = this.get("contract"),
-                mods = Y.Bridge.parseModifiers(contract);
+                mods = contract ? Y.Bridge.parseModifiers(contract) : "";
 
             this._passBox.set("enabledButtons", {
                 PASS: true,
