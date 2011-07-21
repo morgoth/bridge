@@ -189,3 +189,12 @@ input.yui3-biddingbox-alert-input {
 .yui3-biddingbox-button-enabled {
     cursor: pointer;
 }
+
+.yui3-bidboxsuit-suit-c,
+.yui3-bidboxsuit-suit-s {
+}
+
+.yui3-bidboxsuit-suit-d,
+.yui3-bidboxsuit-suit-h {
+    color: #cb0000;
+}

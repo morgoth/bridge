@@ -12,8 +12,14 @@ YUI.add("bidboxsuits", function (Y) {
 
         _renderBidBoxSuits: function () {
             Y.each(Y.Bridge.CONTRACT_SUITS, function (suit) {
-                this.add({ label: suit });
+                this.add({ label: this._renderSuit(suit) });
             }, this);
+        },
+
+        _renderSuit: function (suit) {
+            var content = { C: "&clubs;", D: "&diams;", H: "&hearts;", S: "&spades;", NT: "NT" }[suit];
+
+            return '<span class="' + this.getClassName("suit", suit.toLowerCase()) + '">' + content + '</span>';
         },
 
         bindUI: function () {

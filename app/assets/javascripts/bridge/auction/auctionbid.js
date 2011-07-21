@@ -23,7 +23,7 @@ YUI.add("auctionbid", function (Y) {
         },
 
         _renderSuit: function (suit) {
-            var content = {C: "&clubs;", D: "&diams;", H: "&hearts;", S: "&spades;", NT: "NT"}[suit];
+            var content = { C: "&clubs;", D: "&diams;", H: "&hearts;", S: "&spades;", NT: "NT" }[suit];
 
             return '<span class="' + this.getClassName("suit", suit.toLowerCase()) + '">' + content + '</span>';
         },
