@@ -23,7 +23,7 @@ YUI.add("table", function (Y) {
         },
 
         _renderPlaceholder: function (name) {
-            return this.get("contentBox").appendChild('<div>').addClass("placeholder", this.getClassName(name)).addClass(this.getClassName("placeholder"));
+            return this.get("contentBox").appendChild('<div>').addClass(this.getClassName("placeholder", name)).addClass(this.getClassName("placeholder"));
         },
 
         _renderHands: function () {
@@ -38,7 +38,7 @@ YUI.add("table", function (Y) {
         },
 
         _renderBiddingBox: function () {
-            this._biddingBox = new Y.Bridge.BiddingBox({ contract: "1C" }).render(this._brNode);
+            this._biddingBox = new Y.Bridge.BiddingBox({}).render(this._brNode);
         },
 
         _renderAuction: function () {

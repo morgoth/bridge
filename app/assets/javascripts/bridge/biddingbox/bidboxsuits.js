@@ -1,7 +1,7 @@
 YUI.add("bidboxsuits", function (Y) {
 
     var BidBoxSuits = Y.Base.create("bidboxsuit", Y.ButtonGroup, [], {
-        
+
         clearChoices: function () {
             this.set("minSuit", undefined);
         },
