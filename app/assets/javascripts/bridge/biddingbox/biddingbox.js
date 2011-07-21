@@ -50,12 +50,13 @@ YUI.add("biddingbox", function (Y) {
         },
 
         _syncOurs: function (ours) {
-            var mods = Y.Bridge.parseModifiers(this.get("contract"));
+            var contract = this.get("contract"),
+                mods = Y.Bridge.parseModifiers(contract);
 
             this._passBox.set("enabledButtons", {
                 PASS: true,
-                X: !ours && !mods,
-                XX: ours && mods == "X"
+                X: !ours && !mods && Y.Lang.isValue(contract),
+                XX: ours && mods === "X"
             });
         },
 
