@@ -1,21 +1,23 @@
 class TableSerializer
+  include ActiveModel::Serializers::JSON
+
   attr_reader :table
+  delegate :id, :state, :version, :to => :table
+
+  self.include_root_in_json = false
 
   def initialize(table_id)
     @table = Table.find(table_id)
+    @board = @table.boards.current
   end
 
-  def to_json
-    to_hash.to_json
-  end
-
-  def to_hash
+  def attributes
     {
-      :id      => table.id,
-      :state   => table.state,
-      :version => table.version,
-      :players => players,
-      :board   => board
+      :id      => nil,
+      :state   => nil,
+      :version => nil,
+      :players => nil,
+      :board   => nil,
     }
   end
 
@@ -30,16 +32,15 @@ class TableSerializer
   end
 
   def board
-    board = table.board
-    if board
+    if @board
       {
-        :id         => board.id,
-        :state      => board.state,
-        :dealer     => board.dealer,
-        :vulnerable => board.vulnerable,
-        :declarer   => board.declarer,
-        :contract   => board.contract,
-        :deal       => board.deal.to_hash,
+        :id         => @board.id,
+        :state      => @board.state,
+        :dealer     => @board.dealer,
+        :vulnerable => @board.vulnerable,
+        :declarer   => @board.declarer,
+        :contract   => @board.contract,
+        :deal       => @board.deal.to_hash,
         :bids       => bids,
         :cards      => cards,
       }
@@ -49,7 +50,7 @@ class TableSerializer
   end
 
   def bids
-    table.board.bids.map do |bid|
+    @board.bids.map do |bid|
       {
         :id  => bid.id,
         :bid => bid.bid.to_s
@@ -58,7 +59,7 @@ class TableSerializer
   end
 
   def cards
-    table.board.cards.map do |card|
+    @board.cards.map do |card|
       {
         :id   => card.id,
         :card => card.card.to_s
