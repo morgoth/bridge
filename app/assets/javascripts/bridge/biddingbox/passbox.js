@@ -2,14 +2,26 @@ YUI.add("passbox", function (Y) {
 
     var PassBox = Y.Base.create("passbox", Y.ButtonGroup, [], {
 
-        _buttonNames: ["PASS", "X", "XX"],
-
         renderUI: function () {
             this._renderButtons();
         },
 
         _renderButtons: function () {
+            var buttonNames = ["PASS", "X", "XX"];
+
             this.add([{ label: "Pass" }, { label: "Dbl" }, { label: "Rdbl" }]);
+            // Adding names and css classes
+            this.each(function (button, i) {
+                var className = this.getClassName("modifier", buttonNames[i].toLowerCase());
+
+                button.addAttr("name", {
+                    value: buttonNames[i],
+                    writeOnce: true
+                });
+                // adding css class: "passbox-modifier-{button_name}"
+                // FIXME: class gets added before yui3-button-content. Fix it or add it to boundingBox
+                button.get("contentBox").addClass(className);
+            }, this);
         },
 
         syncUI: function () {
@@ -18,7 +30,7 @@ YUI.add("passbox", function (Y) {
 
         _syncEnabledButtons: function (enabledButtons) {
             this.each(function (button, i) {
-                button.set("enabled", enabledButtons[this._buttonNames[i]]);
+                button.set("enabled", enabledButtons[button.get("name")]);
             }, this);
         },
 
@@ -28,9 +40,7 @@ YUI.add("passbox", function (Y) {
         },
 
         _afterButtonPress: function (event) {
-            var i = event.target.get("index");
-
-            this.fire("bid", this._buttonNames[i]);
+            this.fire("bid", event.target.get("name"));
         },
 
         _afterEnabledButtonsChange: function (event) {
@@ -47,9 +57,9 @@ YUI.add("passbox", function (Y) {
 
             enabledButtons: {
                 value: {
-                    PASS: true,
+                    PASS: false,
                     X: false,
-                    XX: true
+                    XX: false
                 }
             }
 
