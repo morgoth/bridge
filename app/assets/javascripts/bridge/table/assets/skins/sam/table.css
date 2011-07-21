@@ -1,0 +1,11 @@
+.yui3-table-content {
+    width: 960px;
+    height: 700px;
+    margin: auto;
+}
+
+.yui3-table-placeholder {
+    width: 33%;
+    height: 33%;
+    float: left;
+}
