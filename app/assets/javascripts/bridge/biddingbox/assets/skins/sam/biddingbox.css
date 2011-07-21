@@ -27,6 +27,7 @@ http://www.assembla.com/code/yui/git/node/blob/yui3-gallery/sandbox/apipkin/gall
     zoom: 1;
     *display: inline;
 }
+
 .yui3-biddingbox-content .yui3-button .yui3-button-content,
 .yui3-biddingbox-content .yui3-button .yui3-icon {
     *display: inline-block;
@@ -34,12 +35,14 @@ http://www.assembla.com/code/yui/git/node/blob/yui3-gallery/sandbox/apipkin/gall
     display: inline;
     vertical-align: middle;
 }
+
 .yui3-biddingbox-content .yui3-button-focused {
     border-color: #009ee7;
     box-shadow: 0 0 2px #009ee7;
     -moz-box-shadow: 0 0 2px #009ee7;
     -webkit-box-shadow: 0 0 2px #009ee7;
 }
+
 .yui3-biddingbox-content .yui3-button .yui3-button-content {
     line-height: 16px;
     text-shadow: 1px 1px #efefef;
@@ -64,6 +67,7 @@ http://www.assembla.com/code/yui/git/node/blob/yui3-gallery/sandbox/apipkin/gall
     background-position: left 0px;
     cursor: default;
 }
+
 .yui3-biddingbox-content .yui3-button-disabled .yui3-button-content {
     cursor: default;
 }
@@ -79,18 +83,22 @@ http://www.assembla.com/code/yui/git/node/blob/yui3-gallery/sandbox/apipkin/gall
     opacity: .5;
     filter: alpha(opacity=50);
 }
+
 .yui3-biddingbox-content .yui3-button-disabled .yui3-icon {
     background-image: url('img/icon-sprite-bw.gif');
 }
+
 .yui3-biddingbox-content .yui3-icon-default .yui3-button-content {
     padding-left: 0;
     background: none;
 }
+
 .yui3-biddingbox-content .yui3-button .yui3-icon {
     background-image: url('img/icon-sprite.gif');
     width: 22px;
     height: 16px;
 }
+
 .yui3-biddingbox-content .yui3-icon-default .yui3-icon {
     width: 0px;
 }
