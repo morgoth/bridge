@@ -6,27 +6,15 @@ YUI.add("bidboxsuits", function(Y){
             this._renderBidBoxSuits();
         },
 
-        syncUI: function () {
-            this._syncMinSuit(this.get("minSuit"));
-        },
-
-        _syncMinSuit: function (minSuit) {
-            var minIndex = Y.Bridge.CONTRACT_SUITS.indexOf(minSuit);
-            if (!Y.Lang.isValue(minSuit)){
-                minIndex = 5; // nah nah nah
-            }
-            this.each(function (button, i) {
-                button.set("enabled", i >= minIndex);
+        _renderBidBoxSuits: function () {
+            Y.each(Y.Bridge.CONTRACT_SUITS, function (suit) {
+                this.add({ label: suit });
             }, this);
         },
 
         bindUI: function () {
             this.after("minSuitChange", this._afterMinSuitChange);
             this.after("button:press", this._afterButtonPress);
-        },
-
-        _getButtonSuit: function (button) {
-            return Y.Bridge.CONTRACT_SUITS[button.get("index")];
         },
 
         _afterMinSuitChange: function (event) {
@@ -37,11 +25,23 @@ YUI.add("bidboxsuits", function(Y){
             this._fireSuitSelected(this._getButtonSuit(event.target));
         },
 
-        _renderBidBoxSuits: function () {
-            Y.each(Y.Bridge.CONTRACT_SUITS, function (suit) {
-                var button = new Y.Button({ label: suit });
-                this.add(button);
+        syncUI: function () {
+            this._syncMinSuit(this.get("minSuit"));
+        },
+
+        _syncMinSuit: function (minSuit) {
+            var minIndex = Y.Bridge.CONTRACT_SUITS.indexOf(minSuit);
+
+            if (!Y.Lang.isValue(minSuit)){
+                minIndex = 5; // nah nah nah
+            }
+            this.each(function (button, i) {
+                button.set("enabled", i >= minIndex);
             }, this);
+        },
+
+        _getButtonSuit: function (button) {
+            return Y.Bridge.CONTRACT_SUITS[button.get("index")];
         },
 
         _newSuitSelected: function () {
@@ -54,6 +54,10 @@ YUI.add("bidboxsuits", function(Y){
 
     }, {
         ATTRS: {
+
+            defaultChildType: {
+                value: Y.Button
+            },
 
             minSuit: {
                 value: undefined,

@@ -58,11 +58,7 @@ YUI.add("biddingbox", function (Y) {
         _fireBidEvent: function (bid) {
             var alertData = this._getAlert();
 
-            this.fire("bid", {}, {
-                bid: bid,
-                alert: alertData.alert,
-                alertMsg: alertData.alertMsg
-            });
+            this.fire("bid", {}, { bid: bid, alert: alertData.alert, alertMsg: alertData.alertMsg });
         },
 
         _getAlert: function () {

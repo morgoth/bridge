@@ -6,27 +6,33 @@ YUI.add("bidboxlevels", function(Y){
             this._renderBidBoxLevels();
         },
 
-        syncUI: function () {
-            this._syncMinLevel(this.get("minLevel"));
+        _renderBidBoxLevels: function () {
+            Y.each(Y.Bridge.LEVELS, function (level) {
+                this.add({ label: level.toString() });
+            }, this);
         },
 
         bindUI: function () {
-            this.after("selectionChange", this._afterSelectionChange);
             this.after("minLevelChange", this._afterMinLevelChange);
-        },
-
-        resetSelected: function () {
-            this.each(function (child) {
-                child.set("selected", 0);
-            }, this);
         },
 
         _afterMinLevelChange: function (event) {
             this._syncMinLevel(event.newVal);
         },
 
+        _afterSelectionChange: function (event) {
+            var button = event.newVal;
+
+            this.constructor.superclass._afterSelectionChange.apply(this, arguments);
+            this._fireLevelEvent(button ? button.get("index") + 1 : undefined);
+        },
+
+        syncUI: function () {
+            this._syncMinLevel(this.get("minLevel"));
+        },
+
         _syncMinLevel: function (minLevel) {
-            if (! Y.Lang.isValue(minLevel)){
+            if (!Y.Lang.isValue(minLevel)) {
                 minLevel = 8; // nah nah nah
             }
             this.each(function (child, i) {
@@ -34,17 +40,9 @@ YUI.add("bidboxlevels", function(Y){
             }, this);
         },
 
-        _afterSelectionChange: function(event) {
-            var button = event.newVal;
-
-            if (Y.Lang.isValue(button)){
-                this._fireLevelEvent(button.get("index") + 1);
-            }
-        },
-
-        _renderBidBoxLevels: function () {
-            Y.each(Y.Bridge.LEVELS, function (level) {
-                this.add({ label: level.toString() });
+        resetSelected: function () {
+            this.each(function (child) {
+                child.set("selected", 0);
             }, this);
         },
 

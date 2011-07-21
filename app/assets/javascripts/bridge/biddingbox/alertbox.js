@@ -2,11 +2,31 @@ YUI.add("alertbox", function(Y){
 
     var AlertBox = Y.Base.create("alertbox", Y.Widget, [], {
 
-        ALERT_INPUT_TEMPLATE:  '<input type="text" name="alertMsg" value=""/>',
+        ALERT_INPUT_TEMPLATE: '<input type="text" />',
 
         renderUI: function () {
             this._renderAlertToggle();
             this._renderAlertInput();
+        },
+
+        _renderAlertInput: function () {
+            this._alertInput = this.get("contentBox").appendChild(this.ALERT_INPUT_TEMPLATE);
+        },
+
+        _renderAlertToggle: function () {
+            this._alertToggle = new Y.ButtonToggle({ label: "Alert" });
+            this._alertToggle.render(this.get("contentBox"));
+        },
+
+        bindUI: function () {
+            this._alertToggle.after("selectedChange", this._afterAlertTogglePress, this);
+        },
+
+        _afterAlertTogglePress: function (event) {
+            var selected = !!event.newVal;
+
+            this.set("alert", selected);
+            this._syncAlertInput(selected);
         },
 
         syncUI: function () {
@@ -14,8 +34,16 @@ YUI.add("alertbox", function(Y){
             this._syncAlertToggle(this.get("alert"));
         },
 
-        bindUI: function () {
-            this._alertToggle.after("selectedChange", this._afterAlertTogglePress, this);
+        _syncAlertInput: function (alert) {
+            if (alert) {
+                this._alertInput.show();
+            } else {
+                this._alertInput.hide();
+            }
+        },
+
+        _syncAlertToggle: function (alert) {
+            this._alertToggle.set("selected", +alert);
         },
 
         resetUI: function () {
@@ -40,34 +68,6 @@ YUI.add("alertbox", function(Y){
             this.resetUI();
 
             return result;
-        },
-
-        _syncAlertInput: function (alert) {
-            if (alert) {
-                this._alertInput.show();
-            } else {
-                this._alertInput.hide();
-            }
-        },
-
-        _syncAlertToggle: function (alert) {
-            this._alertToggle.set("selected", +alert);
-        },
-
-        _renderAlertInput: function () {
-            this._alertInput = this.get("contentBox").appendChild(this.ALERT_INPUT_TEMPLATE);
-        },
-
-        _renderAlertToggle: function () {
-            this._alertToggle = new Y.ButtonToggle({ label: "alert" });
-            this._alertToggle.render(this.get("contentBox"));
-        },
-
-        _afterAlertTogglePress: function (event) {
-            var selected = !!event.newVal;
-
-            this.set("alert", selected);
-            this._syncAlertInput(selected);
         }
 
     }, {

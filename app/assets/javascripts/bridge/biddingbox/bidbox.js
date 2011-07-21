@@ -3,13 +3,16 @@ YUI.add("bidbox", function(Y){
     var BidBox = Y.Base.create("bidbox", Y.Widget, [], {
 
         renderUI: function () {
-            this._renderBidBox();
             this._renderLevels();
             this._renderSuits();
         },
 
-        syncUI: function () {
-            this._syncContract(this.get("contract"));
+        _renderLevels: function () {
+            this._levelWidget = new Y.Bridge.BidBoxLevels().render(this.get("contentBox"));
+        },
+
+        _renderSuits: function () {
+            this._suitWidget = new Y.Bridge.BidBoxSuits().render(this.get("contentBox"));
         },
 
         bindUI: function () {
@@ -24,10 +27,12 @@ YUI.add("bidbox", function(Y){
 
         _afterLevelSelected: function (event, level) {
             this._level = level;
-            if (level == this._minLevel) {
+            if (level === this._minLevel) {
                 this._suitWidget.set("minSuit", this._minSuit);
-            } else {
+            } else if (level > this._minLevel) {
                 this._suitWidget.set("minSuit", Y.Bridge.CONTRACT_SUITS[0]);
+            } else {
+                this._suitWidget.set("minSuit", undefined);
             }
         },
 
@@ -35,18 +40,14 @@ YUI.add("bidbox", function(Y){
             this._bidSelected(Y.Bridge.makeContract(this._level, suit));
         },
 
+        syncUI: function () {
+            this._syncContract(this.get("contract"));
+        },
+
         _syncContract: function (contract) {
             this._calcMinBid(contract);
             this._levelWidget.set("minLevel", this._minLevel);
             this._suitWidget.set("minSuit", undefined);
-        },
-
-        _renderLevels: function () {
-            this._levelWidget = new Y.Bridge.BidBoxLevels().render(this.get("contentBox"));
-        },
-
-        _renderSuits: function () {
-            this._suitWidget = new Y.Bridge.BidBoxSuits().render(this.get("contentBox"));
         },
 
         _calcMinBid: function (contract) {
@@ -58,7 +59,7 @@ YUI.add("bidbox", function(Y){
             var cs = Y.Bridge.CONTRACT_SUITS,
                 level = Y.Bridge.parseLevel(contract),
                 suit = Y.Bridge.parseSuit(contract),
-                isNT = cs.indexOf(suit) + 1 == cs.length;
+                isNT = cs.indexOf(suit) + 1 === cs.length;
 
             this._minLevel = level + isNT;
             this._minSuit = isNT ? cs[0] : cs[cs.indexOf(suit) + 1];
@@ -71,10 +72,6 @@ YUI.add("bidbox", function(Y){
 
         _fireBidEvent: function (bid) {
             this.fire("bid", bid);
-        },
-
-        _renderBidBox: function () {
-            // Extra rendering stuff
         }
 
     }, {
