@@ -119,15 +119,18 @@ http://www.assembla.com/code/yui/git/node/blob/yui3-gallery/sandbox/apipkin/gall
     font-size: 167%;
 }
 
-.yui3-biddingbox-modifiers, .yui3-biddingbox-levels, .yui3-biddingbox-suits, .yui3-biddingbox-alerts {
+/* .yui3-biddingbox-modifiers, .yui3-biddingbox-levels, .yui3-biddingbox-suits, .yui3-biddingbox-alerts { */
+
+/* FIXME: Fix height */
+.yui3-passbox, .yui3-bidboxlevels, .yui3-bidboxsuits, .yui3-alertbox {
     margin: 0;
     padding: 0;
     display: block;
     line-height: 30px;
-    height: 30px;
+    *height: 30px;
 }
 
-.yui3-biddingbox-modifiers li, .yui3-biddingbox-levels li, .yui3-biddingbox-suits li, .yui3-biddingbox-alerts li {
+.yui3-passbox li, .yui3-bidboxlevels li, .yui3-bidboxsuits li, .yui3-alertbox li {
     list-style: none;
     display: inline;
 }
@@ -167,12 +170,12 @@ input.yui3-biddingbox-alert-input {
     margin-right: 1px;
 }
 
-.yui3-biddingbox-modifier-pass {
-    background: #006d00;
+.yui3-passbox-modifier-pass {
+    background: green;
     color: white;
 }
 
-.yui3-biddingbox-modifier-x, .yui3-biddingbox-modifier-xx {
+.yui3-passbox-modifier-x, .yui3-passbox-modifier-xx {
     background: #cb0000;
     color: white;
 }
