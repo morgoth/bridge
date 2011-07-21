@@ -52,13 +52,21 @@ YUI.add("biddingbox", function (Y) {
         _syncOurs: function (ours) {
             var mods = Y.Bridge.parseModifiers(this.get("contract"));
 
-            this._passBox.set("enabledButtons", { PASS: true, X: !ours && !mods, XX: ours && mods == "X" });
+            this._passBox.set("enabledButtons", {
+                PASS: true,
+                X: !ours && !mods,
+                XX: ours && mods == "X"
+            });
         },
 
         _fireBidEvent: function (bid) {
             var alertData = this._getAlert();
 
-            this.fire("bid", {}, { bid: bid, alert: alertData.alert, alertMsg: alertData.alertMsg });
+            this.fire("bid", {}, {
+                bid: bid,
+                alert: alertData.alert,
+                alertMsg: alertData.alertMsg
+            });
         },
 
         _getAlert: function () {

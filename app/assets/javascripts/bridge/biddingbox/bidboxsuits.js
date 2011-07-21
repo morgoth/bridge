@@ -1,6 +1,10 @@
 YUI.add("bidboxsuits", function (Y) {
 
     var BidBoxSuits = Y.Base.create("bidboxsuit", Y.ButtonGroup, [], {
+        
+        clearChoices: function () {
+            this.set("minSuit", undefined);
+        },
 
         renderUI: function () {
             this._renderBidBoxSuits();
@@ -15,6 +19,10 @@ YUI.add("bidboxsuits", function (Y) {
         bindUI: function () {
             this.after("minSuitChange", this._afterMinSuitChange);
             this.after("button:press", this._afterButtonPress);
+        },
+
+        _getButtonSuit: function (button) {
+            return Y.Bridge.CONTRACT_SUITS[button.get("index")];
         },
 
         _afterMinSuitChange: function (event) {

@@ -1,6 +1,12 @@
 YUI.add("bidboxlevels", function(Y){
 
     var BidBoxLevels = Y.Base.create("bidboxlevels", Y.ButtonGroup, [], {
+        
+        clearSelected: function () {
+            this.each(function (child) {
+                child.set("selected", 0);
+            }, this);
+        },
 
         renderUI: function () {
             this._renderBidBoxLevels();
@@ -13,6 +19,7 @@ YUI.add("bidboxlevels", function(Y){
         },
 
         bindUI: function () {
+            this.after("selectionChange", this._afterSelectionChange);
             this.after("minLevelChange", this._afterMinLevelChange);
         },
 
@@ -37,12 +44,6 @@ YUI.add("bidboxlevels", function(Y){
             }
             this.each(function (child, i) {
                 child.set("enabled", i + 1 >= minLevel);
-            }, this);
-        },
-
-        resetSelected: function () {
-            this.each(function (child) {
-                child.set("selected", 0);
             }, this);
         },
 
