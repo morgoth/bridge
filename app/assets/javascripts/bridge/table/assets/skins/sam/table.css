@@ -1,8 +1,11 @@
 .yui3-table-content {
-    width: 800px;
+    width: 960px;
+    height: 700px;
+    margin: auto;
 }
 
 .yui3-table-placeholder {
+    border: 1px solid black;
     width: 33%;
     height: 33%;
     float: left;
