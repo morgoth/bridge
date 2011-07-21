@@ -3,9 +3,13 @@ YUI.add("biddingbox", function (Y) {
     var BiddingBox = Y.Base.create("biddingbox", Y.Widget, [], {
 
         renderUI: function () {
+            this._renderAlertBox();
             this._renderPassBox();
             this._renderBidBox();
-            this._renderAlertBox();
+        },
+
+        _renderAlertBox: function () {
+            this._alertBox = new Y.Bridge.AlertBox().render(this.get("contentBox"));
         },
 
         _renderPassBox: function () {
@@ -14,10 +18,6 @@ YUI.add("biddingbox", function (Y) {
 
         _renderBidBox: function () {
             this._bidBox = new Y.Bridge.BidBox().render(this.get("contentBox"));
-        },
-
-        _renderAlertBox: function () {
-            this._alertBox = new Y.Bridge.AlertBox().render(this.get("contentBox"));
         },
 
         bindUI: function () {
