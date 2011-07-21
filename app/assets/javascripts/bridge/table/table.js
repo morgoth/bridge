@@ -38,7 +38,7 @@ YUI.add("table", function (Y) {
         },
 
         _renderBiddingBox: function () {
-            this._biddingBox = new Y.Bridge.BiddingBox({ contract: "1C" }).render(this._brNode);
+            this._biddingBox = new Y.Bridge.BiddingBox({}).render(this._brNode);
         },
 
         _renderAuction: function () {
