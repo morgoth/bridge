@@ -79,6 +79,7 @@ YUI.add("biddingbox", function (Y) {
         ATTRS: {
 
             ours: {
+                value: false,
                 validator: Y.Lang.isBoolean
             },
 
