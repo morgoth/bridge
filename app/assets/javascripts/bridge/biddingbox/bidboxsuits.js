@@ -1,9 +1,9 @@
-YUI.add("newbidboxsuits", function(Y){
+YUI.add("bidboxsuits", function(Y){
 
-    var NewBidBoxSuits = Y.Base.create("newbidboxsuit", Y.ButtonGroup, [], {
+    var BidBoxSuits = Y.Base.create("bidboxsuit", Y.ButtonGroup, [], {
 
         renderUI: function () {
-            this._renderNewBidBoxSuits();
+            this._renderBidBoxSuits();
         },
 
         syncUI: function () {
@@ -12,7 +12,7 @@ YUI.add("newbidboxsuits", function(Y){
 
         _syncMinSuit: function (minSuit) {
             var minIndex = Y.Bridge.CONTRACT_SUITS.indexOf(minSuit);
-            if (! Y.Lang.isValue(minSuit)){
+            if (!Y.Lang.isValue(minSuit)){
                 minIndex = 5; // nah nah nah
             }
             this.each(function (button, i) {
@@ -37,7 +37,7 @@ YUI.add("newbidboxsuits", function(Y){
             this._fireSuitSelected(this._getButtonSuit(event.target));
         },
 
-        _renderNewBidBoxSuits: function () {
+        _renderBidBoxSuits: function () {
             Y.each(Y.Bridge.CONTRACT_SUITS, function (suit) {
                 var button = new Y.Button({ label: suit });
                 this.add(button);
@@ -50,10 +50,6 @@ YUI.add("newbidboxsuits", function(Y){
 
         _fireSuitSelected: function (suit) {
             this.fire("suitSelected", suit);
-        },
-
-        _renderNewBidBox: function () {
-            // Extra rendering stuff
         }
 
     }, {
@@ -69,6 +65,6 @@ YUI.add("newbidboxsuits", function(Y){
         }
     });
 
-    Y.namespace("Bridge").NewBidBoxSuits = NewBidBoxSuits;
+    Y.namespace("Bridge").BidBoxSuits = BidBoxSuits;
 
 }, "0", { requires: ["gallery-button", "gallery-button-toggle", "gallery-button-group"] });

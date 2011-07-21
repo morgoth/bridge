@@ -1,9 +1,9 @@
-YUI.add("newbidboxlevels", function(Y){
+YUI.add("bidboxlevels", function(Y){
 
-    var NewBidBoxLevels = Y.Base.create("newbidboxlevels", Y.ButtonGroup, [], {
+    var BidBoxLevels = Y.Base.create("bidboxlevels", Y.ButtonGroup, [], {
 
         renderUI: function () {
-            this._renderNewBidBoxLevels();
+            this._renderBidBoxLevels();
         },
 
         syncUI: function () {
@@ -12,7 +12,7 @@ YUI.add("newbidboxlevels", function(Y){
 
         bindUI: function () {
             this.after("selectionChange", this._afterSelectionChange);
-            this.on("minLevelChange", this._afterMinLevelChange);
+            this.after("minLevelChange", this._afterMinLevelChange);
         },
 
         resetSelected: function () {
@@ -36,17 +36,15 @@ YUI.add("newbidboxlevels", function(Y){
 
         _afterSelectionChange: function(event) {
             var button = event.newVal;
+
             if (Y.Lang.isValue(button)){
                 this._fireLevelEvent(button.get("index") + 1);
             }
         },
 
-        _renderNewBidBoxLevels: function () {
+        _renderBidBoxLevels: function () {
             Y.each(Y.Bridge.LEVELS, function (level) {
-                var button = new Y.ButtonToggle({
-                    label: level.toString()
-                });
-                this.add(button);
+                this.add({ label: level.toString() });
             }, this);
         },
 
@@ -55,7 +53,12 @@ YUI.add("newbidboxlevels", function(Y){
         }
 
     }, {
+
         ATTRS: {
+
+            defaultChildType: {
+                value: Y.ButtonToggle
+            },
 
             minLevel: {
                 // undefined -> no choice available
@@ -66,8 +69,9 @@ YUI.add("newbidboxlevels", function(Y){
             }
 
         }
+
     });
 
-    Y.namespace("Bridge").NewBidBoxLevels = NewBidBoxLevels;
+    Y.namespace("Bridge").BidBoxLevels = BidBoxLevels;
 
 }, "0", { requires: ["gallery-button-toggle", "gallery-button-group"] });

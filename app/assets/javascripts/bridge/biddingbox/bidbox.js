@@ -1,9 +1,9 @@
-YUI.add("newbidbox", function(Y){
+YUI.add("bidbox", function(Y){
 
-    var NewBidBox = Y.Base.create("newbidbox", Y.Widget, [], {
-        
+    var BidBox = Y.Base.create("bidbox", Y.Widget, [], {
+
         renderUI: function () {
-            this._renderNewBidBox();
+            this._renderBidBox();
             this._renderLevels();
             this._renderSuits();
         },
@@ -32,7 +32,7 @@ YUI.add("newbidbox", function(Y){
         },
 
         _afterSuitSelected: function (event, suit) {
-            this._newBidSelected(Y.Bridge.makeContract(this._level, suit));
+            this._bidSelected(Y.Bridge.makeContract(this._level, suit));
         },
 
         _syncContract: function (contract) {
@@ -42,15 +42,15 @@ YUI.add("newbidbox", function(Y){
         },
 
         _renderLevels: function () {
-            this._levelWidget = new Y.Bridge.NewBidBoxLevels().render(this.get("contentBox"));
+            this._levelWidget = new Y.Bridge.BidBoxLevels().render(this.get("contentBox"));
         },
 
         _renderSuits: function () {
-            this._suitWidget = new Y.Bridge.NewBidBoxSuits().render(this.get("contentBox"));
+            this._suitWidget = new Y.Bridge.BidBoxSuits().render(this.get("contentBox"));
         },
 
         _calcMinBid: function (contract) {
-            if (! contract) {
+            if (!contract) {
                 this._minLevel = Y.Bridge.LEVELS[0];
                 this._minSuit = Y.Bridge.CONTRACT_SUITS[0];
                 return;
@@ -64,7 +64,7 @@ YUI.add("newbidbox", function(Y){
             this._minSuit = isNT ? cs[0] : cs[cs.indexOf(suit) + 1];
         },
 
-        _newBidSelected: function (bid) {
+        _bidSelected: function (bid) {
             this._levelWidget.resetSelected();
             this._fireBidEvent(bid);
         },
@@ -73,24 +73,25 @@ YUI.add("newbidbox", function(Y){
             this.fire("bid", bid);
         },
 
-        _renderNewBidBox: function () {
+        _renderBidBox: function () {
             // Extra rendering stuff
-            
         }
 
     }, {
+
         ATTRS: {
-            
+
             contract: {
                 value: undefined,
                 setter: function (contract) {
                     return (Y.Lang.isValue(contract) && Y.Bridge.isContract(contract)) ? contract : undefined;
                 }
             }
-            
+
         }
+
     });
 
-    Y.namespace("Bridge").NewBidBox = NewBidBox;
+    Y.namespace("Bridge").BidBox = BidBox;
 
-}, "0", { requires: ["newbidboxlevels", "newbidboxsuits"] });
+}, "0", { requires: ["bidboxlevels", "bidboxsuits"] });

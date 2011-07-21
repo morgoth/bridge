@@ -1,21 +1,32 @@
 YUI.add("biddingbox", function (Y) {
 
     var BiddingBox = Y.Base.create("biddingbox", Y.Widget, [], {
-        
+
         renderUI: function () {
-            this._renderBiddingBox();
             this._renderPassBox();
-            this._renderNewBidBox();
+            this._renderBidBox();
             this._renderAlertBox();
+        },
+
+        _renderPassBox: function () {
+            this._passBox = new Y.Bridge.PassBox().render(this.get("contentBox"));
+        },
+
+        _renderBidBox: function () {
+            this._bidBox = new Y.Bridge.BidBox().render(this.get("contentBox"));
+        },
+
+        _renderAlertBox: function () {
+            this._alertBox = new Y.Bridge.AlertBox().render(this.get("contentBox"));
         },
 
         bindUI: function () {
             this._passBox.after("bid", this._afterBid, this);
-            this._newBidBox.after("bid", this._afterBid, this);
+            this._bidBox.after("bid", this._afterBid, this);
             this.after("contractChange", this._afterContractChange);
             this.after("oursChange", this._afterOursChange);
         },
-        
+
         _afterBid: function (event, bid) {
             this._fireBidEvent(bid);
         },
@@ -34,21 +45,19 @@ YUI.add("biddingbox", function (Y) {
         },
 
         _syncContract: function (contract) {
-            this._newBidBox.set("contract", contract);
+            this._bidBox.set("contract", contract);
             this._syncOurs(this.get("ours")); // FIXME: it's not nice
         },
 
         _syncOurs: function (ours) {
             var mods = Y.Bridge.parseModifiers(this.get("contract"));
-            this._passBox.set("enabledButtons", {
-                    PASS: true,
-                    X: !ours && !mods,
-                    XX: ours && mods == "X"
-            });
+
+            this._passBox.set("enabledButtons", { PASS: true, X: !ours && !mods, XX: ours && mods == "X" });
         },
 
         _fireBidEvent: function (bid) {
             var alertData = this._getAlert();
+
             this.fire("bid", {}, {
                 bid: bid,
                 alert: alertData.alert,
@@ -58,27 +67,6 @@ YUI.add("biddingbox", function (Y) {
 
         _getAlert: function () {
             return this._alertBox.getAlertAndResetUI();
-        },
-
-        _renderBiddingBox: function () {
-            var contentBox = this.get("contentBox");
-            this.get("contentBox").append(Y.Node.create(
-                '<div>Bid: (previous bid: ' + this.get("contract") + ') </div>'
-            ));
-        },
-
-        _renderPassBox: function () {
-            this._passBox = new Y.Bridge.PassBox().render(this.get("contentBox"));
-        },
-
-        _renderNewBidBox: function () {
-            this._newBidBox = new Y.Bridge.NewBidBox({
-                contract: this.get("contract")
-            }).render(this.get("contentBox"));
-        },
-
-        _renderAlertBox: function () {
-            this._alertBox = new Y.Bridge.AlertBox().render(this.get("contentBox"));
         }
 
     }, {
@@ -100,4 +88,4 @@ YUI.add("biddingbox", function (Y) {
 
     Y.namespace("Bridge").BiddingBox = BiddingBox;
 
-}, "0", { requires: ["passbox", "newbidbox", "alertbox"] });
+}, "0", { requires: ["passbox", "bidbox", "alertbox"] });

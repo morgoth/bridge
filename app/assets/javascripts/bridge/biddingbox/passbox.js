@@ -3,17 +3,13 @@ YUI.add("passbox", function (Y) {
     var PassBox = Y.Base.create("passbox", Y.ButtonGroup, [], {
 
         _buttonNames: ["PASS", "X", "XX"],
-        
+
         renderUI: function () {
             this._renderButtons();
         },
 
         _renderButtons: function () {
-            this.add([
-                { label: "Pass" },
-                { label: "Dbl" },
-                { label: "Rdbl" }
-            ]);
+            this.add([{ label: "Pass" }, { label: "Dbl" }, { label: "Rdbl" }]);
         },
 
         syncUI: function () {
@@ -33,6 +29,7 @@ YUI.add("passbox", function (Y) {
 
         _afterButtonPress: function (event) {
             var i = event.target.get("index");
+
             this.fire("bid", this._buttonNames[i]);
         },
 
