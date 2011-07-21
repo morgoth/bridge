@@ -19,7 +19,7 @@ YUI.add("table", function (Y) {
         },
 
         _renderGridNode: function (name) {
-            return this.get("contentBox").appendChild('<div>').addClass(this.getClassName(name));
+            return this.get("contentBox").appendChild('<div>').addClass(this.getClassName(name)).addClass(this.getClassName("placeholder"));
         },
 
         bindUI: function () {

@@ -1,4 +1,4 @@
-YUI.add("bidboxsuits", function(Y){
+YUI.add("bidboxsuits", function (Y) {
 
     var BidBoxSuits = Y.Base.create("bidboxsuit", Y.ButtonGroup, [], {
 
@@ -32,7 +32,7 @@ YUI.add("bidboxsuits", function(Y){
         _syncMinSuit: function (minSuit) {
             var minIndex = Y.Bridge.CONTRACT_SUITS.indexOf(minSuit);
 
-            if (!Y.Lang.isValue(minSuit)){
+            if (!Y.Lang.isValue(minSuit)) {
                 minIndex = 5; // nah nah nah
             }
             this.each(function (button, i) {
