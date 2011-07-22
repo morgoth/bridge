@@ -1,10 +1,12 @@
-YUI().use("hand", "trick", "biddingbox", "auction", "table-model", function (Y) {
+YUI().use("hand", "trick", "biddingbox", "tricklist", "auction", "table-model", function (Y) {
     this.Y = Y;
 
     var cards = ["SA", "SK", "SQ", "SJ", "ST", "S9", "S8", "S7", "S6", "S5", "S4", "S3", "S2",
                  "HA", "HK", "HQ", "HJ", "HT", "H9", "H8", "H7", "H6", "H5", "H4", "H3", "H2",
                  "DA", "DK", "DQ", "DJ", "DT", "D9", "D8", "D7", "D6", "D5", "D4", "D3", "D2",
                  "CA", "CK", "CQ", "CJ", "CT", "C9", "C8", "C7", "C6", "C5", "C4", "C3", "C2"];
+
+    window.trickList = new Y.Bridge.TrickList({ player: "N" }).render();
 
     window.biddingBox = new Y.Bridge.BiddingBox({ contract: "2D", ours: false }).render();
 
@@ -24,4 +26,29 @@ YUI().use("hand", "trick", "biddingbox", "auction", "table-model", function (Y) 
     window.trick = new Y.Bridge.Trick({ cards: ["CA", "DA", "HA", "SA"] }).render();
 
     window.auction = new Y.Bridge.Auction({ bids: ["1C", "1D", "1HX", "1S", "1NT", "2NT", "PASS", "PASS", "PASS"], dealer: "E" }).render();
+
+
+    // Super-Ugly tests :-)
+    for (var i = 0; i < 10; i++){
+        window.trickList.addTrick({ get: function () {
+            return Math.random() > 0.5 ? "N" : "W";
+        }});
+    }
+
+    setTimeout(function () {
+        var tricks = [];
+        for (var i = 0; i < 7; i++){
+            var f = function () {
+                var p = Math.random() > 0.5 ? "N" : "W";
+                tricks.push({ get: function () {
+                    return p;
+                }});
+            } ();
+        }
+        window.trickList.set("tricks", tricks);
+        // Switch sides!
+        setTimeout(function () {
+            window.trickList.set("player", "W");
+        }, 1000);
+    }, 2000);
 });
