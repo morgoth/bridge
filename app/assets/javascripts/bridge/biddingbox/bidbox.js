@@ -1,4 +1,4 @@
-YUI.add("bidbox", function(Y){
+YUI.add("bidbox", function (Y) {
 
     var BidBox = Y.Base.create("bidbox", Y.Widget, [], {
 

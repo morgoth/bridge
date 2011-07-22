@@ -82,6 +82,14 @@ YUI.add("biddingbox", function (Y) {
                 setter: function (contract) {
                     return (Y.Lang.isValue(contract) && Y.Bridge.isContract(contract)) ? contract : undefined;
                 }
+            },
+
+            visible: {
+                value: false
+            },
+
+            disabled: {
+                value: true
             }
 
         }

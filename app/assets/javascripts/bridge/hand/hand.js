@@ -80,6 +80,14 @@ YUI.add("hand", function (Y) {
 
             active: {
                 validator: Y.Lang.isBoolean
+            },
+
+            visible: {
+                value: false
+            },
+
+            disabled: {
+                value: true
             }
 
         }

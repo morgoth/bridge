@@ -68,6 +68,14 @@ YUI.add("trick", function (Y) {
 
             cards: {
                 value: []
+            },
+
+            visible: {
+                value: false
+            },
+
+            disabled: {
+                value: true
             }
 
         }

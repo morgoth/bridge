@@ -54,9 +54,8 @@ YUI.add("auction", function (Y) {
             }
 
             Y.each(bids, function (bid, i) {
-                var attrs = { bid: bid, direction: ["N", "E", "S", "W"][(i + dealerIndex) % 4] };
-
-                this.item(i) ? this.item(i).setAttrs(attrs) : this.add(attrs);
+                bid.direction = ["N", "E", "S", "W"][(i + dealerIndex) % 4];
+                this.item(i) ? this.item(i).setAttrs(bid) : this.add(bid);
             }, this);
 
             this._uiScrollDownBids();
@@ -103,6 +102,14 @@ YUI.add("auction", function (Y) {
 
             bids: {
                 value: []
+            },
+
+            visible: {
+                value: false
+            },
+
+            disabled: {
+                value: true
             }
 
         }

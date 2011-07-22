@@ -31,6 +31,28 @@ YUI.add("table-model", function (Y) {
             this._board.setAttrs(board);
         },
 
+        generate: function () {
+            return {
+                auction: this._board.generateAuction(),
+                topHand: this._generateHand("N"),
+                rightHand: this._generateHand("E"),
+                bottomHand: this._generateHand("S"),
+                leftHand: this._generateHand("W")
+            };
+        },
+
+        _generateHand: function (direction) {
+            var player = this._playerList.getByDirection(direction);
+
+            return {
+                cards: this._board.generateCards(direction),
+                direction: direction,
+                name: player ? player.get("name") : "",
+                visible: true,
+                active: this._board.activeDirection() === direction
+            };
+        },
+
         _url: function (id) {
             id || (id = this.get("id"));
 
@@ -83,6 +105,10 @@ YUI.add("table-model", function (Y) {
 
             players: {
                 value: []
+            },
+
+            board: {
+
             }
 
         }

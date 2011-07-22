@@ -11,7 +11,8 @@
     width: 300px;
     background: #99cccc;
     border: 1px solid white;
-    font-size: 167%;
+    font-size: 22px;
+    font-family: sans-serif;
 }
 
 .yui3-auction-headers {

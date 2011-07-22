@@ -56,10 +56,6 @@ YUI.add("auctionbid", function (Y) {
             if (prevDirection) {
                 this.get("boundingBox").removeClass(this.getClassName(prevDirection.toLowerCase()));
             }
-        },
-
-        _validateBid: function (bid) {
-            return Y.Bridge.isContract(bid) || (bid === "PASS");
         }
 
     }, {
@@ -67,7 +63,15 @@ YUI.add("auctionbid", function (Y) {
         ATTRS: {
 
             bid: {
-                validator: "_validateBid"
+
+            },
+
+            alert: {
+                validator: Y.Lang.isBoolean
+            },
+
+            message: {
+                validator: Y.Lang.isString
             },
 
             direction: {

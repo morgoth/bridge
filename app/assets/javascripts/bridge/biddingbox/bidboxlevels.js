@@ -1,7 +1,7 @@
-YUI.add("bidboxlevels", function(Y){
+YUI.add("bidboxlevels", function (Y) {
 
     var BidBoxLevels = Y.Base.create("bidboxlevels", Y.ButtonGroup, [], {
-        
+
         clearSelected: function () {
             this.each(function (child) {
                 child.set("selected", 0);

@@ -10,6 +10,14 @@ YUI.add("bid-model", function (Y) {
 
             bid: {
 
+            },
+
+            alert: {
+
+            },
+
+            message: {
+
             }
 
         }

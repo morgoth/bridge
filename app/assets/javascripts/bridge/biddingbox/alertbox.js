@@ -1,4 +1,4 @@
-YUI.add("alertbox", function(Y){
+YUI.add("alertbox", function (Y) {
 
     var AlertBox = Y.Base.create("alertbox", Y.Widget, [], {
 
@@ -8,7 +8,7 @@ YUI.add("alertbox", function(Y){
         },
 
         _renderAlertInput: function () {
-            this._alertInput = this.get("contentBox").appendChild('<input type="text" />');
+            this._alertInput = this.get("contentBox").appendChild('<input type="text">');
         },
 
         _renderAlertToggle: function () {

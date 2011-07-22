@@ -1,3 +1,7 @@
+.yui3-biddingbox-hidden {
+    display: none;
+}
+
 .yui3-biddingbox-content {
     font-family: sans-serif;
     font-size: 22px;
@@ -25,10 +29,10 @@
     color: black !important;
 }
 
-.yui3-biddingbox .yui3-button-disabled .yui3-button-content {
+.yui3-biddingbox .yui3-button-disabled {
     text-shadow: none;
-    opacity: .33;
-    filter: alpha(opacity=33);
+    opacity: .2;
+    filter: alpha(opacity=20);
 }
 
 .yui3-biddingbox .yui3-bidboxsuit-suit-c,
