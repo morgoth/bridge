@@ -1,6 +1,6 @@
-YUI.add("tricklist", function (Y) {
+YUI.add("tricks", function (Y) {
 
-    var TrickList = Y.Base.create("trickList", Y.Widget, [], {
+    var Tricks = Y.Base.create("tricks", Y.Widget, [], {
 
         TRICKS_NUM: 13,
         SCORES_TEMPLATE: '<div class="scores"><div class="NS"></div><div class="WE"></div></div>',
@@ -33,10 +33,10 @@ YUI.add("tricklist", function (Y) {
         },
 
         renderUI: function () {
-            this._renderTrickList();
+            this._renderTricks();
         },
 
-        _renderTrickList: function () {
+        _renderTricks: function () {
             var cb = this.get("contentBox"),
                 scoresNode = cb.appendChild(this.SCORES_TEMPLATE),
                 tricksNode = cb.appendChild(this.TRICKLIST_TEMPLATE);
@@ -143,6 +143,6 @@ YUI.add("tricklist", function (Y) {
 
     });
 
-    Y.namespace("Bridge").TrickList = TrickList;
+    Y.namespace("Bridge").Tricks = Tricks;
 
 }, "0", { requires: ["widget", "helpers"] });
