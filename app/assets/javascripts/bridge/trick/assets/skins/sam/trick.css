@@ -34,24 +34,3 @@
     bottom: 10%;
     left: 0;
 }
-
-.yui3-tricklist .scores .NS:before {
-    content: "NS: ";
-}
-
-.yui3-tricklist .scores .WE:before {
-    content: "WE: ";
-}
-
-.yui3-tricklist .trick {
-    list-style: none;
-    display: inline;
-}
-
-.yui3-tricklist .won:before {
-    content: "|";
-}
-
-.yui3-tricklist .lost:before {
-    content: "-";
-}

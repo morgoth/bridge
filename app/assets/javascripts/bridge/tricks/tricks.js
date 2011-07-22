@@ -1,14 +1,16 @@
 YUI.add("tricks", function (Y) {
 
-    var Tricks = Y.Base.create("tricks", Y.Widget, [], {
+    var Tricks = Y.Base.create("tricks", Y.Widget, [Y.WidgetParent], {
 
         TRICKS_NUM: 13,
-        SCORES_TEMPLATE: '<div class="scores"><div class="NS"></div><div class="WE"></div></div>',
-        TRICKLIST_TEMPLATE: '<ul class="tricks"></ul>',
-        TRICK_TEMPLATE: '<li class="trick"></li>',
+        CONTENT_TEMPLATE: '<div>' +
+            '<div class="scores">' +
+            '<div class="NS"></div><div class="WE"></div>' +
+            '</div>' +
+            '<ul class="children"></ul>' +
+            '</div>',
 
         addTrick: function (trick) {
-            // TODO: winner is not yet an trick's attr
             var i = this.get("current"),
                 winner = trick.get("winner"),
                 side = (winner === "N" || winner === "S" ? "NS" : "WE"),
@@ -16,17 +18,17 @@ YUI.add("tricks", function (Y) {
 
             // Save trick
             this._set("current", i + 1);
-            this._tricks[i] = trick;
-            this._trickNodes[i].addClass(won ? "won" : "lost").show();
+            this.item(i).set("won", won);
             // Increment scores
             this.set("scores" + side, this.get("scores" + side) + 1);
         },
 
         clear: function () {
-            Y.each(this._trickNodes, function (node) {
-                node.hide().removeClass("lost").removeClass("won");
-            });
-            this._tricks = [];
+            // hide children
+            this.each(function (child) {
+                child.set("won", undefined);
+            }, this);
+            // reset attributes
             this._set("current", 0);
             this.set("scoresNS", 0);
             this.set("scoresWE", 0);
@@ -38,17 +40,15 @@ YUI.add("tricks", function (Y) {
 
         _renderTricks: function () {
             var cb = this.get("contentBox"),
-                scoresNode = cb.appendChild(this.SCORES_TEMPLATE),
-                tricksNode = cb.appendChild(this.TRICKLIST_TEMPLATE);
+                scoresNode = cb.one(".scores"),
+                childrensNode = cb.one(".children");
 
             // scores
             this._scoresNodeNS = scoresNode.one(".NS");
             this._scoresNodeWE = scoresNode.one(".WE");
             // tricks
-            this._trickNodes = [];
-            this._tricks = [];
             for (var i = 0; i < this.TRICKS_NUM; i++) {
-                this._trickNodes[i] = tricksNode.appendChild(this.TRICK_TEMPLATE).hide();
+                this.add({ won: undefined, boundingBox: childrensNode });
             }
         },
 
@@ -109,6 +109,10 @@ YUI.add("tricks", function (Y) {
 
         ATTRS: {
 
+            defaultChildType: {
+                value: Y.Bridge.TricksTrick
+            },
+
             player: {
                 value: "N",
                 validator: Y.Bridge.isDirection
@@ -145,4 +149,4 @@ YUI.add("tricks", function (Y) {
 
     Y.namespace("Bridge").Tricks = Tricks;
 
-}, "0", { requires: ["widget", "helpers"] });
+}, "0", { requires: ["trickstrick", "widget-parent", "helpers"] });

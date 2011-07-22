@@ -1,0 +1,25 @@
+.yui3-tricks-content .scores .NS:before {
+    content: "NS: ";
+}
+
+.yui3-tricks-content .scores .WE:before {
+    content: "WE: ";
+}
+
+.yui3-tricks-content .yui3-trickstrick-content {
+    list-style: none;
+    display: inline;
+}
+
+.yui3-tricks-content .yui3-trickstrick-content.won:before {
+    font-weight: bold;
+    color: green;
+    content: "|";
+}
+
+.yui3-tricks-content .yui3-trickstrick-content.lost:before {
+    font-weight: bold;
+    color: black;
+    content: "-";
+}
+
