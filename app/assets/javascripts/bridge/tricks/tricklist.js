@@ -1,12 +1,12 @@
 YUI.add("tricklist", function (Y) {
 
     var TrickList = Y.Base.create("trickList", Y.Widget, [], {
-        
+
         TRICKS_NUM: 13,
         SCORES_TEMPLATE: '<div class="scores"><div class="NS"></div><div class="WE"></div></div>',
         TRICKLIST_TEMPLATE: '<ul class="tricks"></ul>',
         TRICK_TEMPLATE: '<li class="trick"></li>',
-        
+
         addTrick: function (trick) {
             // TODO: winner is not yet an trick's attr
             var i = this.get("current"),
@@ -65,7 +65,7 @@ YUI.add("tricklist", function (Y) {
         _afterScoresNSChange: function (event) {
             this._syncScoresNS(event.newVal);
         },
-        
+
         _afterScoresWEChange: function (event) {
             this._syncScoresWE(event.newVal);
         },
@@ -97,7 +97,7 @@ YUI.add("tricklist", function (Y) {
         _getTricks: function (tricks) {
             return this._tricks;
         },
-        
+
         _setTricks: function (tricks) {
             this.clear();
             Y.each(tricks, function (trick) {
@@ -134,7 +134,7 @@ YUI.add("tricklist", function (Y) {
                 value: 0,
                 validator: Y.Lang.isNumber
             },
-            
+
             scoresWE: {
                 value: 0,
                 validator: Y.Lang.isNumber
