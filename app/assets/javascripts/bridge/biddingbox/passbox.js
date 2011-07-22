@@ -2,26 +2,14 @@ YUI.add("passbox", function (Y) {
 
     var PassBox = Y.Base.create("passbox", Y.ButtonGroup, [], {
 
+        buttonNames: ["PASS", "X", "XX"],
+
         renderUI: function () {
             this._renderButtons();
         },
 
         _renderButtons: function () {
-            var buttonNames = ["PASS", "X", "XX"];
-
             this.add([{ label: "Pass" }, { label: "Dbl" }, { label: "Rdbl" }]);
-            // Adding names and css classes
-            this.each(function (button, i) {
-                var className = this.getClassName("modifier", buttonNames[i].toLowerCase());
-
-                button.addAttr("name", {
-                    value: buttonNames[i],
-                    writeOnce: true
-                });
-                // adding css class: "passbox-modifier-{button_name}"
-                // FIXME: class gets added before yui3-button-content. Fix it or add it to boundingBox
-                button.get("contentBox").addClass(className);
-            }, this);
         },
 
         syncUI: function () {
@@ -30,7 +18,7 @@ YUI.add("passbox", function (Y) {
 
         _syncEnabledButtons: function (enabledButtons) {
             this.each(function (button, i) {
-                button.set("enabled", enabledButtons[button.get("name")]);
+                button.set("enabled", enabledButtons[this.buttonNames[i]]);
             }, this);
         },
 
@@ -40,7 +28,9 @@ YUI.add("passbox", function (Y) {
         },
 
         _afterButtonPress: function (event) {
-            this.fire("bid", event.target.get("name"));
+            var index = event.target.get("index");
+
+            this.fire("bid", this.buttonNames[index]);
         },
 
         _afterEnabledButtonsChange: function (event) {
