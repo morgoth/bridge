@@ -31,21 +31,21 @@ YUI.add("auctionbid", function (Y) {
         _syncBid: function (bid) {
             var content;
 
-            if (bid === "PASS") {
+            switch (bid) {
+            case "PASS":
                 content = "Pass";
-            } else if (Y.Bridge.parseModifiers(bid) === "X") {
+                break;
+            case "X":
                 content = "Dbl";
-            } else if (Y.Bridge.parseModifiers(bid) === "XX") {
+                break;
+            case "XX":
                 content = "Rdbl";
-            } else {
+                break;
+            default:
                 content = Y.Bridge.parseLevel(bid) + this._renderSuit(Y.Bridge.parseSuit(bid));
             }
 
-            if (Y.Lang.isValue(bid)) {
-                this.set("label", content);
-            } else {
-                this.set("label", "");
-            }
+            this.setAttrs({ label: content, title: "" });
         },
 
         _syncDirection: function (newDirection, prevDirection) {
