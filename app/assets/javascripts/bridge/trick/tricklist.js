@@ -71,8 +71,13 @@ YUI.add("tricklist", function (Y) {
         },
 
         syncUI: function () {
+            this._syncTricks(this.get("tricks"));
             this._syncScoresNS(this.get("scoresNS"));
             this._syncScoresWE(this.get("scoresWE"));
+        },
+
+        _syncTricks: function (tricks) {
+            this.set("tricks", tricks);
         },
 
         _syncPlayer: function (player) {
