@@ -120,6 +120,10 @@ window.YUI_config = {
                     path: "trick/trickcard.js",
                     requires: ["card"]
                 },
+                "tricks": {
+                    path: "tricks/tricks.js",
+                    requires: ["widget", "helpers"]
+                },
                 "auction": {
                     path: "auction/auction.js",
                     requires: ["widget", "widget-parent", "auctionbid"],
