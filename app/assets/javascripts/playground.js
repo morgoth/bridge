@@ -12,7 +12,7 @@ YUI().use("hand", "trick", "biddingbox", "auction", "table-model", function (Y) 
     window.biddingBox.after("bid", function (event, data) {
         var msg = "Your bid is: " + data.bid + "\n";
         if (data.alert) {
-            msg += "alert: " + data.alertMsg;
+            msg += "alert: " + data.alertMessage;
         } else {
             msg += "no alert";
         }

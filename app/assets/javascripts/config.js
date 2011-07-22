@@ -108,7 +108,7 @@ window.YUI_config = {
                 },
                 "alertbox": {
                     path: "biddingbox/alertbox.js",
-                    requires: ["node", "gallery-button-toggle"],
+                    requires: ["event-valuechange", "gallery-button-toggle"],
                     skinnable: true
                 },
                 "trick": {

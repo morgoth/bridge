@@ -61,17 +61,12 @@ YUI.add("biddingbox", function (Y) {
         },
 
         _fireBidEvent: function (bid) {
-            var alertData = this._getAlert();
-
             this.fire("bid", {}, {
                 bid: bid,
-                alert: alertData.alert,
-                alertMsg: alertData.alertMsg
+                alert: this._alertBox.get("alert"),
+                alertMessage: this._alertBox.get("alertMessage")
             });
-        },
-
-        _getAlert: function () {
-            return this._alertBox.getAlertAndResetUI();
+            this._alertBox.reset("alert");
         }
 
     }, {
