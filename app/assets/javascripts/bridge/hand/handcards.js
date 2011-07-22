@@ -68,6 +68,10 @@ YUI.add("handcards", function (Y) {
                 writeOnce: "initOnly"
             },
 
+            disabled: {
+                value: true
+            },
+
             cards: {
                 value: []
             }
