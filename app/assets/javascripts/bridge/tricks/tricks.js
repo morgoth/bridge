@@ -16,22 +16,11 @@ YUI.add("tricks", function (Y) {
                 side = (winner === "N" || winner === "S" ? "NS" : "WE"),
                 won = Y.Bridge.areSameSide(this.get("player"), winner);
 
-            // Save trick
             this._set("current", i + 1);
+            // Save trick
             this.item(i).set("won", won);
             // Increment scores
             this.set("scores" + side, this.get("scores" + side) + 1);
-        },
-
-        clear: function () {
-            // hide children
-            this.each(function (child) {
-                child.set("won", undefined);
-            }, this);
-            // reset attributes
-            this._set("current", 0);
-            this.set("scoresNS", 0);
-            this.set("scoresWE", 0);
         },
 
         renderUI: function () {
@@ -53,9 +42,14 @@ YUI.add("tricks", function (Y) {
         },
 
         bindUI: function () {
+            this.after("tricksChange", this._afterTricksChange);
             this.after("playerChange", this._afterPlayerChange);
             this.after("scoresWEChange", this._afterScoresWEChange);
             this.after("scoresNSChange", this._afterScoresNSChange);
+        },
+
+        _afterTricksChange: function (event) {
+            this._syncTricks(event.newVal);
         },
 
         _afterPlayerChange: function (event) {
@@ -77,13 +71,14 @@ YUI.add("tricks", function (Y) {
         },
 
         _syncTricks: function (tricks) {
-            this.set("tricks", tricks);
+            this._clear();
+            Y.each(tricks, function (trick) {
+                this.addTrick(trick);
+            }, this);
         },
 
         _syncPlayer: function (player) {
-            var tricks = this._tricks;
-
-            this.set("tricks", tricks);
+            this._syncTricks(this.get("tricks"));
         },
 
         _syncScoresNS: function (scores) {
@@ -94,15 +89,15 @@ YUI.add("tricks", function (Y) {
             this._scoresNodeWE.set("innerHTML", scores);
         },
 
-        _getTricks: function (tricks) {
-            return this._tricks;
-        },
-
-        _setTricks: function (tricks) {
-            this.clear();
-            Y.each(tricks, function (trick) {
-                this.addTrick(trick);
+        _clear: function () {
+            // hide children
+            this.each(function (child) {
+                child.set("won", undefined);
             }, this);
+            // reset attributes
+            this._set("current", 0);
+            this.set("scoresNS", 0);
+            this.set("scoresWE", 0);
         }
 
     }, {
@@ -125,13 +120,10 @@ YUI.add("tricks", function (Y) {
                 readOnly: true
             },
 
-            // Setting this clears everything and redraws it again.
-            // addTrick should be used in most cases.
+            // Used to resync widget with some state. To add single trick use addTrick.
             tricks: {
                 value: [],
-                validator: Y.Lang.isArray,
-                getter: "_getTricks",
-                setter: "_setTricks"
+                validator: Y.Lang.isArray
             },
 
             scoresNS: {
