@@ -1,7 +1,7 @@
 YUI.add("trickstrick", function (Y) {
 
     var TricksTrick = Y.Base.create("trickstrick", Y.Widget, [Y.WidgetChild], {
-        CONTENT_TEMPLATE: "<li></li>",
+        CONTENT_TEMPLATE: '<li><div class="cover"></div></li>',
 
         renderUI: function () {
 
@@ -43,7 +43,7 @@ YUI.add("trickstrick", function (Y) {
                 value: undefined,
                 validator: Y.Lang.isBoolean
             }
-            // TODO: Add later: winner, lead
+            // TODO: Add later: winner, lead, cards (like trick/trick.js)
         }
     });
     Y.namespace("Bridge").TricksTrick = TricksTrick;

@@ -3,11 +3,14 @@ YUI.add("tricks", function (Y) {
     var Tricks = Y.Base.create("tricks", Y.Widget, [Y.WidgetParent], {
 
         TRICKS_NUM: 13,
-        CONTENT_TEMPLATE: '<div>' +
-            '<div class="scores">' +
-            '<div class="NS"></div><div class="WE"></div>' +
-            '</div>' +
-            '<ul class="children"></ul>' +
+        CONTENT_TEMPLATE:
+            '<div>' +
+              '<ul class="tricklist"></ul>' +
+              '<div class="info">' +
+                '<div class="scores">' +
+                  '<div class="NS"></div><div class="WE"></div>' +
+                '</div>' +
+              '</div>' +
             '</div>',
 
         addTrick: function (trick) {
@@ -30,14 +33,19 @@ YUI.add("tricks", function (Y) {
         _renderTricks: function () {
             var cb = this.get("contentBox"),
                 scoresNode = cb.one(".scores"),
-                childrensNode = cb.one(".children");
+                childrensNode = cb.one(".tricklist");
 
             // scores
             this._scoresNodeNS = scoresNode.one(".NS");
             this._scoresNodeWE = scoresNode.one(".WE");
             // tricks
             for (var i = 0; i < this.TRICKS_NUM; i++) {
-                this.add({ won: undefined, boundingBox: childrensNode });
+                // FIXME: sth's wrong - if 'add' is used like that, its boudningBox is moved to the end of the widget
+                // this.add({ won: undefined, boundingBox: childrensNode });
+                // Workaround
+                var c = new Y.Bridge.TricksTrick({ won: undefined, boundingBox: childrensNode });
+                c.render();
+                this.add(c);
             }
         },
 
