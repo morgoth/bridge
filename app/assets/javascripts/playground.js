@@ -7,19 +7,39 @@ YUI().use("hand", "trick", "tricks", "biddingbox", "auction", "table-model", fun
                  "CA", "CK", "CQ", "CJ", "CT", "C9", "C8", "C7", "C6", "C5", "C4", "C3", "C2"];
 
     window.tricks = new Y.Bridge.Tricks({ player: "N" }).render();
-    // Add sample tricks
-    for (var i = 0; i < 10; i++) {
-        var f = function(i){
-            var winner = "NESW"[i % 4];
-            window.tricks.addTrick({ get: function () { return winner; }});
-        }(i);
-    }
 
     window.biddingBox = new Y.Bridge.BiddingBox({ contract: "2D", ours: false }).render();
+    window.hand = new Y.Bridge.Hand({ cards: cards, name: "qoobaa", direction: "N" }).render();
 
-    // Test
+    window.trick = new Y.Bridge.Trick({ cards: ["CA", "DA", "HA", "SA"] }).render();
+
+    window.auction = new Y.Bridge.Auction({ bids: ["1C", "1D", "1HX", "1S", "1NT", "2NT", "PASS", "PASS", "PASS"], dealer: "E" }).render();
+
+
+    // UI Tests
+
+    // -Tricks-
+    // Add sample tricks
+    var tricks = [];
+
+    for (var i = 0; i < 7; i++) {
+        var f = function(i){
+            var winner = "NESW"[i % 4];
+            tricks.push({ get: function () { return winner; }});
+            // Or add tricks one by one
+            // window.tricks.addTrick({ get: function () { return winner; }});
+        }(i);
+    }
+    // Set all tricks at once
+    window.tricks.set("tricks", tricks);
+    // Rotate player
+    // window.tricks.set("player", "W");
+
+    // -BiddingBox-
+    // Show choosen bid
     window.biddingBox.after("bid", function (event, data) {
         var msg = "Your bid is: " + data.bid + "\n";
+
         if (data.alert) {
             msg += "alert: " + data.alertMessage;
         } else {
@@ -28,9 +48,4 @@ YUI().use("hand", "trick", "tricks", "biddingbox", "auction", "table-model", fun
         alert(msg);
     });
 
-    window.hand = new Y.Bridge.Hand({ cards: cards, name: "qoobaa", direction: "N" }).render();
-
-    window.trick = new Y.Bridge.Trick({ cards: ["CA", "DA", "HA", "SA"] }).render();
-
-    window.auction = new Y.Bridge.Auction({ bids: ["1C", "1D", "1HX", "1S", "1NT", "2NT", "PASS", "PASS", "PASS"], dealer: "E" }).render();
 });
