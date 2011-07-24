@@ -2,7 +2,11 @@ YUI.add("player-model-list", function (Y) {
 
     var PlayerList = Y.Base.create("player-model-list", Y.ModelList, [], {
 
-        model: Y.Bridge.Model.Player
+        model: Y.Bridge.Model.Player,
+
+        isCompleted: function () {
+            return this.size() === 4;
+        }
 
     }, {
 
