@@ -1,4 +1,4 @@
-.yui3-tricks-content .info {
+.yui3-tricks-content .yui3-tricks-info {
     background: #99cccc;
     color: black;
     font-size: 167%;
@@ -14,25 +14,25 @@
 }
 
 
-.yui3-tricks-content .scores .NS {
+.yui3-tricks-scores-NS {
     margin: 0 5px;
     float: right;
 }
 
-.yui3-tricks-content .scores .WE {
+.yui3-tricks-scores-WE {
     margin: 0 5px;
     float: right;
 }
 
-.yui3-tricks-content .scores .NS:before {
+.yui3-tricks-scores-NS:before {
     content: "NS: ";
 }
 
-.yui3-tricks-content .scores .WE:before {
+.yui3-tricks-scores-WE:before {
     content: "WE: ";
 }
 
-.yui3-tricks-content .tricklist {
+.yui3-tricks-tricklist {
     margin: 0 0 0 -52px;
     text-align: center;
     height: 90px;
@@ -44,7 +44,7 @@
     display: inline-block;
 }
 
-.yui3-trickstrick-content.won {
+.yui3-trickstrick-won {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
@@ -56,7 +56,7 @@
     margin: 0 -36px;
 }
 
-.yui3-trickstrick-content.lost {
+.yui3-trickstrick-lost {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
@@ -68,7 +68,7 @@
     margin: 39px -74px 0 -36px;
 }
 
-.yui3-trickstrick-content .cover {
+.yui3-trickstrick-cover {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
@@ -77,12 +77,12 @@
     margin: 5px;
 }
 
-.yui3-trickstrick-content.won .cover {
+.yui3-trickstrick-won .yui3-trickstrick-cover {
     width: 74px;
     height: 113px;
 }
 
-.yui3-trickstrick-content.lost .cover {
+.yui3-trickstrick-lost .yui3-trickstrick-cover {
     width: 113px;
     height: 74px;
 }

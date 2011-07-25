@@ -3,16 +3,6 @@ YUI.add("tricks", function (Y) {
     var Tricks = Y.Base.create("tricks", Y.Widget, [Y.WidgetParent], {
 
         TRICKS_NUM: 13,
-        CONTENT_TEMPLATE:
-            '<div>' +
-              '<ul class="tricklist"></ul>' +
-              '<div class="info">' +
-                '<div class="scores">' +
-                  '<div class="NS"></div><div class="WE"></div>' +
-                '</div>' +
-              '</div>' +
-            '</div>',
-
         addTrick: function (trick) {
             var i = this.get("current"),
                 winner = trick.get("winner"),
@@ -32,18 +22,25 @@ YUI.add("tricks", function (Y) {
 
         _renderTricks: function () {
             var cb = this.get("contentBox"),
-                scoresNode = cb.one(".scores"),
-                childrensNode = cb.one(".tricklist");
+            // Generating nodes
+                tricksNode = cb.appendChild("<ul></ul>").addClass(
+                    this.getClassName("tricklist")),
+                infoNode = cb.appendChild("<div></div>").addClass(
+                    this.getClassName("info")),
+               scoresNode = infoNode.appendChild("<div></div>").addClass(
+                   this.getClassName("scores"));
 
-            // scores
-            this._scoresNodeNS = scoresNode.one(".NS");
-            this._scoresNodeWE = scoresNode.one(".WE");
+            this._scoresNodeWE = scoresNode.appendChild("<div></div>").addClass(
+                this.getClassName("scores", "NS"));
+            this._scoresNodeNS = scoresNode.appendChild("<div></div>").addClass(
+                this.getClassName("scores", "WE"));
+
             // tricks
             for (var i = 0; i < this.TRICKS_NUM; i++) {
                 // FIXME: sth's wrong - if 'add' is used like that, its boudningBox is moved to the end of the widget
-                // this.add({ won: undefined, boundingBox: childrensNode });
+                // this.add({ won: undefined, boundingBox: tricksNode });
                 // Workaround
-                var c = new Y.Bridge.TricksTrick({ won: undefined, boundingBox: childrensNode });
+                var c = new Y.Bridge.TricksTrick({ won: undefined, boundingBox: tricksNode });
                 c.render();
                 this.add(c);
             }
