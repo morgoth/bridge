@@ -1,21 +1,8 @@
 YUI.add("tricks", function (Y) {
 
-    var Tricks = Y.Base.create("tricks", Y.Widget, [Y.WidgetParent], {
+    var Tricks = Y.Base.create("tricks", Y.Widget, [], {
 
         TRICKS_NUM: 13,
-        addTrick: function (trick) {
-            var i = this.get("current"),
-                winner = trick.get("winner"),
-                side = (winner === "N" || winner === "S" ? "NS" : "WE"),
-                won = Y.Bridge.areSameSide(this.get("player"), winner);
-
-            this._set("current", i + 1);
-            // Save trick
-            this.item(i).set("won", won);
-            // Increment scores
-            this.set("scores" + side, this.get("scores" + side) + 1);
-        },
-
         renderUI: function () {
             this._renderTricks();
         },
@@ -23,11 +10,10 @@ YUI.add("tricks", function (Y) {
         _renderTricks: function () {
             var cb = this.get("contentBox"),
             // Generating nodes
-                tricksNode = cb.appendChild("<ul></ul>").addClass(
-                    this.getClassName("tricklist")),
+                tricksBarNode = cb.appendChild("<div></div>"),
                 infoNode = cb.appendChild("<div></div>").addClass(
                     this.getClassName("info")),
-               scoresNode = infoNode.appendChild("<div></div>").addClass(
+                scoresNode = infoNode.appendChild("<div></div>").addClass(
                    this.getClassName("scores"));
 
             this._scoresNodeWE = scoresNode.appendChild("<div></div>").addClass(
@@ -35,15 +21,11 @@ YUI.add("tricks", function (Y) {
             this._scoresNodeNS = scoresNode.appendChild("<div></div>").addClass(
                 this.getClassName("scores", "WE"));
 
-            // tricks
-            for (var i = 0; i < this.TRICKS_NUM; i++) {
-                // FIXME: sth's wrong - if 'add' is used like that, its boudningBox is moved to the end of the widget
-                // this.add({ won: undefined, boundingBox: tricksNode });
-                // Workaround
-                var c = new Y.Bridge.TricksTrick({ won: undefined, boundingBox: tricksNode });
-                c.render();
-                this.add(c);
-            }
+            this._tricksBar = new Y.Bridge.TricksBar({
+                player: this.get("player"),
+                tricks: this.get("tricks")
+            }).render({ boudningBox: tricksBarNode });
+
         },
 
         bindUI: function () {
@@ -71,19 +53,30 @@ YUI.add("tricks", function (Y) {
 
         syncUI: function () {
             this._syncTricks(this.get("tricks"));
+            this._syncPlayer(this.get("player"));
             this._syncScoresNS(this.get("scoresNS"));
             this._syncScoresWE(this.get("scoresWE"));
         },
 
         _syncTricks: function (tricks) {
-            this._clear();
+            // Recalculate scores
+            var scores = { NS: 0, WE: 0 };
+
             Y.each(tricks, function (trick) {
-                this.addTrick(trick);
+                var winner = trick.get("winner"),
+                    side = (winner === "N" || winner === "S" ? "NS" : "WE"),
+                    won = Y.Bridge.areSameSide(this.get("player"), winner);
+                    scores[side] += 1;
             }, this);
+            this.set("scoresWE", scores.WE);
+            this.set("scoresNS", scores.NS);
+            // Sync tricksBar
+            this._tricksBar.set("tricks", tricks);
         },
 
         _syncPlayer: function (player) {
             this._syncTricks(this.get("tricks"));
+            this._tricksBar.set("player", player);
         },
 
         _syncScoresNS: function (scores) {
@@ -92,40 +85,17 @@ YUI.add("tricks", function (Y) {
 
         _syncScoresWE: function (scores) {
             this._scoresNodeWE.set("innerHTML", scores);
-        },
-
-        _clear: function () {
-            // hide children
-            this.each(function (child) {
-                child.set("won", undefined);
-            }, this);
-            // reset attributes
-            this._set("current", 0);
-            this.set("scoresNS", 0);
-            this.set("scoresWE", 0);
         }
 
     }, {
 
         ATTRS: {
 
-            defaultChildType: {
-                value: Y.Bridge.TricksTrick
-            },
-
             player: {
                 value: "N",
                 validator: Y.Bridge.isDirection
             },
 
-            // Current trick number
-            current: {
-                value: 0,
-                validator: Y.Bridge.isNumber,
-                readOnly: true
-            },
-
-            // Used to resync widget with some state. To add single trick use addTrick.
             tricks: {
                 value: [],
                 validator: Y.Lang.isArray
@@ -146,4 +116,4 @@ YUI.add("tricks", function (Y) {
 
     Y.namespace("Bridge").Tricks = Tricks;
 
-}, "0", { requires: ["trickstrick", "widget-parent", "helpers"] });
+}, "0", { requires: ["tricksbar", "helpers"] });

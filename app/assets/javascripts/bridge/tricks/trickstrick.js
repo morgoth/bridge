@@ -1,7 +1,7 @@
 YUI.add("trickstrick", function (Y) {
 
     var TricksTrick = Y.Base.create("trickstrick", Y.Widget, [Y.WidgetChild], {
-        CONTENT_TEMPLATE: '<li></li>',
+        BOUNDING_TEMPLATE: '<li></li>',
 
         renderUI: function () {
             this.get("contentBox").appendChild("<div></div>").addClass(
@@ -25,25 +25,19 @@ YUI.add("trickstrick", function (Y) {
                 c_won = this.getClassName("won"),
                 c_lost = this.getClassName("lost");
 
-            if (!Y.Lang.isValue(won)) {
-                cb.hide();
-                return;
-            }
             if (won) {
                 cb.removeClass(c_lost).addClass(c_won);
             } else {
                 cb.removeClass(c_won).addClass(c_lost);
             }
-            cb.show();
         }
 
     }, {
 
         ATTRS: {
 
-            // If undefined - do not show
             won: {
-                value: undefined,
+                value: false,
                 validator: Y.Lang.isBoolean
             }
             // TODO: Add later: winner, lead, cards (like trick/trick.js)

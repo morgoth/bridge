@@ -22,18 +22,16 @@ YUI().use("hand", "trick", "tricks", "biddingbox", "auction", "table-model", fun
     // Add sample tricks
     var tricks = [];
 
-    for (var i = 0; i < 7; i++) {
+    for (var i = 0; i < 13; i++) {
         var f = function(i){
             var winner = "NESW"[i % 4];
             tricks.push({ get: function () { return winner; }});
-            // Or add tricks one by one
-            // window.tricks.addTrick({ get: function () { return winner; }});
         }(i);
     }
-    // Set all tricks at once
+    // window.tricks.set("tricks", tricks.slice(0,5));
     window.tricks.set("tricks", tricks);
     // Rotate player
-    // window.tricks.set("player", "W");
+    window.tricks.set("player", "W");
 
     // -BiddingBox-
     // Show choosen bid

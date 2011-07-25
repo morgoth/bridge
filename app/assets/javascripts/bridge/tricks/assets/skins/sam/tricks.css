@@ -1,4 +1,4 @@
-.yui3-tricks-content .yui3-tricks-info {
+.yui3-tricks-info {
     background: #99cccc;
     color: black;
     font-size: 167%;
@@ -32,14 +32,14 @@
     content: "WE: ";
 }
 
-.yui3-tricks-tricklist {
+.yui3-tricksbar {
     margin: 0 0 0 -52px;
     text-align: center;
     height: 90px;
     overflow: hidden;
 }
 
-.yui3-trickstrick-content {
+.yui3-trickstrick {
     list-style: none;
     display: inline-block;
 }
@@ -85,6 +85,10 @@
 .yui3-trickstrick-lost .yui3-trickstrick-cover {
     width: 113px;
     height: 74px;
+}
+
+.yui3-trickstrick-hidden {
+    display: none;
 }
 
 /* Not yet implemented */
