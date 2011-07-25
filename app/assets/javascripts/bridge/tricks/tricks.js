@@ -80,11 +80,11 @@ YUI.add("tricks", function (Y) {
         },
 
         _syncScoresNS: function (scores) {
-            this._scoresNodeNS.set("innerHTML", scores);
+            this._scoresNodeNS.setText(scores);
         },
 
         _syncScoresWE: function (scores) {
-            this._scoresNodeWE.set("innerHTML", scores);
+            this._scoresNodeWE.setText(scores);
         }
 
     }, {
