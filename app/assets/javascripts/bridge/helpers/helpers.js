@@ -12,7 +12,7 @@ YUI.add("helpers", function (Y) {
 
     Y.Bridge.CONTRACT_SUITS = Y.Bridge.SUITS.concat("NT");
 
-    Y.Bridge.VALUES = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"];
+    Y.Bridge.VALUES = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"];
 
     Y.Bridge.VULNERABILITIES = ["NONE", "NS", "EW", "BOTH"];
 
@@ -117,6 +117,12 @@ YUI.add("helpers", function (Y) {
 
     Y.Bridge.isVulnerability = function (vulnerability) {
         return Y.Array.indexOf(Y.Bridge.VULNERABILITIES, vulnerability) !== -1;
+    };
+
+    // OTHER
+
+    Y.Bridge.valuePosition = function (value) {
+        return Y.Array.indexOf(Y.Bridge.VALUES, value);
     };
 
 }, "", { requires: [] });
