@@ -1,10 +1,11 @@
 YUI.add("trickstrick", function (Y) {
 
     var TricksTrick = Y.Base.create("trickstrick", Y.Widget, [Y.WidgetChild], {
-        CONTENT_TEMPLATE: '<li><div class="cover"></div></li>',
+        BOUNDING_TEMPLATE: '<li></li>',
 
         renderUI: function () {
-
+            this.get("contentBox").appendChild("<div></div>").addClass(
+                this.getClassName("cover"));
         },
 
         bindUI: function () {
@@ -20,31 +21,28 @@ YUI.add("trickstrick", function (Y) {
         },
 
         _syncWon: function (won) {
-            var cb = this.get("contentBox");
+            var cb = this.get("contentBox"),
+                c_won = this.getClassName("won"),
+                c_lost = this.getClassName("lost");
 
-            if (!Y.Lang.isValue(won)) {
-                cb.hide();
-                return;
-            }
             if (won) {
-                cb.removeClass("lost").addClass("won");
+                cb.removeClass(c_lost).addClass(c_won);
             } else {
-                cb.removeClass("won").addClass("lost");
+                cb.removeClass(c_won).addClass(c_lost);
             }
-            cb.show();
         }
 
     }, {
 
         ATTRS: {
 
-            // If undefined - do not show
             won: {
-                value: undefined,
+                value: false,
                 validator: Y.Lang.isBoolean
             }
             // TODO: Add later: winner, lead, cards (like trick/trick.js)
         }
+
     });
     Y.namespace("Bridge").TricksTrick = TricksTrick;
 

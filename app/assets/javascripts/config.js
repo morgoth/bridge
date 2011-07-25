@@ -122,12 +122,16 @@ window.YUI_config = {
                 },
                 "tricks": {
                     path: "tricks/tricks.js",
-                    requires: ["trickstrick", "helpers", "widget-parent"],
+                    requires: ["tricksbar", "widget-parent", "helpers"],
                     skinnable: true
                 },
                 "trickstrick": {
                     path: "tricks/trickstrick.js",
                     requires: ["widget", "widget-child"]
+                },
+                "tricksbar": {
+                    path: "tricks/tricksbar.js",
+                    requires: ["trickstrick", "widget-parent", "helpers"]
                 },
                 "auction": {
                     path: "auction/auction.js",
