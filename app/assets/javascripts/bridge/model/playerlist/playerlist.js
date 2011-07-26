@@ -8,6 +8,10 @@ YUI.add("player-model-list", function (Y) {
             return Y.Array.find(this._items, function (player) {
                 return player.get("direction") === direction;
             });
+        },
+
+        isCompleted: function () {
+            return this.size() === 4;
         }
 
     }, {

@@ -27,7 +27,7 @@ window.YUI_config = {
                 },
                 "bid-model-list": {
                     path: "bidlist/bidlist.js",
-                    requires: ["model-list", "bid-model"]
+                    requires: ["model-list", "bid-model", "collection"]
                 },
                 "board-model": {
                     path: "board/board.js",
@@ -39,7 +39,7 @@ window.YUI_config = {
                 },
                 "card-model-list": {
                     path: "cardlist/cardlist.js",
-                    requires: ["model-list", "card-model"]
+                    requires: ["model-list", "card-model", "collection"]
                 },
                 "player-model": {
                     path: "player/player.js",
@@ -119,6 +119,19 @@ window.YUI_config = {
                 "trickcard": {
                     path: "trick/trickcard.js",
                     requires: ["card"]
+                },
+                "tricks": {
+                    path: "tricks/tricks.js",
+                    requires: ["tricksbar", "widget-parent", "helpers"],
+                    skinnable: true
+                },
+                "trickstrick": {
+                    path: "tricks/trickstrick.js",
+                    requires: ["widget", "widget-child"]
+                },
+                "tricksbar": {
+                    path: "tricks/tricksbar.js",
+                    requires: ["trickstrick", "widget-parent", "helpers"]
                 },
                 "auction": {
                     path: "auction/auction.js",

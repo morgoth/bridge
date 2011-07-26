@@ -99,10 +99,6 @@ YUI.add("table-model", function (Y) {
 
         ATTRS: {
 
-            state: {
-
-            },
-
             players: {
                 value: []
             },

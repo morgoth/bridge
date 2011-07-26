@@ -4,17 +4,19 @@ YUI.add("bid-model-list", function (Y) {
 
         model: Y.Bridge.Model.Bid,
 
-        getBids: function () {
-            return Y.Array.map(this._items, function (bid) {
-                return bid.getAttrs(["bid", "alert", "message"]);
-            });
+        last: function (number) {
+            number || (number = 1);
+
+            return this._items.slice(-number);
         },
 
-        isFinished: function () {
+        isCompleted: function () {
             if (this.size() > 3) {
-
-            } else if (this.size() === 4) {
-
+                return Y.Array.every(this.last(3), function (bid) {
+                    return bid.get("bid") === "PASS";
+                });
+            } else {
+                return false;
             }
         }
 
@@ -28,4 +30,4 @@ YUI.add("bid-model-list", function (Y) {
 
     Y.namespace("Bridge.Model").BidList = BidList;
 
-}, "", { requires: ["model-list", "bid-model"] });
+}, "", { requires: ["model-list", "bid-model", "collection"] });

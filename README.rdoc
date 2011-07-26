@@ -1,8 +1,7 @@
 = Bridge Libre!
 
 Welcome to Bridge Libre - a free contract bridge application. It
-requires modern browser only to play - it uses JavaScript and some of
-HTML5 features, like WebSockets (with Flash fallback support).
+requires only a modern browser to play.
 
 == License
 

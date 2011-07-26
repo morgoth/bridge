@@ -73,6 +73,31 @@ YUI.add("board-model", function (Y) {
 
         _refreshCards: function (cards) {
             this._cardList.refresh(cards);
+        },
+
+        state: function () {
+            if (this._cardList.isCompleted()) {
+                return "completed";
+            } else if (this._bidList.isCompleted()) {
+                return "playing";
+            } else {
+                return "auction";
+            }
+        },
+
+        hand: function (direction) {
+            var cards,
+                result = this.get("deal")[direction] || ["", "", "", "", "", "", "", "", "", "", "", "", ""];
+
+            if (result[0] !== "") {
+                cards = this._cardList.cards();
+
+                return Y.Array.filter(result, function (card) {
+                    return Y.Array.indexOf(cards, card) === -1;
+                });
+            } else {
+                return result.slice(0, cardsLeft(direction)); // TODO: cardsLeft
+            }
         }
 
     }, {
@@ -80,12 +105,7 @@ YUI.add("board-model", function (Y) {
         ATTRS: {
 
             deal: {
-                value: {
-                    "N": ["", "", "", "", "", "", "", "", "", "", "", "", ""],
-                    "E": ["", "", "", "", "", "", "", "", "", "", "", "", ""],
-                    "S": ["", "", "", "", "", "", "", "", "", "", "", "", ""],
-                    "W": ["", "", "", "", "", "", "", "", "", "", "", "", ""]
-                }
+
             },
 
             dealer: {
@@ -94,14 +114,6 @@ YUI.add("board-model", function (Y) {
 
             vulnerable: {
 
-            },
-
-            declarer: {
-                value: null
-            },
-
-            contract: {
-                value: null
             },
 
             // writeonly
