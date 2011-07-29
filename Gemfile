@@ -7,6 +7,7 @@ gem "bridge"
 gem "proxies"
 gem "beaconpush"
 gem "state_machine"
+gem "sprockets", "2.0.0.beta10"
 
 group :development, :test do
   gem "sqlite3"
