@@ -6,8 +6,9 @@ YUI().use("table", "table-model", function (Y) {
 
     tableModel.load({}, function (error, response) {
         if (!error) {
-            Y.log(tableModel.generate());
-            tableWidget.setAttrs(tableModel.generate());
+            var data = tableModel.generate();
+            Y.log(data);
+            tableWidget.setAttrs(data);
         }
     });
 });

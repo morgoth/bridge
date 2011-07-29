@@ -14,8 +14,8 @@ YUI.add("board-model", function (Y) {
             this.after("bidsChange", this._afterBidsChange);
             this.after("cardsChange", this._afterCardsChange);
 
-            this._refreshBids(this.get("bids"));
-            this._refreshCards(this.get("cards"));
+            this._resetBids(this.get("bids"));
+            this._resetCards(this.get("cards"));
         },
 
         generateAuction: function () {
@@ -38,13 +38,6 @@ YUI.add("board-model", function (Y) {
             return result;
         },
 
-        state: function () {
-            var bidsCount = this._bidList.size(),
-                cardsCount = this._cardList.size();
-
-
-        },
-
         activeDirection: function () {
             var dealerPosition = Y.Bridge.directionPosition(this.get("dealer"));
 
@@ -60,19 +53,19 @@ YUI.add("board-model", function (Y) {
         },
 
         _afterBidsChange: function (event) {
-            this._refreshBids(event.newVal);
+            this._resetBids(event.newVal);
         },
 
         _afterCardsChange: function (event) {
-            this._refreshCards(event.newVal);
+            this._resetCards(event.newVal);
         },
 
-        _refreshBids: function (bids) {
-            this._bidList.refresh(bids);
+        _resetBids: function (bids) {
+            this._bidList.reset(bids);
         },
 
-        _refreshCards: function (cards) {
-            this._cardList.refresh(cards);
+        _resetCards: function (cards) {
+            this._cardList.reset(cards);
         },
 
         state: function () {

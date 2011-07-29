@@ -16,18 +16,18 @@ YUI.add("table-model", function (Y) {
         },
 
         _afterPlayersChange: function (event) {
-            this._refreshPlayers(event.newVal);
+            this._resetPlayers(event.newVal);
         },
 
         _afterBoardChange: function (event) {
-            this._refreshBoard(event.newVal);
+            this._resetBoard(event.newVal);
         },
 
-        _refreshPlayers: function (players) {
-            this._playerList.refresh(players);
+        _resetPlayers: function (players) {
+            this._playerList.reset(players);
         },
 
-        _refreshBoard: function (board) {
+        _resetBoard: function (board) {
             this._board.setAttrs(board);
         },
 
