@@ -21,9 +21,13 @@ window.YUI_config = {
         "bridge-model": {
             base: "/assets/bridge/model/",
             modules: {
+                "sync": {
+                    path: "sync/sync.js",
+                    requires: ["io", "querystring-stringify"]
+                },
                 "bid-model": {
                     path: "bid/bid.js",
-                    requires: ["model"]
+                    requires: ["model", "sync"]
                 },
                 "bid-model-list": {
                     path: "bidlist/bidlist.js",
@@ -51,7 +55,7 @@ window.YUI_config = {
                 },
                 "table-model": {
                     path: "table/table.js",
-                    requires: ["model", "board-model", "player-model-list", "io"]
+                    requires: ["model", "board-model", "player-model-list", "sync"]
                 }
             }
         },

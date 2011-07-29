@@ -1,5 +1,5 @@
 class Ajax::ApplicationController < ActionController::Base
-  # before_filter :fetch_table, :fetch_board
+  before_filter :fetch_table, :fetch_board
 
   respond_to :json
 
@@ -7,11 +7,11 @@ class Ajax::ApplicationController < ActionController::Base
 
   # protected
 
-  # def fetch_table
-  #   @table = Table.find(params[:table_id])
-  # end
+  def fetch_table
+    @table = Table.find(params[:table_id])
+  end
 
-  # def fetch_board
-  #   @board = @table.boards.current
-  # end
+  def fetch_board
+    @board = @table.boards.current
+  end
 end

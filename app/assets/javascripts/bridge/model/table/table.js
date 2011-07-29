@@ -1,6 +1,6 @@
 YUI.add("table-model", function (Y) {
 
-    var Table = Y.Base.create("table-model", Y.Model, [], {
+    var Table = Y.Base.create("table-model", Y.Model, [Y.Bridge.Model.Sync], {
 
         initializer: function () {
             this._board = new Y.Bridge.Model.Board();
@@ -31,6 +31,10 @@ YUI.add("table-model", function (Y) {
             this._board.setAttrs(board);
         },
 
+        createBid: function (model, object, callback) {
+            this._board.createBid(model, { tableId: this.get("id") }, callback);
+        },
+
         generate: function () {
             return {
                 auction: this._board.generateAuction(),
@@ -53,46 +57,14 @@ YUI.add("table-model", function (Y) {
             };
         },
 
-        _url: function (id) {
-            id || (id = this.get("id"));
+        _url: function (options) {
+            options.id || (options.id = this.get("id"));
 
-            if (id) {
-                return "/ajax/tables/" + id + ".json";
+            if (options.id) {
+                return "/ajax/tables/" + options.id + ".json";
             } else {
                 return "/ajax/tables.json";
             }
-        },
-
-        sync: function (action, options, callback) {
-            options || (options = {});
-
-            var configuration = {
-                    on: {
-                        success: function (transactionId, response) {
-                            callback(null, response.responseText);
-                        },
-                        failure: function (transactionId, response) {
-                            callback(response.statusText, response.responseText);
-                        }
-                    }
-                };
-
-            switch (action) {
-            case "create":
-                configuration.method = "POST";
-                break;
-            case "update":
-                configuration.method = "PUT";
-                break;
-            case "read":
-                configuration.method = "GET";
-                break;
-            case "delete":
-                configuration.method = "DELETE";
-                break;
-            }
-
-            Y.io(this._url(options.id), configuration);
         }
 
     }, {
@@ -113,4 +85,4 @@ YUI.add("table-model", function (Y) {
 
     Y.namespace("Bridge.Model").Table = Table;
 
-}, "", { requires: ["model", "board-model", "player-model-list", "io"] });
+}, "", { requires: ["model", "board-model", "player-model-list", "sync"] });
