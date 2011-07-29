@@ -35,6 +35,10 @@ YUI.add("table-model", function (Y) {
             this._board.createBid(model, { tableId: this.get("id") }, callback);
         },
 
+        createCard: function (model, object, callback) {
+            this._board.createCard(model, { tableId: this.get("id") }, callback);
+        },
+
         generate: function () {
             return {
                 auction: this._board.generateAuction(),

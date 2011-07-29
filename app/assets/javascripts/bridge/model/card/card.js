@@ -8,6 +8,16 @@ YUI.add("card-model", function (Y) {
 
         value: function () {
             return Y.Bridge.parseValue(this.get("card"));
+        },
+
+        _url: function (options) {
+            options.id || (options.id = this.get("id"));
+
+            if (options.id) {
+                return "/ajax/tables/" + options.tableId + "/cards/" + options.id + ".json";
+            } else {
+                return "/ajax/tables/" + options.tableId + "/cards.json";
+            }
         }
 
     }, {

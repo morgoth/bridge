@@ -22,6 +22,10 @@ YUI.add("board-model", function (Y) {
             this._bidList.create(model, object, callback);
         },
 
+        createCard: function (model, object, callback) {
+            this._cardList.create(model, object, callback);
+        },
+
         generateAuction: function () {
             return {
                 bids: this._bidList.bids(),
