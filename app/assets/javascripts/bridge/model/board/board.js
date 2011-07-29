@@ -20,7 +20,7 @@ YUI.add("board-model", function (Y) {
 
         generateAuction: function () {
             return {
-                bids: this._bidList.getBids(),
+                bids: this._bidList.bids(),
                 vulnerable: this.get("vulnerable"),
                 dealer: this.get("dealer"),
                 visible: true
@@ -28,7 +28,7 @@ YUI.add("board-model", function (Y) {
         },
 
         generateCards: function (direction) {
-            var cards = this._cardList.getCards(),
+            var cards = this._cardList.cards(),
                 result = this.get("deal")[direction];
 
             result = Y.Array.filter(result, function (card) {

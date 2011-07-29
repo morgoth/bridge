@@ -4,6 +4,12 @@ YUI.add("bid-model-list", function (Y) {
 
         model: Y.Bridge.Model.Bid,
 
+        bids: function () {
+            return Y.Array.map(this._items, function (bid) {
+                return bid.get("bid");
+            });
+        },
+
         last: function (number) {
             number || (number = 1);
 
