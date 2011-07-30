@@ -1,6 +1,6 @@
 YUI.add("board-model", function (Y) {
 
-    var Board = Y.Base.create("board-model", Y.Model, [], {
+    var Board = Y.Base.create("board", Y.Model, [], {
 
         initializer: function () {
             this._bidList = new Y.Bridge.Model.BidList();

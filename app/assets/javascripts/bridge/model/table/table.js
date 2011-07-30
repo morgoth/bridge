@@ -1,6 +1,6 @@
 YUI.add("table-model", function (Y) {
 
-    var Table = Y.Base.create("table-model", Y.Model, [Y.Bridge.Model.Sync], {
+    var Table = Y.Base.create("table", Y.Model, [Y.Bridge.Model.Sync], {
 
         initializer: function () {
             this._board = new Y.Bridge.Model.Board();

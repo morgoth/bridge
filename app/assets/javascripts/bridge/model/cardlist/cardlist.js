@@ -1,6 +1,6 @@
 YUI.add("card-model-list", function (Y) {
 
-    var CardList = Y.Base.create("card-model-list", Y.ModelList, [], {
+    var CardList = Y.Base.create("card-list", Y.ModelList, [], {
 
         model: Y.Bridge.Model.Card,
 

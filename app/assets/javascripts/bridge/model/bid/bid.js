@@ -1,6 +1,6 @@
 YUI.add("bid-model", function (Y) {
 
-    var Bid = Y.Base.create("bid-model", Y.Model, [Y.Bridge.Model.Sync], {
+    var Bid = Y.Base.create("bid", Y.Model, [Y.Bridge.Model.Sync], {
 
         _url: function (options) {
             options.id || (options.id = this.get("id"));

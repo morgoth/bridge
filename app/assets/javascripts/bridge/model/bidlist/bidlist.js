@@ -1,6 +1,6 @@
 YUI.add("bid-model-list", function (Y) {
 
-    var BidList = Y.Base.create("bid-model-list", Y.ModelList, [], {
+    var BidList = Y.Base.create("bid-list", Y.ModelList, [], {
 
         model: Y.Bridge.Model.Bid,
 
