@@ -1,13 +1,12 @@
 source "http://rubygems.org"
 
-gem "rails", "3.1.0.rc4"
+gem "rails", "~> 3.1.0.rc5"
 
 gem "acts_as_list"
 gem "bridge"
 gem "proxies"
 gem "beaconpush"
 gem "state_machine"
-gem "sprockets", "2.0.0.beta10"
 
 group :development, :test do
   gem "sqlite3"
@@ -15,7 +14,7 @@ group :development, :test do
 end
 
 group :test do
-  gem "factory_girl_rails", "~> 1.1.rc1"
+  gem "factory_girl_rails", "~> 1.1"
   gem "mocha"
   gem "turn", :require => false
 end
