@@ -16,6 +16,41 @@ YUI.add("bid-model-list", function (Y) {
             return this._items.slice(-number);
         },
 
+        contracts: function () {
+            return Y.Array.reduce(this._items, [], function (result, bid) {
+                if (Y.Bridge.isContract(bid.get("bid"))) {
+                    result.push(bid.get("bid"));
+                }
+                return result;
+            });
+        },
+
+        modifier: function () {
+            return Y.Array.reduce(this._items, undefined, function (result, bid) {
+                if (Y.Bridge.isContract(bid.get("bid"))) {
+                    return undefined;
+                } else if (Y.Bridge.isModifier(bid.get("bid"))) {
+                    return bid.get("bid");
+                } else {
+                    return result;
+                }
+            });
+        },
+
+        contract: function () {
+            var contract,
+                modifier = this.modifier(),
+                contracts = this.contracts();
+
+            contract = contracts[contracts.length - 1];
+
+            if (Y.Lang.isValue(contract) && Y.Lang.isValue(modifier)) {
+                return contract + modifier;
+            } else {
+                return contract;
+            }
+        },
+
         isCompleted: function () {
             if (this.size() > 3) {
                 return Y.Array.every(this.last(3), function (bid) {
