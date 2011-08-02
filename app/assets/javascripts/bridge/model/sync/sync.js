@@ -21,11 +21,13 @@ YUI.add("sync", function (Y) {
 
             switch (action) {
             case "create":
-                configuration.data = { bid: this.toJSON() };
+                configuration.data = {};
+                configuration.data[this.constructor.NAME] = this.toJSON();
                 configuration.method = "POST";
                 break;
             case "update":
-                configuration.data = { _method: "PUT", bid: this.toJSON() };
+                configuration.data = { _method: "PUT" };
+                configuration.data[this.constructor.NAME] = this.toJSON();
                 configuration.method = "POST";
                 break;
             case "read":

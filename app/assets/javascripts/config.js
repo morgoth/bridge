@@ -39,7 +39,7 @@ window.YUI_config = {
                 },
                 "card-model": {
                     path: "card/card.js",
-                    requires: ["model"]
+                    requires: ["model", "sync"]
                 },
                 "card-model-list": {
                     path: "cardlist/cardlist.js",

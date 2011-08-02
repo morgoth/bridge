@@ -1,6 +1,6 @@
 YUI.add("player-model", function (Y) {
 
-    var Player = Y.Base.create("player-model", Y.Model, [], {
+    var Player = Y.Base.create("player", Y.Model, [], {
 
     }, {
 

@@ -1,6 +1,6 @@
 YUI.add("card-model", function (Y) {
 
-    var Card = Y.Base.create("card-model", Y.Model, [], {
+    var Card = Y.Base.create("card", Y.Model, [Y.Bridge.Model.Sync], {
 
         suit: function () {
             return Y.Bridge.parseSuit(this.get("card"));
@@ -34,4 +34,4 @@ YUI.add("card-model", function (Y) {
 
     Y.namespace("Bridge.Model").Card = Card;
 
-}, "", { requires: ["model", "helpers"] });
+}, "", { requires: ["model", "helpers", "sync"] });

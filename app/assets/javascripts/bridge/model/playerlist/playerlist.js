@@ -1,6 +1,6 @@
 YUI.add("player-model-list", function (Y) {
 
-    var PlayerList = Y.Base.create("player-model-list", Y.ModelList, [], {
+    var PlayerList = Y.Base.create("player-list", Y.ModelList, [], {
 
         model: Y.Bridge.Model.Player,
 
