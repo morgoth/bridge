@@ -10,14 +10,14 @@ YUI.add("helpers-test", function (Y) {
 
         name: "Helpers Tests",
 
-        testIsSuit: function () {
-            isTrue(Y.Bridge.isSuit("C"));
-            isTrue(Y.Bridge.isSuit("D"));
-            isTrue(Y.Bridge.isSuit("H"));
-            isTrue(Y.Bridge.isSuit("S"));
-            isTrue(Y.Bridge.isSuit("NT"));
+        testIsContractSuit: function () {
+            isTrue(Y.Bridge.isContractSuit("C"));
+            isTrue(Y.Bridge.isContractSuit("D"));
+            isTrue(Y.Bridge.isContractSuit("H"));
+            isTrue(Y.Bridge.isContractSuit("S"));
+            isTrue(Y.Bridge.isContractSuit("NT"));
 
-            isFalse(Y.Bridge.isSuit("X"));
+            isFalse(Y.Bridge.isContractSuit("X"));
         },
 
         testSuitPosition: function () {
