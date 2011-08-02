@@ -68,6 +68,15 @@ window.YUI_config = {
                 }
             }
         },
+        "bridge-test-model": {
+            base: "/assets/bridge/test/model/",
+            modules: {
+                "bid-model-list-test": {
+                    path: "bidlist/bidlist.js",
+                    requires: ["test", "bid-model-list"]
+                }
+            }
+        },
         "bridge": {
             base: "/assets/bridge/",
             modules: {
