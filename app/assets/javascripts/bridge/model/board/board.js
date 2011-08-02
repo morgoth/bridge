@@ -51,7 +51,7 @@ YUI.add("board-model", function (Y) {
 
             switch (this.get("state")) {
             case "auction":
-                return Y.Bridge.DIRECTIONS[dealerPosition + this._bidList.size()];
+                return Y.Bridge.DIRECTIONS[(dealerPosition + this._bidList.size()) % 4];
                 break;
             case "playing":
                 return "N"; // TODO
