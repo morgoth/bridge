@@ -7,6 +7,7 @@ gem "bridge"
 gem "proxies"
 gem "beaconpush"
 gem "state_machine"
+gem "sprockets", :git => "https://github.com/sstephenson/sprockets.git"
 
 group :development, :test do
   gem "sqlite3"
