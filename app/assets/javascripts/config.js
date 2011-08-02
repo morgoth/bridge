@@ -59,6 +59,15 @@ window.YUI_config = {
                 }
             }
         },
+        "bridge-test": {
+            base: "/assets/bridge/test/",
+            modules: {
+                "helpers-test": {
+                    path: "helpers/helpers.js",
+                    requires: ["test", "helpers"]
+                }
+            }
+        },
         "bridge": {
             base: "/assets/bridge/",
             modules: {
