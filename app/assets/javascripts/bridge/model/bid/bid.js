@@ -54,6 +54,10 @@ YUI.add("bid-model", function (Y) {
 
         isContract: function () {
             return Y.Bridge.isContract(this.get("bid"));
+        },
+
+        isSameSide: function (direction) {
+            return Y.Bridge.areSameSide(this.direction(), direction);
         }
 
     }, {

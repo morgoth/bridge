@@ -66,6 +66,50 @@ YUI.add("board-model-test", function (Y) {
             this.board.set("bids", [{ bid: "PASS" }, { bid: "PASS" }, { bid: "PASS" }, { bid: "PASS" }]);
 
             areSame("completed", this.board.state());
+        },
+
+        // contract
+
+        testContractReturnsUndefinedWhenNoContract: function () {
+            this.board.set("bids", [{ bid: "PASS" }]);
+
+            isUndefined(this.board.contract());
+        },
+
+        testContractReturnsLastContract: function () {
+            this.board.set("bids", [{ bid: "PASS" }, { bid: "1C" }, { bid: "X" }, { bid: "PASS" }, { bid: "1NT" }, { bid: "PASS" }]);
+
+            areSame("1NT", this.board.contract());
+        },
+
+        testContractReturnsLastContractWithModifiers: function () {
+            this.board.set("bids", [{ bid: "PASS" }, { bid: "1C" }, { bid: "X" }, { bid: "PASS" }, { bid: "1NT" }, { bid: "PASS" }, { bid: "PASS" }, { bid: "X" }, { bid: "XX" }, { bid: "PASS" }]);
+
+            areSame("1NTXX", this.board.contract());
+        },
+
+        // declarer
+
+        testDeclarerReturnsUndefinedWhenNoBids: function () {
+            isUndefined(this.board.declarer());
+        },
+
+        testDeclarerReturnsCorrectSideWithSuitDeclaredOnce: function () {
+            this.board.setAttrs({ bids: [{ bid: "1C" }], dealer: "S" });
+
+            areSame("S", this.board.declarer());
+        },
+
+        testDeclarerReturnsCorrectSideWithSuitDeclaredTwiceByDifferentSides: function () {
+            this.board.setAttrs({ bids: [{ bid: "1C" }, { bid: "2C" }, { bid: "X" }], dealer: "S" });
+
+            areSame("W", this.board.declarer());
+        },
+
+        testDeclarerReturnsCorrectSideWithSuitDeclaredTwiceBySameSides: function () {
+            this.board.setAttrs({ bids: [{ bid: "1C" }, { bid: "2C" }, { bid: "X" }, { bid: "XX" }, { bid: "PASS" }, { bid: "PASS" }, { bid: "3C" }], dealer: "E" });
+
+            areSame("E", this.board.declarer());
         }
 
     });

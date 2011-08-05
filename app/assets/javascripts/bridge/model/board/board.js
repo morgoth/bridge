@@ -59,11 +59,31 @@ YUI.add("board-model", function (Y) {
         },
 
         contract: function () {
-            return this.bids().contract();
+            var lastContract = this.bids().lastContract(),
+                lastModifier = this.bids().lastModifier();
+
+            if (lastContract && lastModifier && lastModifier.index() > lastContract.index()) {
+                return lastContract.get("bid") + lastModifier.get("bid");
+            } else {
+                return lastContract && lastContract.get("bid");
+            }
+        },
+
+        declarer: function () {
+            var bid,
+                lastContract = this.bids().lastContract();
+
+            if (lastContract) {
+                bid = this.bids().firstBidWithSuitAndSide(lastContract.suit(), lastContract.direction());
+
+                return bid && bid.direction();
+            } else {
+                return undefined;
+            }
         },
 
         state: function () {
-            if (this.cards().isCompleted() || (this.bids().isCompleted() && !Y.Lang.isValue(this.contract()))) {
+            if (this.cards().isCompleted() || (this.bids().isCompleted() && !this.contract())) {
                 return "completed";
             } else if (this.bids().isCompleted()) {
                 return "playing";

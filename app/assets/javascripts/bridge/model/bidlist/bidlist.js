@@ -14,62 +14,32 @@ YUI.add("bid-model-list", function (Y) {
             });
         },
 
-        last: function (number) {
-            number || (number = 1);
-
-            return this._items.slice(-number);
-        },
-
-        contracts: function () {
-            return Y.Array.reduce(this._items, [], function (result, bid) {
-                if (Y.Bridge.isContract(bid.get("bid"))) {
-                    result.push(bid.get("bid"));
-                }
-                return result;
+        lastContract: function () {
+            var contracts = Y.Array.filter(this._items, function (bid) {
+                return bid.isContract();
             });
+
+            return contracts[contracts.length - 1];
         },
 
-        modifier: function () {
-            return Y.Array.reduce(this._items, undefined, function (result, bid) {
-                if (Y.Bridge.isContract(bid.get("bid"))) {
-                    return undefined;
-                } else if (Y.Bridge.isModifier(bid.get("bid"))) {
-                    return bid.get("bid");
-                } else {
-                    return result;
-                }
+        lastModifier: function () {
+            var modifiers = Y.Array.filter(this._items, function (bid) {
+                return bid.isModifier();
             });
+
+            return modifiers[modifiers.length - 1];
         },
 
-        contract: function () {
-            var contract,
-                modifier = this.modifier(),
-                contracts = this.contracts();
-
-            contract = contracts[contracts.length - 1];
-
-            if (Y.Lang.isValue(contract) && Y.Lang.isValue(modifier)) {
-                return contract + modifier;
-            } else {
-                return contract;
-            }
-        },
-
-        declarer: function () {
-            var contractSuit,
-                contract = this.contract();
-
-            contractSuit = Y.Bridge.parseContractSuit(contract);
-
-            Y.Array.find(this._items, function (bid) {
-                return bid.suit() == contractSuit && Y.Bridge.areSameSide();
-            }, this);
+        firstBidWithSuitAndSide: function (suit, direction) {
+            return Y.Array.find(this._items, function (bid) {
+                return bid.suit() === suit && bid.isSameSide(direction);
+            });
         },
 
         isCompleted: function () {
             if (this.size() > 3) {
-                return Y.Array.every(this.last(3), function (bid) {
-                    return bid.get("bid") === "PASS";
+                return Y.Array.every(this._items.slice(-3), function (bid) {
+                    return bid.isPass();
                 });
             } else {
                 return false;
