@@ -10,6 +10,10 @@ YUI.add("bid-model", function (Y) {
             return this.list() && this.list().board();
         },
 
+        index: function () {
+            return Y.Array.indexOf(this.list()._items, this);
+        },
+
         _url: function (options) {
             options.id || (options.id = this.get("id"));
 
@@ -18,6 +22,10 @@ YUI.add("bid-model", function (Y) {
             } else {
                 return "/ajax/tables/" + options.tableId + "/bids.json";
             }
+        },
+
+        direction: function () {
+            return Y.Bridge.DIRECTIONS[(this.board().dealerPosition() + this.index()) % 4];
         }
 
     }, {
@@ -42,4 +50,4 @@ YUI.add("bid-model", function (Y) {
 
     Y.namespace("Bridge.Model").Bid = Bid;
 
-}, "", { requires: ["model", "sync"] });
+}, "", { requires: ["model", "sync", "helpers"] });

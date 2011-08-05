@@ -27,7 +27,7 @@ window.YUI_config = {
                 },
                 "bid-model": {
                     path: "bid/bid.js",
-                    requires: ["model", "sync"]
+                    requires: ["model", "sync", "helpers"]
                 },
                 "bid-model-list": {
                     path: "bidlist/bidlist.js",
@@ -35,7 +35,7 @@ window.YUI_config = {
                 },
                 "board-model": {
                     path: "board/board.js",
-                    requires: ["model", "bid-model-list", "card-model-list"]
+                    requires: ["model", "bid-model-list", "card-model-list", "helpers"]
                 },
                 "card-model": {
                     path: "card/card.js",
@@ -74,6 +74,14 @@ window.YUI_config = {
                 "bid-model-list-test": {
                     path: "bidlist/bidlist.js",
                     requires: ["test", "bid-model-list"]
+                },
+                "bid-model-test": {
+                    path: "bid/bid.js",
+                    requires: ["test", "bid-model", "bid-model-list", "board-model"]
+                },
+                "board-model-test": {
+                    path: "board/board.js",
+                    requires: ["test", "board-model"]
                 }
             }
         },

@@ -34,12 +34,14 @@ YUI.add("board-model", function (Y) {
             this._cardList.create(model, object, callback);
         },
 
-        activeDirection: function () {
-            var dealerPosition = Y.Bridge.directionPosition(this.get("dealer"));
+        dealerPosition: function () {
+            return Y.Bridge.directionPosition(this.get("dealer"));
+        },
 
-            switch (this.get("state")) {
+        activeDirection: function () {
+            switch (this.state()) {
             case "auction":
-                return Y.Bridge.DIRECTIONS[(dealerPosition + this._bidList.size()) % 4];
+                return Y.Bridge.DIRECTIONS[(this.dealerPosition() + this._bidList.size()) % 4];
                 break;
             case "playing":
                 return "N"; // TODO
@@ -121,4 +123,4 @@ YUI.add("board-model", function (Y) {
 
     Y.namespace("Bridge.Model").Board = Board;
 
-}, "", { requires: ["model", "bid-model-list", "card-model-list"] });
+}, "", { requires: ["model", "bid-model-list", "card-model-list", "helpers"] });
