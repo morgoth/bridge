@@ -66,10 +66,14 @@ YUI.add("board-model", function (Y) {
             this._cardList.reset(cards);
         },
 
+        contract: function () {
+            return this.bids().contract();
+        },
+
         state: function () {
-            if (this._cardList.isCompleted()) {
+            if (this.cards().isCompleted() || (this.bids().isCompleted() && !this.contract())) {
                 return "completed";
-            } else if (this._bidList.isCompleted()) {
+            } else if (this.bids().isCompleted()) {
                 return "playing";
             } else {
                 return "auction";
