@@ -4,6 +4,10 @@ YUI.add("player-model-list", function (Y) {
 
         model: Y.Bridge.Model.Player,
 
+        table: function () {
+            return this._table;
+        },
+
         getByDirection: function (direction) {
             return Y.Array.find(this._items, function (player) {
                 return player.get("direction") === direction;

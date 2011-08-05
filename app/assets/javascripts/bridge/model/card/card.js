@@ -2,6 +2,14 @@ YUI.add("card-model", function (Y) {
 
     var Card = Y.Base.create("card", Y.Model, [Y.Bridge.Model.Sync], {
 
+        list: function () {
+            return this.lists[0];
+        },
+
+        board: function () {
+            return this.list() && this.list().board();
+        },
+
         suit: function () {
             return Y.Bridge.parseSuit(this.get("card"));
         },

@@ -4,6 +4,10 @@ YUI.add("bid-model-list", function (Y) {
 
         model: Y.Bridge.Model.Bid,
 
+        board: function () {
+            return this._board;
+        },
+
         bids: function () {
             return Y.Array.map(this._items, function (bid) {
                 return bid.getAttrs(["bid", "alert", "message"]);

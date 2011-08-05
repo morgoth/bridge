@@ -4,11 +4,11 @@ YUI.add("board-model", function (Y) {
 
         initializer: function () {
             this._bidList = new Y.Bridge.Model.BidList();
-            this._bidList.parent = this;
+            this._bidList._board = this;
             this._bidList.addTarget(this);
 
             this._cardList = new Y.Bridge.Model.CardList();
-            this._cardList.parent = this;
+            this._cardList._board = this;
             this._cardList.addTarget(this);
 
             this.after("bidsChange", this._afterBidsChange);
@@ -18,32 +18,20 @@ YUI.add("board-model", function (Y) {
             this._resetCards(this.get("cards"));
         },
 
+        bids: function () {
+            return this._bidList;
+        },
+
+        cards: function () {
+            return this._cardList;
+        },
+
         createBid: function (model, object, callback) {
             this._bidList.create(model, object, callback);
         },
 
         createCard: function (model, object, callback) {
             this._cardList.create(model, object, callback);
-        },
-
-        generateAuction: function () {
-            return {
-                bids: this._bidList.bids(),
-                vulnerable: this.get("vulnerable"),
-                dealer: this.get("dealer"),
-                visible: true
-            };
-        },
-
-        generateCards: function (direction) {
-            var cards = this._cardList.cards(),
-                result = this.get("deal")[direction];
-
-            result = Y.Array.filter(result, function (card) {
-                return Y.Array.indexOf(cards, card) === -1;
-            });
-
-            return result;
         },
 
         activeDirection: function () {

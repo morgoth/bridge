@@ -4,6 +4,10 @@ YUI.add("card-model-list", function (Y) {
 
         model: Y.Bridge.Model.Card,
 
+        board: function () {
+            return this._board;
+        },
+
         isCompleted: function () {
             return this.size() === 52;
         },
