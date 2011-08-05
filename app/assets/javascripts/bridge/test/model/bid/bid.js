@@ -14,6 +14,116 @@ YUI.add("bid-model-test", function (Y) {
             this.bid = new Y.Bridge.Model.Bid();
         },
 
+        // suit
+
+        testBidSuitReturnsUndefinedWithPass: function () {
+            this.bid.set("bid", "PASS");
+
+            isUndefined(this.bid.suit());
+        },
+
+        testBidSuitReturnsUndefinedWithXX: function () {
+            this.bid.set("bid", "XX");
+
+            isUndefined(this.bid.suit());
+        },
+
+        testBidSuitReturnsNTWith1NT: function () {
+            this.bid.set("bid", "1NT");
+
+            areSame("NT", this.bid.suit());
+        },
+
+        testBidSuitReturnsHWith1H: function () {
+            this.bid.set("bid", "1H");
+
+            areSame("H", this.bid.suit());
+        },
+
+        // level
+
+        testLevelReturnsUndefinedWithPass: function () {
+            this.bid.set("bid", "PASS");
+
+            isUndefined(this.bid.level());
+        },
+
+        testLevelReturns5With5H: function () {
+            this.bid.set("bid", "5H");
+
+            areSame(5, this.bid.level());
+        },
+
+        // isPass
+
+        testIsPassReturnsTrueWithPass: function () {
+            this.bid.set("bid", "PASS");
+
+            isTrue(this.bid.isPass());
+        },
+
+        testIsPassReturnsFalseWithDouble: function () {
+            this.bid.set("bid", "X");
+
+            isFalse(this.bid.isPass());
+        },
+
+        // isDouble
+
+        testIsDoubleReturnsTrueWithDouble: function () {
+            this.bid.set("bid", "X");
+
+            isTrue(this.bid.isDouble());
+        },
+
+        testIsDoubleReturnsFalseWithRedouble: function () {
+            this.bid.set("bid", "XX");
+
+            isFalse(this.bid.isDouble());
+        },
+
+        // isRedouble
+
+        testIsRedoubleReturnsTrueWithRedouble: function () {
+            this.bid.set("bid", "XX");
+
+            isTrue(this.bid.isRedouble());
+        },
+
+        testIsRedoubleReturnsFalseWithDouble: function () {
+            this.bid.set("bid", "X");
+
+            isFalse(this.bid.isRedouble());
+        },
+
+        // isModifier
+
+        testIsModifierReturnsTrueWithRedouble: function () {
+            this.bid.set("bid", "XX");
+
+            isTrue(this.bid.isModifier());
+        },
+
+        testIsModifierReturnsFalseWithPass: function () {
+            this.bid.set("bid", "PASS");
+
+            isFalse(this.bid.isModifier());
+        },
+
+        // isContract
+
+        testIsContractReturnsTrueWith5NT: function () {
+            this.bid.set("bid", "5NT");
+
+            isTrue(this.bid.isContract());
+        },
+
+        testIsContractReturnsFalseWithPass: function () {
+            this.bid.set("bid", "PASS");
+
+            isFalse(this.bid.isContract());
+        },
+
         // index
 
         testBidIndexReturnsCorrectIndex: function () {

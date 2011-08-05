@@ -26,14 +26,6 @@ YUI.add("board-model", function (Y) {
             return this._cardList;
         },
 
-        createBid: function (model, object, callback) {
-            this._bidList.create(model, object, callback);
-        },
-
-        createCard: function (model, object, callback) {
-            this._cardList.create(model, object, callback);
-        },
-
         dealerPosition: function () {
             return Y.Bridge.directionPosition(this.get("dealer"));
         },
@@ -41,7 +33,7 @@ YUI.add("board-model", function (Y) {
         activeDirection: function () {
             switch (this.state()) {
             case "auction":
-                return Y.Bridge.DIRECTIONS[(this.dealerPosition() + this._bidList.size()) % 4];
+                return Y.Bridge.DIRECTIONS[(this.dealerPosition() + this.bids().size()) % 4];
                 break;
             case "playing":
                 return "N"; // TODO
@@ -59,11 +51,11 @@ YUI.add("board-model", function (Y) {
         },
 
         _resetBids: function (bids) {
-            this._bidList.reset(bids);
+            this.bids().reset(bids);
         },
 
         _resetCards: function (cards) {
-            this._cardList.reset(cards);
+            this.cards().reset(cards);
         },
 
         contract: function () {
@@ -71,7 +63,7 @@ YUI.add("board-model", function (Y) {
         },
 
         state: function () {
-            if (this.cards().isCompleted() || (this.bids().isCompleted() && !this.contract())) {
+            if (this.cards().isCompleted() || (this.bids().isCompleted() && !Y.Lang.isValue(this.contract()))) {
                 return "completed";
             } else if (this.bids().isCompleted()) {
                 return "playing";
@@ -85,7 +77,7 @@ YUI.add("board-model", function (Y) {
                 result = this.get("deal")[direction] || ["", "", "", "", "", "", "", "", "", "", "", "", ""];
 
             if (result[0] !== "") {
-                cards = this._cardList.cards();
+                cards = this.cards().cards();
 
                 return Y.Array.filter(result, function (card) {
                     return Y.Array.indexOf(cards, card) === -1;
@@ -127,4 +119,4 @@ YUI.add("board-model", function (Y) {
 
     Y.namespace("Bridge.Model").Board = Board;
 
-}, "", { requires: ["model", "bid-model-list", "card-model-list", "helpers"] });
+}, "", { requires: ["model", "bid-model-list", "card-model-list", "helpers", "collection"] });

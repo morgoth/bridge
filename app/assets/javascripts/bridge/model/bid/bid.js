@@ -26,6 +26,34 @@ YUI.add("bid-model", function (Y) {
 
         direction: function () {
             return Y.Bridge.DIRECTIONS[(this.board().dealerPosition() + this.index()) % 4];
+        },
+
+        suit: function () {
+            return this.isContract() ? Y.Bridge.parseContractSuit(this.get("bid")) : undefined;
+        },
+
+        level: function () {
+            return this.isContract() ? Y.Bridge.parseLevel(this.get("bid")) : undefined;
+        },
+
+        isPass: function () {
+            return this.get("bid") === "PASS";
+        },
+
+        isDouble: function () {
+            return this.get("bid") === "X";
+        },
+
+        isRedouble: function () {
+            return this.get("bid") === "XX";
+        },
+
+        isModifier: function () {
+            return Y.Bridge.isModifier(this.get("bid"));
+        },
+
+        isContract: function () {
+            return Y.Bridge.isContract(this.get("bid"));
         }
 
     }, {

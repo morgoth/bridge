@@ -42,7 +42,7 @@ YUI.add("auctionbid", function (Y) {
                 content = "Rdbl";
                 break;
             default:
-                content = Y.Bridge.parseLevel(bid) + this._renderSuit(Y.Bridge.parseSuit(bid));
+                content = Y.Bridge.parseLevel(bid) + this._renderSuit(Y.Bridge.parseContractSuit(bid));
             }
 
             this.setAttrs({ label: content, title: "" });

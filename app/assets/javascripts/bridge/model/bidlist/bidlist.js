@@ -55,6 +55,17 @@ YUI.add("bid-model-list", function (Y) {
             }
         },
 
+        declarer: function () {
+            var contractSuit,
+                contract = this.contract();
+
+            contractSuit = Y.Bridge.parseContractSuit(contract);
+
+            Y.Array.find(this._items, function (bid) {
+                return bid.suit() == contractSuit && Y.Bridge.areSameSide();
+            }, this);
+        },
+
         isCompleted: function () {
             if (this.size() > 3) {
                 return Y.Array.every(this.last(3), function (bid) {

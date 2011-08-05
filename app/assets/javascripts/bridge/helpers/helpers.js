@@ -46,6 +46,12 @@ YUI.add("helpers", function (Y) {
     };
 
     Y.Bridge.parseSuit = function (contract) {
+        var matchData = contract.match(new RegExp(Y.Bridge.SUITS.join("|")));
+
+        return matchData ? matchData[0] : undefined;
+    };
+
+    Y.Bridge.parseContractSuit = function (contract) {
         var matchData = contract.match(new RegExp(Y.Bridge.CONTRACT_SUITS.join("|")));
 
         return matchData ? matchData[0] : undefined;
@@ -95,6 +101,8 @@ YUI.add("helpers", function (Y) {
         return Y.Array.indexOf(Y.Bridge.MODIFIERS, modifier) !== -1;
     };
 
+    // OTHER
+
     Y.Bridge.isContract = function (contract) {
         return new RegExp("^(" + Y.Bridge.CONTRACTS.join("|") + ")(X{1,2})?$").test(contract);
     };
@@ -118,8 +126,6 @@ YUI.add("helpers", function (Y) {
     Y.Bridge.isVulnerability = function (vulnerability) {
         return Y.Array.indexOf(Y.Bridge.VULNERABILITIES, vulnerability) !== -1;
     };
-
-    // OTHER
 
     Y.Bridge.valuePosition = function (value) {
         return Y.Array.indexOf(Y.Bridge.VALUES, value);
