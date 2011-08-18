@@ -46,13 +46,13 @@ YUI.add("helpers", function (Y) {
     };
 
     Y.Bridge.parseSuit = function (contract) {
-        var matchData = contract.match(new RegExp(Y.Bridge.SUITS.join("|")));
+        var matchData = contract && contract.match(new RegExp(Y.Bridge.SUITS.join("|")));
 
         return matchData ? matchData[0] : undefined;
     };
 
     Y.Bridge.parseContractSuit = function (contract) {
-        var matchData = contract.match(new RegExp(Y.Bridge.CONTRACT_SUITS.join("|")));
+        var matchData = contract && contract.match(new RegExp(Y.Bridge.CONTRACT_SUITS.join("|")));
 
         return matchData ? matchData[0] : undefined;
     };

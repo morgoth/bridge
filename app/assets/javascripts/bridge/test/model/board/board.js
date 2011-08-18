@@ -88,6 +88,24 @@ YUI.add("board-model-test", function (Y) {
             areSame("1NTXX", this.board.contract());
         },
 
+        // trump
+
+        testTrumpReturnsUndefinedWithoutContract: function () {
+            isUndefined(this.board.trump());
+        },
+
+        testTrumpReturnsUndefinedWith1NTContract: function () {
+            this.board.set("bids", [{ bid: "PASS" }, { bid: "1C" }, { bid: "X" }, { bid: "PASS" }, { bid: "1NT" }, { bid: "PASS" }, { bid: "PASS" }, { bid: "X" }, { bid: "XX" }, { bid: "PASS" }]);
+
+            isUndefined(this.board.trump());
+        },
+
+        testTrumpReturnsHWith3HContract: function () {
+            this.board.set("bids", [{ bid: "PASS" }, { bid: "1C" }, { bid: "X" }, { bid: "PASS" }, { bid: "3H" }, { bid: "PASS" }, { bid: "PASS" }, { bid: "X" }, { bid: "XX" }, { bid: "PASS" }]);
+
+            areSame("H", this.board.trump());
+        },
+
         // declarer
 
         testDeclarerReturnsUndefinedWhenNoBids: function () {

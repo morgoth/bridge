@@ -69,6 +69,32 @@ YUI.add("board-model", function (Y) {
             }
         },
 
+        trump: function () {
+            return Y.Bridge.parseSuit(this.contract());
+        },
+
+        trickNumber: function () {
+            return Math.floor(this.cards().size() / 4);
+        },
+
+        trick: function () {
+            return this.cards().trick(this.trickNumber());
+        },
+
+        leadSuit: function () {
+            var lead = this.lead();
+
+            return lead && lead.suit();
+        },
+
+        lead: function () {
+            return this.trick()[0];
+        },
+
+        leadDirection: function () {
+
+        },
+
         declarer: function () {
             var bid,
                 lastContract = this.bids().lastContract();
@@ -80,6 +106,10 @@ YUI.add("board-model", function (Y) {
             } else {
                 return undefined;
             }
+        },
+
+        declarerPosition: function () {
+            return Y.Bridge.directionPosition(this.declarer());
         },
 
         state: function () {

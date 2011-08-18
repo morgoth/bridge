@@ -10,6 +10,18 @@ YUI.add("card-model", function (Y) {
             return this.list() && this.list().board();
         },
 
+        index: function () {
+            return Y.Array.indexOf(this.list()._items, this);
+        },
+
+        trick: function () {
+            return Math.floor((this.index() - 1) / 4);
+        },
+
+        direction: function () {
+            // return Y.Bridge.DIRECTIONS[(this.board().declarerPosition() + this.index()) % 4];
+        },
+
         suit: function () {
             return Y.Bridge.parseSuit(this.get("card"));
         },
