@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -48,6 +49,11 @@ ActiveRecord::Schema.define(:version => 20110720184016) do
     t.datetime "updated_at"
   end
 
+  create_table "channels", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "claims", :force => true do |t|
     t.integer  "tricks"
     t.string   "state"
@@ -56,6 +62,15 @@ ActiveRecord::Schema.define(:version => 20110720184016) do
     t.datetime "updated_at"
     t.integer  "claiming_user_id"
     t.string   "explanation"
+  end
+
+  create_table "messages", :force => true do |t|
+    t.string   "body"
+    t.integer  "user_id"
+    t.integer  "channel_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "position"
   end
 
   create_table "players", :force => true do |t|
@@ -79,7 +94,7 @@ ActiveRecord::Schema.define(:version => 20110720184016) do
     t.datetime "updated_at"
   end
 
-  create_table "website_accounts", :force => true do |t|
+  create_table "web_accounts", :force => true do |t|
     t.string   "name"
     t.string   "email"
     t.string   "password_digest"

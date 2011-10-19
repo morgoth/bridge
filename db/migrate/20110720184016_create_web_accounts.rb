@@ -1,6 +1,6 @@
-class CreateWebsiteAccounts < ActiveRecord::Migration
+class CreateWebAccounts < ActiveRecord::Migration
   def change
-    create_table :website_accounts do |t|
+    create_table :web_accounts do |t|
       t.string :name
       t.string :email
       t.string :password_digest

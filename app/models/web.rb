@@ -1,5 +1,5 @@
-module Website
+module Web
   def self.table_name_prefix
-    'website_'
+    'web_'
   end
 end

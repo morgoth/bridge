@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   helper_method :current_user
 
   def current_user
-    @current_user ||= (website_session = Website::Session.find(session)) && website_session.account.user
+    @current_user ||= (web_session = Web::Session.find(session)) && web_session.account.user
   end
 
   def login_required

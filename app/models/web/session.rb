@@ -1,4 +1,4 @@
-class Website::Session
+class Web::Session
   extend ActiveModel::Naming
   include ActiveModel::AttributeMethods
   include ActiveModel::Conversion
@@ -22,7 +22,7 @@ class Website::Session
   def self.find(store)
     account_id = store[store_key] && store[store_key][:account_id]
     return if account_id.blank?
-    account = Website::Account.find_for_authentication(:id => account_id)
+    account = Web::Account.find_for_authentication(:id => account_id)
     return if account.blank?
     new(store) { |session| session.account = account }
   end
@@ -43,7 +43,7 @@ class Website::Session
   end
 
   def account
-    Website::Account.where(:id => account_id).first
+    Web::Account.where(:id => account_id).first
   end
 
   def account=(account)
@@ -74,7 +74,7 @@ class Website::Session
 
   def authenticity
     return if email.blank? or password.blank?
-    account = Website::Account.find_for_authentication(:email => email)
+    account = Web::Account.find_for_authentication(:email => email)
     errors.add :email, :invalid if account.blank?
     return if account.blank?
     authenticated_account = account.authenticate(password)

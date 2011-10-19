@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  has_one :website_account, :class_name => "Website::Account"
+  has_one :web_account, :class_name => "Web::Account"
 
   delegate :name, :email, :to => :account, :allow_nil => true
 
@@ -8,6 +8,6 @@ class User < ActiveRecord::Base
   end
 
   def account
-    website_account || build_website_account
+    web_account || build_web_account
   end
 end
