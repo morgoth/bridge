@@ -8,6 +8,7 @@ gem "proxies"
 gem "beaconpush"
 gem "state_machine"
 gem "bcrypt-ruby"
+gem "active_session"
 
 group :development, :test do
   gem "sqlite3"

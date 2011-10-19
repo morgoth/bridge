@@ -13,8 +13,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    @session = Web::Session.find(session)
-    @session.destroy
+    current_session.destroy
     redirect_to root_path, :notice => "Logged out"
   end
 end

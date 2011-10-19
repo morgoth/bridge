@@ -15,6 +15,9 @@ GEM
       rack-mount (~> 0.8.2)
       rack-test (~> 0.6.1)
       sprockets (~> 2.0.2)
+    active_session (0.1.0)
+      activemodel (~> 3.1.1)
+      activesupport (~> 3.1.1)
     activemodel (3.1.1)
       activesupport (= 3.1.1)
       builder (~> 3.0.0)
@@ -115,6 +118,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active_session
   acts_as_list
   bcrypt-ruby
   beaconpush
