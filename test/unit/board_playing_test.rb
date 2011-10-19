@@ -2,7 +2,7 @@ require "test_helper"
 
 class BoardPlayingTest < ActiveSupport::TestCase
   setup do
-    @board = FactoryGirl.create(:board_1S_by_N)
+    @board = FactoryGirl.create(:board_1s_by_n)
     @user_n = @board.user_n
     @user_e = @board.user_e
     @user_s = @board.user_s

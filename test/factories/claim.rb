@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :claim do
-    association :board, :factory => :board_1S_by_N
+    association :board, :factory => :board_1s_by_n
     tricks 13
     user { board.user_n }
   end

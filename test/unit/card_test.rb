@@ -2,7 +2,7 @@ require "test_helper"
 
 class CardTest < ActiveSupport::TestCase
   setup do
-    @board = FactoryGirl.create(:board_1S_by_N)
+    @board = FactoryGirl.create(:board_1s_by_n)
   end
 
   test "return suit of card" do

@@ -2,7 +2,7 @@ require "test_helper"
 
 class CardValidationTest < ActiveSupport::TestCase
   setup do
-    @board = FactoryGirl.create(:board_1S_by_N)
+    @board = FactoryGirl.create(:board_1s_by_n)
     @card = FactoryGirl.build(:card, :board => @board, :user => @board.user_n)
   end
 
@@ -58,7 +58,7 @@ class CardValidationTest < ActiveSupport::TestCase
   end
 
   test "not valid when card is in other suit than last card and suit is present on hand" do
-    board = FactoryGirl.create(:board_1S_by_N, :deal_id => 636839108127179982824423290.to_s)
+    board = FactoryGirl.create(:board_1s_by_n, :deal_id => 636839108127179982824423290.to_s)
     # :n => ["SA", "SK", "SQ", "S8", "S6", "HK", "H7", "H6", "H4", "DK", "DQ", "DJ", "C3"]
     # :e => ["S5", "S4", "S3", "HA", "HQ", "HJ", "H9", "D5", "D4", "CK", "CJ", "C9", "C5"]
     # :s => ["ST", "S7", "S2", "HT", "H8", "H2", "DT", "D8", "D3", "CA", "CT", "C6", "C2"]

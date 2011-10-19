@@ -2,7 +2,7 @@ require "test_helper"
 
 class ClaimTest < ActiveSupport::TestCase
   setup do
-    @claim = FactoryGirl.build(:claim, :board => FactoryGirl.create(:board_1S_by_N))
+    @claim = FactoryGirl.build(:claim, :board => FactoryGirl.create(:board_1s_by_n))
     @user_n = @declarer = @claim.board.user_n
     @user_e = @lho = @claim.board.user_e
     @user_s = @dummy = @claim.board.user_s

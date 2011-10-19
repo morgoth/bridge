@@ -23,7 +23,7 @@ FactoryGirl.define do
     end
   end
 
-  factory :board_1S_by_N, :parent => :board do
+  factory :board_1s_by_n, :parent => :board do
     after_create do |board|
       board.bids.create!(:bid => "1S", :user => board.user_n)
       board.bids.create!(:bid => "PASS", :user => board.user_e)
