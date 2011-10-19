@@ -35,10 +35,21 @@ YUI.add("helpers-test", function (Y) {
             areSame("D", Y.Bridge.parseSuit("5D"));
             areSame("H", Y.Bridge.parseSuit("2H"));
             areSame("S", Y.Bridge.parseSuit("6S"));
-            areSame("NT", Y.Bridge.parseSuit("7NTX"));
 
             isUndefined(Y.Bridge.parseSuit(""));
             isUndefined(Y.Bridge.parseSuit("X"));
+            isUndefined(Y.Bridge.parseSuit("NT"));
+        },
+
+        testParseContractSuit: function () {
+            areSame("C", Y.Bridge.parseContractSuit("1CXX"));
+            areSame("D", Y.Bridge.parseContractSuit("5D"));
+            areSame("H", Y.Bridge.parseContractSuit("2H"));
+            areSame("S", Y.Bridge.parseContractSuit("6S"));
+            areSame("NT", Y.Bridge.parseContractSuit("7NTX"));
+
+            isUndefined(Y.Bridge.parseContractSuit(""));
+            isUndefined(Y.Bridge.parseContractSuit("X"));
         },
 
         testDirectionPosition: function () {

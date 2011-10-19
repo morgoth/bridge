@@ -39,14 +39,6 @@ YUI.add("table-model", function (Y) {
             this._board.setAttrs(board);
         },
 
-        createBid: function (model, object, callback) {
-            this._board.createBid(model, { tableId: this.get("id") }, callback);
-        },
-
-        createCard: function (model, object, callback) {
-            this._board.createCard(model, { tableId: this.get("id") }, callback);
-        },
-
         _url: function (options) {
             options.id || (options.id = this.get("id"));
 

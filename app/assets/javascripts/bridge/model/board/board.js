@@ -26,20 +26,14 @@ YUI.add("board-model", function (Y) {
             return this._cardList;
         },
 
-        createBid: function (model, object, callback) {
-            this._bidList.create(model, object, callback);
-        },
-
-        createCard: function (model, object, callback) {
-            this._cardList.create(model, object, callback);
+        dealerPosition: function () {
+            return Y.Bridge.directionPosition(this.get("dealer"));
         },
 
         activeDirection: function () {
-            var dealerPosition = Y.Bridge.directionPosition(this.get("dealer"));
-
-            switch (this.get("state")) {
+            switch (this.state()) {
             case "auction":
-                return Y.Bridge.DIRECTIONS[(dealerPosition + this._bidList.size()) % 4];
+                return Y.Bridge.DIRECTIONS[(this.dealerPosition() + this.bids().size()) % 4];
                 break;
             case "playing":
                 return "N"; // TODO
@@ -57,17 +51,71 @@ YUI.add("board-model", function (Y) {
         },
 
         _resetBids: function (bids) {
-            this._bidList.reset(bids);
+            this.bids().reset(bids);
         },
 
         _resetCards: function (cards) {
-            this._cardList.reset(cards);
+            this.cards().reset(cards);
+        },
+
+        contract: function () {
+            var lastContract = this.bids().lastContract(),
+                lastModifier = this.bids().lastModifier();
+
+            if (lastContract && lastModifier && lastModifier.index() > lastContract.index()) {
+                return lastContract.get("bid") + lastModifier.get("bid");
+            } else {
+                return lastContract && lastContract.get("bid");
+            }
+        },
+
+        trump: function () {
+            return Y.Bridge.parseSuit(this.contract());
+        },
+
+        trickNumber: function () {
+            return Math.floor(this.cards().size() / 4);
+        },
+
+        trick: function () {
+            return this.cards().trick(this.trickNumber());
+        },
+
+        leadSuit: function () {
+            var lead = this.lead();
+
+            return lead && lead.suit();
+        },
+
+        lead: function () {
+            return this.trick()[0];
+        },
+
+        leadDirection: function () {
+
+        },
+
+        declarer: function () {
+            var bid,
+                lastContract = this.bids().lastContract();
+
+            if (lastContract) {
+                bid = this.bids().firstBidWithSuitAndSide(lastContract.suit(), lastContract.direction());
+
+                return bid && bid.direction();
+            } else {
+                return undefined;
+            }
+        },
+
+        declarerPosition: function () {
+            return Y.Bridge.directionPosition(this.declarer());
         },
 
         state: function () {
-            if (this._cardList.isCompleted()) {
+            if (this.cards().isCompleted() || (this.bids().isCompleted() && !this.contract())) {
                 return "completed";
-            } else if (this._bidList.isCompleted()) {
+            } else if (this.bids().isCompleted()) {
                 return "playing";
             } else {
                 return "auction";
@@ -79,7 +127,7 @@ YUI.add("board-model", function (Y) {
                 result = this.get("deal")[direction] || ["", "", "", "", "", "", "", "", "", "", "", "", ""];
 
             if (result[0] !== "") {
-                cards = this._cardList.cards();
+                cards = this.cards().cards();
 
                 return Y.Array.filter(result, function (card) {
                     return Y.Array.indexOf(cards, card) === -1;
@@ -121,4 +169,4 @@ YUI.add("board-model", function (Y) {
 
     Y.namespace("Bridge.Model").Board = Board;
 
-}, "", { requires: ["model", "bid-model-list", "card-model-list"] });
+}, "", { requires: ["model", "bid-model-list", "card-model-list", "helpers", "collection"] });
